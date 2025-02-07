@@ -26,17 +26,18 @@ figures/pdf/%.pdf: figures/eps/%.eps
 figures/png/%.png: figures/eps/%.eps
 	convert -density 400 -depth 8 -quality 85 -trim $? $@
 
-pdf: $(pdfs) 
+pdf: 
+	@if [ -z "$(pdfs)" ]; then echo "No figures found. Skipping figure conversion."; else make $(pdfs); fi
 png: $(pngs) 
 jpg: $(jpgs) 
 
-note: $(tex_files) pdf 
+note: $(tex_files)
+	@if [ -z "$(pdfs)" ]; then echo "No figures to process."; fi
 	if [ ! -d tmp ] ; then mkdir tmp ; fi ; \
 	pdflatex -output-directory=tmp $(note).tex ; \
 	if [ -f tmp/$(note).aux ]; then bibtex tmp/$(note); fi ; \
 	pdflatex -output-directory=tmp $(note).tex ; \
 	pdflatex -output-directory=tmp $(note).tex
-
                                                                                                                         # TARGET DESCRIPTION:
                                                                                                                         #generate a target called `note` which depends on two things: the .files and the pdf target
                                                                                                                         # (so before compiling the LateX document it makes sure all the .eps figures are converted)
@@ -45,7 +46,6 @@ note: $(tex_files) pdf
                                                                                                                         #if in the tmp folder exists the .aux fileruns bibtex
                                                                                                                         #runs pdflatex to correctly update figure numbers, references and citations
                                                                                                                         #runs the command again to finalize page numbers and references
-
 all: pdf note
 	echo $(pdfs)
 	echo $?
