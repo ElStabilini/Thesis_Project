@@ -1,0 +1,121 @@
+\documentclass{book}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{physics}
+\usepackage{mathtools}
+\usepackage{textgreek}
+\usepackage{float}
+%\usepackage{marginnote}
+%\usepackage{theorem}
+\usepackage{amsthm,marginnote,xparse}
+\usepackage{import}
+\pgfplotsset{compat=1.17}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{multicol}
+\usepackage{physics}
+\usepackage{hyperref}
+\usepackage{geometry}
+	\geometry{a4paper, top=4 cm, bottom=4 cm, left=4.5 cm, right=4 cm, heightrounded, bindingoffset=0 cm}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{algpseudocode}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{comment}
+
+\usepackage[sectionbib]{natbib}
+\usepackage{chapterbib}
+
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{%
+\markboth{\thechapter.\ #1}{}}
+
+
+\newcommand{\llq}{\lq\lq}
+\newcommand{\intf}{\int_{-\infty}^{+\infty}}
+\newcommand{\nota}[1]{\marginpar[\raggedleft#1]{#1}}
+\newcommand{\hatvb}[1]{\hat{\vb #1}}
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definizione}
+
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{corollary}{Corollario}[theorem]
+\newtheorem{Lemma}[theorem]{Lemma}
+
+\usepackage{algorithm2e,etoolbox}
+\AtBeginEnvironment{algorithm}{\let\textnormal\ttfamily}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                       BEGIN DOCUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%FRONTESPIZIO
+
+\begin{center}
+{\Large  Master degree in Physics }
+\end{center}
+
+
+\vskip1.5cm
+\begin{center}
+{\fontsize{15}{20}\selectfont \textbf{Title\\}}
+\end{center}
+
+
+{\large
+\vskip 20mm Supervisor:
+\vskip 0.2mm \large  \textbf{Prof. Dr. Stefano Carrazza}
+\vskip 5mm
+\large Co-supervisors:
+\vskip 0.2mm
+\large \textbf{Dr Alessandro Candido}
+\large \textbf{Dr Andrea Pasquale}
+\large \textbf{Dr Edoardo Pedicillo}
+}
+
+
+\vskip 2cm
+\hskip 9cm\parbox[t]{7cm}
+{\large 
+\textbf{Elisa Stabilini}\\
+Matricola n$^\circ$ $28326A$\\
+A.A. $2024$/$2025$\\      
+}
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DEDICATION 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\tableofcontent
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%THESIS WORK
+\chapter*{Summary}
+%\input{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%ACKNOWLEDGEMENT
+\chapter*{Acknowledgement}
+
+\end{document}
