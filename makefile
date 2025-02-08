@@ -5,7 +5,7 @@
 
 dir=.
 
-note := main
+note := $(if $(CHAPTER),chapters/$(CHAPTER),main)
 
 tex_files := $(note).tex $(wildcard *.tex) 
 
@@ -37,7 +37,17 @@ note: $(tex_files)
 	pdflatex -output-directory=tmp $(note).tex ; \
 	pdflatex -output-directory=tmp $(note).tex
 
-all: pdf note
+# Compile full thesis
+thesis: 
+	@make CHAPTER=
+
+# Compile a single chapter
+chapter:
+	@if [ -z "$(CHAPTER)" ]; then echo "Error: Specify CHAPTER=name (without .tex)"; exit 1; fi
+	@echo "Compiling chapter: $(CHAPTER).tex"
+	@make note
+
+all: pdf thesis
 	echo $(pdfs)
 	echo $?
 

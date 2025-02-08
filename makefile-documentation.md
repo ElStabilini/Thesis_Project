@@ -59,7 +59,7 @@ jpg: $(jpgs)
 ```
 Convenience targets for generating all files of a specific type.
 
-### Main Document Compilation
+### Document Compilation
 ```makefile
 note: $(tex_files)
 	@if [ -z "$(pdfs)" ]; then echo "No figures to process."; fi
@@ -75,6 +75,20 @@ Handles the full LaTeX compilation process, including:
 3. Initial LaTeX pass
 4. Bibliography processing with BibTeX
 5. Additional LaTeX passes for reference resolution
+
+## Thesis-Specific Targets
+```makefile
+thesis: 
+	@make CHAPTER=
+
+chapter:
+	@if [ -z "$(CHAPTER)" ]; then echo "Error: Specify CHAPTER=name (without .tex)"; exit 1; fi
+	@echo "Compiling chapter: $(CHAPTER).tex"
+	@make note
+```
+Special targets for thesis management:
+- `thesis`: Compiles the complete thesis
+- `chapter`: Compiles a single chapter when specified
 
 ### Default Target
 ```makefile
