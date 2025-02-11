@@ -30,6 +30,9 @@
 \usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{comment}
+\usepackage{letltxmacro}
+
+
 
 \usepackage[sectionbib]{natbib}
 \usepackage{chapterbib}
@@ -38,7 +41,8 @@
 \renewcommand{\chaptermark}[1]{%
 \markboth{\thechapter.\ #1}{}}
 
-
+\LetLtxMacro{\oldref}{\ref}
+\renewcommand{\ref}[1]{(\oldref{#1})}
 \newcommand{\llq}{\lq\lq}
 \newcommand{\intf}{\int_{-\infty}^{+\infty}}
 \newcommand{\nota}[1]{\marginpar[\raggedleft#1]{#1}}
