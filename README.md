@@ -11,7 +11,6 @@ Thesis_Project/
 │── README.md             # Explanation of your project
 │── bibliography.bib      # References file
 │── figures/              # Folder for images/graphs
-│   ├── eps/              # EPS format images
 │   ├── pdf/              # PDF format images (auto-generated)
 │   ├── png/              # PNG format images (auto-generated)
 │── chapters/             # Individual chapter files (optional)
