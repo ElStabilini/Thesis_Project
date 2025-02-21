@@ -51,9 +51,6 @@
 \newcommand{\nota}[1]{\marginpar[\raggedleft#1]{#1}}
 \newcommand{\hatvb}[1]{\hat{\vb #1}}
 
-\theoremstyle{definition}
-\newtheorem*{definition}{Definizione}
-
 \newtheorem{theorem}{Teorema}[section]
 \newtheorem{corollary}{Corollario}[theorem]
 \newtheorem{Lemma}[theorem]{Lemma}
@@ -62,66 +59,18 @@
 \AtBeginEnvironment{algorithm}{\let\textnormal\ttfamily}
 
 
-
+\title{Experiments on sueprconducting qubits}
+\author{Elisa Stabilini}
+\date{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                       BEGIN DOCUMENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
+\input{cover.tex}
 
-\frontmatter
-{
-\thispagestyle{empty}
-
-\centerline{
-\includegraphics[width=120mm,angle=0,clip=]{figures/png/front.png}
-}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%FRONTESPIZIO
-
-\begin{center}
-{\Large  Master degree in Physics }
-\end{center}
-
-
-\vskip1.5cm
-\begin{center}
-{\fontsize{15}{20}\selectfont \textbf{Title\\}}
-\end{center}
-
-
-{\large
-\vskip 20mm Supervisor:
-\vskip 0.2mm \large  \textbf{Prof. Dr. Stefano Carrazza}
-\vskip 5mm
-\large Co-supervisor:
-\vskip 0.2mm
-\large \textbf{Dr Alessandro Candido}
-\vskip 5mm
-\large Co-supervisor:
-\vskip 0.2mm
-\large \textbf{Dr Andrea Pasquale}
-\vskip 5mm
-\large Co-supervisor:
-\vskip 0.2mm
-\large \textbf{Dott Edoardo Pedicillo}
-}
-}
-
-\vskip 2cm
-\noindent
-\hfill
-\parbox[t]{7cm}{
-    \large
-    \raggedright
-    \textbf{Elisa Stabilini} \\
-    Matricola n$^\circ$ $28326\mathrm{A}$ \\
-    A.A. 2024/2025
-}  
 \clearpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEDICATION 
@@ -134,8 +83,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %THESIS WORK
 \chapter*{Summary}
-\chapter{Results}
-\input{Results}
+%\chapter{Results}
+%\input{Results}
 %\input{Conlusions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
