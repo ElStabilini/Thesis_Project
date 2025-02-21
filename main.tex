@@ -8,6 +8,7 @@
 \usepackage{textgreek}
 \usepackage{float}
 \usepackage{xparse}
+\usepackage{fix-cm}
 \usepackage{import}
 \pgfplotsset{compat=1.17}
 \usepackage{mathtools}
@@ -15,7 +16,7 @@
 \usepackage{multicol}
 \usepackage{hyperref}
 \usepackage{geometry}
-	\geometry{a4paper, top=4 cm, bottom=4 cm, left=4.5 cm, right=4 cm, heightrounded, bindingoffset=0 cm}
+	\geometry{a4paper, top=2.5 cm, bottom=2.5 cm, left=2.5 cm, right=2.5 cm, heightrounded, bindingoffset=0 cm}
 \usepackage{tikz}
 \usepackage{caption}
 \usepackage{algpseudocode}
@@ -66,11 +67,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                       BEGIN DOCUMENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\frontmatter
+{
+\thispagestyle{empty}
+
 \centerline{
 \includegraphics[width=120mm,angle=0,clip=]{figures/png/front.png}
 }
 
-\begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %FRONTESPIZIO
@@ -90,23 +96,30 @@
 \vskip 20mm Supervisor:
 \vskip 0.2mm \large  \textbf{Prof. Dr. Stefano Carrazza}
 \vskip 5mm
-\large Co-supervisors:
+\large Co-supervisor:
 \vskip 0.2mm
-\large \textbf{Dr. Alessandro Candido}
+\large \textbf{Dr Alessandro Candido}
+\vskip 5mm
+\large Co-supervisor:
 \vskip 0.2mm
-\large \textbf{Dr. Andrea Pasquale}
+\large \textbf{Dr Andrea Pasquale}
+\vskip 5mm
+\large Co-supervisor:
 \vskip 0.2mm
-\large \textbf{Dott. Edoardo Pedicillo}
+\large \textbf{Dott Edoardo Pedicillo}
 }
-
+}
 
 \vskip 2cm
-\hskip 9cm\parbox[t]{7cm}
-{\large 
-\textbf{Elisa Stabilini}\\
-Matricola n$^\circ$ $28326A$\\
-A.A. $2024$/$2025$\\      
-}
+\noindent
+\hfill
+\parbox[t]{7cm}{
+    \large
+    \raggedright
+    \textbf{Elisa Stabilini} \\
+    Matricola n$^\circ$ $28326\mathrm{A}$ \\
+    A.A. 2024/2025
+}  
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
