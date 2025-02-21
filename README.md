@@ -7,7 +7,9 @@ The repository is organized as follows
 ```
 Thesis_Project/
 │── main.tex              # Your main LaTeX file
-│── Makefile              # The Makefile (used for automation)
+│── makefile              # The Makefile (used for automation)
+├── makefile-documentation.md
+├── myplot.mplstyle
 │── README.md             # Explanation of your project
 │── bibliography.bib      # References file
 │── figures/              # Folder for images/graphs
@@ -19,5 +21,5 @@ Thesis_Project/
 │   ├── results.tex
 │── tmp/                  # Temporary files (ignored by Git)
 │── .gitignore            # Ignore temporary LaTeX files
-└── thesis.pdf            # The compiled thesis (output)
+└── main.pdf              # The compiled thesis (output)
 ```
