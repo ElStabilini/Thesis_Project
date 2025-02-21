@@ -1,54 +1,49 @@
-#------------------------------------------------------------------------------
-# Primary source: .eps
-# The script converts .eps files into .png and.pdf
-#------------------------------------------------------------------------------
-
+# Default directory
 dir=.
 
+# Define the main document or chapter to compile
 note := $(if $(CHAPTER),chapters/$(CHAPTER),main)
 
-tex_files := $(note).tex $(wildcard *.tex) 
+# Collect all tex files
+tex_files := $(note).tex $(wildcard chapters/*.tex) cover.tex
 
-pdfs := $(patsubst figures/eps/%.eps, figures/pdf/%.pdf, $(wildcard figures/eps/*.eps)) \
-        $(patsubst figures/png/%.png, figures/pdf/%.pdf, $(wildcard figures/png/*.png))
+# Only handle PNG images as final format
 pngs := $(patsubst figures/eps/%.eps, figures/png/%.png, $(wildcard figures/eps/*.eps)) \
         $(wildcard figures/png/*.png)
-jpgs := $(patsubst figures/eps/%.eps, figures/jpg/%.jpg, $(wildcard figures/eps/*.eps ))
 
-figures/pdf/%.pdf: figures/png/%.png
-	convert $? $@
+# Make sure output directories exist
+$(shell mkdir -p figures/png tmp)
 
-figures/pdf/%.pdf: figures/eps/%.eps
-	ps2pdf -dEPSCrop $? $@
+# Convert images to PNG format
+png: $(pngs)
 
-figures/png/%.png: figures/eps/%.eps
-	convert -density 400 -depth 8 -quality 85 -trim $? $@
+# Compile the document
+note: $(tex_files) png
+	pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex
+	if [ -f tmp/$(note).aux ] && [ -f bibliography.bib ]; then \
+		bibtex tmp/$(note); \
+		pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex; \
+	fi
+	pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex
+	cp tmp/$(note).pdf .
 
-pdf: 
-	@if [ -z "$(pdfs)" ]; then echo "No figures found. Skipping figure conversion."; else make $(pdfs); fi
-png: $(pngs) 
-jpg: $(jpgs) 
-
-note: $(tex_files)
-	@if [ -z "$(pdfs)" ]; then echo "No figures to process."; fi
-	if [ ! -d tmp ] ; then mkdir tmp ; fi ; \
-	pdflatex -output-directory=tmp $(note).tex ; \
-	if [ -f tmp/$(note).aux ]; then bibtex tmp/$(note); fi ; \
-	pdflatex -output-directory=tmp $(note).tex ; \
-	pdflatex -output-directory=tmp $(note).tex
-
-# Compile full thesis
-thesis: 
-	@make CHAPTER=
+# Main target - avoids recursive calls
+all: note
 
 # Compile a single chapter
 chapter:
-	@if [ -z "$(CHAPTER)" ]; then echo "Error: Specify CHAPTER=name (without .tex)"; exit 1; fi
+	@if [ -z "$(CHAPTER)" ]; then \
+		echo "Error: Specify CHAPTER=name (without .tex)"; \
+		exit 1; \
+	fi
 	@echo "Compiling chapter: $(CHAPTER).tex"
-	@make note
+	@$(MAKE) note
 
-all: pdf thesis
-	echo $(pdfs)
-	echo $?
+# Clean generated files
+clean:
+	rm -rf tmp/*
+	rm -f *.pdf
+	rm -f figures/png/*.png
+	rm -f *.log *.aux *.bbl *.blg *.out *.toc *.lof *.lot
 
-.DEFAULT_GOAL := all
+.PHONY: all png note chapter clean

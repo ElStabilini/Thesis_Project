@@ -29,7 +29,6 @@
 \usepackage[sectionbib]{natbib}
 \usepackage{chapterbib}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %manage header style
 \usepackage{fancyhdr}
 
@@ -40,7 +39,6 @@
 
 \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}} % Format chapter name
 \renewcommand{\sectionmark}[1]{\markright{#1}} % Format section name
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Have properly formatted references
 \LetLtxMacro{\oldref}{\ref}
@@ -63,33 +61,26 @@
 \author{Elisa Stabilini}
 \date{}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                       BEGIN DOCUMENT
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%BEGIN DOCUMENT
+
 \begin{document}
 \input{cover.tex}
 
 \clearpage
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DEDICATION 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \tableofcontents
 \clearpage
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %THESIS WORK
 \chapter*{Summary}
-%\chapter{Results}
-%\input{Results}
+\chapter{Results}
+\input{chapters/Results.tex}
 %\input{Conlusions}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %ACKNOWLEDGEMENT
 \chapter*{Acknowledgement}
 
