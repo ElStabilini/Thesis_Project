@@ -1,21 +1,14 @@
 \documentclass{book}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{array}
-\usepackage{graphicx}
 \usepackage{pgfplots}
-\usepackage{tikz}
-\usepackage{hyperref}
 \usepackage{physics}
-\usepackage{mathtools}
 \usepackage{textgreek}
 \usepackage{float}
+\usepackage{xparse}
 \usepackage{fix-cm}
-%\usepackage{marginnote}
-%\usepackage{theorem}
-\usepackage{amsthm,marginnote,xparse}
 \usepackage{import}
 \pgfplotsset{compat=1.17}
 \usepackage{mathtools}
@@ -26,24 +19,33 @@
 	\geometry{a4paper, top=2.5 cm, bottom=2.5 cm, left=2.5 cm, right=2.5 cm, heightrounded, bindingoffset=0 cm}
 \usepackage{tikz}
 \usepackage{caption}
-\usepackage{fancyhdr}
 \usepackage{algpseudocode}
 \usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{comment}
 \usepackage{letltxmacro}
 
-
-
+%manage byogrpahy
 \usepackage[sectionbib]{natbib}
 \usepackage{chapterbib}
 
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{%
-\markboth{\thechapter.\ #1}{}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%manage header style
+\usepackage{fancyhdr}
 
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\nouppercase{\rightmark}} 
+\fancyhead[LO,RE]{\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}} % Format chapter name
+\renewcommand{\sectionmark}[1]{\markright{#1}} % Format section name
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Have properly formatted references
 \LetLtxMacro{\oldref}{\ref}
 \renewcommand{\ref}[1]{(\oldref{#1})}
+
 \newcommand{\llq}{\lq\lq}
 \newcommand{\intf}{\int_{-\infty}^{+\infty}}
 \newcommand{\nota}[1]{\marginpar[\raggedleft#1]{#1}}
@@ -132,7 +134,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %THESIS WORK
 \chapter*{Summary}
-%\input{}
+\chapter{Results}
+\input{Results}
+%\input{Conlusions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
