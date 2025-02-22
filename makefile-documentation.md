@@ -1,136 +1,96 @@
-# Makefile for LaTeX Document Compilation structure
+# LaTeX Makefile Documentation
 
 ## Overview
+This Makefile automates the compilation process of LaTeX documents, handling both complete documents and individual chapters. It manages PNG images and coordinates the compilation of bibliography when needed.
 
-This Makefile handles:
-- LaTeX document compilation with bibliography processing
-- Automatic conversion of figures between different formats (EPS, PDF, PNG, JPG)
-- Directory management and temporary file handling
+## Prerequisites
+- A LaTeX distribution (e.g., TeX Live, MiKTeX)
+- `pdflatex` command-line tool
+- `bibtex` for bibliography processing
 
-## Structure and Components
-
-### Directory Configuration
-```makefile
-dir := .
+## Directory Structure
 ```
-The current directory is assigned to the `dir` variable using immediate evaluation (`:=`).
-
-### Base Name Configuration
-```makefile
-note := main
+.
+├── main.tex           # Main LaTeX document
+├── chapters/          # Directory containing chapter files
+├── figures/
+│   └── png/          # PNG images
+├── tmp/              # Temporary build files
+├── bibliography.bib  # Bibliography file (optional)
+└── cover.tex         # Cover page template
 ```
-Defines the main LaTeX file name (without extension) that will be compiled.
 
-### File Discovery
-```makefile
-tex_files := $(note).tex $(wildcard *.tex)
+## Variables
+- `dir`: Default working directory (set to current directory)
+- `note`: Main document to compile (either `main.tex` or a specific chapter)
+- `tex_files`: All TeX files needed for compilation
+- `pngs`: List of PNG image files in the figures/png directory
+
+## Main Targets
+
+### `all` (Default)
+```bash
+make
+# or
+make all
 ```
-Uses GNU Make's `wildcard` function to find all `.tex` files in the directory.
+Compiles the complete document by calling the `note` target.
 
-### Figure Conversion Setup
-```makefile
-pdfs := $(patsubst figures/eps/%.eps, figures/pdf/%.pdf, $(wildcard figures/eps/*.eps)) \
-        $(patsubst figures/png/%.png, figures/pdf/%.pdf, $(wildcard figures/png/*.png))
-pngs := $(patsubst figures/eps/%.eps, figures/png/%.png, $(wildcard figures/eps/*.eps)) \
-        $(wildcard figures/png/*.png)  
-jpgs := $(patsubst figures/eps/%.eps, figures/jpg/%.jpg, $(wildcard figures/eps/*.eps))
+### `note`
+```bash
+make note
 ```
-Sets up pattern substitution for converting between different image formats.
+Primary compilation target that:
+1. Ensures PNG images are available
+2. Runs pdflatex for initial compilation
+3. Processes bibliography if present
+4. Runs additional pdflatex passes for references
+5. Copies the final PDF to the root directory
 
-### Figure Conversion Rules
-```makefile
-figures/pdf/%.pdf: figures/png/%.png
-	convert $? $@
-
-figures/pdf/%.pdf: figures/eps/%.eps
-	ps2pdf -dEPSCrop $? $@
-
-figures/png/%.png: figures/eps/%.eps
-	convert -density 400 -depth 8 -quality 85 -trim $? $@
+### `chapter`
+```bash
+make chapter CHAPTER=chapter_name
 ```
-Defines rules for converting between different image formats using ImageMagick and ps2pdf.
+Compiles a single chapter from the `chapters/` directory.
+- `CHAPTER` parameter should be specified without the `.tex` extension
+- Outputs the compiled chapter as a standalone PDF
 
-### Phony Targets
-```makefile
-pdf: 
-	@if [ -z "$(pdfs)" ]; then echo "No figures found. Skipping figure conversion."; else make $(pdfs); fi
-png: $(pngs) 
-jpg: $(jpgs) 
+### `png`
+```bash
+make png
 ```
-Convenience targets for generating all files of a specific type.
+Ensures PNG images are available in `figures/png/`.
 
-### Document Compilation
-```makefile
-note: $(tex_files)
-	@if [ -z "$(pdfs)" ]; then echo "No figures to process."; fi
-	if [ ! -d tmp ] ; then mkdir tmp ; fi ; \
-	pdflatex -output-directory=tmp $(note).tex ; \
-	if [ -f tmp/$(note).aux ]; then bibtex tmp/$(note); fi ; \
-	pdflatex -output-directory=tmp $(note).tex ; \
-	pdflatex -output-directory=tmp $(note).tex
+### `clean`
+```bash
+make clean
 ```
-Handles the full LaTeX compilation process, including:
-1. Figure processing check
-2. Temporary directory creation
-3. Initial LaTeX pass
-4. Bibliography processing with BibTeX
-5. Additional LaTeX passes for reference resolution
+Removes all generated files:
+- Temporary build files in `tmp/`
+- Generated PDFs
+- PNG images in figures/png
+- LaTeX auxiliary files (`.aux`, `.log`, etc.)
 
-## Thesis-Specific Targets
-```makefile
-thesis: 
-	@make CHAPTER=
+## Example Usage
 
-chapter:
-	@if [ -z "$(CHAPTER)" ]; then echo "Error: Specify CHAPTER=name (without .tex)"; exit 1; fi
-	@echo "Compiling chapter: $(CHAPTER).tex"
-	@make note
+1. Compile full document:
+```bash
+make
 ```
-Special targets for thesis management:
-- `thesis`: Compiles the complete thesis
-- `chapter`: Compiles a single chapter when specified
 
-### Default Target
-```makefile
-all: pdf note
-	echo $(pdfs)
-	echo $?
-
-.DEFAULT_GOAL := all
+2. Compile specific chapter:
+```bash
+make chapter CHAPTER=introduction
 ```
-Ensures all PDFs are generated before compiling the document.
 
-## Special Variables and Symbols
+3. Clean all generated files:
+```bash
+make clean
+```
 
-| Symbol | Description |
-|--------|-------------|
-| `:=` | Immediate variable assignment |
-| `$@` | The target file |
-| `$?` | Dependencies newer than the target |
-| `$<` | The first dependency |
-| `%` | Wildcard in pattern rules |
-| `@` | Prevents command from being printed |
-| `-z` | Shell test for empty string |
-| `\` | Line continuation character |
-
-## Usage
-
-1. Place your LaTeX main file (default: `main.tex`) in the same directory as the Makefile
-2. Organize your figures in the appropriate directories:
-   - `figures/eps/` for EPS files
-   - `figures/png/` for PNG files
-   - `figures/pdf/` for PDF files
-   - `figures/jpg/` for JPG files
-3. Run one of the following commands:
-   - `make` or `make all` to compile everything
-   - `make pdf` to convert figures to PDF
-   - `make png` to convert figures to PNG
-   - `make jpg` to convert figures to JPG
-   - `make note` to compile the LaTeX document only
-
-## Requirements
-
-- LaTeX distribution (e.g., TexLive, MikTeX)
-- ImageMagick for image conversion
-- Ghostscript (for ps2pdf)
-- Make utility
+## Notes
+- The Makefile automatically creates necessary directories (`figures/png/` and `tmp/`)
+- Bibliography compilation is optional and only runs if `bibliography.bib` exists
+- The compilation process uses batch mode with error checking
+- Final PDFs are copied to the root directory for easy access
+- Unlike the previous version, this Makefile does not handle EPS to PNG conversion

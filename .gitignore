@@ -12,3 +12,6 @@ auto
 __pycache__/
 *.py[cod]
 *$py.class
+
+#ignore temporary folder
+tmp/

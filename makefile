@@ -8,8 +8,7 @@ note := $(if $(CHAPTER),chapters/$(CHAPTER),main)
 tex_files := $(note).tex $(wildcard chapters/*.tex) cover.tex
 
 # Only handle PNG images as final format
-pngs := $(patsubst figures/eps/%.eps, figures/png/%.png, $(wildcard figures/eps/*.eps)) \
-        $(wildcard figures/png/*.png)
+pngs := $(wildcard figures/png/*.png)
 
 # Make sure output directories exist
 $(shell mkdir -p figures/png tmp)
