@@ -67,7 +67,7 @@
 
 %BEGIN DOCUMENT
 \begin{document}
-
+\frontmatter
 \input{cover.tex}
 
 \clearpage
@@ -77,15 +77,28 @@
 \tableofcontents
 \clearpage
 
+
 %THESIS WORK
 \chapter*{Summary}
+
+\mainmatter
+\chapter{Quantum computing}
+\chapter{Qibo}
 \chapter{Results}
 \input{chapters/Results.tex}
+\chapter{Conclusions}
 %\input{Conlusions}
 
 
 
+
+\backmatter
+%BIBLIOGRAPHY
+\bibliographystyle{apsrev4-2}
+%\printbibliography
+
+
 %ACKNOWLEDGEMENT
 \chapter*{Acknowledgement}
-
+\input{chapters/Acknowledgement}
 \end{document}
