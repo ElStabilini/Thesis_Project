@@ -49,6 +49,10 @@
 \newcommand{\nota}[1]{\marginpar[\raggedleft#1]{#1}}
 \newcommand{\hatvb}[1]{\hat{\vb #1}}
 
+%code-like text as in markdown
+\LetLtxMacro{\oldtt}{\texttt}
+\renewcommand{\tt}[1]{\oldtt{#1}}
+
 \newtheorem{theorem}{Teorema}[section]
 \newtheorem{corollary}{Corollario}[theorem]
 \newtheorem{Lemma}[theorem]{Lemma}
