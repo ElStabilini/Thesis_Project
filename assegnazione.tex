@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+
+
+\title{Calibration of superconducting qubits using \tt{Qibocal}}
+\author{Elisa Stabilini}
+\date{January 2024}
+
+\begin{document}
+One of the main challenges in gate-based quantum computing is achieving high-fidelity qubits for both single-qubit and two-qubit gate operations. In superconducting qubit platforms, maintaining high fidelity is crucial for accurately executing quantum circuits and enabling scalable, fault-tolerant quantum computing. To achieve this, qubits must exhibit sufficiently long coherence times to support multiple gate operations, while the implemented quantum gates must minimize errors as much as possible.
+
+The primary objective of this work is to develop and integrate advanced calibration routines into the \texttt{Qibocal} library to enhance the fidelity of both single-qubit and two-qubit gates. The first step involves refining an existing calibration process to further improve qubit fidelity. Instead of starting from an arbitrary configuration, the approach builds upon an already acceptable calibration obtained through the pre-existing routines in the library and seeks to optimize it further.
+
+This is achieved by optimizing specific figures of merit for quantum circuits, with the infidelity measured through randomized benchmarking serving as the loss function. Enhancing the performance of randomized benchmarking requires fine-tuning the physical parameters that define native gates—these are the fundamental gate operations from which all other quantum operations are constructed.
+
+In superconducting qubit systems, gate operations are realized through the application of precisely shaped electromagnetic pulses. Consequently, key tunable parameters for gate optimization include pulse amplitude and frequency. The optimization process involves defining an appropriate parameter space and selecting suitable optimization techniques, such as gradient-based methods or genetic algorithms, to systematically improve gate fidelity.
+
+Once the fine-tuning phase is complete, the focus shifts to addressing calibration issues by implementing targeted routines to mitigate specific sources of error. In particular, for superconducting flux-tunable qubits, distortions in the applied flux pulses—arising from imperfections in the transmission lines both inside and outside the cryostat—can lead to deviations from the intended control signals. To compensate for these distortions, predistortion techniques can be employed, precompensating for transmission artifacts and ensuring that the applied pulses more accurately correspond to the desired gate operations.
+
+This work contributes to the broader goal of improving quantum gate fidelities and enhancing the reliability of superconducting qubit platforms, ultimately advancing the scalability and feasibility of quantum computing.
+\end{document}
