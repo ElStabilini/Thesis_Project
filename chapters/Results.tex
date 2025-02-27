@@ -1,14 +1,24 @@
+Tutti i risultati che sono presentati nel seguito sono stati ottenuti utilizzando il software di \Qibolab per l'interazione con gli strumenti del laboratorio e \Qibocal per il controllo delle operazioni sui qubit.
+L'hardware è un chip ... di QunatumWare.
+Durante il lavoro condotto per questo progetto di tesi entrambe le libereria, sia Qibocal che Qibolab undergo update and release, for this reason the first part of this work was realized using \Qibocal v0.1 and \Qibolab v0.1 while the second part of the work, 
+dato che puntava anche allo sviluppo di routine ch epotessero essere utili per la calibrazione dei qubit è stato realizzato direttamente con \Qibocal v0.2 e \Qibolab v0.2. 
+
 \section{RB fidelity optimization}
 
-\subsection{Randomized Benchmarking}
+\subsection{Randomized Benchmarking}\label{RBsection}
+A strong limitation to the realization of quantum computing technologies is the loss of coherence that happens as a consequence of the application of many sequential quantum gates to to the quibts.
+Indeed, a grate challenge faced by quantum computing eexperiments is to physicallly realize gates with low errors whenerver and wherevere applied, currently ... inserire qual è un valore ACCETTABILE.
+A possible approach to \textit{gate error charachterization} is the process tomography which allows the experimenter to establish the behaviour of a quantum gates. 
+The main drawback of this approach is that process tomography can be very time consumig since its time complexity scales exponentially with the number of qubits involved \cite{QPTomography}
+
 Randomized benchmarking (RB) is technique used to characterize the performance of quantum gates measuring their avarage error rates.
 RB was firstly introduced in 2005 \cite{Emerson_2005_RB}, the key idea 
 
-\textbf{disclaimer}: this first study was performed using \tt{qibocal v0.1} the code currently uploaded on thi GitHub repository is instead compatible with \tt{qibocal v0.2}
-Main idea: improve fidelity (which one?) fine tuning the calibration
 
 \subsubsection{Randomized Benchmarking}
-For the results we present in the following the technique used slightly differ from the 
+For the results we present in the following the technique used slightly differs from the one described in section \ref{RBsection}, %dato che il tempo richiesto per eseguire una standard RB è dell'ordine di ..
+%in qibocal è stata imolementata una variante che si basa sull'implementazione di QUA
+
 \paragraph{Randomized Benchmarking on \tt{qua}} %la verisone di Stavros più veloce
 
 \subsection{Optimization methods}

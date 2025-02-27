@@ -44,6 +44,9 @@
 \LetLtxMacro{\oldref}{\ref}
 \renewcommand{\ref}[1]{(\oldref{#1})}
 
+\newcommand{\Qibocal}{\texttt{Qibocal}}
+\newcommand{\Qibo}{\texttt{Qibo}}
+\newcommand{\Qibolab}{\texttt{Qibolab}}
 \newcommand{\llq}{\lq\lq}
 \newcommand{\intf}{\int_{-\infty}^{+\infty}}
 \newcommand{\nota}[1]{\marginpar[\raggedleft#1]{#1}}
@@ -85,7 +88,7 @@
 \chapter{Quantum computing}
 \chapter{Qibo}
 \chapter{Results}
-\input{chapters/Results.tex}
+%\input{chapters/Results.tex}
 \chapter{Conclusions}
 %\input{Conlusions}
 
@@ -94,9 +97,8 @@
 
 \backmatter
 %BIBLIOGRAPHY
-\bibliographystyle{apsrev4-2}
-%\printbibliography
-
+%\bibliographystyle{apsrev4-2}
+\bibliography{bibliography}
 
 %ACKNOWLEDGEMENT
 \chapter*{Acknowledgement}

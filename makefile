@@ -20,7 +20,7 @@ png: $(pngs)
 note: $(tex_files) png
 	pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex
 	if [ -f tmp/$(note).aux ] && [ -f bibliography.bib ]; then \
-		bibtex tmp/$(note); \
+		BIBINPUTS=.:tmp bibtex tmp/$(note); \
 		pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex; \
 	fi
 	pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex
