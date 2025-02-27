@@ -26,8 +26,8 @@
 \usepackage{letltxmacro}
 
 %manage byogrpahy
-\usepackage[sectionbib]{natbib}
-\usepackage{chapterbib}
+\usepackage[style=phys, backend=biber]{biblatex}
+\addbibresource{bibliography.bib}
 
 %manage header style
 \usepackage{fancyhdr}
@@ -97,8 +97,7 @@
 
 \backmatter
 %BIBLIOGRAPHY
-%\bibliographystyle{apsrev4-2}
-\bibliography{bibliography}
+\printbibliography
 
 %ACKNOWLEDGEMENT
 \chapter*{Acknowledgement}
