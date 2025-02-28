@@ -9,7 +9,7 @@ tex_files := $(note).tex $(wildcard chapters/*.tex) cover.tex
 
 # Compile the document
 note: $(tex_files) png
-	pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex
+	pdflatex -halt-on-error -file-line-error -output-directory=tmp $(note).tex
 	if [ -f tmp/$(note).bcf ] && [ -f bibliography.bib ]; then \
 		biber --output-directory=tmp tmp/$(note); \
 		pdflatex -interaction=batchmode -halt-on-error -file-line-error -output-directory=tmp $(note).tex; \
