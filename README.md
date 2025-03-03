@@ -6,20 +6,21 @@ The repository is organized as follows
 
 ```
 Thesis_Project/
-│── main.tex              # Your main LaTeX file
-│── makefile              # The Makefile (used for automation)
+├── assegnazione.tex
+│── main.tex              
+│── makefile              
 ├── makefile-documentation.md
 ├── myplot.mplstyle
-│── README.md             # Explanation of your project
-│── bibliography.bib      # References file
-│── figures/              # Folder for images/graphs
-│   ├── pdf/              # PDF format images (auto-generated)
-│   ├── png/              # PNG format images (auto-generated)
-│── chapters/             # Individual chapter files (optional)
-│   ├── intro.tex
-│   ├── methods.tex
-│   ├── results.tex
-│── tmp/                  # Temporary files (ignored by Git)
-│── .gitignore            # Ignore temporary LaTeX files
-└── main.pdf              # The compiled thesis (output)
+│── README.md             
+│── bibliography.bib      
+│── figures/              
+│   ├── pdf/              
+│   ├── png/              
+│── chapters/             
+│   ├── Introduction.tex
+│   ├── Results.tex
+│   ├── Acknowledgement.tex
+│── tmp/                  
+│── .gitignore            
+└── main.pdf             
 ```
