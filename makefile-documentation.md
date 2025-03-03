@@ -1,30 +1,18 @@
-# LaTeX Makefile Documentation
+# LaTeX Document Compilation Makefile
 
 ## Overview
-This Makefile automates the compilation process of LaTeX documents, handling both complete documents and individual chapters. It manages PNG images and coordinates the compilation of bibliography when needed.
+This Makefile automates the compilation process of LaTeX documents, handling both complete documents and individual chapters. It manages the compilation workflow and coordinates bibliography processing when needed.
 
 ## Prerequisites
 - A LaTeX distribution (e.g., TeX Live, MiKTeX)
 - `pdflatex` command-line tool
-- `bibtex` for bibliography processing
-
-## Directory Structure
-```
-.
-├── main.tex           # Main LaTeX document
-├── chapters/          # Directory containing chapter files
-├── figures/
-│   └── png/          # PNG images
-├── tmp/              # Temporary build files
-├── bibliography.bib  # Bibliography file (optional)
-└── cover.tex         # Cover page template
-```
+- `biber` for bibliography processing
+- Basic Unix tools (`cp`, `rm`, etc.)
 
 ## Variables
 - `dir`: Default working directory (set to current directory)
 - `note`: Main document to compile (either `main.tex` or a specific chapter)
-- `tex_files`: All TeX files needed for compilation
-- `pngs`: List of PNG image files in the figures/png directory
+- `tex_files`: All TeX files needed for compilation, including main document, chapters, and cover
 
 ## Main Targets
 
@@ -41,11 +29,10 @@ Compiles the complete document by calling the `note` target.
 make note
 ```
 Primary compilation target that:
-1. Ensures PNG images are available
-2. Runs pdflatex for initial compilation
-3. Processes bibliography if present
-4. Runs additional pdflatex passes for references
-5. Copies the final PDF to the root directory
+1. Runs pdflatex for initial compilation
+2. Processes bibliography with biber if present
+3. Runs additional pdflatex passes for references
+4. Copies the final PDF to the root directory
 
 ### `chapter`
 ```bash
@@ -55,12 +42,6 @@ Compiles a single chapter from the `chapters/` directory.
 - `CHAPTER` parameter should be specified without the `.tex` extension
 - Outputs the compiled chapter as a standalone PDF
 
-### `png`
-```bash
-make png
-```
-Ensures PNG images are available in `figures/png/`.
-
 ### `clean`
 ```bash
 make clean
@@ -68,8 +49,7 @@ make clean
 Removes all generated files:
 - Temporary build files in `tmp/`
 - Generated PDFs
-- PNG images in figures/png
-- LaTeX auxiliary files (`.aux`, `.log`, etc.)
+- LaTeX auxiliary files (`.aux`, `.log`, `.bbl`, etc.)
 
 ## Example Usage
 
@@ -89,8 +69,7 @@ make clean
 ```
 
 ## Notes
-- The Makefile automatically creates necessary directories (`figures/png/` and `tmp/`)
+- The Makefile uses a `tmp/` directory for temporary build files
 - Bibliography compilation is optional and only runs if `bibliography.bib` exists
-- The compilation process uses batch mode with error checking
+- The compilation process uses batch mode with error checking for subsequent passes
 - Final PDFs are copied to the root directory for easy access
-- Unlike the previous version, this Makefile does not handle EPS to PNG conversion
