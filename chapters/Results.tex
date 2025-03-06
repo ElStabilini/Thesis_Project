@@ -1,6 +1,6 @@
 Tutti i risultati che sono presentati nel seguito sono stati ottenuti utilizzando il software di \Qibolab per l'interazione con gli strumenti del laboratorio e \Qibocal per il controllo delle operazioni sui qubit.
-L'hardware è un chip ... di QunatumWare.
-Durante il lavoro condotto per questo progetto di tesi entrambe le libereria, sia Qibocal che Qibolab undergo update and release, for this reason the first part of this work was realized using \Qibocal v0.1 and \Qibolab v0.1 while the second part of the work, 
+L'hardware è un chip di QunatumWare. %chiedere dettagli sul chip
+Durante il lavoro condotto per questo progetto di tesi entrambe le libererie, sia Qibocal che Qibolab undergo update and release, for this reason the first part of this work was realized using \Qibocal v0.1 and \Qibolab v0.1 while the second part of the work, 
 dato che puntava anche allo sviluppo di routine ch epotessero essere utili per la calibrazione dei qubit è stato realizzato direttamente con \Qibocal v0.2 e \Qibolab v0.2. 
 
 \section{RB fidelity optimization}
@@ -10,62 +10,59 @@ A strong limitation to the realization of quantum computing technologies is the 
 A possible approach to characterize gate error is the quantum process tomography which allows the experimenter to establish the behaviour of a quantum gates; the main drawback of this approach is that process tomography can be very time consumig since its time complexity scales exponentially with the number of qubits involved \cite{QPTomography} and the result is affected by state preparation and measurements (SPAM) errors.
 
 To overcome these limitations, randomized benchmarking (RB) was introduced and is currently widely used to quantify the avarage error rate for a set of quantum gates.
+
 The main idea is that the error obtained from the combined action of random unitary gates drawn from a uniform distribution with respect to the Haar measure \cite{Mele_2024} and applied in sequence to the qubit will avarage out to behave like a depolarizing channel \cite{Emerson_2005_RB}.
 This last consideration simplifies the characterization of noise because it removes dependence on specific error structures and allows fidelity to be extracted through a simple exponential decay.
-It was later shown that simplifies this procedure by restricting the unitaries to gates in the Clifford group \footnote{unitary rotations mapping the group of Puali operators in itself} and by not requiring that the sequence is strictly self-inverting \cite{knill_randomized_2008}.
+
+It was later shown that it is possible to simplify this procedure even more, by restricting the unitaries to gates in the Clifford group \footnote{unitary rotations mapping the group of Puali operators in itself} and by not requiring that the sequence is strictly self-inverting \cite{knill_randomized_2008}.
 \begin{comment}
     The Haar measure is crucial because it provides a unique, invariant way of selecting random elements from a group (in this case, unitary gates) that ensures the randomness is truly uniform and unbiased across the group's structure.
 \end{comment}
 
 The fundamental principle of RB is the application of sequences of randomly selected quantum gates from the Clifford group $\mathcal{C}$ followed by an inversion gate which, in absence of noise, return the system to its initial state. 
 For real systems, where noise is present, the observed survival probability provides an estimate of the avarage gate fidelity.
+
+
 The standard RB protocols consist of the following steps:\begin{enumerate}\label{routine:RB}
     \item Initialize the system in ground state $\ket{0}$
     \item For each sequence-length $m$ build a sequence of $m$ randomly drawn Clifford gates $C_1, C_2, ..., C_m$
     \item Determine the inverse gate $C_{m+1}=(C_m\circ...\circ C_1)^{-1}$
     \item Measure $C_{m+1}\circ C_m \circ ...\circ C_1 \ket{0}$
 \end{enumerate}
-This process must be repeated for multiple sequence of the same length and with varying length.
+The process must be repeated for multiple sequence of the same length and with varying length.
 
-As mentioned before, randomization with Clifford gates behave as a depolarizing channel \ref{eq:depolarizing_channel} with depolarization probability $d$.
-We can compute the expectation value for the system to be in the initial state $\ket{0}$, after the application of the gate sequence described in \ref{routine:RB} as \begin{equation}
-    P(m) = Ae^{-m/\lambda} + B,
+In ideal systems without noise we should have 
+\begin{equation}\label{eq:CliffordIdeal}
+    C_{m+1}\circ C_m \circ ...\circ C_1 \ket{0} = (C_m\circ...\circ C_1)^{-1}\circ(C_m\circ...\circ C_1)\ket{0} = \ket{0}
 \end{equation}
-where $A$ and $B$ model the noise, $m$ is the sequence length (or equivalently the number of random Clifford gates applied before inversion) and $\lambda$ is related to the avarage gate fidelity.
+
+In realsystems, where noise is present, eq. \ref{eq:CliddordIdeal} does not hold; instead randomization with Clifford gates behave as a depolarizing channel \ref{eq:depolarizing_channel} with depolarization probability $d$.
+The survival probability of the initial state $\ket{0}$ for different sequence lengths follows the exponential decay model \begin{equation}
+    F(m) = Ap^m +B,
+\end{equation}
+where $1-p$ is the rate of depolarization and $A$ and $B$ capture the state preparation and measurement error. 
+Note that the exponential form arises naturally due to the assumption that each gate introduces independent noise.
+
 \begin{comment}
     The exponential form arises from modeling each gate application as an independent error process. When you compose multiple noisy gates, their error contributions multiply, leading naturally to an exponential decay.
 \end{comment}    
 
+The parameter $p$ is directly related to the depolarization probability $d$ through the avarage gate fidelity $F$ which, for a depolarizing channel, is given by \begin{equation}
+    F = 1 - \frac{d}{2^n - 1}\label{eq:avarage_gate_fidelity}.
+\end{equation}
+For the details of the calculations to obtain eq. \ref{eq:avarage_gate_fidelity} see \ref{Appendix:A}
 
-The avarage error per Clifford gate $\epsilon_{Clifford}$ is given by\begin{equation}
+Now we can derive the avarage error per Clifford gate $\epsilon_{Clifford}$ \begin{equation}
     \epsilon_{Clifford} = 1 - F \label{eq:avg_error_Clifford_gate},
 \end{equation}
-where $F$ is the avarage gate fidelity (correct?). Sobstituting in \ref{eq:avg_error_Clifford_gate} the formula for $F$ we obtain \begin{equation}
+where $F$ is the avarage gate fidelity. Sobstituting in \ref{eq:avg_error_Clifford_gate} the formula for the avarage gate fidelity \ref{eq:avarage_gate_fidelity} we obtain \begin{equation}
     \epsilon_{Clifford} = \frac{d}{2^n -1} = \frac{1-p}{1-2^{-n}},
 \end{equation}
 which shows how the avarage error per Clifford gate is directly connected to the exponential decay rate.
-\subsubsection{Randomized Benchmarking}
-For the results we present in the following the technique used slightly differs from the one described in section \ref{RBsection}, %dato che il tempo richiesto per eseguire una standard RB è dell'ordine di ..
-%in qibocal è stata imolementata una variante che si basa sull'implementazione di QUA
 
-\begin{comment}
-        SINGLE QUBIT RANDOMIZED BENCHMARKING (for gates >= 40ns)
-The program consists in playing random sequences of Clifford gates and measuring the state of the resonator afterwards.
-Each random sequence is derived on the FPGA for the maximum depth (specified as an input) and played for each depth
-asked by the user (the sequence is truncated to the desired depth). Each truncated sequence ends with the recovery gate,
-found at each step thanks to a preloaded lookup table (Cayley table), that will bring the qubit back to its ground state.
-
-If the readout has been calibrated and is good enough, then state discrimination can be applied to only return the state
-of the qubit. Otherwise, the 'I' and 'Q' quadratures are returned.
-Each sequence is played n_avg times for averaging. A second averaging is performed by playing different random sequences.
-
-The data is then post-processed to extract the single-qubit gate fidelity and error per gate
-.
-Prerequisites:
-    - Having found the resonance frequency of the resonator coupled to the qubit under study (resonator_spectroscopy).
-    - Having calibrated qubit pi pulse (x180) by running qubit, spectroscopy, rabi_chevron, power_rabi and updated the config.
-    - Having the qubit frequency perfectly calibrated (ramsey).
-    - (optional) Having calibrated the readout (readout_frequency, amplitude, duration_optimization IQ_blobs) for better SNR.
+\subsubsection{QUA Randomized Benchmarking}
+For the results we present in the following the technique used slightly differs from the one described in section \ref{RBsection} 
+%dato che il tempo richiesto per eseguire una standard RB è dell'ordine di .. la routine su cui sono stari relizzati gli esperimenti è una variante più rapida che è stata implementata sulla base di quanto rirportato in
 
 \end{comment}
 \subsection{Optimization methods}\label{Sec:OptimizationMethods}
@@ -79,96 +76,10 @@ Il primo metodo utilizzato è stato Nelder-Mead \cite{NelderMeads} dato che in l
 \cite{cmaessimplepractical}
 
 \section{RX90 calibration}
+Another possible source of error is ...
 
 \section{Flux pulse correction}
 \subsection{Notes on signal analysis}
-\begin{comment}
-    Let's assume we have:
-\begin{itemize}
-    \item An \textbf{IIR filter} with impulse response \( h_{\text{IIR}}(n) \).
-    \item An \textbf{FIR filter} with impulse response \( h_{\text{FIR}}(n) \).
-\end{itemize}
-
-The \textbf{IIR filter} is described by the difference equation:
-
-\begin{equation}
-    y(n) = \sum_{k=0}^{M} b_k x(n-k) - \sum_{j=1}^{N} a_j y(n-j)
-\end{equation}
-
-where:
-\begin{itemize}
-    \item \( x(n) \) is the input signal.
-    \item \( y(n) \) is the output signal.
-    \item \( \{b_k\} \) are the feedforward (numerator) coefficients.
-    \item \( \{a_j\} \) are the feedback (denominator) coefficients.
-\end{itemize}
-
-The \textbf{FIR filter} is a simpler convolutional system:
-
-\begin{equation}
-    y_{\text{FIR}}(n) = \sum_{m=0}^{P} c_m x(n-m)
-\end{equation}
-
-where \( \{c_m\} \) are the FIR coefficients.
-
-\section{Equivalent Filtering and Convolution}
-
-Now, suppose we cascade the IIR and FIR filters, meaning the output of the IIR filter becomes the input of the FIR filter.
-
-\begin{enumerate}
-    \item First, apply the \textbf{IIR filter}:
-    \begin{equation}
-        x_{\text{IIR}}(n) = h_{\text{IIR}}(n) * x(n)
-    \end{equation}
-
-    \item Then, apply the \textbf{FIR filter} to the IIR output:
-    \begin{equation}
-        y(n) = h_{\text{FIR}}(n) * x_{\text{IIR}}(n)
-    \end{equation}
-\end{enumerate}
-
-Using the \textbf{associativity property of convolution}, we can write:
-
-\begin{equation}
-    y(n) = h_{\text{FIR}}(n) * (h_{\text{IIR}}(n) * x(n))
-\end{equation}
-
-Rearranging:
-
-\begin{equation}
-    y(n) = (h_{\text{FIR}}(n) * h_{\text{IIR}}(n)) * x(n)
-\end{equation}
-
-where:
-
-\begin{equation}
-    h_{\text{total}}(n) = h_{\text{FIR}}(n) * h_{\text{IIR}}(n)
-\end{equation}
-
-This shows that convolving the impulse responses of the IIR and FIR filters produces a single \textbf{equivalent filter}.
-
-\section{Frequency-Domain Interpretation}
-
-In the frequency domain, convolution in the time domain corresponds to multiplication in the frequency domain:
-
-\begin{equation}
-    H_{\text{total}}(z) = H_{\text{FIR}}(z) H_{\text{IIR}}(z)
-\end{equation}
-
-This confirms that \textbf{combining them via convolution is mathematically correct}, as it creates a new filter with the desired frequency response.
-
-\section{Conclusion}
-
-Since convolution correctly combines linear time-invariant (LTI) systems, we conclude:
-
-\begin{itemize}
-    \item Convolution correctly merges the IIR and FIR filters into one.
-    \item The combined filter is mathematically valid and maintains the desired properties.
-    \item The resulting filter taps from \( h_{\text{total}}(n) \) can be used directly in hardware implementation.
-\end{itemize}
-
-Thus, applying \texttt{np.convolve(h\_IIR, h\_FIR)} correctly gives the \textbf{filter taps to implement in electronics}.
-\end{comment}
 
 
 \subsection{Cryoscope}
