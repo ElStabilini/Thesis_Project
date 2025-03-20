@@ -40,7 +40,7 @@ In realsystems, where noise is present, eq. \ref{eq:CliddordIdeal} does not hold
 The survival probability of the initial state $\ket{0}$ for different sequence lengths follows the exponential decay model \begin{equation}
     F(m) = Ap^m +B,
 \end{equation}
-where $1-p$ is the rate of depolarization and $A$ and $B$ capture the state preparation and measurement error. 
+where $1-p$ is the rate of depolarization and $A$ and $B$ capture the state preparation and measurement error but not the rate of decay $p$. 
 Note that the exponential form arises naturally due to the assumption that each gate introduces independent noise.
 
 \begin{comment}
@@ -50,7 +50,7 @@ Note that the exponential form arises naturally due to the assumption that each 
 The parameter $p$ is directly related to the depolarization probability $d$ through the avarage gate fidelity $F$ which, for a depolarizing channel, is given by \begin{equation}
     F = 1 - \frac{d}{2^n - 1}\label{eq:avarage_gate_fidelity}.
 \end{equation}
-For the details of the calculations to obtain eq. \ref{eq:avarage_gate_fidelity} see \ref{Appendix:A}
+For the details of the calculations to obtain eq. \ref{eq:avarage_gate_fidelity} see Appendix A (\ref{Appendix:A}).
 
 Now we can derive the avarage error per Clifford gate $\epsilon_{Clifford}$ \begin{equation}
     \epsilon_{Clifford} = 1 - F \label{eq:avg_error_Clifford_gate},
@@ -64,10 +64,39 @@ which shows how the avarage error per Clifford gate is directly connected to the
 For the results we present in the following the technique used slightly differs from the one described in section \ref{RBsection} 
 %dato che il tempo richiesto per eseguire una standard RB è dell'ordine di .. la routine su cui sono stari relizzati gli esperimenti è una variante più rapida che è stata implementata sulla base di quanto rirportato in
 
-\end{comment}
 \subsection{Optimization methods}\label{Sec:OptimizationMethods}
 I primi metodi che abbiamo provato per l'ottimizzazione dei parametri sono quelli standard implementati nella libreria \tt{Scipy} \cite{SciPy-NMeth} evitando metodi gradient-based considerato il landscape potenzialmente complicato della funzione RB.
-Il primo metodo utilizzato è stato Nelder-Mead \cite{NelderMeads} dato che in letteratura ara già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
+The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
+
+The Nelder-Mead or simplex method is a widely used numerical optimization technique for unconstrained problems in multidimensional spaces. 
+It was originally introduced by Nelder and Mead in 1965 \cite{NelderMeads}; this derivative-free method is particularly effective for minimizing non-differentiable, noisy functions where gradient-based methods struggle.
+
+
+The Nelder-Mead method operates using simplex, which is a polytope of $n+1$ vertices in a $n$-dimensional space.
+The algorithm iteratively updates the simplex by replacing its worst-performing vertex with a new candidate point, thereby guiding the search towards an optimal solution. 
+If the goal is to minimize a given function $f(\mathbf{x})$ where $\mathbf{x} \in \mathbb{R}^n$ the algorithms proceeds with the following steps:\begin{enumerate}
+    \item If not otherwise initialized, $n+1$ points are sampled for building the initial symplex
+    \item \tt{Order} the test points according to their values at vertices: $f(\mathbf{x}_1) \leq f(\mathbf{x}_2) \leq \dots \leq f(\mathbf{x}_{n+1})$ and check whether the algorithm should terminate.
+    \item \tt{Calculate} $\mathbf{x}_0$, the centroid of all points except $\mathbf{x}_{n+1}$.
+    \item \tt{Reflection}: Compute the reflected point $\mathbf{x}_r = \mathbf{x}_0 + \alpha(\mathbf{x}_0 - \mathbf{x}_{n+1})$ with $\alpha > 0$. 
+            If $\mathbf{x}_r$ satisfies $f(\mathbf{x}_1) \leq f(\mathbf{x}_r) < f(\mathbf{x}_n)$, then a new simplex is obtained by replacing the worst-performing point $\mathbf{x}_{n+1}$ with $\mathbf{x}_r$ and then go to step 1.
+    \item \tt{Expansion}: If $\mathbf{x_r}$ is the current best point, meaning that $f(\mathbf{x}_r) < f(\mathbf{x}_1)$, then the expanded point is computed: $\mathbf{x}_e = \mathbf{x}_0 + \gamma(\mathbf{x}_r-\mathbf{x}_0)$ with $\gamma>1$.
+           If $\mathbf{x}_e$ satisfies $f(\mathbf{x}_e) < f(\mathbf{x}_r)$, then a new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with the expanded point $\mathbf{x}_e$ and then go to step 1.
+            If instead $f(\mathbf{x}_e) \geq f(\mathbf{x}_r)$, the new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with $\mathbf{x}_r$, and then go to step 1.
+    \item \tt{Contraction}: In this case is certain that $f(\mathbf{x}_r) \geq f(\mathbf{x}_n)$ then:\begin{itemize}
+        \item If $f(\mathbf{x}_r) < f(\mathbf{x}_{n+1})$: compute the contracted point $\mathbf{x}_c=\mathbf{x}_0 +\rho(\mathbf{x}_{r}-\mathbf{x}_0)$ with $0<\rho \leq 0.5$.
+                If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{r})$, then a new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with  $\mathbf{x}_c$ and go to step 1.
+                Else go to step 6.
+        \item  If $f(\mathbf{x}_r) \geq f(\mathbf{x}_{n+1})$: compute the contracted point $\mathbf{x}_c=\mathbf{x}_0 +\rho(\mathbf{x}_{n+1}-\mathbf{x}_0)$ with $0<\rho \leq 0.5$.
+                If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{n+1})$, the a new simplex is constructed with $\mathbf{x}_c$ and go to step 1.
+                Else go to step 6.
+    \end{itemize}
+    \item \tt{Shrinkage}: Replace all points except the best, $\mathbf{x}_1$, with $\mathbf{x}_i = \sigma(\mathbf{x}_i - \mathbf{x}_1)$  
+\end{enumerate}
+The algorithm terminates when the standard deviation of the function values of the current simplex fall below a user-initialized tolerance. 
+When the cycle stops the point of the simplex associated to the lower function value is returned as proposed optimum
+
+The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
 
 \paragraph{\tt{Optuna}}
 \cite{optuna_2019}
