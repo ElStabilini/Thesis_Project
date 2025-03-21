@@ -9,6 +9,18 @@ Another possible source of error is ...
 \subsection{Cryoscope}
 The experiment that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
 
+As explained in section \ref{sec:cQED}, accurate dynamical control of qubit frequency is of key importance to realize single- and two-qubit gates.
+One of the on-chip control variable that is used on QunatumWare chip is the magnteic flux through a SQUID loop, the signal for magnetic flux control originates from an arbitrary waveform genarator (AWG) which operates at room temperature.\\
+As the signal propagates through various electrical components along the control line leading to the quantum device it undergoes linear dynamical distortions. 
+If not properly compensated, these distortions can degrade gate performance, impacting experiments fidelity and repeatability.
+
+In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by measuring the qubit state.
+
+\subsubsection{Pulse reconstruction}
+
+\subsubsection{Correctios study}
+
+\subsection{Corrected pulse}
 
 \begin{comment}
     TO DO LIST:

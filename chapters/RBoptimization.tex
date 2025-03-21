@@ -66,6 +66,8 @@ For the results we present in the following the technique used slightly differs 
 %dato che il tempo richiesto per eseguire una standard RB è dell'ordine di .. la routine su cui sono stari relizzati gli esperimenti è una variante più rapida che è stata implementata sulla base di quanto rirportato in
 
 \section{Scipy optimization methods}\label{Sec:OptimizationMethods}
+
+\subsection{Algorithm description}
 I primi metodi che abbiamo provato per l'ottimizzazione dei parametri sono quelli standard implementati nella libreria \tt{Scipy} \cite{SciPy-NMeth} evitando metodi gradient-based considerato il landscape potenzialmente complicato della funzione RB.
 The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
 
@@ -98,6 +100,8 @@ The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to de
 \subsection{Results}
 
 \section{CMA-ES}
+
+\subsection{Algorithm description}
 Covariance Matrix Adaptation Evolution Strategy (\tt{CMA-ES} \cite{cmaessimplepractical}), is a population-based evolutionary algorithm designed for optimizing complex, non-convex, and high-dimensional functions.\\
 It belongs to the broader class of Evolution Strategies (ES), a subset of Evolutionary Algorithms (EAs)(see \cite{sloss20192019evolutionaryalgorithmsreview}), and is particularly effective for black-box optimization where gradient information is unavailable.
 
@@ -133,6 +137,9 @@ Nel seguito, a meno che non sia diversamente specificato, i parametri sono stati
 
 
 \section{Optuna}
+
+\subsection{Algorithm description}
+
 Oltre ai metodi elencati sopra, per l'ottimizzazione si è provato ad utilizzare metodi del tipo TPE, utilizzandone l'implementazione che è stata fatta nella libreria \tt{optuna} \cite{optuna_2019}.
 
 Tree-Structured Parzen Estimator (TPE) is a Sequential Model-Based Optimization (SMBO) approach \cite{SMBO_proceedings}. 
