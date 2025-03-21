@@ -3,7 +3,7 @@ L'hardware è un chip di QunatumWare. %chiedere dettagli sul chip
 Durante il lavoro condotto per questo progetto di tesi entrambe le libererie, sia Qibocal che Qibolab undergo update and release, for this reason the first part of this work was realized using \Qibocal v0.1 and \Qibolab v0.1 while the second part of the work, 
 dato che puntava anche allo sviluppo di routine ch epotessero essere utili per la calibrazione dei qubit è stato realizzato direttamente con \Qibocal v0.2 e \Qibolab v0.2. 
 
-\section{RB fidelity optimization}
+\chapter{RB fidelity optimization}
 
 \subsection{Randomized Benchmarking}\label{RBsection}
 A strong limitation to the realization of quantum computing technologies is the loss of coherence that happens as a consequence of the application of many sequential quantum gates to to the quibts.
@@ -131,9 +131,21 @@ Nel seguito, a meno che non sia diversamente specificato, i parametri sono stati
 
 
 \paragraph{\tt{Optuna}}
-\cite{optuna_2019}
+Oltre ai metodi elencati sopra, per l'ottimizzazione si è provato ad utilizzare metodi del tipo TPE, utilizzandone l'implementazione che è stata fatta nella libreria \tt{optuna} \cite{optuna_2019}.
+
+Tree-Structured Parzen Estimator (TPE) is a Sequential Model-Based Optimization (SMBO) approach \cite{SMBO_proceedings}. 
+SMBO methods sequentially construct models to approximate the performance of optimization parameters based on historical measurements, and then subsequently choose new parameters values to test based on this model. \cite{BayesianOptimizationReview}
+At the heart of SMBO is the idea of building a surrogate model, which is used to predict the objective function's values for unseen parameters configurations. 
+The surrogate model is iteratively updated as new observations are made, and the optimization process balances exploration, which focuses on uncertain regions of the search space, and exploitation, which focuses on areas that are more likely to improve the objective based on past evaluations. 
+This balance ensures that the optimization process makes efficient use of resources and avoids wasting time on suboptimal regions.\\
+
+The TPE algorithm is a probabilistic model-based optimization method that uses non-parametric density estimation to guide the search. 
+Unlike traditional Bayesian optimization approaches that model the objective function directly, TPE models the probability densities of good and bad parameter configurations independently.\\
 
 
+
+
+\chapter{Gates fine-tunig}
 \section{RX90 calibration}
 Another possible source of error is ...
 
@@ -143,6 +155,7 @@ Another possible source of error is ...
 
 \subsection{Cryoscope}
 The experiment that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
+
 
 \begin{comment}
     TO DO LIST:
