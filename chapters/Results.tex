@@ -96,9 +96,39 @@ When the cycle stops the point of the simplex associated to the lower function v
 The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
 
 \paragraph{\tt{CMA-ES}}
-Covariance Matrix Adaptation Evolution Strategy (\tt{CMA-ES}) is a population-based evolutionary algorithm designed for optimizing complex, non-convex, and high-dimensional functions.\\
-It belongs to the broader class of Evolution Strategies (ES), a subset of Evolutionary Algorithms (EAs)(see \cite{sloss}), and is particularly effective for black-box optimization where gradient information is unavailable or unreliable. 
-\cite{cmaessimplepractical}
+Covariance Matrix Adaptation Evolution Strategy (\tt{CMA-ES}) \cite{cmaessimplepractical}, is a population-based evolutionary algorithm designed for optimizing complex, non-convex, and high-dimensional functions.\\
+It belongs to the broader class of Evolution Strategies (ES), a subset of Evolutionary Algorithms (EAs)(see \cite{sloss20192019evolutionaryalgorithmsreview}), and is particularly effective for black-box optimization where gradient information is unavailable.
+
+Evolution Strategies (ES) are a class of optimization methods that employ self-adaptive mechanisms to explore the search space efficiently. 
+Unlike classical optimization techniques that rely on gradient descent, ES leverage stochastic sampling to navigate rugged and multimodal landscapes.
+In this context, CMA-ES is an adaptive stochastic search method that iteratively refines a probability distribution over the search space. 
+Unlike traditional Genetic Algorithms (GAs), which rely on crossover and mutation operators, CMA-ES employs a multivariate normal distribution to generate candidate solutions. 
+The method adaptively updates the distribution's mean and covariance matrix based on the fitness of sampled points.
+
+The fundamental idea behind CMA-ES is the use of a multivariate Gaussian distribution to model promising search directions. 
+Let $\mathbf{\mu}_t$ denote the mean of the distribution at iteration $t$, and $\Sigma_t$ the covariance matrix. 
+Then, a new population of $\lambda$ candidate solutions $\mathbf{x}_i^(t+1) \sim \mathbf{\mu}_t + \sigma_t\mathcal{N}(0, \Sigma_t)$, where $\sigma_t$ is a step size controlling the exploration.  
+
+The CMA-ES algorithm follows the following steps:\begin{enumerate}
+    \item If not otherwise specified, the initial parameters are set: mean vector $\mathbf{\mu_0}$, covariance matrix $\Sigma_0$\footnote{$\Sigma_0=\mathbb{I}$ for isotropic search}, step size $\sigma_0$, population size $\lambda$
+    \item Generate $\lambda$ new candidate solutions $\mathbf{x}_i$ according to a multivariate normal distribution.
+    \item Evaluate the objective function $f(\mathbf{x}_i)$ for each candidate solution.
+    \item Sort the new candidate solutions based on fitness: $f(\mathbf{x}_0) \leq ... \leq f(\mathbf{x}_{\lambda})$.
+    \item Update the mean vector $\mathbf{\mu}$ with the $m=\lfloor \lambda / 2 \rfloor$ top performing solutions:\begin{equation}
+        \mathbf{\mu} \leftarrow \sum_{i=0}^m \mathbf{w}_i\mathbf{x}_1,
+    \end{equation} where $\mathbf{w}_i$ are internally defined weights.
+    \item Update the isotropic and anisotropic evolution path $\mathbf{p}_{\sigma}$, $\mathbf{p}_c$ \footnote{For details on the update process of the evolution paths see \cite{cmaessimplepractical}.}.
+    \item Update the covariance matrix: \begin{equation}
+        C \leftarrow (1 - c_1 - c_{\mu}) C + c_1 \mathbf{p}_c \mathbf{p}_c^T + c_{\mu} \sum_{i=1}^{\mu} w_i \mathbf{y}_i \mathbf{y}_i^T,
+    \end{equation} where $c_1$ and $c_\mu$ are learning rates and $\mathbf{y}_i$ represents the deviation of the $i$-th cnadidate solution from the mean $\mathbf{mu}$.
+    \item Update the step size using a cumulative path evolution mechanism \begin{equation}
+        \sigma \leftarrow \sigma \cdot \exp \left( \frac{c_{\sigma}}{d_{\sigma}} \left( \| \mathbf{p}_{\sigma} \| - E \| \mathcal{N}(0, I) \| \right) \right),
+    \end{equation} where $c_\sigma$ is the learning rate for step-size adaptation, $d_\sigma$ is a damping factor $\| \mathbf{p}_{\sigma} \|$ is the length of the evolution path and $E \| \mathcal{N}(0, I) \|$ is the expected length of a standard normally distributed random vector.
+\end{enumerate}
+
+Nel seguito, a meno che non sia diversamente specificato, i parametri sono stati inizializzati ai valori di default della libereria \tt{CMA-ES}
+
+
 
 \paragraph{\tt{Optuna}}
 \cite{optuna_2019}
