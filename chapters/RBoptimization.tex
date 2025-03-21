@@ -1,11 +1,12 @@
+\chapter{RB fidelity optimization}
+
 Tutti i risultati che sono presentati nel seguito sono stati ottenuti utilizzando il software di \Qibolab per l'interazione con gli strumenti del laboratorio e \Qibocal per il controllo delle operazioni sui qubit.
 L'hardware è un chip di QunatumWare. %chiedere dettagli sul chip
 Durante il lavoro condotto per questo progetto di tesi entrambe le libererie, sia Qibocal che Qibolab undergo update and release, for this reason the first part of this work was realized using \Qibocal v0.1 and \Qibolab v0.1 while the second part of the work, 
 dato che puntava anche allo sviluppo di routine ch epotessero essere utili per la calibrazione dei qubit è stato realizzato direttamente con \Qibocal v0.2 e \Qibolab v0.2. 
 
-\chapter{RB fidelity optimization}
 
-\subsection{Randomized Benchmarking}\label{RBsection}
+\section{Randomized Benchmarking}\label{RBsection}
 A strong limitation to the realization of quantum computing technologies is the loss of coherence that happens as a consequence of the application of many sequential quantum gates to to the quibts.
 A possible approach to characterize gate error is the quantum process tomography which allows the experimenter to establish the behaviour of a quantum gates; the main drawback of this approach is that process tomography can be very time consumig since its time complexity scales exponentially with the number of qubits involved \cite{QPTomography} and the result is affected by state preparation and measurements (SPAM) errors.
 
@@ -64,7 +65,7 @@ which shows how the avarage error per Clifford gate is directly connected to the
 For the results we present in the following the technique used slightly differs from the one described in section \ref{RBsection} 
 %dato che il tempo richiesto per eseguire una standard RB è dell'ordine di .. la routine su cui sono stari relizzati gli esperimenti è una variante più rapida che è stata implementata sulla base di quanto rirportato in
 
-\subsection{Optimization methods}\label{Sec:OptimizationMethods}
+\section{Scipy optimization methods}\label{Sec:OptimizationMethods}
 I primi metodi che abbiamo provato per l'ottimizzazione dei parametri sono quelli standard implementati nella libreria \tt{Scipy} \cite{SciPy-NMeth} evitando metodi gradient-based considerato il landscape potenzialmente complicato della funzione RB.
 The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
 
@@ -94,9 +95,10 @@ The algorithm terminates when the standard deviation of the function values of t
 When the cycle stops the point of the simplex associated to the lower function value is returned as proposed optimum
 
 The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
+\subsection{Results}
 
-\paragraph{\tt{CMA-ES}}
-Covariance Matrix Adaptation Evolution Strategy (\tt{CMA-ES}) \cite{cmaessimplepractical}, is a population-based evolutionary algorithm designed for optimizing complex, non-convex, and high-dimensional functions.\\
+\section{CMA-ES}
+Covariance Matrix Adaptation Evolution Strategy (\tt{CMA-ES} \cite{cmaessimplepractical}), is a population-based evolutionary algorithm designed for optimizing complex, non-convex, and high-dimensional functions.\\
 It belongs to the broader class of Evolution Strategies (ES), a subset of Evolutionary Algorithms (EAs)(see \cite{sloss20192019evolutionaryalgorithmsreview}), and is particularly effective for black-box optimization where gradient information is unavailable.
 
 Evolution Strategies (ES) are a class of optimization methods that employ self-adaptive mechanisms to explore the search space efficiently. 
@@ -127,10 +129,10 @@ The CMA-ES algorithm follows the following steps:\begin{enumerate}
 \end{enumerate}
 
 Nel seguito, a meno che non sia diversamente specificato, i parametri sono stati inizializzati ai valori di default della libereria \tt{CMA-ES}
+\subsection{Results}
 
 
-
-\paragraph{\tt{Optuna}}
+\section{Optuna}
 Oltre ai metodi elencati sopra, per l'ottimizzazione si è provato ad utilizzare metodi del tipo TPE, utilizzandone l'implementazione che è stata fatta nella libreria \tt{optuna} \cite{optuna_2019}.
 
 Tree-Structured Parzen Estimator (TPE) is a Sequential Model-Based Optimization (SMBO) approach \cite{SMBO_proceedings}. 
@@ -141,31 +143,6 @@ This balance ensures that the optimization process makes efficient use of resour
 
 The TPE algorithm is a probabilistic model-based optimization method that uses non-parametric density estimation to guide the search. 
 Unlike traditional Bayesian optimization approaches that model the objective function directly, TPE models the probability densities of good and bad parameter configurations independently.\\
+\subsection{Results}
 
-
-
-
-\chapter{Gates fine-tunig}
-\section{RX90 calibration}
-Another possible source of error is ...
-
-\section{Flux pulse correction}
-\subsection{Notes on signal analysis}
-
-
-\subsection{Cryoscope}
-The experiment that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
-
-
-\begin{comment}
-    TO DO LIST:
-    * calcoli analitici per assunzioni del cryoscope
-    * calcoli analitici di convoluzioni per dimostrare che è giusto il modo in cui combiniamo i filtri
-    * costruire script per analisi dati
-    * eventualmente provare ad aggiungere più correzioni esponenziali
-\end{comment}
-\subsection{Filter determination}
-\subsubsection{IIR}
-\subsubsection{FIR}
-for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethods}
-\subsubsection{Output filters in QM}
+\section{RB optimization conclusions}
