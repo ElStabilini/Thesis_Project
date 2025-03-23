@@ -12,13 +12,21 @@ The experiment that we describe in this section was first introduced in \cite{ro
 As explained in section \ref{sec:cQED}, accurate dynamical control of qubit frequency is of key importance to realize single- and two-qubit gates.
 One of the on-chip control variable that is used on QunatumWare chip is the magnteic flux through a SQUID loop, the signal for magnetic flux control originates from an arbitrary waveform genarator (AWG) which operates at room temperature.\\
 As the signal propagates through various electrical components along the control line leading to the quantum device it undergoes linear dynamical distortions. 
-If not properly compensated, these distortions can degrade gate performance, impacting experiments fidelity and repeatability.
+If not properly compensated, these distortions can degrade gate performance, impacting experiments fidelity and repeatability.\\
 
-In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by measuring the qubit state.
+In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by directly measuring the qubit state.
+In this protocol we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
+The first $\frac{\pi}{2}$ pulse rotates the qubit of $\frac{\pi}{2}$ around the $y$ axis of the Bloch sphere changing its state from $\ket{0}$ to $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$.
+If no flux pulse was applied, during $T_{sep}$ the qubit would decohere around the $z$ axis, leaving the qubit in state $\ket{\psi(T_{sep})} = \exp \left\{-i\frac{\omega_Q T_{sep}}{2}\hat{\sigma}_z\right\}$ where $\omega_Q$ is the qubit frequence.\\
 
+When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\footnote{To send a $\Phi_{Q,\tau}(t)$ flux pulse we are actually sending a $V_{\text{in},\tau}(t)$ voltage pulse through the electronics} after the first $\frac{\pi}{2}$ pulse, the qubits evolve to the state $\frac{\ket{0}+e^{i\varphi_\tau}\ket{1}}{\sqrt{2}}$ with relative quantum phase 
+\begin{equation}\label{eq:phi}
+    \frac{\varphi_{\tau}}{2\pi} = \int_{0}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t = \int_{0}^{\tau} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t + \int_{\tau}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t
+\end{equation}
+where in the second step I separate the contributions from flux response up to $\tau$ and the turn-off transient. For a full derivation of equation eq. \ref{eq:phi} see \hyperref[app:AppendixB]{Appendix B}.
 \subsubsection{Pulse reconstruction}
 
-\subsubsection{Correctios study}
+\subsubsection{Corrections study}
 
 \subsection{Corrected pulse}
 
