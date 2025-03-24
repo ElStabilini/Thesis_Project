@@ -1,6 +1,13 @@
 \chapter{Pulses analysis and tuning}
+
+Having concluded that closed-loop optimization would not significantly improve fidelity, we shifted our focus towards improvement and implementation of individual protocols to improve the accuracy of qubit operations.\\
+In this chapter, I present the results of two additions to the \texttt{Qibocal} software. 
+The first is the inclusion of an $RX90$ gate as a native gate, which can enhance the performance of protocols requiring qubit rotations of $\frac{\pi}{2}$.
+The second is the implementation of the cryoscope, a routine first described in \cite{rol_time-domain_2020}, which is useful for correcting distortions in the magnetic flux pulse applied to the SQUID.
+
 \section{RX90 calibration}
-Another possible source of error is ...
+
+
 
 \section{Flux pulse correction}
 \subsection{Notes on signal analysis}
