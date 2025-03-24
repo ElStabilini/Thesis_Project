@@ -19,3 +19,10 @@ A depolarizing channel describes a process in which the current state of the $n$
 \section{Superconducting qubits}
 
 \subsection{cQED systems} \label{sec:cQED}
+
+The frequency $f_Q$ of a two-junction transmon dependends on the magnetic flux $\Phi_Q(t)$ through the SQUID loop, for symmetric junctions is given by\cite{TransmonPaper}
+\begin{equation}\label{eq:freqdepndenceonflux}
+    f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right)    
+\end{equation}
+
+where $E_C$ is the charging energy, $E_J$ is the sum of the Josephson energies of the individual Josephson junctions, $\Phi_0$ is the flux quantum, and $h$ is the Planck's constant.
