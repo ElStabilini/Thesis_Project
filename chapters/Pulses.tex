@@ -17,13 +17,26 @@ If not properly compensated, these distortions can degrade gate performance, imp
 In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by directly measuring the qubit state.
 In this protocol we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
 The first $\frac{\pi}{2}$ pulse rotates the qubit of $\frac{\pi}{2}$ around the $y$ axis of the Bloch sphere changing its state from $\ket{0}$ to $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$.
-If no flux pulse was applied, during $T_{sep}$ the qubit would decohere around the $z$ axis, leaving the qubit in state $\ket{\psi(T_{sep})} = \exp \left\{-i\frac{\omega_Q T_{sep}}{2}\hat{\sigma}_z\right\}$ where $\omega_Q$ is the qubit frequence.\\
 
 When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\footnote{To send a $\Phi_{Q,\tau}(t)$ flux pulse we are actually sending a $V_{\text{in},\tau}(t)$ voltage pulse through the electronics} after the first $\frac{\pi}{2}$ pulse, the qubits evolve to the state $\frac{\ket{0}+e^{i\varphi_\tau}\ket{1}}{\sqrt{2}}$ with relative quantum phase 
 \begin{equation}\label{eq:phi}
     \frac{\varphi_{\tau}}{2\pi} = \int_{0}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t = \int_{0}^{\tau} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t + \int_{\tau}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t
 \end{equation}
-where in the second step I separate the contributions from flux response up to $\tau$ and the turn-off transient. For a full derivation of equation eq. \ref{eq:phi} see \hyperref[app:AppendixB]{Appendix B}.
+where in the second step we separated the contributions from flux response up to $\tau$ and the turn-off transient. 
+
+The experiment is then completed with a $\frac{\pi}{2}$ rotation aroud the $y$- or $x$-axis of the Bloch sphere to measure respectively the $\langle X \rangle$ or $\langle Y \rangle$ components of the Bloch vector when applying the measurement gate $MZ$. 
+From the measurement of $\langle X \rangle$ and $\langle Y \rangle$ we can extract the relative phase $\phi_{\tau}$.\\
+
+Then we can estimate $\Phi_Q(t)$ in the interval $[\tau,\tau+\Delta\tau]$ as follows. From the measurement of $\phi_{\tau + \Delta\tau}$ and $\phi_\tau$ we can compute $\overline{\Delta f_R}$:
+\begin{align}
+    \overline{\Delta f_R} &= \frac{\phi_{\tau+\Delta\tau} - \phi_\tau}{2\pi\Delta\tau}\\ 
+    &= \frac{1}{\Delta\tau}\left(\int_{0}^{\tau+\Delta\tau}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt + \int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt -
+    \int_{0}^{\tau}\Delta f_Q (\Phi_{Q,\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\\
+    &=\frac{1}{\Delta\tau}\left(\int_{\tau}^{\tau+\Delta\tau} \Delta f_Q(\Phi_{Q,\tau+\Delta\tau})dt + \int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\\
+    &= \frac{1}{\Delta\tau}\int_{\tau}^{\tau+\Delta\tau} \Delta f_Q(\Phi_{Q,\tau+\Delta\tau})dt + \varepsilon
+\end{align}  
+with $\varepsilon = \frac{1}{\Delta\tau}\left(\int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)$
+
 \subsubsection{Pulse reconstruction}
 
 \subsubsection{Corrections study}
