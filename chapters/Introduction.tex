@@ -1,5 +1,20 @@
-\section{Qubits}
+\section{Introduction}
+The physical realization of quantum computing necessitates the development of a system capable of functioning as quantum bits (qubits). 
+Qubits can be implemented through various physical mechanisms; however, their practical realization remains a significant challenge due to their susceptibility to environmental interactions, which lead to decoherence and reduce their coherence time. 
+Despite the diversity of possible physical implementations, any functional quantum computing system must satisfy a set of fundamental criteria. 
+These requirements, known as the DiVincenzo criteria, establish the essential conditions for the construction and operation of a viable quantum computer\cite{DiVincenzo_2000,Manenti:2023zzn}:
+\begin{enumerate}
+    \item The physical system used as quantum computer must comprise a set of qubits, meaning that the quantum system must be well-characterized, and scalable such that quantum
+    computing can be realized.
+    \item It must be possible to initialize the qubits in a reliable state, such as the ground state.
+    \item The coherence time of the qubits must be longer than the typical gate time.
+    \item It must be possible to implement a universal set of quantum gates.
+    \item It must be possible to measure the qubits in the computational basis.
+\end{enumerate}
+
+
 \section{Operation on qubits}
+
 \subsection{Density matrix}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
 \section{Quantum operations}
