@@ -1,8 +1,17 @@
+The electronics that modern computers rely on contain components that operate based on quantum mechanics; however, their computational processes are still governed by classical laws. 
+For this reason, they are referred to as "classical computers."\\
+
+Quantum computing emerged from Richard Feynman’s idea that simulating quantum systems efficiently requires quantum mechanical resources \cite{Feynman1982}. 
+Classical computers struggle to model complex quantum interactions due to the exponential growth of computational requirements with system size, making exact simulations infeasible beyond small systems \cite{Brown2010}. 
+Quantum computers, taking advantage of quantum mechanics phenomena like superposition and entanglement, offer a natural framework for such simulations and have been demonstrated to provide exponential speedups for certain quantum systems \cite{Georgescu_2014}.
+
+Beyond quantum simulation, curren theoretical advancements suggest that quantum algorithms can outperform classical counterparts in solving specific problems \cite{Montanaro2016}.
+
 \section{Introduction}
 The physical realization of quantum computing necessitates the development of a system capable of functioning as quantum bits (qubits). 
 Qubits can be implemented through various physical mechanisms; however, their practical realization remains a significant challenge due to their susceptibility to environmental interactions, which lead to decoherence and reduce their coherence time. 
 Despite the diversity of possible physical implementations, any functional quantum computing system must satisfy a set of fundamental criteria. 
-These requirements, known as the DiVincenzo criteria, establish the essential conditions for the construction and operation of a viable quantum computer\cite{DiVincenzo_2000,Manenti:2023zzn}:
+These requirements, known as the DiVincenzo criteria, establish the essential conditions for the construction and operation of a viable quantum computer \cite{DiVincenzo_2000}, \cite{Manenti:2023zzn}:
 \begin{enumerate}
     \item The physical system used as quantum computer must comprise a set of qubits, meaning that the quantum system must be well-characterized, and scalable such that quantum
     computing can be realized.
@@ -12,6 +21,8 @@ These requirements, known as the DiVincenzo criteria, establish the essential co
     \item It must be possible to measure the qubits in the computational basis.
 \end{enumerate}
 
+In the present work, I will focus on superconducting qubits, which constitute the hardware I have worked on and where the experiments were conducted. 
+However, several of the experiments described later can also be implemented using different physical systems.
 
 \section{Operation on qubits}
 
