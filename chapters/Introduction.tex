@@ -8,6 +8,8 @@ Quantum computers, taking advantage of quantum mechanics phenomena like superpos
 Beyond quantum simulation, curren theoretical advancements suggest that quantum algorithms can outperform classical counterparts in solving specific problems \cite{Montanaro2016}.
 
 \section{Introduction}
+%Insert definition of qubit
+
 The physical realization of quantum computing necessitates the development of a system capable of functioning as quantum bits (qubits). 
 Qubits can be implemented through various physical mechanisms; however, their practical realization remains a significant challenge due to their susceptibility to environmental interactions, which lead to decoherence and reduce their coherence time. 
 Despite the diversity of possible physical implementations, any functional quantum computing system must satisfy a set of fundamental criteria. 
@@ -20,6 +22,22 @@ These requirements, known as the DiVincenzo criteria, establish the essential co
     \item It must be possible to implement a universal set of quantum gates.
     \item It must be possible to measure the qubits in the computational basis.
 \end{enumerate}
+
+A possible geometric representation of qubit states is given by the Bloch sphere, which offers a visualization of two level quantum systems as vectors on a unit sphere.  
+A qubit state is depicted as a vector originating from the sphere’s center, with the computational basis states $\ket{0}$ and $\ket{1}$ positioned at the north and south poles, respectively.
+The axis connecting these states defines the $z$-axis. The transverse $x$- and $y$- axes correspond to the equal superposition states $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$ and $\ket{\pm i} = \frac{1}{\sqrt{2}}(\ket{0}\pm i\ket{1})$, respectively.\\
+A vector of unit length on the Blooch sphere is characterized by the polar angle $\theta$, with $0\leq\theta\leq\pi$ and the azimuthal angle $\varphi$, with $0\leq\varphi\leq 2\pi$, each unit vector represent a possible pure state of the qubit.\\
+It can be shown that the hamiltonian of a qubit can be written as \begin{equation}\label{eq:qubithamiltonian}
+    \hat{H_Q}=\hbar\omega\hat{\sigma}_z,
+\end{equation} 
+with $\hbar=h/2\pi$, where $h$ is the Planck's constant, $\omega$ is the qubit frequency and $\hat{\sigma}_z$ is the Pauli matrix. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.25\textwidth]{figures/png/Bloch_sphere.svg.png}
+\caption{Example of qubit state representation on the Bloch sphere}
+\label{fig:BlochSphere}
+\end{figure}
 
 In the present work, I will focus on superconducting qubits, which constitute the hardware I have worked on and where the experiments were conducted. 
 However, several of the experiments described later can also be implemented using different physical systems.
