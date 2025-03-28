@@ -30,8 +30,9 @@ A vector of unit length on the Blooch sphere is characterized by the polar angle
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.25\textwidth]{figures/png/Bloch_sphere.svg.png}
-\caption{Example of qubit state representation on the Bloch sphere}
+\includegraphics[width=0.25\textwidth]{figures/png/BlochSphere.png}
+\caption{Example of qubit state representation on the Bloch sphere\\
+Source: Metrology of Quantum Control and Measurement in Superconducting Qubits \cite{Chen2018}}
 \label{fig:BlochSphere}
 \end{figure}
 
@@ -67,7 +68,7 @@ For convenience, the Hamiltonian can also be rewritten in terms of the Pauli $z$
 \paragraph{}
 Qubits can be implemented through various physical mechanisms; however, their practical realization remains a significant challenge due to their susceptibility to environmental interactions, which lead to decoherence and reduce their coherence time. 
 Despite the diversity of possible physical implementations, any functional quantum computing system must satisfy a set of fundamental criteria. 
-These requirements, known as the DiVincenzo criteria, establish the essential conditions for the construction and operation of a viable quantum computer \cite{DiVincenzo_2000}, \cite{Manenti:2023zzn}:
+These requirements, known as the DiVincenzo criteria, establish the essential conditions for the construction and operation of a viable quantum computer \cite{DiVincenzo_2000}, \cite{manenti_quantum_2023}:
 \begin{enumerate}
     \item The physical system used as quantum computer must comprise a set of qubits, meaning that the quantum system must be well-characterized, and scalable such that quantum
     computing can be realized.
@@ -81,6 +82,7 @@ In the present work, I will focus on superconducting qubits, which constitute th
 However, several of the experiments described later can also be implemented using different physical systems.
 
 \section{Transmon qubits}
+In questa sezione faccio un ripasso della struttura e del funzionamento dei superconducting transmon qubits, per la stesura di questa sezione ho fatto riferimento al Qunatum Information Science manual \cite{manenti_quantum_2023}, the Metrology of Quantum Control and Measurement in Superconducting Qubits \cite{Chen2018} and the original paper \cite{TransmonPaper}.
 
 \subsection{Density matrix}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
