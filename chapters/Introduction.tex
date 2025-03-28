@@ -8,9 +8,63 @@ Quantum computers, taking advantage of quantum mechanics phenomena like superpos
 Beyond quantum simulation, curren theoretical advancements suggest that quantum algorithms can outperform classical counterparts in solving specific problems \cite{Montanaro2016}.
 
 \section{Introduction}
-%Insert definition of qubit
+The physical realization of quantum computing necessitates the development of a system capable of functioning as quantum bits (qubits).\\
+Similar to classical logic, where the bits 0 and 1 are associated with two physical levels, typically represented by high and low voltage states, a qubit can, to a first approximation, be considered as a two-level physical system.
 
-The physical realization of quantum computing necessitates the development of a system capable of functioning as quantum bits (qubits). 
+Mathematically, this system is described within a two-dimensional complex Hilbert space, where the basis states $\ket{0}$ and $\ket{1}$ correspond to two orthonormal vectors.
+Any general state of the qubit can be expressed as a superporition of these basis states:
+\begin{equation}\label{eq:qubit}
+    \ket{\psi} = \alpha\ket{0} + \beta\ket{1} \rightarrow \begin{pmatrix} 
+        \alpha \\ 
+        \beta 
+        \end{pmatrix},
+\end{equation}
+where $\alpha,\beta\in \mathbb{C}$. If the normalization condition $|\alpha|^2 +|\beta|^2 =1$ holds, the state $\ket{\psi}$ represents a qubit.
+The basis $\{\ket{0},\ket{1}\}$ is called computational basis and the information is stored in the complex numbers $\alpha$ and $\beta$.
+
+\paragraph{}
+A possible geometric representation of qubit states is given by the Bloch sphere, which offers a visualization of two level quantum systems as vectors on a unit sphere.  
+A qubit state is depicted as a vector originating from the center of the sphere, with the computational basis states $\ket{0}$ and $\ket{1}$ positioned at the north and south poles, respectively.
+The axis connecting these states defines the $z$-axis. The transverse $x$- and $y$- axes correspond to the equal superposition states $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$ and $\ket{\pm i} = \frac{1}{\sqrt{2}}(\ket{0}\pm i\ket{1})$, respectively.\\
+A vector of unit length on the Blooch sphere is characterized by the polar angle $\theta$, with $0\leq\theta\leq\pi$ and the azimuthal angle $\varphi$, with $0\leq\varphi\leq 2\pi$, each unit vector represent a possible pure state of the qubit.\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.25\textwidth]{figures/png/Bloch_sphere.svg.png}
+\caption{Example of qubit state representation on the Bloch sphere}
+\label{fig:BlochSphere}
+\end{figure}
+
+The qubit states $\ket{0}$ and $\ket{1}$ can also be associated with energy eigenstates of a physical system, where $\ket{0}$ represents the ground state with energy $E_0$ and $\ket{1}$ represents the excited state with energy $E_1$, assuming $E_0 < E_1$. 
+In this energy eigenbasis, the Hamiltonian of the qubit is given by
+\begin{equation}\label{eq:qubithamiltonian}
+    \hat{H}_q = E_0 \ket{0} \bra{0} + E_1 \ket{1} \bra{1} = 
+    \begin{pmatrix}
+        E_0 & 0 \\
+        0 & E_1
+    \end{pmatrix}.
+\end{equation}
+
+Since only energy differences are physically relevant, it is possible to redefine the zero-point energy by subtracting the constant term $E_0 (\ket{0} \bra{0} + \ket{1} \bra{1})$, leading to the simplified Hamiltonian
+\begin{equation}\label{eq:qubithamiltonian}
+    \hat{H}_q = (E_1 - E_0) \ket{1} \bra{1} = \hbar \omega_q \ket{1} \bra{1} = \hbar \omega_q \hat{\sigma}^{+} \hat{\sigma}^{-} = 
+    \begin{pmatrix}
+        0 & 0 \\
+        0 & \hbar \omega_q
+    \end{pmatrix},
+\end{equation}
+
+where $\omega_q = (E_1 - E_0)/\hbar$ is the qubit transition frequency, and we have used the relation $\hat{\sigma}^{+} \hat{\sigma}^{-} = \ket{1} \bra{1}$.
+For convenience, the Hamiltonian can also be rewritten in terms of the Pauli $z$-matrix, $\hat{\sigma}_z$, by adding a term proportional to the identity:
+\begin{equation}
+    \hat{H}_q = \hbar \omega_q \ket{1} \bra{1} - \frac{\hbar \omega_q}{2}\mathbb{I} = 
+    \begin{pmatrix}
+        -\frac{\hbar \omega_q}{2} & 0 \\
+        0 & \frac{\hbar \omega_q}{2}
+    \end{pmatrix} = -\frac{\hbar \omega_q}{2} \hat{\sigma}_z.
+\end{equation}
+
+\paragraph{}
 Qubits can be implemented through various physical mechanisms; however, their practical realization remains a significant challenge due to their susceptibility to environmental interactions, which lead to decoherence and reduce their coherence time. 
 Despite the diversity of possible physical implementations, any functional quantum computing system must satisfy a set of fundamental criteria. 
 These requirements, known as the DiVincenzo criteria, establish the essential conditions for the construction and operation of a viable quantum computer \cite{DiVincenzo_2000}, \cite{Manenti:2023zzn}:
@@ -23,26 +77,10 @@ These requirements, known as the DiVincenzo criteria, establish the essential co
     \item It must be possible to measure the qubits in the computational basis.
 \end{enumerate}
 
-A possible geometric representation of qubit states is given by the Bloch sphere, which offers a visualization of two level quantum systems as vectors on a unit sphere.  
-A qubit state is depicted as a vector originating from the sphere’s center, with the computational basis states $\ket{0}$ and $\ket{1}$ positioned at the north and south poles, respectively.
-The axis connecting these states defines the $z$-axis. The transverse $x$- and $y$- axes correspond to the equal superposition states $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$ and $\ket{\pm i} = \frac{1}{\sqrt{2}}(\ket{0}\pm i\ket{1})$, respectively.\\
-A vector of unit length on the Blooch sphere is characterized by the polar angle $\theta$, with $0\leq\theta\leq\pi$ and the azimuthal angle $\varphi$, with $0\leq\varphi\leq 2\pi$, each unit vector represent a possible pure state of the qubit.\\
-It can be shown that the hamiltonian of a qubit can be written as \begin{equation}\label{eq:qubithamiltonian}
-    \hat{H_Q}=\hbar\omega\hat{\sigma}_z,
-\end{equation} 
-with $\hbar=h/2\pi$, where $h$ is the Planck's constant, $\omega$ is the qubit frequency and $\hat{\sigma}_z$ is the Pauli matrix. 
-
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.25\textwidth]{figures/png/Bloch_sphere.svg.png}
-\caption{Example of qubit state representation on the Bloch sphere}
-\label{fig:BlochSphere}
-\end{figure}
-
 In the present work, I will focus on superconducting qubits, which constitute the hardware I have worked on and where the experiments were conducted. 
 However, several of the experiments described later can also be implemented using different physical systems.
 
-\section{Operation on qubits}
+\section{Transmon qubits}
 
 \subsection{Density matrix}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
