@@ -68,7 +68,8 @@ For the results we present in the following the technique used slightly differs 
 \section{Scipy optimization methods}\label{Sec:OptimizationMethods}
 
 \subsection{Algorithm description}
-I primi metodi che abbiamo provato per l'ottimizzazione dei parametri sono quelli standard implementati nella libreria \tt{Scipy} \cite{SciPy-NMeth} evitando metodi gradient-based considerato il landscape potenzialmente complicato della funzione RB.
+I primi metodi che abbiamo provato per l'ottimizzazione dei parametri sono quelli standard implementati nella libreria \tt{Scipy} \cite{SciPy-NMeth}.
+
 The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
 
 The Nelder-Mead optimization method, originally introduced by Nelder and Mead in 1965 \cite{NelderMeads}, is a widely used numerical optimization technique for unconstrained problems in multidimensional spaces. \\
@@ -97,7 +98,15 @@ The algorithm terminates when the standard deviation of the function values of t
 When the cycle stops the point of the simplex associated to the lower function value is returned as proposed optimum
 
 The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
+
+Per valutare eventuali miglioramenti nella performance abbiamo provato ad utilizzare un algoritmo che fosse gradient-based. 
+Nello specifico ho provato ad utilizzare l'algoritmo di Sequential Least Squares Programming (SLSQP) nella versione implementata all'interno della libreria scipy.
+%Inserire descrizione algoritmo
+
 \subsection{Results}
+Di seguito riporto i risultai che abbiamo ottenuto utilizzando gli algoritmi descritti in precedenza per la minimizzazione del RB.
+Per prima cosa ho studiato come l'utilizzo di algoritmi di ottimizzazione che agiscono su ampiezza e durata ... sono in grado di migliorare la assignment fidelity partendo da una calibrazione non ottimalel de qubit 
+
 
 \section{CMA-ES}
 

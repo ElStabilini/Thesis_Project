@@ -81,8 +81,59 @@ These requirements, known as the DiVincenzo criteria, establish the essential co
 In the present work, I will focus on superconducting qubits, which constitute the hardware I have worked on and where the experiments were conducted. 
 However, several of the experiments described later can also be implemented using different physical systems.
 
-\section{Transmon qubits}
+\section{Transmon qubits}\label{sec:cQED}
 In questa sezione faccio un ripasso della struttura e del funzionamento dei superconducting transmon qubits, per la stesura di questa sezione ho fatto riferimento al Qunatum Information Science manual \cite{manenti_quantum_2023}, the Metrology of Quantum Control and Measurement in Superconducting Qubits \cite{Chen2018} and the original paper \cite{TransmonPaper}.
+
+A transmon consists of two superconducting pads connected by a Josephson junction. 
+The Josephson junction (JJ) is formed by a thin oxide layer positioned between the two superconductors which acts as an insulating barriers. 
+
+Superconductivity is a phenomenon observed in certain materials where, when cooled well below a critical temperature $T_c$, which depends on the material, their electrical resistance drops to zero, allowing them to behave as perfect conductors.
+According to the BCS (Bardeen-Cooper-Schrieffer) theory, superconductivity arises, from the formation of Cooper pairs, which are bound states of electrons with opposite momenta and spins.
+These pairs collectively forms a macroscopic quantum states described by a single waveform $\psi(\mathbf{r})$ which can be expressed as 
+\begin{equation}\label{eq:BCSequation}
+    \psi(\mathbf{r}) = \sqrt{\rho(\mathbf{r})}e^{i\theta(\mathbf{r})}
+\end{equation}
+where $\rho(\mathbf{r})$ is the density of Cooper pairs in the metal, which is typically uniform in the bulk of the superconductor, and $\theta(\mathbf{r})$ is the macroscopic phase of the superconducting wavfunction.
+
+For this reason the wavefunctions on the two sides of the JJ can be denoted as
+\begin{equation}\label{eq:JosephsonWavefunctions}
+    \psi_1(\mathbf{r}, t) = \sqrt{\rho_1(\mathbf{r}, t)} e^{i\theta_1(\mathbf{r},t)}, \psi_2(\mathbf{r}, t) = \sqrt{\rho_2(\mathbf{r}, t)} e^{i\theta_2(\mathbf{r},t)}
+\end{equation}
+
+The dynamics of the system can be described by the two equations\begin{equation}\label{eq:schr1}
+    i\hbar \frac{d\psi_1}{dt} = E_1 \psi_1 + K \psi_2,
+\end{equation}
+\begin{equation}\label{eq:schr2}
+    i\hbar \frac{d\psi_2}{dt} = E_2 \psi_2 + K \psi_1.
+\end{equation}
+By substituting the expression of $\psi_i$ into the Schr\"odinger equation \ref{eq:schr1}, \ref{eq:schr2} we obtain
+\begin{equation}\label{eq:schr-sub1}
+    \frac{d\rho_1}{dt} = \frac{2K}{\hbar} \sqrt{\rho_1 \rho_2} \sin(\theta_2 - \theta_1),
+\end{equation}
+\begin{equation}\label{eq:schr-sub2}
+    \frac{d\rho_2}{dt} = -\frac{2K}{\hbar} \sqrt{\rho_1 \rho_2} \sin(\theta_2 - \theta_1).
+\end{equation}
+
+Since the derivative of the charge density is the current, from equations \ref{eq:schr-sub1} and \ref{eq:schr-sub2} we obtain the first Josephson equation
+\begin{equation}\label{eq:Josephson1}
+    I=I_c\sin{\phi}
+\end{equation} 
+where $I_c = \frac{2K}{\hbar}\sqrt{\rho_1\rho_2}$ is the critical current and $\phi$ is the superconducting phase difference $\theta_2 - \theta_1$.
+
+Instead, from the real part of the Schr\"odinger equation \ref{eq:schr1}, \ref{eq:schr2} and a few calculations, we obtain the second Josephson equation
+\begin{equation}\label{eq:Josephson2}
+    \frac{d\phi}{dt} = \frac{2e}{\hbar} V(t).
+\end{equation}
+which can be rewritten as \begin{equation}
+    \frac{d\phi}{dt} = \frac{2\pi}{\Phi_0} V(t).
+\end{equation}
+where $\Phi_0$ is the superconducting flux quantum.
+The frequency $f_Q$ of a two-junction transmon dependends on the magnetic flux $\Phi_Q(t)$ through the SQUID loop, for symmetric junctions is given by\cite{TransmonPaper}
+\begin{equation}\label{eq:freqdepndenceonflux}
+    f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right)    
+\end{equation}
+
+where $E_C$ is the charging energy, $E_J$ is the sum of the Josephson energies of the individual Josephson junctions, $\Phi_0$ is the flux quantum, and $h$ is the Planck's constant.
 
 \subsection{Density matrix}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
@@ -100,15 +151,7 @@ A depolarizing channel describes a process in which the current state of the $n$
     \mathcal{E}_{dc}(\rho) = d\frac{\id}{2^n}+(1-d)\rho\label{eq:depolarizing_channel}
 \end{equation} 
 
-\section{Transmon qubit}
 
 \subsection{Rabi experiments}
 
-\subsection{cQED systems} \label{sec:cQED}
 
-The frequency $f_Q$ of a two-junction transmon dependends on the magnetic flux $\Phi_Q(t)$ through the SQUID loop, for symmetric junctions is given by\cite{TransmonPaper}
-\begin{equation}\label{eq:freqdepndenceonflux}
-    f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right)    
-\end{equation}
-
-where $E_C$ is the charging energy, $E_J$ is the sum of the Josephson energies of the individual Josephson junctions, $\Phi_0$ is the flux quantum, and $h$ is the Planck's constant.
