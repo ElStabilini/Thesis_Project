@@ -154,7 +154,7 @@ where $\Phi_0 = \frac{h}{2e}$ is the superconducting flux quantum, with $h$ is t
 
 The time derivative of the first Josephson equation \ref{eq:Josephson1} yields:
 \begin{equation}\label{eq:current_derivative}
-    \dot{I_J}I_C\cos{\phi}\frac{\partial \phi}{\partial t},
+    \dot{I_J}=I_C\cos{\phi}\frac{\partial \phi}{\partial t},
 \end{equation}
 equation \ref{eq:current_derivative} suggests a nonlinear relation between the current the voltage. 
 Using the Josephson voltage-phase relation and the fact that $\dot{I}=\frac{V}{L}$ it is possible to define an effective nonlinear inductance for the Josephson junction:
@@ -174,38 +174,85 @@ Fom equation \ref{eq:LJ} it is possible to compute the energy stored in the nonl
 \end{align}
 where $E_J$ represents the energy due to the behaviour of the junction as nonlinear inductor .
 
-Then it is possible to write the classical Hamiltonian of the system
-\begin{equation}
-    H_J = \frac{Q^2}{2C_J} - E_J\cos{\phi}
-\end{equation}
-where the constant term was ignored as it acts simply as a constant offset without influencing the dynamics of the system.
-Since the charge $Q$ can be expressesd in terms of the number of excess of Cooper pairs as $Q=2eN$, where $N\in(-\infty,+\infty)$ represents the difference in the number of Cooper pairs on either side of the junction, 
-it is possible to determine the charging energy as \begin{equation}\label{eq:charging_energy}
-    E_C = \frac{e^2}{2C_J}.
-\end{equation}
+\subsection{CPB qubit}
 
-Substituting the definition of charging energy \ref{eq:charging_energy} in the hamiltonians we obtain
-\begin{equation}\label{eq:JosephsonHamiltonian1}
-    H_J = 4E_C N^2 - E_J\cos{\phi}.
+A first example of superconducting qubit is the Cooper Pair Box (CPB), which consists of a small superconducting island connected to a reservoir of superconducting electrons through a Josephson junction \cite{Vion2002}, with an external gate voltage controlling the charge state.
+The circuit corresponding to CPB is similar to the circuit of a parallel resonator where the linear inductance is subsituted by a Josephson junction which simply acts as a nonlinear inductance.
+
+Combining the energy associated to the capacitance $C$ and the energy of the Josephson junction \ref{eq:inductive_energy} it is possible to write the classical Hamiltonian of the circuit
+\begin{equation}\label{eq:CPB_hamiltonian}
+    H_J = 4E_C n^2 - E_J\cos{\phi}
+\end{equation}
+where the constant term was ignored as it acts simply as a constant offset without influencing the dynamics of the system and where $E_C$ is the charging energy defined as \begin{equation}\label{eq:charging_energy}
+    E_C = \frac{e^2}{2C}.
 \end{equation}
 
-\subsection{SQUID Hamiltonian}
-In the hardware I used during my thesis work, as in most of the superconducting qubits currently in use, instead of a single Josephson junction, a configuration known as a SQUID (Superconducting QUantum Interference Device) is employed, in which two Josephson junctions are connected in parallel to form a superconducting loop. 
-This arrangement allows for the effective Josephson energy of the device to be tuned by an external magnetic flux threading the loop.
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.60\textwidth]{figures/png/CPB.png}
+        \subcaption{}
+        \label{fig:CPB}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.70\textwidth]{figures/png/CPB_circuit.png}
+        \subcaption{}
+        \label{fig:CPB_circuit}
+    \end{subfigure}
+    \caption{Figure \ref{fig:CPB}: corresponding circuit of a CPB which consists of Josephson junction shunted by a capacitor. Surce: \cite{manenti_quantum_2023}. Figure \ref{fig:CPB_circuit}: electrical circuit of a CPB capacitively coupled to a DC voltage source through a capacitor $C_g$. Source: \cite{manenti_quantum_2023}.}
+    \label{fig:CPB_general}
+\end{figure}
 
+To control the number of Cooper pairs on the island, it is possible to connecnt a DC voltage source $V_g$ to the system through a gate capacitor $C_g$, as shown in Figure \ref{fig:CPB_circuit}.
+When $V_g = 0$, both the gate and qubit capacitors remain uncharged. 
+As $V_g$ increases, a charge $Q_g = C_g V_g$ accumulates on the gate capacitor, inducing an equal and opposite charge on the island to maintain charge neutrality. 
+When $Q_g \approx 2e$, a Cooper pair tunnels from the reservoir to the island, discharging the qubit capacitor. \\
 
+The presence of the external voltage source introduces an additional control parameter for the number of Cooper pairs on the island, modifying the system's Hamiltonian. 
+The resulting Hamiltonian of the Cooper Pair Box (CPB) takes the form
 
+\begin{equation}\label{eq:CPB_complete}
+    \hat{H} = 4E_C(\hat{n} - n_g)^2 - E_J \cos{\hat{\phi}}
+\end{equation}
 
+where $n_g = \frac{C_g V_g}{2e}$ represents the normalized gate charge.
 
+\subsection{Transmon qubit}
+To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
+A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting QUantum Interference Device).
+In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop as shown in Figure [??].
 
-The frequency $f_Q$ of a two-junction transmon dependends on the magnetic flux $\Phi_Q(t)$ through the SQUID loop, for symmetric junctions is given by\cite{TransmonPaper}
+Starting from the Hamiltonian of the single Josephson junction it is possible to write the hamiltonian of a SQUID:
+\begin{equation}\label{eq:SQUID_Hamiltonian}
+    \hat{H} = 4E_C\hat{n}^2 - E_{J1}\cos{\hat{\phi_1}} - E_{J2}\cos{\hat{\phi_2}}
+\end{equation}
+where $E_{J1}$ and $E_{J2}$ are the Josephson energies of the two junctions, and the operators $\hat{\phi_1}$ and $\hat{\phi_2}$ are the phase differences across the junctions.
+
+Because od the quantization of the magnetic flux through the SQUID, the quantities $\hat{\phi_1}$ and $\hat{\phi_2}$ are not independet. 
+In particular, as show in \cite{manenti_quantum_2023}, the difference between $\hat{\phi_1}$ and $\hat{\phi_2}$ follows the following relation:
+\begin{equation}\label{eq:phases_relation}
+    \hat{\phi_1} - \hat{\phi_2} = \frac{2\pi}{\Phi_0}\Phi_{\text{ext}}\mathbb{I}(\text{mod}2\pi)
+\end{equation}
+where $\Phi_{\text{ext}}$ is the flux of external magnetic field defined as the integral of the magnetic field over the SQUID area.
+
+Equation \ref{eq:phases_relation} can be simplified and rewritten as 
+\begin{equation}\label{eq:tunable_transmon_hamiltonian}
+    \hat{H} = 4E_C\hat{n}^2 - E_J(\Phi_{\text{ext}})\cos{\hat{\varphi}}
+\end{equation}
+where $\hat{\varphi} = \frac{\hat{\phi_1}+\hat{\phi_2}}{2}$, and the Josephson energy is flux-dependent: 
+\begin{equation}\label{eq:EJ_tunable}
+    E_J(\Phi_{\text{ext}}) = (E_{J1} + E_{J2}) \left| \cos \left( \pi \frac{\Phi_{\text{ext}}}{\Phi_0} \right) \right| \sqrt{1 + d^2 \tan^2 \left( \pi \frac{\Phi_{\text{ext}}}{\Phi_0} \right) },
+\end{equation}
+where $d = \frac{E_{J1}-E_{J2}}{E_{J1}+E_{J2}}$ is the relative junction asymmetry.
+
+Then, it's easy to see that the frequency $f_Q$ of a two-junction transmon dependends on the magnetic flux $\Phi_Q(t)$ through the SQUID loop, for symmetric junctions is given by
 \begin{equation}\label{eq:freqdepndenceonflux}
-    f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right)    
+    f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right).    
 \end{equation}
 
-where $E_C$ is the charging energy, $E_J$ is the sum of the Josephson energies of the individual Josephson junctions, $\Phi_0$ is the flux quantum, and $h$ is the Planck's constant.
-
-\subsection{Density matrix}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
 \section{Quantum operations}
 A quantum operation is a mathematical transformation that describes how a quantum state changes as a consequence of a physical process. Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by a density operator $\hat{\rho}$ into another state described by a new density operator $\hat{\rho}'$:
