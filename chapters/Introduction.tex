@@ -30,7 +30,7 @@ A vector of unit length on the Blooch sphere is characterized by the polar angle
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.25\textwidth]{figures/png/BlochSphere.png}
+\includegraphics[width=0.35\textwidth]{figures/png/BlochSphere.png}
 \caption{Example of qubit state representation on the Bloch sphere\\
 Source: Metrology of Quantum Control and Measurement in Superconducting Qubits \cite{Chen2018}}
 \label{fig:BlochSphere}
@@ -73,7 +73,7 @@ These requirements, known as the DiVincenzo criteria, establish the essential co
     \item The physical system used as quantum computer must comprise a set of qubits, meaning that the quantum system must be well-characterized, and scalable such that quantum
     computing can be realized.
     \item It must be possible to initialize the qubits in a reliable state, such as the ground state.
-    \item The coherence time of the qubits must be longer than the typical gate time.
+    \item The coherence time of the qubits must be longer than the typical gate time, ideally should be possible to perform $>10^4$ operations, that is the number which allows for realizing effective error corrections.
     \item It must be possible to implement a universal set of quantum gates.
     \item It must be possible to measure the qubits in the computational basis.
 \end{enumerate}
@@ -82,10 +82,33 @@ In the present work, I will focus on superconducting qubits, which constitute th
 However, several of the experiments described later can also be implemented using different physical systems.
 
 \section{Transmon qubits}\label{sec:cQED}
-In questa sezione faccio un ripasso della struttura e del funzionamento dei superconducting transmon qubits, per la stesura di questa sezione ho fatto riferimento al Qunatum Information Science manual \cite{manenti_quantum_2023}, the Metrology of Quantum Control and Measurement in Superconducting Qubits \cite{Chen2018} and the original paper \cite{TransmonPaper}.
+In this section, I provide a review of the structure and operation of superconducting transmon qubits. 
+The content of this section is based on the \textit{Quantum Information Science} manual \cite{manenti_quantum_2023}, \textit{The Metrology of Quantum Control and Measurement in Superconducting Qubits} \cite{Chen2018}, the notes from quantum computing lectures held by Professor Olivares \cite{Olivares2021}, and the original transmon paper \cite{TransmonPaper}.
 
-A transmon consists of two superconducting pads connected by a Josephson junction. 
+\subsection{Josephson Junctions}
 The Josephson junction (JJ) is formed by a thin oxide layer positioned between the two superconductors which acts as an insulating barriers. 
+An example of Josephson junction is show in figure \ref{fig:JJ}, a side view in image \ref{fig:JJ_side} and a top view in image \ref{fig:JJ_top}.
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.90\textwidth]{figures/png/JJ_side.png}
+        \subcaption{}
+        \label{fig:JJ_side}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.70\textwidth]{figures/png/JJ_top.png}
+        \subcaption{}
+        \label{fig:JJ_top}
+    \end{subfigure}
+    \caption{Figure \ref{fig:JJ_side}: Side viwe of a Josephson junction, the two superconducting pads are coloured in red and blue and indicating by the letter S. In grey, indicated by letter I is represented the insulating barrier of oxide. 
+    The superconductors and the oxide are layered over a substrate.\\
+    Figure \ref{fig:JJ_top}: Electron microscope image of a $2 \mu\text{m} \cross 2 \mu\text{m}$ cross-type junction: I. Josephson junction. II. Base electrode. III. Contact to the top electrode.\\
+    Source:\url{https://www.ims.kit.edu/english/2551.php}}
+    \label{fig:JJ}
+\end{figure}
 
 Superconductivity is a phenomenon observed in certain materials where, when cooled well below a critical temperature $T_c$, which depends on the material, their electrical resistance drops to zero, allowing them to behave as perfect conductors.
 According to the BCS (Bardeen-Cooper-Schrieffer) theory, superconductivity arises, from the formation of Cooper pairs, which are bound states of electrons with opposite momenta and spins.
@@ -127,7 +150,54 @@ Instead, from the real part of the Schr\"odinger equation \ref{eq:schr1}, \ref{e
 which can be rewritten as \begin{equation}
     \frac{d\phi}{dt} = \frac{2\pi}{\Phi_0} V(t).
 \end{equation}
-where $\Phi_0$ is the superconducting flux quantum.
+where $\Phi_0 = \frac{h}{2e}$ is the superconducting flux quantum, with $h$ is the Planck's constant and $2e$ is the charge of a Cooper pair.
+
+The time derivative of the first Josephson equation \ref{eq:Josephson1} yields:
+\begin{equation}\label{eq:current_derivative}
+    \dot{I_J}I_C\cos{\phi}\frac{\partial \phi}{\partial t},
+\end{equation}
+equation \ref{eq:current_derivative} suggests a nonlinear relation between the current the voltage. 
+Using the Josephson voltage-phase relation and the fact that $\dot{I}=\frac{V}{L}$ it is possible to define an effective nonlinear inductance for the Josephson junction:
+\begin{equation}\label{eq:LJ}
+    L_J = \frac{1}{\cos{\phi}}\frac{\Phi_0}{2\pi I_c}.
+\end{equation} 
+
+In addition to ths inductive behaviour the Josephson junction also exibits capacitive properties due to its inherent capacitance $C_J$ with a corresponing energy of 
+\begin{equation}\label{eq:capacitive_energy}
+    E_{C_J} = \frac{Q^2}{2C_J}
+\end{equation}.
+
+Fom equation \ref{eq:LJ} it is possible to compute the energy stored in the nonlinear inductance as
+\begin{align}\label{eq:inductive_energy}
+    E_{L_J} &= \int_{0}^{t}\text{d}\tau I_J(\tau)V(\tau) = \int_{0}^{t}\text{d}\tau I_c\sin{\phi(\tau)}\frac{\partial\phi(\tau)}{\partial\tau}\frac{\Phi_0}{2\pi}\\
+    &= \frac{\Phi_0 I_c}{2\pi}(1-\cos{\phi}) = E_J(1-\cos{\phi})
+\end{align}
+where $E_J$ represents the energy due to the behaviour of the junction as nonlinear inductor .
+
+Then it is possible to write the classical Hamiltonian of the system
+\begin{equation}
+    H_J = \frac{Q^2}{2C_J} - E_J\cos{\phi}
+\end{equation}
+where the constant term was ignored as it acts simply as a constant offset without influencing the dynamics of the system.
+Since the charge $Q$ can be expressesd in terms of the number of excess of Cooper pairs as $Q=2eN$, where $N\in(-\infty,+\infty)$ represents the difference in the number of Cooper pairs on either side of the junction, 
+it is possible to determine the charging energy as \begin{equation}\label{eq:charging_energy}
+    E_C = \frac{e^2}{2C_J}.
+\end{equation}
+
+Substituting the definition of charging energy \ref{eq:charging_energy} in the hamiltonians we obtain
+\begin{equation}\label{eq:JosephsonHamiltonian1}
+    H_J = 4E_C N^2 - E_J\cos{\phi}.
+\end{equation}
+
+\subsection{SQUID Hamiltonian}
+In the hardware I used during my thesis work, as in most of the superconducting qubits currently in use, instead of a single Josephson junction, a configuration known as a SQUID (Superconducting QUantum Interference Device) is employed, in which two Josephson junctions are connected in parallel to form a superconducting loop. 
+This arrangement allows for the effective Josephson energy of the device to be tuned by an external magnetic flux threading the loop.
+
+
+
+
+
+
 The frequency $f_Q$ of a two-junction transmon dependends on the magnetic flux $\Phi_Q(t)$ through the SQUID loop, for symmetric junctions is given by\cite{TransmonPaper}
 \begin{equation}\label{eq:freqdepndenceonflux}
     f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right)    
