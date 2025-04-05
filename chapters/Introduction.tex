@@ -220,7 +220,66 @@ The resulting Hamiltonian of the Cooper Pair Box (CPB) takes the form
 
 where $n_g = \frac{C_g V_g}{2e}$ represents the normalized gate charge.
 
+A key feature of the system is the presence of a Josephson junction in place of a linear inductance. 
+Unlike a standard LC circuit—corresponding to a quantum harmonic oscillator—this results in a non-equidistant energy level spectrum. 
+In particular, the energy levels are anharmonic, allowing the first two levels to be spectrally isolated from the higher ones. 
+This anharmonicity enables the use of the subspace spanned by the ground state $\ket{0}$ and the first excited state $\ket{1}$ aas a qubit.
+
+The qubit frequency is defined as the frequency associated with the energy difference between these two states: $f_{01}(n_g) = f_Q = \frac{(E_1 - E_0)}{h}$.
+This frequency can be tuned by varying the externally applied DC voltage, which modifies the system’s parameters and, consequently, its energy level spacing.\\
+
+%%%NOTA PER ME: INSERIRE IL PLOT DEI LIVELLI ENERGETICI DEL CPB
+
+
 \subsection{Transmon qubit}
+One of the main drawbacks of the Cooper Pair Box (CPB) qubit, which ultimately led to its replacement by other qubit architectures, is its limited coherence time. 
+The transmon qubit was introduced specifically to address this issue, with the goal of improving the dephasing time of the CPB. The key idea behind the transmon is to reduce the sensitivity of the energy levels to fluctuations in the gate charge—effectively flattening the energy bands—by increasing the ratio between the Josephson energy $E_J/E_C \geqq 1$,
+this architecture was first proposed in \cite{TransmonPaper}, the first and more straightforward method to increase this ratio is to enlarge the capacitance of the qubit, which reduces the charging energy $E_C$.
+
+Since the CPB and the transmon qubit have the same electrical circuit they are also described by the same hamiltonian \ref{eq:CPB_hamiltonian}. 
+The difference is that in this case the transmon satisfies the condition $E_J/E_C \geqq 1$ it is possible to expand the cosine term in \ref{eq:CPB_hamiltonian} with a Taylor series and neglect the higher order terms:
+\begin{equation}\label{eq:approx_transmon}
+    \hat{H}\approx 4E_C\hat{n}^2 + \frac{1}{2}E_J\hat{\phi}^2 - \frac{E_J}{4!}\hat{\phi}^4
+\end{equation}
+where the last term, proportional to $\hat{phi}^4$, makes the potential of the transmon slightly anharmonic.
+
+As happens in the standard harmonic oscillator case, the operators $\hat{phi}$ and $\hat{n}$ satisfy the cnaonical commutation relation $[\hat{\phi},\hat{n}]=i\mathbb{I}$, it is possible to introduce the raising and lowering operators $\hat{b},\hat{b}^\dagger$ as
+\begin{equation}\label{eq:raising_lowering_operators}
+    \hat{\phi} = \sqrt{\xi}(\hat{b}+\hat{b}^\dagger), 2\quad \hat{n} = -\frac{i}{2\sqrt{xi}}(\hat{b}-\hat{b}^\dagger),
+\end{equation}
+where $\xi =  \sqrt{2E_C/E_J}$.
+
+Substituting equations \ref{eq:raising_lowering_operators} in the hamiltonian, equation \ref{eq:approx_transmon} becomes
+\begin{equation}\label{eq:transmon_hamiltonian}
+    \hat{H} = \sqrt{8E_JE_C}\hat{b}^\dagger\hat{b} - \frac{E_C}{12}(\hat{b}+\hat{b}^\dagger)^4.
+\end{equation}
+
+Given equation \ref{eq:transmon_hamiltonian} it is possible to solve the eigenvalue proble $\hat{H}\ket{k}=E_k\ket{k}$ and calculate the energy levels $E_k$.
+The first term of hamiltonian \ref{eq:transmon_hamiltonian} is the harmonic oscillator contribution with eigenstates $\ket{k}$ and eigenvalues $\sqrt{8E_JE_C}k$. 
+Since $E_C \ll E_J$, the second term $ \hat{V} = -\frac{E_C}{12}(\hat{b} + \hat{b}^\dagger)^4$ represents a small perturbative contribution to the Hamiltonian and can be treated using perturbation theory. 
+The first-order correction to the energy levels is given by the diagonal matrix elements of the perturbation operator: $\Delta E_k^{(1)} = \langle k | \hat{V} | k \rangle$.
+It is possible to verify that $\bra{k} \hat{V} \ket{k} = -\frac{E_C}{12} (6k^2 + 6k + 3)$. 
+Thus the eigenenergies of the transmon hamiltonian are 
+\begin{equation}
+    E_k \approx \sqrt{8E_JE_C}k - \frac{E_C}{2}(k^2 + k).
+\end{equation}
+
+As mentioned before, the qubit frequency is defined as $f_Q = f_{01} = (E_1 - E_0)/h$ which yields
+\begin{equation}
+    f_01 \approx (\sqrt{8E_JE_C} - E_C)/h
+\end{equation}
+
+As explained at the beginning of this section, a large $E_J/E_C$ ratio makes the transmon qubit significantly less sensitive to charge noise. 
+However, this improvement comes at the expense of reduced anharmonicity in the energy level spectrum. 
+The anharmonicity $\eta$ is defined as the difference between the second and first transition energies, relative to the first transition energy:
+\begin{equation}
+    \eta = \frac{(E_2 - E_1) - (E_1 - E_0)}{\hbar} = \omega_{12} - \omega_{01}.
+\end{equation}
+For a transmon, the anharmonicity $\eta$ is negative, reflecting the fact that the level spacing decreases with increasing energy. 
+Ideally, the absolute value  $|\eta|$ should be sufficiently large to allow external microwave drives to selectively address the $\ket{0}\leftrightarrow\ket{1}$ transition without inadvertently exciting higher-energy states.
+
+
+\paragraph{Flux-tunable transmon}
 To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
 A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting QUantum Interference Device).
 In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop as shown in Figure [??].
@@ -262,7 +321,7 @@ A quantum operation is a mathematical transformation that describes how a quantu
 
 The simplest example of a quantum operation is the evolution of a quantum state $\hat{\rho}$ of a closed quantum system, under a unitary operator $\hat{U}$, which can be written as $\mathcal{E} \equiv \hat{U} \hat{\rho} \hat{U}^{\dagger}$.
 
-\paragraph{Depolarizing chennel}
+\paragraph{Depolarizing channel}
 A depolarizing channel describes a process in which the current state of the $n$-qubit system $\rho$, is replaced by $\frac{\id}{2^n}$, with probability $d$. This process can be represented with a quantum map as follows:
 \begin{equation}
     \mathcal{E}_{dc}(\rho) = d\frac{\id}{2^n}+(1-d)\rho\label{eq:depolarizing_channel}
