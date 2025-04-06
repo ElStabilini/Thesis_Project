@@ -282,7 +282,7 @@ Ideally, the absolute value  $|\eta|$ should be sufficiently large to allow exte
 \subsection{Flux-tunable transmon}
 To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
 A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting QUantum Interference Device).
-In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop as shown in Figure \ref{FrequencyTunableTransmon}.
+In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop, as shown in Figure \ref{fig:FrequencyTunableTransmon}.
 
 Starting from the Hamiltonian of the single Josephson junction it is possible to write the Hamiltonian of a SQUID:
 \begin{equation}\label{eq:SQUID_Hamiltonian}
@@ -320,14 +320,14 @@ Then, it's easy to see that the frequency $f_Q$ of a two-junction transmon depen
 \end{figure}
 
 
-\section{Circuit QED}\label{sec:cQED}
+\section{Qubit readout}\label{sec:cQED}
 Up to this point, I have discussed the physical structure of a transmon qubit. 
 However, in order to perform quantum computing, it is essential to be able to control and measure its quantum state.
 One approach to achieve this is to capacitively couple the qubit to both a drive line and a readout line. 
 The drive line is used to manipulate the state of the qubit, while the readout line is employed to measure it.
 An example of such a system is shown in Figure \ref{fig:Transmon_model}, along with the corresponding circuit diagram.
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}{0.47\textwidth}
         \centering
@@ -346,7 +346,6 @@ An example of such a system is shown in Figure \ref{fig:Transmon_model}, along w
     \label{fig:Transmon_model}
 \end{figure}
 
-\subsection{Qubit readout}
 As mentioned in the introduction of this section, in circuit quantum electrodynamiccs (cQED), the qubit state is measured via a dispersive interaction between a qubit and a far-detuned microwave resonator.\\
 
 In Figure \ref{fig:TransmonCircuit}, in blue is represented the resonator circuit capacitively coupled to the (red) qubit that is used for the readout of the qubit state. 
@@ -354,7 +353,7 @@ The resonator circuit is characterized by a an inductance $L_r$ and a capacitanc
 
 The classical Hamiltonian of the resonator can be written as 
 \begin{equation}\label{eq:classical_hamiltonian_resonator}
-    H_r = \frac{Q^2}{2C} +  \frac{1}{2}C\omega_r^2\Phi^2,
+    H_r = \frac{Q^2}{2C_r} +  \frac{1}{2}C\omega_r^2\Phi^2,
 \end{equation}
 
 where $\Phi$ is the generalized flux, defined as the time integral of the voltage across the capacitor:
@@ -364,7 +363,7 @@ where $\Phi$ is the generalized flux, defined as the time integral of the voltag
 
 The quantization of the Hamiltonian involves replacing the classical conjugate variables with their corresponding hermitian operators $\hat{\Phi}$ and $\hat{Q}$ with $[\hat{\Phi},\hat{Q}]=i\hbar\mathbb{I}$ which leads to
 \begin{equation}
-    \hat{H}_r = \frac{\hat{Q}^2}{2C} +  \frac{1}{2}C\omega_r^2\hat{\Phi}^2.
+    \hat{H}_r = \frac{\hat{Q}^2}{2C_r} +  \frac{1}{2}C\omega_r^2\hat{\Phi}^2.
 \end{equation}
 To find the eigenvalues ans eigenvectors of $\hat{H}_r$ it is often convenient to introduce the raising and lowering operators, $\hat{a}$ and $\hat{a}^\dagger$ which satisfy $[\hat{a},\hat{a}^\dagger]=\mathbb{I}$.
 These two non-hermitian operators are defined as 
@@ -374,7 +373,7 @@ These two non-hermitian operators are defined as
 \begin{equation}\label{eq:Q_operator}
     \hat{Q} = -iQ_{\text{zpf}}(\hat{a} - \hat{a}^\dagger)
 \end{equation}
-wher $\Phi_{\text{zpf}} = \sqrt{\frac{\hbar}{2C\omega_r}}$ and $Q_{\text{zpf}} = \sqrt{\frac{C\hbar \omega_r}{2}}$ are the zero-point fluctuations.
+where $\Phi_{\text{zpf}} = \sqrt{\frac{\hbar}{2C_r\omega_r}}$ and $Q_{\text{zpf}} = \sqrt{\frac{C_r\hbar \omega_r}{2}}$ are the zero-point fluctuations.
 
 Then it is possible to write the Hamiltonian of a microwave resonator in a quantum regime:
 
@@ -385,7 +384,7 @@ Then it is possible to write the Hamiltonian of a microwave resonator in a quant
 The system of the capacitively coupled transmon and resonator is built in such a way that there is a maximum coupling between the qubit and the resonator.
 The Hamiltonian of the system reads
 \begin{align}
-    \hat{H} &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C (\hat{n} + \frac{C_g\hat{V}}{2e})^2- E_J \cos\hat{\phi}\\ 
+    \hat{H} &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C (\hat{n} + \frac{C_{\text{read}}\hat{V}}{2e})^2- E_J \cos\hat{\phi}\\ 
     &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C \hat{n}^2 - E_J \cos\hat{\phi} + \frac{4E_C}{e} \hat{n}_C \hat{V}
 \end{align}
 where $\hat{V} = \hat{Q}/C_r$ is the voltage across the resonator capacitor. Using equations \ref{eq:raising_lowering_operators} and \ref{eq:quant_resonator_hamiltonian} the Hamiltonian becomes
@@ -395,7 +394,7 @@ where $\hat{V} = \hat{Q}/C_r$ is the voltage across the resonator capacitor. Usi
 where was introduced the parameter $g$, known as coupling strength, that quantities the strength of the coupling between the qubit and the resonator.:
 
 \begin{equation}
-    g = \frac{2 E_C}{\hbar e} \frac{C_g}{C_r} Q_{\text{zpf}} \sqrt{\xi} = \frac{E_C}{\hbar e} \left( \frac{E_J}{2 E_C} \right)^{1/4} \frac{C_g}{C_r} \sqrt{2 \hbar \omega_r C_r}.
+    g = \frac{2 E_C}{\hbar e} \frac{C_{\text{read}}}{C_r} Q_{\text{zpf}} \sqrt{\xi} = \frac{E_C}{\hbar e} \left( \frac{E_J}{2 E_C} \right)^{1/4} \frac{C_{\text{read}}}{C_r} \sqrt{2 \hbar \omega_r C_r}.
 \end{equation} 
 The coupling strength can be adjust by varying the capacitance coupling the qubit and the resonator.
 
@@ -429,10 +428,68 @@ Considering also the higher energy levels of the qubit a more accurate expressio
 \end{equation} 
 where $\eta$ is the qubit anharmonicity.
 
-\subsection{Qubit control}ù
+\section{Qubit control}
+Another necessary element for performing quantum computation is the implementation, starting with single-qubit gates. 
+A qubit can be driven into any arbitrary superposition state by applying an electrical pulse with a carefully controlled amplitude, duration, and phase.
+This pulse is generated by an AC voltage source located outside the dilution refrigerator that hosts the qubit.
+The driving pulse is brought to the qubit by an on-chip waveguide which is capacitively coupled to the qubit as shown in Figure \ref{fig:TransmonCircuit}, where the coupling capacitance is indicated with $c$.
+This signal path is commonly referred to as a control line or an XY line. The pulse that arrives at the device has the analytical form
+\begin{equation}\label{eq:drive_pulse}
+    V_d(t) = A\varepsilon(t)\sin{\omega_d t + \alpha}
+\end{equation}
+where $A$ is the pulse amplitude in volts, $\omega_d$ is the drive frequency in rad/s, $\alpha$ is the fase of the pulse and $\varepsilon(t)$ is the modulation of the pulse; the maximum of $\varepsilon(t)$ is fixed at one.
+As a first approximation, the envelope of the drive pulse is often chosen to have a Gaussian shape, which is preferred over a square pulse due to its smaller frequency bandwidth, minimizing the excitation of higher energy levels.
+However, the study of pulse shapes that minimize leakage to states outside the computational basis remains an active area of research \cite{chiaro2025activeleakagecancellationsingle}.
 
+In a similar way to what was previously done to study the capacitive coupling between the qubit and the resonator, it is possible to derive th hamiltonian of the transmon capacitively coupled to the control line starting from the circuit shown in Figure \ref{fig:TransmonCircuit}
+\begin{equation}
+    \hat{H} = 4E_C(\hat{n} + \frac{C_d V_d(t)}{2e})^2 - E_J \cos{\hat{\phi}}
+\end{equation}, 
+where $E_C = e^2/2C_\Sigma$ and $C_\Sigma =  C_d + C_q$. By expanding the parenthesis and dropping a constant term the Hamiltonian can be re-written as
+\begin{equation}\label{eq:tmp}
+    \hat{H} =  4E_C\hat{n}^2 -E_J\cos{\hat{\phi}} + 2e\frac{C_d}{C_\Sigma}V_d(t)\hat{n}.
+\end{equation}
+Since $\hat{n} = -i(\hat{b}-\hat{b}^\dagger)/2\sqrt{\xi}$ (from equation \ref{eq:raising_lowering_operators}), the last term of the Hamiltonian can be rewritten:
+\begin{align}\label{eq:misto}
+    \hat{H}_d &= -2e\frac{C_d}{C_\Sigma}V_d(t)\hat{n}\\
+    &=-i\frac{e}{\sqrt{\xi}}\frac{C_d}{C_{\Sigma}}V_d(t)(\hat{b}-\hat{b}^\dagger)\\
+    &=-i\frac{e}{\sqrt{\xi}}\frac{C_d}{C_{\Sigma}}V_d(t)(\ket{0}\bra{1}-\ket{1}\bra{0})\\
+    &=\frac{e}{\sqrt{\xi}}\frac{C_d}{C_{\Sigma}}V_d(t)\hat{\sigma_y}
+\end{align}
 
+Regarding the first part of equation \ref{eq:tmp}, by focusing on the firs two levels of the transmon the qubit Hamiltonian can be rewritten as $\hat{H}_q = -\frac{1}{2}\hbar\omega_q\hat{\sigma}_z$.
+Then, by substituting the qubit and drive Hamiltonians (equation \ref{eq:misto}) and the analytical form of $V_d(t)$ in equation \ref{eq:tmp} we obtain
+\begin{align}
+    \hat{H} &= \hat{H}_q + \hat{H}_d = -\frac{\hbar \omega_q}{2} \hat{\sigma}_z + \frac{e}{\sqrt{\xi}} \frac{C_g}{C_{\Sigma}} A \epsilon(t) \sin(\omega_d t + \alpha) \hat{\sigma}_y\\
+    &= = -\frac{\hbar \omega_q}{2} \hat{\sigma}_z + \hbar \Omega \epsilon(t) \sin(\omega_d t + \alpha) \hat{\sigma}_y,
+\end{align} 
+where $\Omega$ is the Rabi frequency, 
+\begin{equation}
+    \Omega = \frac{e}{\hbar\sqrt{\xi}}\frac{C_d}{C_\Sigma}A.
+\end{equation}
+The Rabi frequency quantifies the coupling between the control line and the qubit.
 
+To study the dynamics of the system it is convenient to use the rotating frame, the Hamiltonian becomes\footnote{For the complete derivation of the Hamiltonian in the rotating frame see Appendix ...}: %%add appendix per ricavare hamiltoniana nel rotating frame
+\begin{align}
+    \hat{H}' &= -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \hbar \Omega \varepsilon(t) \sin(\omega_d t + \alpha)\left( \hat{\sigma}_x \sin \omega_d t + \hat{\sigma}_y \cos \omega_d t \right)\\
+    &= -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \hbar \Omega \varepsilon(t)\left(\frac{\hat{\sigma}_x}{2} \left( -\cos(2\omega_d t + \alpha) + \cos \alpha \right) + \frac{\hat{\sigma}_y}{2} \left( \sin(2\omega_d t + \alpha) + \sin \alpha \right)\right)\\
+    &=  -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \epsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right)
+\end{align}
+where in the last step I used the rotating wave approximation, meaning that as $\omega_d\approx\omega_q$ the terms $\cos(2\omega_d t + \alpha)$ and $\sin(2\omega_d t + \alpha)$ oscillate rapidly and their contribution to the dynamics can be neglected.
+
+For example, if $\omega_d = \omega_q$ and $\alpha=\frac{\pi}{2}$, the state evolution is described as follows:
+\begin{align}
+    \ket{\psi} = \exp{\frac{i}{\hbar}\int_{0}^{+\infty} \hat{H}(t')}\ket{0} = \exp{-i\frac{\Omega}{2}\int_{0}^{+\infty}\epsilon(t')dt'}\ket{0} = e^{-i\frac{\theta}{2}\hat{\sigma}_y}\ket{0}
+\end{align}
+where
+\begin{equation}
+    \theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'
+\end{equation}
+
+In general, a microwave pulse given by $V_d = A\epsilon(t) \sin(\omega_d t + \alpha)$ implements a single-qubit rotation $R_{\hat{n}(\alpha)}(\theta)$ around an axis $\hat{n}$ that lies on the equator of the Bloch sphere, so that
+\begin{equation}
+    R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta}
+\end{equation}
 
 \section{Qubit decoherence}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
@@ -452,4 +509,4 @@ A depolarizing channel describes a process in which the current state of the $n$
     \mathcal{E}_{dc}(\rho) = d\frac{\id}{2^n}+(1-d)\rho\label{eq:depolarizing_channel}
 \end{equation} 
 
-
+\section{Two qubits gates}
