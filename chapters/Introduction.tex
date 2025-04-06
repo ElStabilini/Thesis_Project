@@ -236,7 +236,7 @@ One of the main drawbacks of the Cooper Pair Box (CPB) qubit, which ultimately l
 The transmon qubit was introduced specifically to address this issue, with the goal of improving the dephasing time of the CPB. The key idea behind the transmon is to reduce the sensitivity of the energy levels to fluctuations in the gate charge—effectively flattening the energy bands—by increasing the ratio between the Josephson energy $E_J/E_C \geqq 1$,
 this architecture was first proposed in \cite{TransmonPaper}, the first and more straightforward method to increase this ratio is to enlarge the capacitance of the qubit, which reduces the charging energy $E_C$.
 
-Since the CPB and the transmon qubit have the same electrical circuit they are also described by the same hamiltonian \ref{eq:CPB_hamiltonian}. 
+Since the CPB and the transmon qubit have the same electrical circuit they are also described by the same Hamiltonian \ref{eq:CPB_hamiltonian}. 
 The difference is that in this case the transmon satisfies the condition $E_J/E_C \geqq 1$ it is possible to expand the cosine term in \ref{eq:CPB_hamiltonian} with a Taylor series and neglect the higher order terms:
 \begin{equation}\label{eq:approx_transmon}
     \hat{H}\approx 4E_C\hat{n}^2 + \frac{1}{2}E_J\hat{\phi}^2 - \frac{E_J}{4!}\hat{\phi}^4
@@ -245,21 +245,21 @@ where the last term, proportional to $\hat{phi}^4$, makes the potential of the t
 
 As happens in the standard harmonic oscillator case, the operators $\hat{phi}$ and $\hat{n}$ satisfy the cnaonical commutation relation $[\hat{\phi},\hat{n}]=i\mathbb{I}$, it is possible to introduce the raising and lowering operators $\hat{b},\hat{b}^\dagger$ as
 \begin{equation}\label{eq:raising_lowering_operators}
-    \hat{\phi} = \sqrt{\xi}(\hat{b}+\hat{b}^\dagger), 2\quad \hat{n} = -\frac{i}{2\sqrt{xi}}(\hat{b}-\hat{b}^\dagger),
+    \hat{\phi} = \sqrt{\xi}(\hat{b}+\hat{b}^\dagger), \quad\quad \hat{n} = -\frac{i}{2\sqrt{xi}}(\hat{b}-\hat{b}^\dagger),
 \end{equation}
 where $\xi =  \sqrt{2E_C/E_J}$.
 
-Substituting equations \ref{eq:raising_lowering_operators} in the hamiltonian, equation \ref{eq:approx_transmon} becomes
+Substituting equations \ref{eq:raising_lowering_operators} in the Hamiltonian, equation \ref{eq:approx_transmon} becomes
 \begin{equation}\label{eq:transmon_hamiltonian}
     \hat{H} = \sqrt{8E_JE_C}\hat{b}^\dagger\hat{b} - \frac{E_C}{12}(\hat{b}+\hat{b}^\dagger)^4.
 \end{equation}
 
 Given equation \ref{eq:transmon_hamiltonian} it is possible to solve the eigenvalue proble $\hat{H}\ket{k}=E_k\ket{k}$ and calculate the energy levels $E_k$.
-The first term of hamiltonian \ref{eq:transmon_hamiltonian} is the harmonic oscillator contribution with eigenstates $\ket{k}$ and eigenvalues $\sqrt{8E_JE_C}k$. 
+The first term of Hamiltonian \ref{eq:transmon_hamiltonian} is the harmonic oscillator contribution with eigenstates $\ket{k}$ and eigenvalues $\sqrt{8E_JE_C}k$. 
 Since $E_C \ll E_J$, the second term $ \hat{V} = -\frac{E_C}{12}(\hat{b} + \hat{b}^\dagger)^4$ represents a small perturbative contribution to the Hamiltonian and can be treated using perturbation theory. 
 The first-order correction to the energy levels is given by the diagonal matrix elements of the perturbation operator: $\Delta E_k^{(1)} = \langle k | \hat{V} | k \rangle$.
 It is possible to verify that $\bra{k} \hat{V} \ket{k} = -\frac{E_C}{12} (6k^2 + 6k + 3)$. 
-Thus the eigenenergies of the transmon hamiltonian are 
+Thus the eigenenergies of the transmon Hamiltonian are 
 \begin{equation}
     E_k \approx \sqrt{8E_JE_C}k - \frac{E_C}{2}(k^2 + k).
 \end{equation}
@@ -282,9 +282,9 @@ Ideally, the absolute value  $|\eta|$ should be sufficiently large to allow exte
 \subsection{Flux-tunable transmon}
 To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
 A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting QUantum Interference Device).
-In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop as shown in Figure [??].
+In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop as shown in Figure \ref{FrequencyTunableTransmon}.
 
-Starting from the Hamiltonian of the single Josephson junction it is possible to write the hamiltonian of a SQUID:
+Starting from the Hamiltonian of the single Josephson junction it is possible to write the Hamiltonian of a SQUID:
 \begin{equation}\label{eq:SQUID_Hamiltonian}
     \hat{H} = 4E_C\hat{n}^2 - E_{J1}\cos{\hat{\phi_1}} - E_{J2}\cos{\hat{\phi_2}}
 \end{equation}
@@ -342,30 +342,114 @@ An example of such a system is shown in Figure \ref{fig:Transmon_model}, along w
         \subcaption{}
         \label{fig:TransmonCircuit}
     \end{subfigure}
-    \caption{Figure \ref{fig:TransmonBoard} shows an example of a single transmon device. Figure \ref{TransmonCircuit} shows the equivalent lumped element circuit model of the device in \ref{fig:TransmonBoard}. Source: \cite{Roth_2023}}
+    \caption{Figure \ref{fig:TransmonBoard} shows an example of a single transmon device. Figure \ref{fig:TransmonCircuit} shows the equivalent lumped element circuit model of the device in \ref{fig:TransmonBoard}, in blue is represented the resonator circuit while in red the transmon qubit circuit. Source: \cite{Roth_2023}}
     \label{fig:Transmon_model}
 \end{figure}
 
 \subsection{Qubit readout}
+As mentioned in the introduction of this section, in circuit quantum electrodynamiccs (cQED), the qubit state is measured via a dispersive interaction between a qubit and a far-detuned microwave resonator.\\
 
-%In the architecture of circuit quantum electrodynamics (cQED), these requirements are addressed by exploiting the dispersive interaction between the qubit and a far-detuned microwave resonator
+In Figure \ref{fig:TransmonCircuit}, in blue is represented the resonator circuit capacitively coupled to the (red) qubit that is used for the readout of the qubit state. 
+The resonator circuit is characterized by a an inductance $L_r$ and a capacitance $C_r$, then the characteristic frequency is $\omega_r =  1/\sqrt{L_r C_r}$. 
 
-\subsection{Qubit control}
+The classical Hamiltonian of the resonator can be written as 
+\begin{equation}\label{eq:classical_hamiltonian_resonator}
+    H_r = \frac{Q^2}{2C} +  \frac{1}{2}C\omega_r^2\Phi^2,
+\end{equation}
+
+where $\Phi$ is the generalized flux, defined as the time integral of the voltage across the capacitor:
+\begin{equation}\label{eq:generalized_flux}
+    \Phi(t) = \int_{-\infty}^{t} V(t')dt' .
+\end{equation}.
+
+The quantization of the Hamiltonian involves replacing the classical conjugate variables with their corresponding hermitian operators $\hat{\Phi}$ and $\hat{Q}$ with $[\hat{\Phi},\hat{Q}]=i\hbar\mathbb{I}$ which leads to
+\begin{equation}
+    \hat{H}_r = \frac{\hat{Q}^2}{2C} +  \frac{1}{2}C\omega_r^2\hat{\Phi}^2.
+\end{equation}
+To find the eigenvalues ans eigenvectors of $\hat{H}_r$ it is often convenient to introduce the raising and lowering operators, $\hat{a}$ and $\hat{a}^\dagger$ which satisfy $[\hat{a},\hat{a}^\dagger]=\mathbb{I}$.
+These two non-hermitian operators are defined as 
+\begin{equation}\label{eq:Phi_operator}
+    \hat{\Phi} =  \Phi_{\text{zpf}}(\hat{a} + \hat{a}^\dagger),
+\end{equation}
+\begin{equation}\label{eq:Q_operator}
+    \hat{Q} = -iQ_{\text{zpf}}(\hat{a} - \hat{a}^\dagger)
+\end{equation}
+wher $\Phi_{\text{zpf}} = \sqrt{\frac{\hbar}{2C\omega_r}}$ and $Q_{\text{zpf}} = \sqrt{\frac{C\hbar \omega_r}{2}}$ are the zero-point fluctuations.
+
+Then it is possible to write the Hamiltonian of a microwave resonator in a quantum regime:
+
+\begin{equation}\label{eq:quant_resonator_hamiltonian}
+    \hat{H}_r = \hbar\omega_r\left(\hat{a}^\dagger\hat{a} + \frac{1}{2}\right),
+\end{equation}
+
+The system of the capacitively coupled transmon and resonator is built in such a way that there is a maximum coupling between the qubit and the resonator.
+The Hamiltonian of the system reads
+\begin{align}
+    \hat{H} &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C (\hat{n} + \frac{C_g\hat{V}}{2e})^2- E_J \cos\hat{\phi}\\ 
+    &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C \hat{n}^2 - E_J \cos\hat{\phi} + \frac{4E_C}{e} \hat{n}_C \hat{V}
+\end{align}
+where $\hat{V} = \hat{Q}/C_r$ is the voltage across the resonator capacitor. Using equations \ref{eq:raising_lowering_operators} and \ref{eq:quant_resonator_hamiltonian} the Hamiltonian becomes
+\begin{equation}
+    \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a}  + \sqrt{8 E_J E_C} \, \hat{b}^\dagger \hat{b} - \frac{E_C}{12} (\hat{b} + \hat{b}^\dagger)^4 + \hbar g (\hat{b}^\dagger - \hat{b})(\hat{a} - \hat{a}^\dagger)
+\end{equation}
+where was introduced the parameter $g$, known as coupling strength, that quantities the strength of the coupling between the qubit and the resonator.:
+
+\begin{equation}
+    g = \frac{2 E_C}{\hbar e} \frac{C_g}{C_r} Q_{\text{zpf}} \sqrt{\xi} = \frac{E_C}{\hbar e} \left( \frac{E_J}{2 E_C} \right)^{1/4} \frac{C_g}{C_r} \sqrt{2 \hbar \omega_r C_r}.
+\end{equation} 
+The coupling strength can be adjust by varying the capacitance coupling the qubit and the resonator.
+
+When $g\ll\omega_r$ and $g\ll\omega_q$ it is possible to use the rotating wave approximation (RWA) and write the Hamiltonian in the form
+\begin{equation}
+    \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a} + \sqrt{8E_J E_C} \hat{b}^\dagger \hat{b} - \frac{E_C}{12} (\hat{b} + \hat{b}^\dagger)^4 + \hbar g (\hat{b}^\dagger \hat{a} + \hat{b} \hat{a}^\dagger).
+\end{equation}
+
+Focusing on the first two levels of the transmon we obtain the Jaynes-Cummings Hamiltonian that reads
+\begin{equation}\label{eq:Jaynes-Cummings}
+    \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a} - \frac{\hbar \omega_{01}}{2} \hat{\sigma}_z + \hbar g (\hat{\sigma}_+ \hat{a} + \hat{\sigma}_- \hat{a}^\dagger),
+\end{equation}
+that describes the interaction between an atom, in this case an artificial atom, with an electromagnetic field in the approximation of the two-level system.
+
+When the coupling strength $g$ is much smaller than the detuning between the qubit and the resonator $\Delta = \omega_q -\omega_r $ the system operates in the dispersive regime.
+
+The Jaynes-Cummings Hamiltonian in the dispersive regime, which is the condition in which we operate to perform the qubit readout, can be approximated as 
+\begin{equation}\label{eq:dispersiveshift_hamiltonian}
+    \hat{H}_{\text{disp}} = \hbar (\omega_r - \chi \hat{\sigma}_z) \hat{a}^\dagger \hat{a} - \frac{\hbar}{2} (\omega_{01} + \chi) \hat{\sigma}_z
+\end{equation}
+where $\chi$ is the dispersive shift defined as \begin{equation}\label{eq:dispersiveshift}
+    \chi = \frac{g^2}{\Delta}.
+\end{equation}
+
+Equation \ref{eq:dispersiveshift_hamiltonian} shows that there is a shift in the resonator frequency from $\omega_r$ to $\omega_r - \chi$ if the qubit is in the ground state and a shift from $\omega_r$ to $\omega_r + \chi$ if the qubit is in the excited state.
+
+The dispersive shift equation \ref{eq:dispersiveshift} was derives assuming that the qubit can be approximated as a two level system.
+Considering also the higher energy levels of the qubit a more accurate expression of the dispersive shift is given by 
+\begin{equation}
+    \chi = \frac{g^2}{\Delta(1+\Delta/\eta)}
+\end{equation} 
+where $\eta$ is the qubit anharmonicity.
+
+\subsection{Qubit control}ù
+
+
+
+
+\section{Qubit decoherence}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
-A quantum operation is a mathematical transformation that describes how a quantum state changes as a consequence of a physical process. Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by a density operator $\hat{\rho}$ into another state described by a new density operator $\hat{\rho}'$:
+A quantum operation is a mathematical transformation that describes how a quantum state changes as a consequence of a physical process. 
+Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by a density operator $\hat{\rho}$ into another state described by a new density operator $\hat{\rho}'$:
 \begin{equation}
     \mathcal{E}(\rho) = \rho'\label{eq:quantum_map}.
 \end{equation}
 
-The simplest example of a quantum operation is the evolution of a quantum state $\hat{\rho}$ of a closed quantum system, under a unitary operator $\hat{U}$, which can be written as $\mathcal{E} \equiv \hat{U} \hat{\rho} \hat{U}^{\dagger}$.
+The simplest example of a quantum operation is the evolution of a quantum state $\hat{\rho}$ of a closed quantum system, under a unitary operator $\hat{U}$, which can be written as $\mathcal{E} \equiv \hat{U} \hat{\rho} \hat{U}^{\dagger}$.\\
+
+
 
 \paragraph{Depolarizing channel}
 A depolarizing channel describes a process in which the current state of the $n$-qubit system $\rho$, is replaced by $\frac{\id}{2^n}$, with probability $d$. This process can be represented with a quantum map as follows:
 \begin{equation}
     \mathcal{E}_{dc}(\rho) = d\frac{\id}{2^n}+(1-d)\rho\label{eq:depolarizing_channel}
 \end{equation} 
-
-
-\subsection{Rabi experiments}
 
 
