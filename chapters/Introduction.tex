@@ -81,7 +81,7 @@ These requirements, known as the DiVincenzo criteria, establish the essential co
 In the present work, I will focus on superconducting qubits, which constitute the hardware I have worked on and where the experiments were conducted. 
 However, several of the experiments described later can also be implemented using different physical systems.
 
-\section{Transmon qubits}\label{sec:cQED}
+\section{Transmon qubits}
 In this section, I provide a review of the structure and operation of superconducting transmon qubits. 
 The content of this section is based on the \textit{Quantum Information Science} manual \cite{manenti_quantum_2023}, \textit{The Metrology of Quantum Control and Measurement in Superconducting Qubits} \cite{Chen2018}, the notes from quantum computing lectures held by Professor Olivares \cite{Olivares2021}, and the original transmon paper \cite{TransmonPaper}.
 
@@ -279,7 +279,7 @@ For a transmon, the anharmonicity $\eta$ is negative, reflecting the fact that t
 Ideally, the absolute value  $|\eta|$ should be sufficiently large to allow external microwave drives to selectively address the $\ket{0}\leftrightarrow\ket{1}$ transition without inadvertently exciting higher-energy states.
 
 
-\paragraph{Flux-tunable transmon}
+\subsection{Flux-tunable transmon}
 To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
 A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting QUantum Interference Device).
 In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop as shown in Figure [??].
@@ -312,8 +312,46 @@ Then, it's easy to see that the frequency $f_Q$ of a two-junction transmon depen
     f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right).    
 \end{equation}
 
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.50\textwidth]{figures/png/FrequencyTunableTransmon.png}
+    \caption{Images of a flux tunable transmon qubit. From left to right: the flux tunable transmon qubit, consisting of a large cross-shaped capacitance in parallel with a SQUID to ground, and its corresponding circuit. A zoom in of the SQUID (center), a single Josephson junction (right). Source: \cite{Roth_2023}}
+    \label{fig:FrequencyTunableTransmon}
+\end{figure}
+
+
+\section{Circuit QED}\label{sec:cQED}
+Up to this point, I have discussed the physical structure of a transmon qubit. 
+However, in order to perform quantum computing, it is essential to be able to control and measure its quantum state.
+One approach to achieve this is to capacitively couple the qubit to both a drive line and a readout line. 
+The drive line is used to manipulate the state of the qubit, while the readout line is employed to measure it.
+An example of such a system is shown in Figure \ref{fig:Transmon_model}, along with the corresponding circuit diagram.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/png/TransmonBoard.png}
+        \subcaption{}
+        \label{fig:TransmonBoard}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/png/TransmonCircuit.png}
+        \subcaption{}
+        \label{fig:TransmonCircuit}
+    \end{subfigure}
+    \caption{Figure \ref{fig:TransmonBoard} shows an example of a single transmon device. Figure \ref{TransmonCircuit} shows the equivalent lumped element circuit model of the device in \ref{fig:TransmonBoard}. Source: \cite{Roth_2023}}
+    \label{fig:Transmon_model}
+\end{figure}
+
+\subsection{Qubit readout}
+
+%In the architecture of circuit quantum electrodynamics (cQED), these requirements are addressed by exploiting the dispersive interaction between the qubit and a far-detuned microwave resonator
+
+\subsection{Qubit control}
 %Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
-\section{Quantum operations}
 A quantum operation is a mathematical transformation that describes how a quantum state changes as a consequence of a physical process. Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by a density operator $\hat{\rho}$ into another state described by a new density operator $\hat{\rho}'$:
 \begin{equation}
     \mathcal{E}(\rho) = \rho'\label{eq:quantum_map}.
