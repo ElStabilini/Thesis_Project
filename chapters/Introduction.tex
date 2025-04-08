@@ -491,22 +491,100 @@ In general, a microwave pulse given by $V_d = A\epsilon(t) \sin(\omega_d t + \al
     R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta}
 \end{equation}
 
-\section{Qubit decoherence}
-%Posso rappresentatre l'operatore densità come una matrce 2x2, mi serve per dopo, per la descrizione del depolarizing channel
+\section{Qubit state degradetion}
+The ability to apply quantum gates to qubits is essential for executing complex circuits and operations. 
+However, to ensure their effective implementation, it is crucial to study the qubit decoherence time, as it directly impacts the reliability and performance of quantum computations.
+
+\subsection{Qubit decoherence}
+By definition, decoherence refers to the loss of coherence in a quantum system, meaning that the relative phase between quantum states becomes randomized due to interactions with the environment. 
+Decoherence is typically characterized by two key time constants: the energy relaxation time $T_1$ and the dephasing time $T_2$. 
+The energy relaxation time  describes the characteristic time over which a qubit in an excited state decays to its ground state due to interactions with the environment. The decay follows an exponential low:
+\begin{equation}\label{eq:gamma1}
+    p_e(t) = p_e(0) e^{-\Gamma_1 t}
+\end{equation}
+where $p_e(t)$ is the probability of the qubit being in the excited state at time $t$, $p_e(0)$ the probability of the qubit being in the excited state at time $t=0$ and $\Gamma_1=1/T_1$ is the decay rate of the qubit from state $\ket{0}$ to state $\ket{1}$.
+Energy relaxation is primarily due to transverse noise, namely noise that couples the qubit through $\hat{\sigma}_x$ and/or $\hat{\sigma}_y$, it is caused by coupling to electromagnetic noise and other dissipative processes that induce energy exchange with the environment.
+
+Longitudinal noise instead is due to environmental fluctuations coupling to $\sigma_z$ that randomize the phase of the the superposition state without causing energy exchange with the environment.
+The charachteristic dephasing time of a qubit è indicato con $T_2^* = 1/\Gamma_\phi$ dove $\Gamma_\phi$ is the pure dephasing rate.
+
+The transverse relaxation rate $\Gamma_2$ describes the combined effets of pure dephasing and energy relaxation and is defined as 
+\begin{equation}\label{eq:gamma2}
+    \Gamma_2 = \frac{\Gamma_1}{2} + \Gamma_\phi,
+\end{equation}
+or equivalently
+\begin{equation}\label{eq:T2equation}
+    \frac{1}{T_2} = \frac{1}{2T_1} + \frac{1}{T_2^*}.
+\end{equation}
+$T_2$ is known as decoherence time and quantifies how quickly a quantum superposition state loses phase coherence due to environmental fluctuations. 
+For this reason, in an ideal system where pure dephasing is absent $T_2$ is simply limited by energy relaxation via the relaxation\begin{equation}\label{eq:T2max}
+    T_{2,\text{max}} = 2T_1.
+\end{equation}
+This result follows from the Bloch equations \cite{krantz_quantum_2019}, where both energy relaxation and phase damping contribute to coherence loss. 
+However, in real systems, additional dephasing mechanisms, such as low-frequency noise from charge or flux fluctuations, reduce $T_2$ below this upper bound and limits it to \ref{eq:T2equation}
+
+\subsection{Noise models}
+Quantum noise mentioned in the previous subsection can be described using quantum operations known as quantum channels. 
 A quantum operation is a mathematical transformation that describes how a quantum state changes as a consequence of a physical process. 
 Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by a density operator $\hat{\rho}$ into another state described by a new density operator $\hat{\rho}'$:
 \begin{equation}
     \mathcal{E}(\rho) = \rho'\label{eq:quantum_map}.
 \end{equation}
 
-The simplest example of a quantum operation is the evolution of a quantum state $\hat{\rho}$ of a closed quantum system, under a unitary operator $\hat{U}$, which can be written as $\mathcal{E} \equiv \hat{U} \hat{\rho} \hat{U}^{\dagger}$.\\
-
-
-
-\paragraph{Depolarizing channel}
-A depolarizing channel describes a process in which the current state of the $n$-qubit system $\rho$, is replaced by $\frac{\id}{2^n}$, with probability $d$. This process can be represented with a quantum map as follows:
+\subsubsection{Amplitude damping channel}
+The amplitude damping channel models energy dissipation due to interaction with a zero-temperature environment. The quantum map which descibes the process is 
+\begin{equation}\label{eq:amplitude_damping}
+    \mathcal{E}_{\text{ad}}(\hat{\rho}) = \hat{E}_0 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_1 \hat{\rho} \hat{E}_1^{\dagger}
+\end{equation}
+where the Kraus operators:
 \begin{equation}
-    \mathcal{E}_{dc}(\rho) = d\frac{\id}{2^n}+(1-d)\rho\label{eq:depolarizing_channel}
-\end{equation} 
+    \hat{E}_0 = \begin{bmatrix} 1 & 0 \\ 0 & \sqrt{1 - \gamma} \end{bmatrix}, \quad
+    \hat{E}_1 = \begin{bmatrix} 0 & \sqrt{\gamma} \\ 0 & 0 \end{bmatrix},
+\end{equation}
+where $p = 1 - e^{-t/T_1}$ represents the probability of relaxation.
 
-\section{Two qubits gates}
+\subsubsection{Generalized amplitude damping channel}
+The generalized amplitude damping channel models energy dissipation in a thermal environment where both relaxation and thermal excitation occur. 
+\begin{equation}\label{eq:GAD_channel}
+    \mathcal{E}_{\text{gad}}(\hat{\rho}) = p \left( \hat{E}_0 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_1 \hat{\rho} \hat{E}_1^{\dagger} \right) + (1 - p) \left( \hat{E}_2 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_3 \hat{\rho} \hat{E}_1^{\dagger} \right)
+\end{equation}
+where:
+\begin{equation}
+    \hat{E}_0 = \sqrt{p} \begin{bmatrix} 1 & 0 \\ 0 & \sqrt{1 - \gamma} \end{bmatrix}, \quad
+     = \sqrt{p} \begin{bmatrix} 0 & \sqrt{\gamma} \\ 0 & 0 \end{bmatrix},
+\end{equation}
+\begin{equation}
+    \hat{E}_2 = \sqrt{1 - p} \begin{bmatrix} \sqrt{1 - \gamma} & 0 \\ 0 & 1 \end{bmatrix}, \quad
+    \hat{E}_3 = \sqrt{1 - p} \begin{bmatrix} 0 & 0 \\ \sqrt{\gamma} & 0 \end{bmatrix},
+\end{equation}
+where $\gamma$ represents the thermal excitation probability and $p$ describes the system-bath interaction strength.
+
+\subsubsection{Phase Damping channel}
+The phase damping channel describes pure dephasing, where the qubit phase is randomized without energy exchange. The Kraus operators for this channel are:
+\begin{equation}
+    \hat{E}_0 = \begin{bmatrix} 1 & 0 \\ 0 & \sqrt{1 - \lambda} \end{bmatrix}, \quad
+    \hat{E}_1 = \begin{bmatrix} 0 & 0 \\ 0 & \sqrt{\lambda} \end{bmatrix},
+\end{equation}
+where $\lambda = 1 - e^{-t/T_2^*}$ quantifies the probability of phase randomization.
+
+\subsubsection{Depolarizing channel}
+The depolarizing channel captures the combined effects of relaxation $(T_1)$ and pure dephasing $(T_2^*)$, making it a natural model for total decoherence. The transformation applied by this channel is given by:
+\begin{equation}
+    \rho \rightarrow (1 - q) \rho + \frac{q}{3} (\sigma_x \rho \sigma_x + \sigma_y \rho \sigma_y + \sigma_z \rho \sigma_z),
+\end{equation}
+meaning that the depolarizing channel leaves  $\hat{\rho}$ unchanged with probability $(1-q)$, while with probability $q/3$ one of the Pauli operators is applied to it.
+The corresponding Kraus operators are:
+\begin{equation}
+    \hat{E}_0 = \sqrt{1 - q} I, \quad
+    \hat{E}_1 = \sqrt{\frac{q}{3}} \sigma_x, \quad
+    \hat{E}_2 = \sqrt{\frac{q}{3}} \sigma_y, \quad
+    \hat{E}_3 = \sqrt{\frac{q}{3}} \sigma_z.
+\end{equation}
+
+This channel models both energy relaxation and phase randomization, effectively representing total decoherence.
+
+An alternative representation of the depolarizing channel describes the process in which the system state $\rho$ is replaced by the maximally mixed state $\frac{\id}{2}$ with probability $d$:
+\begin{equation}\label{eq:depolarizing_channel}
+    \mathcal{E}_{dc}(\rho) = p\frac{\id}{2}+(1-p)\rho.
+\end{equation}
+where the following relation holds between  $p$ and $q$, $q=3p/4$
