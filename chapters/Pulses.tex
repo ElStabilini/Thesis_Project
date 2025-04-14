@@ -64,9 +64,14 @@ Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting eq. \ref{e
 for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethods}
 \subsubsection{Output filters in QM}
 
-\section{dimostrazione}
+\subsection{dimostrazione del conto}
 
-We are assuming
+In general, for different forms of the detuning flux $\Delta f(\Phi) = a\Phi^k$, where $k \in \mathbb{Z}^+$, the phase $\varphi_\tau$ expressed in terms of the impulse response $h =\frac{\text{d}s}{\text{d}t}$ is the following,
+\begin{equation}\label{eq:demonstarted}
+    \varphi_\tau = 2\pi a \int_{0}^{\infty} \left[ \int_{0}^{\infty} h(t - t') dt' - \int_{0}^{\infty} h(t - \tau - t') dt' \right]^k dt = 2\pi a \int_{0}^{\tau} \left[ \int_{0}^{t} h(t - t') dt' \right]^k dt + 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') dt' \right]^k dt,
+\end{equation}
+
+The demonstration of this equality is reported in Appendix C \ref{app:AppendixC}.
 
 \begin{equation}
     
