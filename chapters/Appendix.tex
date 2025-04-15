@@ -25,11 +25,12 @@ F &= \int d\psi \bra{\psi} U^\dagger \left[(1-d)U\ket{\psi}\bra{\psi}U^\dagger +
 \chapter*{Appendix C}
 \label{app:AppendixC}
 
-In the following I demonstrate the corrctness of equation \ref{eq:demonstarted}:
+In the following we will demonstrate the corrctness of equation \ref{eq:demonstarted}:
 
-\begin{equation}
-    \varphi_\tau = 2\pi a \int_{0}^{\infty} \left[ \int_{0}^{\infty} h(t - t') dt' - \int_{0}^{\infty} h(t - \tau - t') dt' \right]^k dt = 2\pi a \int_{0}^{\tau} \left[ \int_{0}^{t} h(t - t') dt' \right]^k dt + 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') dt' \right]^k dt,
-\end{equation}
+\begin{align}
+    \varphi_\tau &= 2\pi a \int_{0}^{\infty} \left[ \int_{0}^{\infty} h(t - t') dt' - \int_{0}^{\infty} h(t - \tau - t') dt' \right]^k dt \\
+    &= 2\pi a \int_{0}^{\tau} \left[ \int_{0}^{t} h(t - t') dt' \right]^k dt + 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') dt' \right]^k dt,
+\end{align}
 for different forms of the detuning flux 
 \begin{equation}\label{eq:det_flux}
     \Delta f(\Phi) = a\Phi^k
@@ -42,14 +43,14 @@ From the calculations showed in \ref{eq:phi} we know that the relative phase $\p
 
 As hypothesis we know that voltage-to-flux step response of the control line is 
 \begin{equation}\label{eq:voltage_to_flux}
-    s(t) = \left(1 - e^{-t/\tau} \right) \cdot u(t)
-\end{equation}, where $u(t)$ is the step function, and that the impulse response is 
+    s(t) = \left(1 - e^{-t/\tau} \right) \cdot u(t),
+\end{equation} where $u(t)$ is the step function, and that the impulse response is 
 \begin{equation}\label{eq:h_def}
     h(t) = \frac{\text{d}s}{\text{d}t}
 \end{equation}
 
 
-If we substitute the expression of $s(t)$ given in \ref{eq:voltage_to_flux} in Eq. \ref{eq:phi_here} we obtain
+If we substitute the expression of $s(t)$ given in \ref{eq:voltage_to_flux} in equation \ref{eq:phi_here} we obtain
 \begin{equation}\label{eq:first_step_dem}
     \varphi_{\tau} = 2\pi a \int_{0}^{+\infty} \left[ \int_{0}^{+\infty} h(t - t') dt' - \int_{0}^{+\infty} h(t - \tau - t') dt' \right]^k dt.
 \end{equation}
@@ -63,7 +64,7 @@ To do we have to show that \begin{enumerate}
     \end{equation}
 \end{enumerate}
 
-We start from the demonstration of Eq. \ref{eq:first_dem}. By definition \ref{eq:h_def} we can write
+We start from the demonstration of equation \ref{eq:first_dem}. By definition \ref{eq:h_def} we can write
 \begin{equation}\label{eq:first_dem1}
     h(t) = \frac{d}{dt} \left[ \left(1 - e^{-t/\tau} \right) u(t) \right] = \frac{e^{-t/\tau}}{\tau} u(t) + \left(1 - e^{-t/\tau} \right) \delta(t), 
 \end{equation}
@@ -80,11 +81,11 @@ by setting $t'' = t-t'$, $dt''=-dt'$,  we have $t''\rightarrow -\infty$ for $t'\
     &= (1 - e^{-t/\tau}) u(t)\\
 \end{align}
 that concludes the demonstration of Eq \ref{eq:first_dem}.
-
-To demonstrate Eq. \ref{eq:sec_dem} we starting again by using the definition of $s(t)$ to compute 
-\begin{equation}\label{eq:sec_dem2}
-    h(t -t'-\tau) = \frac{d}{dt} \left[ \left(1 - e^{-(t-t'-\tau)/\tau} \right) u(t-t'-\tau) \right] = \frac{e^{-(t-t'-\tau)/\tau}}{\tau} u(t-t'-\tau) + \left(1 - e^{-(t-t'-\tau)/\tau} \right) \delta(t-t'-\tau). 
-\end{equation}
+To demonstrate equation \ref{eq:sec_dem} we starting again by using the definition of $s(t)$ to compute 
+\begin{align}
+    h(t -t'-\tau) &= \frac{d}{dt} \left[ \left(1 - e^{-(t-t'-\tau)/\tau} \right) u(t-t'-\tau) \right] \\
+    &= \frac{e^{-(t-t'-\tau)/\tau}}{\tau} u(t-t'-\tau) + \left(1 - e^{-(t-t'-\tau)/\tau} \right) \delta(t-t'-\tau)\\ \label{eq:sec_dem2}
+\end{align}
 
 We can substitute \ref{eq:sec_dem2} in equation \ref{eq:sec_dem} and obtain \begin{equation}
     \int_{0}^{+\infty} h(t - t' - \tau) \, dt' = \int_{0}^{+\infty} \frac{e^{-(t - t' - \tau)/\tau}}{\tau} u(t - t' - \tau) dt' + \int_{0}^{+\infty} \left(1 - e^{-(t - t' - \tau)/\tau} \right) \delta(t - t' - \tau) dt'
@@ -105,10 +106,11 @@ With this, we demonstrated that
 \end{equation}
 
 We now need to show that 
-\begin{equation}\label{eq:second_step_dem}
-    2\pi a \int_{0}^{\infty} \left[ \int_{0}^{\infty} h(t - t') dt' - \int_{0}^{\infty} h(t - \tau - t') dt' \right]^k dt = 2\pi a \int_{0}^{\tau} \left[ \int_{0}^{t} h(t - t') dt' \right]^k dt + 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') \, dt' \right]^k dt.
-\end{equation}
-
+\begin{align}\label{eq:second_step_dem}
+    2\pi a \int_{0}^{\infty} \left[ \int_{0}^{\infty} h(t - t') dt' - \int_{0}^{\infty} h(t - \tau - t') dt' \right]^k dt\\ 
+    &= 2\pi a \int_{0}^{\tau} \left[ \int_{0}^{t} h(t - t') dt' \right]^k dt + 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') \, dt' \right]^k dt.
+\end{align}
+%
 As first step we can try to rewrite the left-hand-side (LHS) in a different way:
 \begin{align}
     & 2\pi a \int_{0}^{\infty} \left[ \int_{0}^{\infty} h(t - t') dt' - \int_{0}^{\infty} h(t - \tau - t') dt' \right]^k dt\\ \label{eq:last1}
@@ -117,16 +119,16 @@ As first step we can try to rewrite the left-hand-side (LHS) in a different way:
     &= 2\pi\alpha \int_0^{\tau} \left[ \left(1 - e^{-t/\tau}\right)u(t)\right]^k dt + 2\pi\alpha \int_{\tau}^{+\infty} \left[ \left(1 - e^{-t/\tau}\right)u(t) - \left(1 - e^{-(t - \tau)/\tau}\right)u(t-\tau) \right]^k dt\\ \label{eq:last4}
     &=  2\pi\alpha \int_0^{\tau} \left[\int_{0}^{\infty} h(t - t') dt' \right]^k dt + 2\pi\alpha \int_{\tau}^{+\infty} \left[ s(t) - s(t-\tau) \right]^k dt\\ \label{eq:last_step}
 \end{align}
-
+%
 In the first step, to get equation \ref{eq:last2} I simply used the equations \ref{eq:first_dem} and \ref{eq:second_dem} that were demonstarted before, then by substituting the definition of $s(t)$ we obtain Eq \ref{eq:last3}.
-It is possible to separate the integral in Eq. \ref{eq:last3} by using the definition of $u(t)$ which is null for $t\tau$ and of $u(t-\tau)$ which is null also for $0<t<\tau$, doing this we obtain Eq, \ref{eq:last4}
+It is possible to separate the integral in equation \ref{eq:last3} by using the definition of $u(t)$ which is null for $t\tau$ and of $u(t-\tau)$ which is null also for $0<t<\tau$, doing this we obtain Eq, \ref{eq:last4}
 By substituting back \ref{eq:first_dem} in the first term of equation \ref{eq:last4} we obtain the first term of equation \ref{second_step_dem} which we want to demonstrate, in the second term of the sum instead, we can substitute back the definition of $s(t)$.
 
 At this point we only have to show that for $t>\tau$, which is the interval we are considering in the second term, 
 \begin{equation}
     2\pi\alpha \int_{\tau}^{+\infty} \left[ s(t) - s(t-\tau) \right]^k dt = 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') dt' \right]^k dt.
 \end{equation}
-
+%
 To do this we can first evaluate $s(t)-s(t-\tau)$ in the interval $t>\tau$ so that $u(t)=u(t-\tau)=1$, we have
 \begin{equation}\label{eq:final}
     s(t) - s(t-\tau) = 1- e^{-\frac{t}{\tau}} - 1 + e^{-\frac{(t-\tau)}{\tau}} = e^{-\frac{t}{\tau}} \left(e^{\frac{\tau}{\tau}}-1\right) = (e-1)e^{-\frac{t}{\tau}}
