@@ -22,9 +22,6 @@ F &= \int d\psi \bra{\psi} U^\dagger \left[(1-d)U\ket{\psi}\bra{\psi}U^\dagger +
 \chapter*{Appendix B}
 \label{app:AppendixB}
 
-\chapter*{Appendix C}
-\label{app:AppendixC}
-
 In the following we will demonstrate the corrctness of equation \ref{eq:demonstarted}:
 
 \begin{align}
@@ -133,14 +130,12 @@ To do this we can first evaluate $s(t)-s(t-\tau)$ in the interval $t>\tau$ so th
 \begin{equation}\label{eq:final}
     s(t) - s(t-\tau) = 1- e^{-\frac{t}{\tau}} - 1 + e^{-\frac{(t-\tau)}{\tau}} = e^{-\frac{t}{\tau}} \left(e^{\frac{\tau}{\tau}}-1\right) = (e-1)e^{-\frac{t}{\tau}}
 \end{equation}
-
+%
 If we then compute $\int_{0}^{\tau} h(t - t')dt'$ we obtain
-
 \begin{align}
     \int_{0}^{\tau} h(t-t')dt' &= \int_{0}^{\tau} \left[ \frac{e^{-\frac{(t-t')}{\tau}}}{\tau} u(t-t') - \left(1-e^{-\frac{t-t'}{\tau}}\right)\delta(t-t') \right] dt'\\
     &= \int_{0}^{\tau} \frac{e^{-\frac{(t-t')}{\tau}}}{\tau} u(t-t')dt' \\
     &= \int_{0}^{\tau} \frac{e^{-\frac{(t-t')}{\tau}}}{\tau} dt'\\
     &= \int_{0}^{\tau} \frac{e^{-\frac{t}{\tau}}e^{\frac{t'}{\tau}}}{\tau} = e^{-\frac{t}{\tau}}e^{\frac{t'}{\tau}}\Big|_{0}^{\tau} = e^{\frac{-t}{tau}}(e-1)
 \end{align}
-
 which is equal to \ref{eq:final} and then concludes the demonstration.

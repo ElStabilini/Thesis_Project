@@ -48,6 +48,11 @@
 \LetLtxMacro{\oldref}{\ref}
 \renewcommand{\ref}[1]{(\oldref{#1})}
 
+\AtBeginDocument{
+  \LetLtxMacro{\oldref}{\ref}
+  \renewcommand{\ref}[1]{(\oldref{#1})}
+}
+
 \newcommand{\id}{\mathbb{I}}
 \newcommand{\Qibocal}{\texttt{Qibocal}}
 \newcommand{\Qibo}{\texttt{Qibo}}
@@ -105,9 +110,9 @@
 \backmatter
 %BIBLIOGRAPHY
 \printbibliography
+\input{chapters/Appendix.tex}
 
 %ACKNOWLEDGEMENT
 \chapter*{Acknowledgement}
 \input{chapters/Acknowledgement}
-\input{chapters/Appendix.tex}
 \end{document}
