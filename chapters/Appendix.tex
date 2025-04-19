@@ -1,57 +1,7 @@
 \chapter*{Appendix A} 
 \label{app:AppendixA}
 
-The avarage gate fiedlity measures how well a noisy quantum gate $\mathcal{E}$ approximates an ideal unitary gate $U$ when avaraged over all pure input state. It is defined as
-\begin{align*}
-F &= \int d\psi \bra{\psi} U^\dagger \mathcal{E}(\rho) U \ket{\psi},
-\end{align*}
-where the integral is taken over all the pure states $\ket{\psi}$ according to the Haar measure.
-In randomized benchmarking, we assume that errors behave like a depolarizing channel, meaning that after applying a noisy Clifford gate, the system is left in the correct state with probability $1-d$ and in a completly mixed state with probability $d$.
-The quantum maps that represent a depolarizing channel is
-\begin{equation}
-\mathcal{E}(\rho) = (1-d)U\rho U^\dagger + d\frac{I}{2^n}
-\end{equation}
-When we substitute it in the avarage gate fidelity definition we get:
-\begin{align*}
-F &= \int d\psi \bra{\psi} U^\dagger \left[(1-d)U\ket{\psi}\bra{\psi}U^\dagger + d\frac{\id}{2^n}\right] U \ket{\psi}\\
-    &= \int d\psi \bra{\psi} U^\dagger \left[(1-d)U\ket{\psi}\bra{\psi}U^\dagger\right] U \ket{\psi} + \int d\psi \bra{\psi} U^\dagger \left[d\frac{I}{2^n}\right] U \ket{\psi}\\
-    &= (1-d)\int d\psi \bra{\psi}\ket{\psi}\bra{\psi}\ket{\psi} + \frac{d}{2^n}\int d\psi \bra{\psi}U^\dagger \id U\ket{\psi}\\
-    &= (1-d) + \frac{d}{2^n}\int d\psi \bra{\psi}\ket{\psi}\\
-    &= (1-d) + \frac{d}{2^n} = 1 - d + \frac{d}{2^n} = 1 - d\left(1 - \frac{1}{2^n}\right)\\
-    &= 1 - d\frac{2^n - 1}{2^n}
-\end{align*}
 
-\begin{comment}
-    References for the General Expressions
-
-For the general fidelity between quantum states:
-   F(ρ,σ)=(Trρσρ)2F(\rho,\sigma) = \left(\text{Tr}\sqrt{\sqrt{\rho}\sigma\sqrt{\rho}}\right)^2
-F(ρ,σ)=(Trρ​σρ​​)2
-References:
-
-Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information: 10th Anniversary Edition. Cambridge University Press. (Section 9.2.2)
-Jozsa, R. (1994). Fidelity for mixed quantum states. Journal of Modern Optics, 41(12), 2315-2323.
-
-
-For the gate fidelity definition:
-   Fρ(U,E)=F(UρU†,E(ρ))F_{\rho}(U, \mathcal{E}) = F(U\rho U^\dagger, \mathcal{E}(\rho))
-Fρ​(U,E)=F(UρU†,E(ρ))
-References:
-
-Magesan, E., Gambetta, J. M., & Emerson, J. (2011). Scalable and robust randomized benchmarking of quantum processes. Physical Review Letters, 106(18), 180504.
-Bowdrey, M. D., Oi, D. K., Short, A. J., Banaszek, K., & Jones, J. A. (2002). Fidelity of single qubit maps. Physics Letters A, 294(5-6), 258-260.
-Nielsen, M. A. (2002). A simple formula for the average gate fidelity of a quantum dynamical operation. Physics Letters A, 303(4), 249-252.
-
-
-
-The formula for average gate fidelity across all input states:
-Favg(U,E)=∫F(UρU†,E(ρ))dρF_{\text{avg}}(U, \mathcal{E}) = \int F(U\rho U^\dagger, \mathcal{E}(\rho)) d\rho
-Favg​(U,E)=∫F(UρU†,E(ρ))dρ
-Where the integration is performed over the Haar measure, is discussed in:
-
-Horodecki, M., Horodecki, P., & Horodecki, R. (1999). General teleportation channel, singlet fraction, and quasidistillation. Physical Review A, 60(3), 1888.
-Emerson, J., Alicki, R., & Życzkowski, K. (2005). Scalable noise estimation with random unitary operators. Journal of Optics B: Quantum and Semiclassical Optics, 7(10), S347.
-\end{comment}
 
 
 \chapter*{Appendix B}
@@ -152,9 +102,9 @@ As first step we can try to rewrite the left-hand-side (LHS) in a different way:
     &=  2\pi\alpha \int_0^{\tau} \left[\int_{0}^{\infty} h(t - t') dt' \right]^k dt + 2\pi\alpha \int_{\tau}^{+\infty} \left[ s(t) - s(t-\tau) \right]^k dt\\ \label{eq:last_step}
 \end{align}
 %
-In the first step, to get equation \ref{eq:last2} I simply used the equations \ref{eq:first_dem} and \ref{eq:second_dem} that were demonstarted before, then by substituting the definition of $s(t)$ we obtain Eq \ref{eq:last3}.
+In the first step, to get equation \ref{eq:last2} I simply used the equations \ref{eq:first_dem} and \ref{eq:sec_dem} that were demonstarted before, then by substituting the definition of $s(t)$ we obtain Eq \ref{eq:last3}.
 It is possible to separate the integral in equation \ref{eq:last3} by using the definition of $u(t)$ which is null for $t\tau$ and of $u(t-\tau)$ which is null also for $0<t<\tau$, doing this we obtain Eq, \ref{eq:last4}
-By substituting back \ref{eq:first_dem} in the first term of equation \ref{eq:last4} we obtain the first term of equation \ref{second_step_dem} which we want to demonstrate, in the second term of the sum instead, we can substitute back the definition of $s(t)$.
+By substituting back \ref{eq:first_dem} in the first term of equation \ref{eq:last4} we obtain the first term of equation \ref{eq:second_step_dem} which we want to demonstrate, in the second term of the sum instead, we can substitute back the definition of $s(t)$.
 
 At this point we only have to show that for $t>\tau$, which is the interval we are considering in the second term, 
 \begin{equation}
@@ -174,3 +124,57 @@ If we then compute $\int_{0}^{\tau} h(t - t')dt'$ we obtain
     &= \int_{0}^{\tau} \frac{e^{-\frac{t}{\tau}}e^{\frac{t'}{\tau}}}{\tau} = e^{-\frac{t}{\tau}}e^{\frac{t'}{\tau}}\Big|_{0}^{\tau} = e^{\frac{-t}{tau}}(e-1)
 \end{align}
 which is equal to \ref{eq:final} and then concludes the demonstration.
+
+\chapter*{Appendix C}
+\label{app:AppendixC}
+The avarage gate fiedlity measures how well a noisy quantum gate $\mathcal{E}$ approximates an ideal unitary gate $U$ when avaraged over all pure input state. It is defined as
+\begin{align*}
+F &= \int d\psi \bra{\psi} U^\dagger \mathcal{E}(\rho) U \ket{\psi},
+\end{align*}
+where the integral is taken over all the pure states $\ket{\psi}$ according to the Haar measure.
+In randomized benchmarking, we assume that errors behave like a depolarizing channel, meaning that after applying a noisy Clifford gate, the system is left in the correct state with probability $1-d$ and in a completly mixed state with probability $d$.
+The quantum maps that represent a depolarizing channel is
+\begin{equation}
+\mathcal{E}(\rho) = (1-d)U\rho U^\dagger + d\frac{I}{2^n}
+\end{equation}
+When we substitute it in the avarage gate fidelity definition we get:
+\begin{align*}
+F &= \int d\psi \bra{\psi} U^\dagger \left[(1-d)U\ket{\psi}\bra{\psi}U^\dagger + d\frac{\id}{2^n}\right] U \ket{\psi}\\
+    &= \int d\psi \bra{\psi} U^\dagger \left[(1-d)U\ket{\psi}\bra{\psi}U^\dagger\right] U \ket{\psi} + \int d\psi \bra{\psi} U^\dagger \left[d\frac{I}{2^n}\right] U \ket{\psi}\\
+    &= (1-d)\int d\psi \bra{\psi}\ket{\psi}\bra{\psi}\ket{\psi} + \frac{d}{2^n}\int d\psi \bra{\psi}U^\dagger \id U\ket{\psi}\\
+    &= (1-d) + \frac{d}{2^n}\int d\psi \bra{\psi}\ket{\psi}\\
+    &= (1-d) + \frac{d}{2^n} = 1 - d + \frac{d}{2^n} = 1 - d\left(1 - \frac{1}{2^n}\right)\\
+    &= 1 - d\frac{2^n - 1}{2^n}
+\end{align*}
+
+\begin{comment}
+    References for the General Expressions
+
+For the general fidelity between quantum states:
+   F(ρ,σ)=(Trρσρ)2F(\rho,\sigma) = \left(\text{Tr}\sqrt{\sqrt{\rho}\sigma\sqrt{\rho}}\right)^2
+F(ρ,σ)=(Trρ​σρ​​)2
+References:
+
+Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information: 10th Anniversary Edition. Cambridge University Press. (Section 9.2.2)
+Jozsa, R. (1994). Fidelity for mixed quantum states. Journal of Modern Optics, 41(12), 2315-2323.
+
+
+For the gate fidelity definition:
+   Fρ(U,E)=F(UρU†,E(ρ))F_{\rho}(U, \mathcal{E}) = F(U\rho U^\dagger, \mathcal{E}(\rho))
+Fρ​(U,E)=F(UρU†,E(ρ))
+References:
+
+Magesan, E., Gambetta, J. M., & Emerson, J. (2011). Scalable and robust randomized benchmarking of quantum processes. Physical Review Letters, 106(18), 180504.
+Bowdrey, M. D., Oi, D. K., Short, A. J., Banaszek, K., & Jones, J. A. (2002). Fidelity of single qubit maps. Physics Letters A, 294(5-6), 258-260.
+Nielsen, M. A. (2002). A simple formula for the average gate fidelity of a quantum dynamical operation. Physics Letters A, 303(4), 249-252.
+
+
+
+The formula for average gate fidelity across all input states:
+Favg(U,E)=∫F(UρU†,E(ρ))dρF_{\text{avg}}(U, \mathcal{E}) = \int F(U\rho U^\dagger, \mathcal{E}(\rho)) d\rho
+Favg​(U,E)=∫F(UρU†,E(ρ))dρ
+Where the integration is performed over the Haar measure, is discussed in:
+
+Horodecki, M., Horodecki, P., & Horodecki, R. (1999). General teleportation channel, singlet fraction, and quasidistillation. Physical Review A, 60(3), 1888.
+Emerson, J., Alicki, R., & Życzkowski, K. (2005). Scalable noise estimation with random unitary operators. Journal of Optics B: Quantum and Semiclassical Optics, 7(10), S347.
+\end{comment}
