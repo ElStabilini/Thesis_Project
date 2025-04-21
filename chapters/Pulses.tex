@@ -10,8 +10,6 @@ The second is the implementation of the cryoscope, a routine first described in 
 
 
 \section{Flux pulse correction}
-\subsection{Notes on signal analysis}
-
 
 \subsection{Cryoscope}
 The experiment that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
@@ -59,12 +57,91 @@ Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting eq. \ref{e
     * eventualmente provare ad aggiungere più correzioni esponenziali
 \end{comment}
 \subsection{Filter determination}
-\subsubsection{IIR}
-\subsubsection{FIR}
-for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethods}
-\subsubsection{Output filters in QM}
+\subsubsection{IIR corrections}
+\subsubsection{FIR corrections}
+Una volta trovati i feedback e feedforward taps per gli IIR filters, è necessario trovare gli FIR per correggere il segnale su scale di tempo più brevi. 
 
-\subsection{dimostrazione del conto}
+for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethods}
+
+\subsubsection{Output filters in QM}
+%Spiegare come applica i filtri quantum machines
+Each analog output port of the OPX system used in this work is equipped with a digital filter that is applied to the signal in the digital domain before conversion to analog. The filters are provided to the OPX via the \texttt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
+\begin{equation}\label{eq:OPX_filter}
+    y[n] = \sum_{m=1}^{M} a_m y[n - m] + \sum_{k=0}^{K} b_k x[n - k],
+\end{equation}
+where $y[n]$ is the output signal, $x[n]$ is the input waveform, $a_m$ are the feedback coefficients, and $b_k$ are the feedforward coefficients.
+
+In our case, we have a set of feedback coefficients determined through IIR correction and two sets of feedforward coefficients: the first obtained from the IIR-based correction, and the second from FIR-based correction on short timescales. 
+To uniquely determine the coefficients to be passed to the electronics, it is necessary to derive a single set of feedforward coefficients and a single set of feedback coefficients by combining the two sets of feedforward filters through convolution.
+
+Infatti posso considerare il segnale di input $x$ a cui applico un primo filtro IIR ottenendo così un segnale in output $y$ tale che
+\begin{equation}\label{eq:y_signal}
+    y[n] = \sum_{m=1}^{M} a[m]y[n-m] + \sum_{k=0}^{N} b[k] x[n-k].
+\end{equation}
+
+al segnale $y$ applico un secondo filtro IIR ottonendo quindi un segnale $z$ in output con la sgeuente forma 
+\begin{equation}\label{eq:z_signal}
+    z[n] = \sum_{m=1}^{M} a'[m]z[n-m] + \sum_{k=0}^{N} b'[k] y[n-k].
+\end{equation}
+
+Now I consider equation \ref{eq:y_signal} and rewrite it as
+\begin{equation}\label{eq:y_signal1}
+    y[n] - \sum_{m=1}^{M} a[m]y[n-m] = \sum_{k=0}^{N} b[k] x[n-k],
+\end{equation} 
+then by applying a Z-transform we obtain
+\begin{equation}\label{eq:y_signal_transform}
+    Y(z)\left(1 - \sum_{m=1}^{M} a[m] z^{-m} \right) = X(z) \left( \sum_{k=0}^{N} b[k] z^{-k} \right)
+\end{equation}
+so that 
+\begin{align}
+    H_1(z) &= \frac{Y(z)}{X(z)} = \frac{\sum_{k=0}^{N} b[k] z^{-k}}{1 - \sum_{m=1}^{M} a[m] z^{-m}} = \frac{B(z)}{A(z)} \\
+    & \rightarrow Y(z) = H_1(z)X(z) = \frac{B(z)}{A(z)}X(z) \\ \label{eq:transfer1}
+\end{align}
+
+We can do the same also for equation \ref{eq:z_signal} and rewrite it as 
+\begin{equation}\label{eq:z_signal1}
+    z[n] = \sum_{m=1}^{M} a'[m]z[n-m] + \sum_{k=0}^{N} b'[k] y[n-k],
+\end{equation}
+which, by applying the Z-transform becomes
+\begin{equation}\label{eq:z_signal_transform}
+    Z(z)\left(1 - \sum_{m=1}^{M} a'[m] z^{-m} \right) = Y(z) \left( \sum_{k=0}^{N} b'[k] z^{-k} \right).
+\end{equation}
+Again we can write the the transfer function
+\begin{align}
+    &H_2(z) = \frac{Z(z)}{Y(z)} = \frac{\sum_{k=0}^{N} b'[k] z^{-k}}{1 - \sum_{m=1}^{M} a'[m] z^{-m}} = \frac{B'(z)}{A'(z)} \\
+    \rightarrow Z(z) &= H_2(z)Y(z) = \frac{B'(z)}{A'(z)}Y(z) = \frac{B'(z)}{A'(z)} \frac{B(z)}{A(z)} X(z)\\ \label{eq:transfer2}
+    &= \left( \frac{\sum_{k=0}^{N} b'[k] z^{-k}}{1 - \sum_{m=1}^{M'} a'[m] z^{-m}} \right) \left( \frac{\sum_{k=0}^{N} b[k] z^{-k}}{1 - \sum_{m=1}^{M} a[m] z^{-m}} \right) X(z)\\
+\end{align}
+From the transfer function we can obtain the expression for $Z(z)$ in terms of $X(z)$ 
+\begin{align}
+    & \rightarrow Z(z) \left(1 - \sum_{m=1}^{M} a'[m] z^{-m} \right) \left(1 - \sum_{m=1}^{M} a[m] z^{-m} \right) = \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) X(z) \\
+    & \rightarrow Z(z) \left( \sum_{m=0}^{M} a'[m] z^{-m} \right) \left( \sum_{m=0}^{M} a[m] z^{-m} \right) = \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) X(z)\\ \label{eq:Zz}
+\end{align}
+where in the last step  ho assorbito l'1 in the sum come coeffiente $a_0$. By expanding the products we obtain
+\begin{align}
+    & \left( \sum_{m=0}^{M} a'[m] \right) \left( \sum_{m=0}^{M} a[m] \right) = \sum_{m=0}^{2M}\sum_{i=0}^{m} a'[i] a[m - i] = c[k], \quad\quad \text{with}\quad m = 0, \dots, 2M,\\ \label{eq:ck}
+    & \left( \sum_{k=0}^{N} b'[k] \right) \left( \sum_{k=0}^{N} b[k] \right) = \sum_{k=0}^{2N} \sum_{i=0}^{k} b[i] b[k-i] = d[k], \quad\quad \text{with}\quad k = 0, \dots, 2N.\\ \label{eq:dk}
+\end{align}
+%so that
+%\begin{align}
+%    & \left( \sum_{m=0}^{M} a'[m] z^{-m} \right) \left( \sum_{m=0}^{M} a[m] z^{-m} \right) = \sum_{m=0}^{2M} c[m]z^{-m} = \sum_{m=0}^{2M}\sum_{i=0}^{m} a'[i]a[m - i]z^{-m}\\
+%    & \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) = \sum_{k=0}^{2N} d[k]z^{-k} = \sum_{k=0}^{2N}\sum_{i=0}^{k} b'[k]b[k-i]z^{-k}.\\
+%\end{align}
+
+It is then possible to re-write equation \ref{eq:Zz} using the new expression for the filters
+\begin{align}
+    & Z(z)\left( \sum_{m=0}^{2M} c[m]z^{-m} \right) = \left( \sum_{k}^{2N} d[k]z^{-k} \right)X(z)\\
+    & \rightarrow Z(z)\left(1 - \sum_{m=1}^{2M} c[m]z^{-m} \right) = \left( \sum_{k}^{2N} d[k]z^{-k} \right)X(z)\\ \label{eq:z_final}
+\end{align} 
+
+then we apply the inverse-Z-transform and obtain
+\begin{align}
+    & z[n] - \sum_{m=1}^{2M} c[m]z[n-m] = \sum_{k=0}^{2N} d[k] x[n-k]\\
+    & z[n] = \sum_{m=1}^{2M} c[m]z[n-m] + \sum_{k=0}^{2N} d[k] x[n-k]\\
+\end{align}
+where the feedforward (feedback) taps of the final filters, are given by the convolution of the feedforward (feedback) taps of the two filters as shown in equations \ref{eq:ck} and \ref{eq:dk}.
+
+\subsection{Dimostrazione del conto}
 
 In general, for different forms of the detuning flux $\Delta f(\Phi) = a\Phi^k$, where $k \in \mathbb{Z}^+$, the phase $\varphi_\tau$ expressed in terms of the impulse response $h =\frac{\text{d}s}{\text{d}t}$ is the following,
 \begin{align}\label{eq:demonstarted}
