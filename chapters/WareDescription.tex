@@ -72,6 +72,8 @@ From this point onward, for the sake of brevity, I will refer to the chip interc
 In the following I will describe the experiments that I performed and commenting on the results.
 
 \subsection{Resonator characterization}
+Before starting with the calibration of the gates necessary for quantum computing it is necessary to charachterize the qubit an clibrate the readout pulses. 
+For this reason the calibration process starts with the charachterization of the resonator coupled to the qubit that will be used to perform non-destructive measurements of the qubit state.
 
 \subsubsection{Resonator spectroscopy}
 The first step to calibrate the readout pulse is to charachterize the resonator is to find the resoinator frequency, that is the tranisition frequency for the resonator. 
@@ -80,8 +82,14 @@ In the case of a 3D cavity resonator, the signal appears amplified, whereas for 
 
 The outcome of this experiment is strongly influenced by the amplitude of the excitation pulse. 
 To reliably determine the resonator frequency, the pulse duration can be fixed on the order of microseconds, which is sufficient to observe the relevant signal response.
-However, selecting an appropriate amplitude requires more careful consideration. When the amplitude is high, the signal becomes more prominent, improving the signal-to-noise ratio and making it easier to identify the resonator's response.
-If the amplitude is increased too much, however, it can drive the system out of the superconducting regime.  In this case, the resonator becomes effectively decoupled from the qubit, and the frequency observed corresponds to the so-called bare resonator frequency.
+However, selecting an appropriate amplitude requires more careful consideration. When the amplitude is high, the signal becomes more prominent, improving the signal-to-noise ratio (SNR) and making it easier to identify the resonator's response.
+If the amplitude is increased too much, however, it can drive the system out of the superconducting regime.  
+In this case, the resonator becomes effectively decoupled from the qubit, and the frequency observed corresponds to the so-called bare resonator frequency.
+During the first calibration operations it is not necessary to have the qubit coupled to the resonator but is helpful to improve the SNR to have a more defined peak in the signal, for this reason the first calibration routines are run in a high-power regime.
+
+In this experiment the main variables on which the experimenterer can operate are the frequency range that is willing to scan and the step of the scan. 
+Regarding the frequency range a very wide scan can be useful if nothing is known about the studied resonator, but usually the design parameters are provided by the produttore; t is possible that they are not exact, but can give an idea of the region to scan.
+Regarding the step for the scan, usually a step of 200 MHz can be used to probe the resonator frequency but can be reduced if a more precise scan is needed. 
 An example of measurement of the bare resonator frequency is shown in Figure \ref{fig:res_high}.
  
 \begin{figure}[h!]
@@ -91,7 +99,7 @@ An example of measurement of the bare resonator frequency is shown in Figure \re
     \label{fig:res_high}
 \end{figure}
 
-Una misura della frequenza di risonanza del resonator low power è invece riportato in Figure \ref{fig:res_low}
+An example of the measurement of the resonator frequency in the low-power regime is shown in Figure \ref{fig:res_low}.
 
 \begin{figure}[h!]
     \centering
@@ -103,26 +111,42 @@ Una misura della frequenza di risonanza del resonator low power è invece riport
 Uno studio più preciso della risposta del risonatore può essere realizzato eseguendo la routine di resonator spectroscopy cambiando la funzione di fit,  questa variazione dell'esperimento è descritta nell'appendice \hyperref[app:AppendixA]{Appendix A}
 
 \subsubsection{Resonator punchout}
-To identify the resonator frequency under qubit coupling, it is necessary to first determine the appropriate readout pulse amplitude. 
-This can initially be explored using a vector network analyzer to verify system functionality and obtain a rough estimate of the relevant parameters. 
-Then it is possible to repeat the spectroscopy, this time over a narrower frequency range and for varying pulse amplitudes. 
+After having found the bare resonator frequency it is necessary to identify the resonator frequency under qubit coupling. 
+To do this it is possible to repeat the spectroscopy, this time over a narrower frequency range and for varying pulse amplitudes. 
 The resonator frequency is expected to depend strongly on amplitude: it remains constant in the high-power regime, shifts during an intermediate transition phase, and stabilizes again at a different value once the qubit-resonator interaction becomes significant.
+For this calibration protocol the experimenterer must carefully choose the frequency and amplitude range to scan to avoid extremly long experiments, at the same time the frequency and amplitude steps must be small enough to clearly identify the frequency and amplitude in which the shift happens.   
 
 %The expected result from a resonator punchout experiment is shown in Figure \ref{fig:res_punchout}
 %\begin{figure}[h!]
 %    \centering
-%    \includegraphics[width=\textwidth]{figures/png/}
+%    \includegraphics[width=\textwidth]{figures/png/res_punchout.png}
 %    \caption{Output of resonator punchout on qubit B2.}
 %    \label{fig:res_punchout}
 %\end{figure}
 
 \subsubsection{Resonator flux dependence}
+As explained in section \ref{sec:flux_tunable_transmon} it is suggested to work at the qubit sweetspot, where the qubit frequency is less sensitive to magnetic flux fluctuations.
+For this reason, it is useful to estimate the location of the sweet spot prior to performing qubit spectroscopy, enabling measurements to be carried out near the optimal bias point. 
+This can be accomplished by exploiting the qubit–resonator coupling: since the qubit frequency depends on the magnetic flux, as shown in equation \ref{eq:freqdepndenceonflux}, and the qubit is coupled to the resonator, the resonator frequency also exhibits a flux dependence. 
+The resonator detuning in the transmon regime ($E_J \gg E_C$) can be computed as 
+\begin{equation}\label{eq:resonator_flux_dependence}
+    f_r(\Phi) = f_r^{\text{bare}} + \frac{g^2 \sqrt[4]{d^2 + (1 - d^2) \cos^2 \left( \pi \frac{\Phi}{\Phi_0} \right)}}{f_r^{\text{bare}} - f_q(\Phi)},
+\end{equation}
+where $f_r^{\text{bare}}$ is the bare resonator frequency, $g^2$ is the coupling between the transmon and the resonator, $d$ is the junctions asymmetry, $E_C$ is the charging energy, $E_J$ the Josephson energy and $\Phi_0 = h/2e$ is the flux quanta.
 
+In \Qibocal it is possible to perform a resonator flux dependence experiment to measure and fit and the curve described by Eq. \ref{eq:resonator_flux_dependence}.
+With this routine the experimenter performs a scan of the both the external bias and frequency, thihs experiment provides an approximate indication of the sweetspot.
+An example of the output of this experiment is shown in Figure
 
-\subsubsection{Resonator crosstalk}
+%\begin{figure}[h!]
+%    \centering
+%    \includegraphics[width=\textwidth]{figures/png/res_punchout.png}
+%    \caption{Output of resonator punchout on qubit B2.}
+%    \label{fig:res_punchout}
+%\end{figure}
 
 \subsection{Qubit characterization}
-Dopo aver calibrato e ricavato i parametri del risonatore accopiato al qubit è possibile procedere con la calibrazione dei parametri relativi al qubit stesso.
+After having determined all the readout parameters it is possibile to continue the calibration process by calibrating the qubit.
 
 \subsubsection{Qubit spectroscopy}
 To determine the resonance frequency of a qubit, a qubit spectroscopy experiment is performed, which, unlike resonator spectroscopy, requires a two-tone approach. 
@@ -155,9 +179,13 @@ An alternative and more controlled approach involves first preparing the qubit i
 %    \label{fig:ef}
 %\end{figure}
 
-Si noti che la descrizione di questa routine di calibrazione è stata inserita qui per una questione di chiarezza e continuità espositiva, tuttavia dato che richiede che il qubit all'inizio della spettroscopia si trovi nello stato $\ket{1}$ può essere eseguita solo dopo l'esecuzione di una single-shot classification\ref{subsec:single_shot}.
+Note that the description of this calibration routine has been included here for the sake of clarity and continuity of exposition; however, since it requires the qubit to be in the $\ket{1}$ state at the beginning of the spectroscopy, it can only be performed after the execution of a single-shot classification (see Section \ref{subsec:single_shot}).
 
 \subsubsection{Qubit flux dependence}
+By performing a resonator flux dependence the experimenterer obtained a first estimate for the sweetspot, now by performing a qubit flux spectroscopy.
+In this experiment a constant DC current signal is sent to the qubit through the flux line with voltage and amplitude fixed for the bias level and then a qubit spectroscopy is performed.
+This procedure is repeated  for different bias levels and different drive frequencies.
+The expected result of the routine is shown in Figure \ref{fig:qubit_flux}.
 
 \begin{figure}[h!]
     \centering
@@ -181,7 +209,7 @@ Si noti che la descrizione di questa routine di calibrazione è stata inserita q
     \centering
     \includegraphics[width=\textwidth]{figures/png/t2_strange.png}
     \caption{Output of the $T2$ measurement on qubit B2.}
-    \label{fig:t1}
+    \label{fig:t2}
 \end{figure}
 
 \subsection{Single shot classification}\label{subsec:single_shot}
@@ -190,22 +218,57 @@ Si noti che la descrizione di questa routine di calibrazione è stata inserita q
     \centering
     \includegraphics[width=0.4\textwidth]{figures/png/classification.png}
     \caption{Output of the single shot classification on qubit B2.}
-    \label{fig:t1}
+    \label{fig:classification}
 \end{figure}
 
 %eventualmente in appendice riportare il fatto che è possibile eseguirli anche direttamente sul segnale, senza aver bisogno della classificazione dello stato.
 %semplicemente al posto della probabilità di trovarsi in un determinato stato verrà riportato direttamente il segnale di acquisizione dello strumento. 
+\subsubsection{Readout charachterization}
+
 
 \subsection{Gate calibration}
+
+After defining all the readout parameters, it is necessary to calibrate the parameters of the drive pulses that constitutes the native gates of the quantum computer.
+With Rabi experiments is possibile to calibrate the drive pulses to perform precise rotations on the Bloch sphere within approximately $40$ ns \cite{Rabi1936}, \cite{Wallraff2005}.
+
+\subsubsection{Rabi amplitude-frequency}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/png/rabi_af.png}
+    \caption{Output of the Rabi amplitude-frequency routine on qubit B2.}
+    \label{fig:rabi_amplitude_frequency}
+\end{figure}
+
 \subsubsection{Rabi amplitude}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/png/rabi_amp.png}
+    \caption{Output of the Rabi amplitude routine on qubit B2.}
+    \label{fig:rabi_amplitude}
+\end{figure}
+
 \subsubsection{Rabi length}
-\subsubsection{Rabi amplitude-length}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/png/rabi_length.png}
+    \caption{Output of the Rabi length routine on qubit B2.}
+    \label{fig:rabi_length}
+\end{figure}
+
 
 \subsection{Fine calibration}
+
 \subsubsection{Ramsey experiment}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/png/ramsey.png}
+    \caption{Output of the Ramsey amplitude routine on qubit B2.}
+    \label{fig:ramsey}
+\end{figure}
+
 \subsubsection{Flipping experiment}
+
 \subsubsection{Dispersive shift}
-\subsubsection{Readout charachterization}
 
 \subsection{Standard Randomized Benchmarking}
 L'esperimento di standard randomized benchmarking verrà descritto più nel dettaglio nel capitolo successivo (see Section \ref{sec:RBsection}), per il momento basti sapere che 

@@ -225,7 +225,7 @@ Unlike a standard LC circuit—corresponding to a quantum harmonic oscillator—
 In particular, the energy levels are anharmonic, allowing the first two levels to be spectrally isolated from the higher ones. 
 This anharmonicity enables the use of the subspace spanned by the ground state $\ket{0}$ and the first excited state $\ket{1}$ aas a qubit.
 
-The qubit frequency is defined as the frequency associated with the energy difference between these two states: $f_{01}(n_g) = f_Q = \frac{(E_1 - E_0)}{h}$.
+The qubit frequency is defined as the frequency associated with the energy difference between these two states: $f_{01}(n_g) = f_q = \frac{(E_1 - E_0)}{h}$.
 This frequency can be tuned by varying the externally applied DC voltage, which modifies the system’s parameters and, consequently, its energy level spacing.\\
 
 %%%NOTA PER ME: INSERIRE IL PLOT DEI LIVELLI ENERGETICI DEL CPB
@@ -264,7 +264,7 @@ Thus the eigenenergies of the transmon Hamiltonian are
     E_k \approx \sqrt{8E_JE_C}k - \frac{E_C}{2}(k^2 + k).
 \end{equation}
 
-As mentioned before, the qubit frequency is defined as $f_Q = f_{01} = (E_1 - E_0)/h$ which yields
+As mentioned before, the qubit frequency is defined as $f_q = f_{01} = (E_1 - E_0)/h$ which yields
 \begin{equation}
     f_01 \approx (\sqrt{8E_JE_C} - E_C)/h
 \end{equation}
@@ -279,7 +279,7 @@ For a transmon, the anharmonicity $\eta$ is negative, reflecting the fact that t
 Ideally, the absolute value  $|\eta|$ should be sufficiently large to allow external microwave drives to selectively address the $\ket{0}\leftrightarrow\ket{1}$ transition without inadvertently exciting higher-energy states.
 
 
-\subsection{Flux-tunable transmon}
+\subsection{Flux-tunable transmon}\label{subsec:flux_tunable_transmon}
 To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
 A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting QUantum Interference Device).
 In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop, as shown in Figure \ref{fig:FrequencyTunableTransmon}.
@@ -307,9 +307,13 @@ where $\hat{\varphi} = \frac{\hat{\phi_1}+\hat{\phi_2}}{2}$, and the Josephson e
 \end{equation}
 where $d = \frac{E_{J1}-E_{J2}}{E_{J1}+E_{J2}}$ is the relative junction asymmetry.
 
-Then, it's easy to see that the frequency $f_Q$ of a two-junction transmon dependends on the magnetic flux $\Phi_Q(t)$ through the SQUID loop, for symmetric junctions is given by
+Then, it's easy to see that the frequency $f_q$ of a two-junction transmon dependends on the magnetic flux $\Phi_q(t)$ through the SQUID loop, the relation between the magnetic flux and qubit frequency is given by \cite{PhysRevApplied.20.024070}
 \begin{equation}\label{eq:freqdepndenceonflux}
-    f_Q(\Phi_Q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_Q}{\Phi_0} \right)} - E_C \right).    
+    f__q(\Phi) = \left( f_q^{\text{max}} + \frac{E_C}{h} \right) \sqrt[4]{d^2 + (1 - d^2) \cos^2 \left( \pi \frac{\Phi}{\Phi_0} \right)} - \frac{E_C}{h},
+\end{equation}
+where $f_q^{\text{max}} = (\sqrt{8E_C E_J}-E_C)/h$ is the maximum qubit frequency. For symmetric junctions this relation can be approximated by \cite{rol_time-domain_2020}
+\begin{equation}\label{eq:freqdepndenceonflux_approx}
+    f_q(\Phi_q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_q}{\Phi_0} \right)} - E_C \right).    
 \end{equation}
 
 \begin{figure}[ht!]
@@ -319,6 +323,11 @@ Then, it's easy to see that the frequency $f_Q$ of a two-junction transmon depen
     \label{fig:FrequencyTunableTransmon}
 \end{figure}
 
+The main drawback of having the qubit fequency depending on the magnetic flux is that the qubit frequency becomes also sensitive to spurios magnetic currents.
+A strategy to minimize the sensitivity of the transition frequency consists in using a special bias value, known as sweetspot. 
+This corresponds to the charge-degeneracy point, $n_g = 1/2$, where the qubit reaches its maximum transition frequency. 
+At this point, small fluctuations in the bias, either increases or decreases, lead to a small change in frequency, making the qubit less susceptible to noise.
+Most importantly, since the charge dispersion has no slope there, linear noise contributions cannot change the qubit transition frequency.
 
 \section{Qubit readout}\label{sec:cQED}
 Up to this point, I have discussed the physical structure of a transmon qubit. 
