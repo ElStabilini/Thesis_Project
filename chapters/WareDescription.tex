@@ -6,7 +6,7 @@ In this chapter I will describe the process of calibration for superconducting f
 All the results presented in this work were obtained using the Contralto-D chip \cite{qw11q}, which offers up to 21 fully connected qubits and 4 isolated qubits, for a total of 25 physical qubits.
 The distinction between fully connected and isolated qubits is important as only the fully connected subset supports direct two-qubit gate operations, which are essential for implementing entangling gates and complex quantum circuits. 
 Isolated qubits, while still operational for single-qubit tasks, do not participate in multi-qubit interactions and thus are not functionally equivalent in terms of computational capabilities.
-The topology of the qubit is shown in figure \ref{fig:qw11q_topology}.
+The topology of the qubit is shown in Figure \ref{fig:qw11q_topology}.
 
 \begin{figure}[ht!]
     \centering
@@ -41,7 +41,7 @@ The system operates as a closed loop: \ce{^{3}He} gas is circulated using a comb
 The refrigerator includes several thermalization stages—typically at $50$ K, $4$ K, $800$ mK, $100$ mK, and finally below $20$ mK—each connected to a corresponding cooling stage and separated by radiation shields and thermal filters to minimize heat load and noise from higher-temperature stages.
 Dilution refrigerators are highly stable and capable of reaching base temperatures below $10$ mK, with hold times on the order of days or even weeks. 
 These temperatures are crucial for achieving the low thermal noise and long coherence times necessary for high-fidelity quantum operations in superconducting circuits.
-Specifically the cryostat employed in the lab is the XLDsl from Bluefors \cite{XLD1000}, an image of the cryostat is shown in figure \ref{fig:XLDsl}.
+Specifically the cryostat employed in the lab is the XLDsl from Bluefors \cite{XLD1000}, an image of the cryostat is shown in Figure \ref{fig:XLDsl}.
 
 \begin{figure}[h!]
     \centering
@@ -71,7 +71,7 @@ The first task that I needed to complete at the beginning of my thesis work was 
 From this point onward, for the sake of brevity, I will refer to the chip interchangeably as Contralto-D or \tt{qw11q}, which is the name of the node under which it is registered on the QRC computing cluster.
 In the following I will describe the experiments that I performed and commenting on the results.
 
-\subsection{Resonator characterization}
+\subsection{Resonator calibration}
 Before starting with the calibration of the gates necessary for quantum computing it is necessary to charachterize the qubit an clibrate the readout pulses. 
 For this reason the calibration process starts with the charachterization of the resonator coupled to the qubit that will be used to perform non-destructive measurements of the qubit state.
 
@@ -125,7 +125,7 @@ For this calibration protocol the experimenterer must carefully choose the frequ
 %\end{figure}
 
 \subsubsection{Resonator flux dependence}
-As explained in section \ref{sec:flux_tunable_transmon} it is suggested to work at the qubit sweetspot, where the qubit frequency is less sensitive to magnetic flux fluctuations.
+As explained in section \ref{subsec:flux_tunable_transmon} it is suggested to work at the qubit sweetspot, where the qubit frequency is less sensitive to magnetic flux fluctuations.
 For this reason, it is useful to estimate the location of the sweet spot prior to performing qubit spectroscopy, enabling measurements to be carried out near the optimal bias point. 
 This can be accomplished by exploiting the qubit–resonator coupling: since the qubit frequency depends on the magnetic flux, as shown in equation \ref{eq:freqdepndenceonflux}, and the qubit is coupled to the resonator, the resonator frequency also exhibits a flux dependence. 
 The resonator detuning in the transmon regime ($E_J \gg E_C$) can be computed as 
@@ -145,7 +145,9 @@ An example of the output of this experiment is shown in Figure
 %    \label{fig:res_punchout}
 %\end{figure}
 
-\subsection{Qubit characterization}
+\subsection{Readout charachterization}
+
+\subsection{Qubit calibration}
 After having determined all the readout parameters it is possibile to continue the calibration process by calibrating the qubit.
 
 \subsubsection{Qubit spectroscopy}
@@ -159,7 +161,7 @@ This excitation modifies the qubit population and, consequently, the resonator r
 When the drive frequency is near resonance and the pulse is sufficiently long, the qubit may reach a maximally mixed state leading to a detectable change in the readout signal amplitude. 
 By sweeping the drive frequency and recording the corresponding readout amplitudes, one can plot a spectroscopy curve that reveals a Lorentzian dip or peak centered at the qubit transition frequency—opposite in direction to the Lorentzian feature observed in the resonator spectroscopy, due to the nature of the state-dependent dispersive shift.
 
-An example of the output of qubit spectroscopy experiment is shown in figure \ref{fig:qubit_spectroscopy}
+An example of the output of qubit spectroscopy experiment is shown in Figure \ref{fig:qubit_spectroscopy}
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/qubit_spectroscopy.png}
@@ -187,6 +189,12 @@ In this experiment a constant DC current signal is sent to the qubit through the
 This procedure is repeated  for different bias levels and different drive frequencies.
 The expected result of the routine is shown in Figure \ref{fig:qubit_flux}.
 
+When calibrating the qubit sweetspot it is important to consider that on a superconducting qubatum chip qubits are not completely isolated systems; rather, they interact with one another through both intentional couplings (e.g capacitive or inductive couplers) and unintended cross-talk mechanisms. 
+The mutual influence that qubits exert on each other's affect their effective operating parameters, particularly their flux-dependent transition frequencies.
+This means that also the location of the sweetspot can be affected by the biasing of neighboring qubits, this occurs because the flux-tuning circuitry is not perfectly isolated; biasing one qubit can induce a spurious flux in nearby qubits, effectively shifting their frequency spectra and hence their sweetspots.
+Consequently, calibrating each qubit in isolation may yield misleading results, therefore, to accurately determine and operate all qubits at their true sweetspots under realistic experimental conditions, it is important to perform simultaneous calibration. 
+This ensures that all mutual interactions and cross-couplings are properly accounted for, leading to a more stable and predictable multi-qubit operation.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/qubit_flux.png}
@@ -195,8 +203,108 @@ The expected result of the routine is shown in Figure \ref{fig:qubit_flux}.
 \end{figure}
 
 \subsubsection{Qubit crosstalk}
+To perform a more detailed study of the qubit crosstalk it is possible to perform a \tt{qubit\_crosstalk} experiment.
 
-\subsection{T1 \& T2 measurement}
+\subsection{Drive pulse calibration}
+
+After defining all the readout parameters and the parameters for qubit control, it is necessary to calibrate the parameters of the drive pulses to be able to control rotations on the Bloch sphere.
+With Rabi experiments is possibile to calibrate the drive pulses to perform precise rotations (see \cite{Rabi1936}, \cite{Wallraff2005}) within approximately $40$ ns.
+This duration is typical for single-qubit gates in superconducting qubit systems, as it represents a balance between fast control and minimal spectral leakage. 
+Faster gates would require higher drive amplitudes, which can increase errors due to leakage into higher transmon levels or induce unwanted transitions in nearby qubits through cross-resonance or crosstalk effects \cite{TransmonPaper}, \cite{Motzoi_2009}. 
+On the other hand, significantly longer gates are more susceptible to decoherence, particularly due to $T_1$ relaxation and $T_2$ dephasing processes, which limit overall gate fidelity \cite{Barends2014-pb}.
+
+Usually the first step of calibrating drive pulses consists in calibrating a $\pi$-pulse, namely an $X$-gate. 
+The goal of the Rabi experiment is to tune the amplitude or duration of the drive pulse, in order to excite the qubit from the ground state up to state $\ket{1}$.
+
+\subsection{Rabi oscillation experiments}
+To experimentally probe the coherent control of a qubit in \Qibocal it is possible to perform different variations of the Rabi oscillation experiments, which provides direct evidence of the qubit's ability to undergo controlled rotations under a resonant microwave drive, as described in Section \ref{sec:qubit_control}.
+In this experiment, a microwave pulse of the form  
+
+\begin{equation}\label{eq:microwave_pulse}
+    V_d(t) = A \varepsilon(t) \sin(\omega_d t + \alpha)
+\end{equation}
+is applied through the control line (XY line), and coupled capacitively to the qubit. 
+The qubit is initialized in its ground state $\ket{0}$, and the drive frequency $\omega_d$ is set close to the qubit transition frequency $\omega_q$. 
+The envelope $\varepsilon(t)$ is typically Gaussian, and its shape is kept constant throughout the experiment. 
+The key parameter that is varied is the amplitude $A$ of the drive pulse (or alternatively, the duration of the pulse while keeping amplitude constant).
+
+To better understand the evolution of the system, it is possible to consider the driven qubit in the interaction picture. 
+The qubit state can be written as:
+\begin{equation}\label{eq:general_state}
+    \ket{\psi(t)} = C_0(t) e^{+i \omega_q t/2} \ket{0} + C_1(t) e^{-i \omega_q t/2} \ket{1}.
+\end{equation}
+%
+Solving the time-dependent Schr\"odinger equation for state \ref{eq:general_state} under Hamiltonian\ref{eq:interaction_hamiltonian} yields the following expressions:
+\begin{align}
+    C_0(t) &= e^{-i \Delta_d t / 2} \left[ \cos \left( \frac{\Omega_R t}{2} \right) + i \frac{\Delta_d}{\Omega_R} \sin \left( \frac{\Omega_R t}{2} \right) \right], \\
+    C_1(t) &= i \frac{\Omega}{\Omega_R} e^{i \Delta_d t / 2} \sin \left( \frac{\Omega_R t}{2} \right),
+\end{align}
+where $\Delta_d = \omega_q - \omega_d$ is the detuning, and
+\begin{equation}
+    \Omega_R = \sqrt{\Omega^2 + \Delta_d^2}
+\end{equation}
+is the generalized Rabi frequency.
+
+The probability of finding the qubit in the excited state at time $t$ is given by:
+\begin{equation}
+    P_1(t) = |C_1(t)|^2 = \frac{\Omega^2}{\Omega^2 + \Delta_d^2} \sin^2 \left( \frac{\Omega_R t}{2} \right).
+\end{equation}
+This result shows that the probability oscillates in time with frequency $\Omega_R$, and the amplitude of the oscillation is reduced when the drive is off-resonant ($\Delta_d \neq 0$).
+The closer the drive is to resonance, the higher the probability of full excitation.
+
+In the resonant case, when $\omega_d =\omega_q$ and $\Delta_d = 0$ the generalized Rabi frequencyreduces to $\Omega_R = \Omega$ and the excited state probability becomes
+\begin{equation}\label{eq:rabi_amplitude}
+    P_e (t) = P_1(t) = \sin^2\left(\frac{\Omega t}{2} \right) = \frac{1}{2}(1-\cos(\Omega t))
+\end{equation}
+which is the curve that is used in the fit when performing a Rabi amplitude experiment.
+
+An example of the output of a Rabi amplitude experiment is shown in figure \ref{fig:rabi_amplitude}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/rabi_amp.png}
+    \caption{Output of the Rabi amplitude routine on qubit B2.}
+    \label{fig:rabi_amplitude}
+\end{figure}
+
+A variation of the Rabi amplitude experiment consists of the Rabi length experiment, where instead of the amplitude, the parameter that is varied is the duration of the drive pulse.
+The qubit is again initialized in the ground state $\ket{0}$ and subjected to a resonant microwave drive ($\omega_d = \omega_q$). 
+In this case, the pulse envelope $\varepsilon(t)$ and amplitude $A$ are held constant, while the total duration of the pulse is incrementally varied. 
+This enables the observation of coherent oscillations in the excited state population as a function of pulse length. 
+However, unlike the idealized scenario, in realistic conditions the qubit experiences energy relaxation and dephasing, which attenuate the oscillation amplitude over time. 
+To account for these effects, the excited state probability is modeled as represents the effective decay time, incorporating both energy relaxation and dephasing processes.
+\begin{equation}
+    P_e (t) = P_1(t)= \frac{1}{2}(1- e^{-t/\tau}\cos(\Omega_R \frac{t}{2}))
+\end{equation}
+where $\Omega_R$ is the generalized Rabi frequency and $\tau$ 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/rabi_length.png}
+    \caption{Output of the Rabi length routine on qubit B2.}
+    \label{fig:rabi_length}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/rabi_af.png}
+    \caption{Output of the Rabi amplitude-frequency routine on qubit B2.}
+    \label{fig:rabi_amplitude_frequency}
+\end{figure}
+
+\subsection{Qubit charachterization}
+\subsubsection{T1 \& T2 measurement}
+After having calibrated all the parameters concerning the qubit it is possible to proceed with charachterization experiments such as $T1$ and $T2$ measurements.
+
+As explained in Section \ref{subsec:qubit_decoherence}, due to coupling to the environment the qubit in state $\ket{1}$ will decay to the state $\ket{0}$. 
+To measure the charachteristic decay time $T_1$ it is possible to perform a simple experiment where the qubit is initialized in state $\ket{1}$ using a previously calibrated $\pi$ pulse.
+After a variable delay $\Delta\tau$, during which the qubit undergoes spontaneous decay due to coupling to the environment, a projective measurement is performed.
+For $\Delta\tau = 0$ we expect to fin the qubit in state $\ket{1}$ while for $\Delta\tau \rightarrow \infty$ the system relaxes fully to the ground state $\ket{0}$.
+r intermediate times, the probability of finding the qubit in $\ket{1}$ decays exponentially, and the measured excited state population $p_e(t)$ as a function of time $t$ is fitted to the model 
+\begin{equation}\label{eq:T1}
+    p_e(t) = A + Be^{-\frac{t}{T_1}}
+\end{equation}
+where $T_1$ is the exnergy relation time and $A$, $B$ are the fitting parameters.
+The expected result from this routine is shown in Figure \ref{fig:t1}.
 
 \begin{figure}[h!]
     \centering
@@ -205,6 +313,7 @@ The expected result of the routine is shown in Figure \ref{fig:qubit_flux}.
     \label{fig:t1}
 \end{figure}
 
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/t2_strange.png}
@@ -212,7 +321,7 @@ The expected result of the routine is shown in Figure \ref{fig:qubit_flux}.
     \label{fig:t2}
 \end{figure}
 
-\subsection{Single shot classification}\label{subsec:single_shot}
+\subsubsection{Single shot classification}\label{subsec:single_shot}
 
 \begin{figure}[h!]
     \centering
@@ -221,52 +330,51 @@ The expected result of the routine is shown in Figure \ref{fig:qubit_flux}.
     \label{fig:classification}
 \end{figure}
 
-%eventualmente in appendice riportare il fatto che è possibile eseguirli anche direttamente sul segnale, senza aver bisogno della classificazione dello stato.
-%semplicemente al posto della probabilità di trovarsi in un determinato stato verrà riportato direttamente il segnale di acquisizione dello strumento. 
-\subsubsection{Readout charachterization}
-
-
-\subsection{Gate calibration}
-
-After defining all the readout parameters, it is necessary to calibrate the parameters of the drive pulses that constitutes the native gates of the quantum computer.
-With Rabi experiments is possibile to calibrate the drive pulses to perform precise rotations on the Bloch sphere within approximately $40$ ns \cite{Rabi1936}, \cite{Wallraff2005}.
-
-\subsubsection{Rabi amplitude-frequency}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.4\textwidth]{figures/png/rabi_af.png}
-    \caption{Output of the Rabi amplitude-frequency routine on qubit B2.}
-    \label{fig:rabi_amplitude_frequency}
-\end{figure}
-
-\subsubsection{Rabi amplitude}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.4\textwidth]{figures/png/rabi_amp.png}
-    \caption{Output of the Rabi amplitude routine on qubit B2.}
-    \label{fig:rabi_amplitude}
-\end{figure}
-
-\subsubsection{Rabi length}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.4\textwidth]{figures/png/rabi_length.png}
-    \caption{Output of the Rabi length routine on qubit B2.}
-    \label{fig:rabi_length}
-\end{figure}
-
-
-\subsection{Fine calibration}
+\subsection{Fine-tuning calibration}
 
 \subsubsection{Ramsey experiment}
+After calibrating the readout and $\pi$-pulses, technically should be possible to execute algorithmic experiments on the qubit. 
+However, essential characteristics of the qubit, such as its coherence properties and the precise drive frequency, remain to be determined; without this information, circuit fidelities would be suboptimal. 
+The Ramsey experiment is a simple yet powerful protocol that allows simultaneous investigation of multiple aspects of qubit behavior, including the fine tuning of the drive frequency and verification of coherent control and signal phase consistency. 
+It also enables extraction of the qubit's coherence time $T_2^*$.
+
+In its standard implementation, the Ramsey sequence consists of two $\frac{\pi}{2}$-pulses separated by a variable delay $\tau$.\\
+The first $\frac{\pi}{2}$-pulse brings the qubit from the ground state $\ket{0}$ onto the equatorial plane of the Bloch sphere, placing it in a superposition of $\ket{0}$ and $\ket{1}$.
+During the delay $\tau$, he qubit state accumulates a relative phase due to its Larmor precession and environmental noise, effectively evolving around the z-axis.\\
+The second $\frac{\pi}{2}$-pulse projects the final state back onto the measurement basis, and the probability of measuring the excited state $\ket{1}$ is recorded.
+Repeating this procedure for different delay times $\tau$ allows to monitor the decay of coherence in the qubit state.
+
+In the ideal, non-detuned case, where the drive frequency matches the qubit transition frequency, the observed signal exhibits a purely exponential decay toward a baseline value, from which the characteristic decoherence time $T_2^*$ can be extracted.
+However, small deviations from the ideal $\frac{\pi}{2}$-pulse, due to imperfect calibration or a mismatch between the drive and quibt frequency lead to more complex behaviour.
+
+Usually a small intentional detuning is applied, in this case the measurement outcomes show a sinusoidal modulation superimoposed on the exponential decay so that the reuslting curve can be fitted with the equation \cite{Baur2012RealizingQG}
+\begin{equation}\label{eq:Ramsey}
+    p_e(\tau) = \frac{1}{2} + \frac{1}{2}e^{-\tau/T_2^*}\cos{(\Delta\omega \tau)}
+\end{equation}
+An example of the output of a Ramsey experiment is shown in Figure \ref{fig:ramsey}
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.4\textwidth]{figures/png/ramsey.png}
+    \includegraphics[width=\textwidth]{figures/png/ramsey.png}
     \caption{Output of the Ramsey amplitude routine on qubit B2.}
     \label{fig:ramsey}
 \end{figure}
 
 \subsubsection{Flipping experiment}
+
+While the Ramsey experiment is typically used to fine-tune the drive frequency of a qubit, the Flipping experiment serves as an effective routine to calibrate the amplitude of the $\pi$-pulse, ensuring accurate implementation of $R_x(\pi)$ rotations. 
+This calibration is fundamental for achieving high-fidelity gate operations, and the flipping experiment can often reveal discrepancies in the amplitude that are not evident in Rabi oscillation measurements.\\
+In this protocol, a flip is defined as a pair of consecutive $\pi$-pulses, which ideally return the qubit to its initial state due to a full $2\pi$ rotation. 
+The experiment begins with the qubit initialized in the ground state $\ket{0}$, followed by an $R_x(\pi/2)$ rotation that places it in an equal superposition state on the equator of the Bloch sphere. 
+Without the initial $R_x(\pi/2)$ rotation, errors in the $\pi$-pulses would lead only to a global phase difference, which is not detectable via projective measurements. 
+With the superposition state, however, the qubit's evolution becomes sensitive to amplitude miscalibrations, allowing over- and under-rotations to be distinguished through changes in measurement probability.
+
+Following the initial $\pi/2$-pulse, the qubit is subjected to a number $N$ of flips choosen by the experimenter. 
+After the flips, a projective measurement is performed. This procedure is repeated for increasing values of $N$, effectively building a scan of how the qubit state evolves under repeated application of imperfect $\pi$-pulses.
+
+In the ideal case, where the $\pi$-pulse amplitude is perfectly calibrated, the repeated flips return the qubit to the equatorial plane after each cycle, resulting in a constant measurement probability. 
+The recorded signal should appear as a flat line; however, if the amplitude is miscalibrated, the qubit state will drift on the Bloch sphere, leading to oscillatory behavior in the measured population as a function of the number of flips. 
+This deviation is modeled by a sinusoidal function, from which the amplitude error can be quantitatively extracted.
 
 \subsubsection{Dispersive shift}
 
