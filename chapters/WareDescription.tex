@@ -282,6 +282,12 @@ where $\Omega_R$ is the generalized Rabi frequency and $\tau$
     \label{fig:rabi_length}
 \end{figure}
 
+
+Sometimes, when the qubit frequency is not precisely known, or when systematic effects such as pulse distortions, frequency drifts, or cross-talk may affect the calibration it can be useful to perform a Rabi measurement in which the amplitude and frequency of the drive pulse are scanned.
+In \Qibocal this experiment is implemented as the Rabi amplitude-frequency routine, this experiment provides a comprehensive view of the qubit's response to a range of drive conditions and is particularly useful during initial calibration.
+This experiment reveals a characteristic chevron-shaped interference pattern in the excitation probability as a function of drive frequency and amplitude. 
+Figure \ref{fig:rabi_amplitude_frequency} shows a possible output of this experiment, in the plot in figure in particular it is possible to see only the first region of the chevron shape with high probability of finding the qubit in an excited state.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/rabi_af.png}
@@ -353,7 +359,14 @@ At each frequency point, single-shot measurements are collected, and the resulti
 Specifically, the distance between the centroids of the two resulting IQ distributions, one corresponding to the ground state and the other to the excited state, is computed. 
 The readout frequency that maximizes this centroid separation is selected, as it provides the greatest distinguishability between the two qubit states and thus optimizes the readout contrast.
 
-A typical result for this routine is shown in Figure
+A typical result for this routine is shown in Figure \ref{fig:dispersive_shift}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/dispersive_shift.png}
+    \caption{Output of the Rabi amplitude routine on qubit B2.}
+    \label{fig:dispersive_shift}
+\end{figure}
 
 \subsection{Qubit charachterization}
 \subsubsection{T1 \& T2 measurement}
@@ -443,6 +456,14 @@ The result of the classification routine should be similar to the one showed in 
 The standard randomized benchmarking experiment will be described in more detail in the following chapter (see Section \ref{sec:RBsection}).
 For now it is enough to say that in this routine, sequences of randomly selected Clifford gates are applied to the qubit, followed by an inverting gate that ideally returns the system to its initial state. 
 By measuring the survival probability as a function of sequence length and fitting the decay curve, an estimate of the average gate fidelity is obtained.
+An example of the output expected from the randomized benchmarking protocol is shown in Figure \ref{fig:rb}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/png/rb.png}
+    \caption{Output of the standard randomized benchmarking routine on qubit B2.}
+    \label{fig:rb}
+\end{figure}
 
 
 \subsection{DRAG experiment}\label{sec:DRAG}
