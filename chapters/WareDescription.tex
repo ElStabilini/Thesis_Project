@@ -145,8 +145,6 @@ An example of the output of this experiment is shown in Figure
 %    \label{fig:res_punchout}
 %\end{figure}
 
-\subsection{Readout charachterization}
-
 \subsection{Qubit calibration}
 After having determined all the readout parameters it is possibile to continue the calibration process by calibrating the qubit.
 
@@ -216,7 +214,7 @@ On the other hand, significantly longer gates are more susceptible to decoherenc
 Usually the first step of calibrating drive pulses consists in calibrating a $\pi$-pulse, namely an $X$-gate. 
 The goal of the Rabi experiment is to tune the amplitude or duration of the drive pulse, in order to excite the qubit from the ground state up to state $\ket{1}$.
 
-\subsection{Rabi oscillation experiments}
+\subsubsection{Rabi oscillation experiments}
 To experimentally probe the coherent control of a qubit in \Qibocal it is possible to perform different variations of the Rabi oscillation experiments, which provides direct evidence of the qubit's ability to undergo controlled rotations under a resonant microwave drive, as described in Section \ref{sec:qubit_control}.
 In this experiment, a microwave pulse of the form  
 
@@ -291,48 +289,9 @@ where $\Omega_R$ is the generalized Rabi frequency and $\tau$
     \label{fig:rabi_amplitude_frequency}
 \end{figure}
 
-\subsection{Qubit charachterization}
-\subsubsection{T1 \& T2 measurement}
-After having calibrated all the parameters concerning the qubit it is possible to proceed with charachterization experiments such as $T1$ and $T2$ measurements.
-
-As explained in Section \ref{subsec:qubit_decoherence}, due to coupling to the environment the qubit in state $\ket{1}$ will decay to the state $\ket{0}$. 
-To measure the charachteristic decay time $T_1$ it is possible to perform a simple experiment where the qubit is initialized in state $\ket{1}$ using a previously calibrated $\pi$ pulse.
-After a variable delay $\Delta\tau$, during which the qubit undergoes spontaneous decay due to coupling to the environment, a projective measurement is performed.
-For $\Delta\tau = 0$ we expect to fin the qubit in state $\ket{1}$ while for $\Delta\tau \rightarrow \infty$ the system relaxes fully to the ground state $\ket{0}$.
-r intermediate times, the probability of finding the qubit in $\ket{1}$ decays exponentially, and the measured excited state population $p_e(t)$ as a function of time $t$ is fitted to the model 
-\begin{equation}\label{eq:T1}
-    p_e(t) = A + Be^{-\frac{t}{T_1}}
-\end{equation}
-where $T_1$ is the exnergy relation time and $A$, $B$ are the fitting parameters.
-The expected result from this routine is shown in Figure \ref{fig:t1}.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/png/t1.png}
-    \caption{Output of the $T1$ measurement on qubit B2.}
-    \label{fig:t1}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/png/t2_strange.png}
-    \caption{Output of the $T2$ measurement on qubit B2.}
-    \label{fig:t2}
-\end{figure}
-
-\subsubsection{Single shot classification}\label{subsec:single_shot}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.4\textwidth]{figures/png/classification.png}
-    \caption{Output of the single shot classification on qubit B2.}
-    \label{fig:classification}
-\end{figure}
-
 \subsection{Fine-tuning calibration}
 
-\subsubsection{Ramsey experiment}
+\subsubsection{Ramsey experiment}\label{subsec:Ramsey}
 After calibrating the readout and $\pi$-pulses, technically should be possible to execute algorithmic experiments on the qubit. 
 However, essential characteristics of the qubit, such as its coherence properties and the precise drive frequency, remain to be determined; without this information, circuit fidelities would be suboptimal. 
 The Ramsey experiment is a simple yet powerful protocol that allows simultaneous investigation of multiple aspects of qubit behavior, including the fine tuning of the drive frequency and verification of coherent control and signal phase consistency. 
@@ -375,11 +334,116 @@ After the flips, a projective measurement is performed. This procedure is repeat
 In the ideal case, where the $\pi$-pulse amplitude is perfectly calibrated, the repeated flips return the qubit to the equatorial plane after each cycle, resulting in a constant measurement probability. 
 The recorded signal should appear as a flat line; however, if the amplitude is miscalibrated, the qubit state will drift on the Bloch sphere, leading to oscillatory behavior in the measured population as a function of the number of flips. 
 This deviation is modeled by a sinusoidal function, from which the amplitude error can be quantitatively extracted.
+Figure \ref{fig:flipping} shows the result of a flipping routine.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/flipping.png}
+    \caption{Output of the flipping routine on qubit B2.}
+    \label{fig:flipping}
+\end{figure}
 
 \subsubsection{Dispersive shift}
+A possible strategy to improve the assignment fidelity is to perform a dispersive shift measurement which helps calibrate the readout frequency.
+To calibrate the readout frequency based on the dispersive shift, two resonator spectroscopy measurements are performed. 
+In the first, the resonator response is measured while the qubit remains in its ground state $\ket{0}$, effectively treating the system as a bare resonator. 
+In the second measurement, a calibrated $\pi$-pulse is applied before each acquisition to prepare the qubit in the excited state $\ket{1}$, and the spectroscopy is repeated under otherwise identical conditions. 
+The transmission or reflection spectra from both configurations are then plotted together as a function of probe frequency. 
+At each frequency point, single-shot measurements are collected, and the resulting IQ data are analyzed. 
+Specifically, the distance between the centroids of the two resulting IQ distributions, one corresponding to the ground state and the other to the excited state, is computed. 
+The readout frequency that maximizes this centroid separation is selected, as it provides the greatest distinguishability between the two qubit states and thus optimizes the readout contrast.
+
+A typical result for this routine is shown in Figure
+
+\subsection{Qubit charachterization}
+\subsubsection{T1 \& T2 measurement}
+After having calibrated all the parameters concerning the qubit it is possible to proceed with charachterization experiments such as $T1$ and $T2$ measurements.
+
+As explained in Section \ref{subsec:qubit_decoherence}, due to coupling to the environment the qubit in state $\ket{1}$ will decay to the state $\ket{0}$. 
+To measure the charachteristic decay time $T_1$ it is possible to perform a simple experiment where the qubit is initialized in state $\ket{1}$ using a previously calibrated $\pi$ pulse.
+After a variable delay $\Delta\tau$, during which the qubit undergoes spontaneous decay due to coupling to the environment, a projective measurement is performed.
+For $\Delta\tau = 0$ we expect to fin the qubit in state $\ket{1}$ while for $\Delta\tau \rightarrow \infty$ the system relaxes fully to the ground state $\ket{0}$.
+r intermediate times, the probability of finding the qubit in $\ket{1}$ decays exponentially, and the measured excited state population $p_e(t)$ as a function of time $t$ is fitted to the model 
+\begin{equation}\label{eq:T1}
+    p_e(t) = A + Be^{-\frac{t}{T_1}},
+\end{equation}
+where $T_1$ is the exnergy relation time and $A$, $B$ are the fitting parameters.
+The expected result from this routine is shown in Figure \ref{fig:t1}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/t1.png}
+    \caption{Output of the $T1$ measurement on qubit B2.}
+    \label{fig:t1}
+\end{figure}
+
+After measuring $T_1$ it is necessary to measure also the dephasing time of the qubit, $T_2$; to do this in \Qibocal, it is possible to perform a T2 experiment.
+The acquisition sequence of the experiment is the same as the Ramsey experiment described in Section \ref{subsec:Ramsey}: a pair of $\pi/2$-pulses is applied with a variable delay $\tau$ in between, during which the qubit freely evolves under a slightly detuned drive.
+As a result, the measured excited state population exhibits oscillations in time, caused by the accumulation of phase due to the detuning. 
+These oscillations are enveloped by an exponential decay that reflects the qubit’s loss of phase coherence over time.  
+
+In the T2 experiment the same pulse sequence is used with the caveat that the drive pulse is not detuned, the protocol assumest that any error on the drive frequency has already been corrected through a Ramsey experiment.
+For this reason the curve that describes the excited state population is expected to follow a simple exponential decay:
+\begin{equation}
+    p_e(t) = A + Be^{-\frac{t}{T_2}},
+\end{equation}
+where $A$ and $B$ are two fitting parameters.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/t2.png}
+    \caption{Output of the $T2$ measurement on qubit B2.}
+    \label{fig:t2}
+\end{figure}
+
+\subsubsection{Single shot classification}\label{subsec:single_shot}
+At this stage of the calibration procedure, the drive and measurement pulses have been individually calibrated, while a measurement now yields a clear analog output, this alone does not indicate whether the qubit was in state $\ket{0}$ or $\ket{1}$.
+To establish this correspondence and enable digital state assignment, it is necessary to perform a single-shot readout experiment.
+
+To charachterize the readout configuration of a superconducting qubit, the measurement is performed using a heterodyne detection setup (see \cite{gao_practical_2021}, \cite{krantz_quantum_2019}) which acquires the transmitted microwave signal from the readout resonator.
+Although the average signal clearly distinguishes the two states, in a single instance, often called single shot, th signal is noisy. 
+This noise arises both from quantum fluctuations intrinsic to the electromagnetic field inside the resonator and from added noise contributed by amplifiers and other electronics in the detection chain.
+The raw signal, sampled over a finite window, is digitally integrated to produce a single complex number corresponding to one measurement instance.
+Repeating this process after preparing the qubit in a known state produces a cloud of points in the complex IQ plane \cite{krantz_quantum_2019}.
+For both state $\ket{0}$ and state $\ket{1}$ we typically observe one Gaussian-shaped distribution of IQ values The separation between these two clusters originates from the dispersive interaction between the qubit and the resonator, which induces a state-dependent frequency shift and consequently a distinguishable phase shift in the transmitted microwave tone. 
+Since the acquisition integrates the signal over time, each shot produces a single point whose location reflects the qubit state but is blurred by noise that generates the Gaussian distributions.
+
+The readout calibration experiment starts by preparing the qubit in state $\ket{0}$, letting it relax to its ground state and collecting IQ data without averaging.
+The experiment is then repeated the after applying a $\pi$-pulse to prepare the qubit in state $\ket{1}$ and the unavaraged IQ-values are recorded.
+Plotting all these single shots in the IQ plane reveals two roughly circular clusters. 
+
+To classify the measured IQ points, the centroids of the two Gaussian-like distributions corresponding to the qubit prepared in $\ket{0}$ and $\ket{1}$ are first identified. 
+The axis passing through these centroids is used to define the direction along which the state information is most distinguishable. 
+The IQ plane is then rotated so that this axis aligns with the horizontal (real) axis, concentrating the relevant state-dependent variation along a single dimension. 
+This rotation is characterized by an angle, measured in radians, between the centroid-connecting axis and the original $Q$-axis.
+
+Following the rotation, the coordinate system is translated such that the centroid of the ground state distribution is placed at the origin. 
+All IQ points are then projected onto the real axis, and the resulting one-dimensional distributions for each state are analyzed. 
+The cumulative distribution functions of these projections are computed, and the optimal threshold is determined by finding the point that maximizes the absolute difference between the two distributions. 
+This threshold defines the decision boundary used to assign a binary qubit state to any new measurement, based on its projection along the rotated axis.
+
+The quality of the classification is then quantified by the assignment fidelity, defined as \cite{gao_practical_2021} 
+\begin{equation}
+    \mathcal{F} = \ -\frac{1}{2}((P(0,1)+P(1,0)))
+\end{equation}
+where $P(i,j)$ is the probability of measuring the qubit in state $i$ but prepared in state $j$; this fidelity is typically expected to exceed 90–95\% for a well-calibrated readout. 
+It serves as a crucial figure of merit for the qubit, reflecting how reliably one can distinguish its quantum states in a single-shot measurement. 
+
+The result of the classification routine should be similar to the one showed in Figure \ref{fig:classification}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/png/classification.png}
+    \caption{Output of the single shot classification on qubit B2.}
+    \label{fig:classification}
+\end{figure}
+
 
 \subsection{Standard Randomized Benchmarking}
-L'esperimento di standard randomized benchmarking verrà descritto più nel dettaglio nel capitolo successivo (see Section \ref{sec:RBsection}), per il momento basti sapere che 
+The standard randomized benchmarking experiment will be described in more detail in the following chapter (see Section \ref{sec:RBsection}).
+For now it is enough to say that in this routine, sequences of randomly selected Clifford gates are applied to the qubit, followed by an inverting gate that ideally returns the system to its initial state. 
+By measuring the survival probability as a function of sequence length and fitting the decay curve, an estimate of the average gate fidelity is obtained.
+
 
 \subsection{DRAG experiment}\label{sec:DRAG}
 \cite{Motzoi_2009}\cite{Gambetta_2011}
