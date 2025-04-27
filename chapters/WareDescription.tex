@@ -505,3 +505,30 @@ An example of the expected output for the DRAG routine is shown in Figure \ref{f
     \caption{Expected output of the DRAG routine. $\beta$ is the symbol used in \Qibocal for the $\lambda$ parameter.}
     \label{fig:drag}
 \end{figure}
+
+\section{Calibration results}
+
+In Table \ref{tab:cal_results}, are summarized the results obtained for the calibration of line D of the \tt{qw11q} chip. 
+The values of the assignment fidelity and readout fidelity are overall satisfactory, indicating reliable state discrimination during measurement. 
+Similarly, the relaxation time $T_1$ of the qubit shows acceptable values.
+
+On the other hand, the coherence time $T_2$ is generally low, especially when considering that its theoretical upper bound is $2T_1$. 
+This indicates the presence of significant pure dephasing mechanisms, which are limiting the coherence independently of energy relaxation processes. 
+A reduced $T_2$ can have important consequences for subsequent experiments, particularly impacting the performance of randomized benchmarking protocols. 
+Specifically, a short coherence time may degrade the fidelity of gate operations, leading to an overestimation of the average error per gate. 
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lccccc}
+    %\toprule
+    \textbf{Qubit} & \textbf{Readout Fidelity} & \textbf{Assignment Fidelity} & \textbf{T1 [$\mu$s]} & \textbf{T2 [$\mu$s]} & \textbf{Gate infidelity (e-3)} \\
+    \midrule
+    \textbf{D1} & $0.876$ & $0.938$ & $26.4 \pm 0.4$ & $13.0 \pm 2.0$ & $27.0 \pm 21.0$ \\
+    \textbf{D2} & $0.945$ & $0.973$ & $14.9 \pm 0.1$ & $18.0 \pm 10.0$ & $20.5 \pm 6.2$ \\
+    \textbf{D3} & $0.905$ & $0.952$ & $23.6 \pm 0.3$ & $28.0 \pm 12.0$ & $7.0 \pm 18$ \\
+    \textbf{D4} & $0.929$ & $0.964$ & $20.6 \pm 0.2$ & $40.0 \pm 5.2$ & $4.4 \pm 4.8$ \\
+    %\bottomrule
+    \end{tabular}
+    \caption{Single qubit gates calibration results}
+    \label{tab:cal_results}
+\end{table}
