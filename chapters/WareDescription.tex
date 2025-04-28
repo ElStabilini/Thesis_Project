@@ -219,7 +219,7 @@ To experimentally probe the coherent control of a qubit in \Qibocal it is possib
 In this experiment, a microwave pulse of the form  
 
 \begin{equation}\label{eq:microwave_pulse}
-    V_d(t) = A \varepsilon(t) \sin(\omega_d t + \alpha)
+    V_d(t) = A \varepsilon(t) \sin(\omega_d t + \alpha),
 \end{equation}
 is applied through the control line (XY line), and coupled capacitively to the qubit. 
 The qubit is initialized in its ground state $\ket{0}$, and the drive frequency $\omega_d$ is set close to the qubit transition frequency $\omega_q$. 
@@ -239,7 +239,7 @@ Solving the time-dependent Schr\"odinger equation for state \ref{eq:general_stat
 \end{align}
 where $\Delta_d = \omega_q - \omega_d$ is the detuning, and
 \begin{equation}
-    \Omega_R = \sqrt{\Omega^2 + \Delta_d^2}
+    \Omega_R = \sqrt{\Omega^2 + \Delta_d^2},
 \end{equation}
 is the generalized Rabi frequency.
 
@@ -252,7 +252,7 @@ The closer the drive is to resonance, the higher the probability of full excitat
 
 In the resonant case, when $\omega_d =\omega_q$ and $\Delta_d = 0$ the generalized Rabi frequencyreduces to $\Omega_R = \Omega$ and the excited state probability becomes
 \begin{equation}\label{eq:rabi_amplitude}
-    P_e (t) = P_1(t) = \sin^2\left(\frac{\Omega t}{2} \right) = \frac{1}{2}(1-\cos(\Omega t))
+    P_e (t) = P_1(t) = \sin^2\left(\frac{\Omega t}{2} \right) = \frac{1}{2}(1-\cos(\Omega t)),
 \end{equation}
 which is the curve that is used in the fit when performing a Rabi amplitude experiment.
 
@@ -271,7 +271,7 @@ This enables the observation of coherent oscillations in the excited state popul
 However, unlike the idealized scenario, in realistic conditions the qubit experiences energy relaxation and dephasing, which attenuate the oscillation amplitude over time. 
 To account for these effects, the excited state probability is modeled as represents the effective decay time, incorporating both energy relaxation and dephasing processes.
 \begin{equation}
-    P_e (t) = P_1(t)= \frac{1}{2}(1- e^{-t/\tau}\cos(\Omega_R \frac{t}{2}))
+    P_e (t) = P_1(t)= \frac{1}{2}\left(1- e^{-t/\tau}\cos(\Omega_R \frac{t}{2})\right),
 \end{equation}
 where $\Omega_R$ is the generalized Rabi frequency and $\tau$ 
 
@@ -314,7 +314,7 @@ However, small deviations from the ideal $\frac{\pi}{2}$-pulse, due to imperfect
 
 Usually a small intentional detuning is applied, in this case the measurement outcomes show a sinusoidal modulation superimoposed on the exponential decay so that the reuslting curve can be fitted with the equation \cite{Baur2012RealizingQG}
 \begin{equation}\label{eq:Ramsey}
-    p_e(\tau) = \frac{1}{2} + \frac{1}{2}e^{-\tau/T_2^*}\cos{(\Delta\omega \tau)}
+    p_e(\tau) = \frac{1}{2} + \frac{1}{2}e^{-\tau/T_2^*}\cos{(\Delta\omega \tau)},
 \end{equation}
 An example of the output of a Ramsey experiment is shown in Figure \ref{fig:ramsey}
 
@@ -437,7 +437,7 @@ This threshold defines the decision boundary used to assign a binary qubit state
 
 The quality of the classification is then quantified by the assignment fidelity, defined as \cite{gao_practical_2021} 
 \begin{equation}
-    \mathcal{F} = \ -\frac{1}{2}((P(0,1)+P(1,0)))
+    \mathcal{F} = \ -\frac{1}{2}(P(0,1)+P(1,0)),
 \end{equation}
 where $P(i,j)$ is the probability of measuring the qubit in state $i$ but prepared in state $j$; this fidelity is typically expected to exceed 90–95\% for a well-calibrated readout. 
 It serves as a crucial figure of merit for the qubit, reflecting how reliably one can distinguish its quantum states in a single-shot measurement. 
@@ -520,15 +520,19 @@ Specifically, a short coherence time may degrade the fidelity of gate operations
 \begin{table}[h]
     \centering
     \begin{tabular}{lccccc}
-    %\toprule
+    \toprule
     \textbf{Qubit} & \textbf{Readout Fidelity} & \textbf{Assignment Fidelity} & \textbf{T1 [$\mu$s]} & \textbf{T2 [$\mu$s]} & \textbf{Gate infidelity (e-3)} \\
     \midrule
     \textbf{D1} & $0.876$ & $0.938$ & $26.4 \pm 0.4$ & $13.0 \pm 2.0$ & $27.0 \pm 21.0$ \\
     \textbf{D2} & $0.945$ & $0.973$ & $14.9 \pm 0.1$ & $18.0 \pm 10.0$ & $20.5 \pm 6.2$ \\
     \textbf{D3} & $0.905$ & $0.952$ & $23.6 \pm 0.3$ & $28.0 \pm 12.0$ & $7.0 \pm 18$ \\
     \textbf{D4} & $0.929$ & $0.964$ & $20.6 \pm 0.2$ & $40.0 \pm 5.2$ & $4.4 \pm 4.8$ \\
-    %\bottomrule
+    \bottomrule
     \end{tabular}
-    \caption{Single qubit gates calibration results}
+    \caption{Single qubit gates calibration results.}
     \label{tab:cal_results}
 \end{table}
+
+The readout and assignment fidelities were obtained by performing a classification exèperiment on each qubit with 5000 shots, while $T1$ and $T2$ measurements were carried out using the respective protocols, each with $2048$ shots.\\
+The standard randomized benchmarking was performed at four different circuit depths: $n=1,5,10,20$; for each depth the circuit was repeated $20$ times with $100$ shots per repetition. 
+The number of shots in the randomized benchmarking experiment was deliberately limited, as this routine is inherently very time-consuming.

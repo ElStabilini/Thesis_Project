@@ -114,13 +114,13 @@ Superconductivity is a phenomenon observed in certain materials where, when cool
 According to the BCS (Bardeen-Cooper-Schrieffer) theory, superconductivity arises, from the formation of Cooper pairs, which are bound states of electrons with opposite momenta and spins.
 These pairs collectively forms a macroscopic quantum states described by a single waveform $\psi(\mathbf{r})$ which can be expressed as 
 \begin{equation}\label{eq:BCSequation}
-    \psi(\mathbf{r}) = \sqrt{\rho(\mathbf{r})}e^{i\theta(\mathbf{r})}
+    \psi(\mathbf{r}) = \sqrt{\rho(\mathbf{r})}e^{i\theta(\mathbf{r})},
 \end{equation}
 where $\rho(\mathbf{r})$ is the density of Cooper pairs in the metal, which is typically uniform in the bulk of the superconductor, and $\theta(\mathbf{r})$ is the macroscopic phase of the superconducting wavfunction.
 
 For this reason the wavefunctions on the two sides of the JJ can be denoted as
 \begin{equation}\label{eq:JosephsonWavefunctions}
-    \psi_1(\mathbf{r}, t) = \sqrt{\rho_1(\mathbf{r}, t)} e^{i\theta_1(\mathbf{r},t)}, \quad \psi_2(\mathbf{r}, t) = \sqrt{\rho_2(\mathbf{r}, t)} e^{i\theta_2(\mathbf{r},t)}
+    \psi_1(\mathbf{r}, t) = \sqrt{\rho_1(\mathbf{r}, t)} e^{i\theta_1(\mathbf{r},t)}, \quad \psi_2(\mathbf{r}, t) = \sqrt{\rho_2(\mathbf{r}, t)} e^{i\theta_2(\mathbf{r},t)}.
 \end{equation}
 
 The dynamics of the system can be described by the two equations\begin{equation}\label{eq:schr1}
@@ -139,7 +139,7 @@ By substituting the expression of $\psi_i$ into the Schr\"odinger equation \ref{
 
 Since the derivative of the charge density is the current, from equations \ref{eq:schr-sub1} and \ref{eq:schr-sub2} we obtain the first Josephson equation
 \begin{equation}\label{eq:Josephson1}
-    I=I_c\sin{\phi}
+    I=I_c\sin{\phi},
 \end{equation} 
 where $I_c = \frac{2K}{\hbar}\sqrt{\rho_1\rho_2}$ is the critical current and $\phi$ is the superconducting phase difference $\theta_2 - \theta_1$.
 
@@ -164,13 +164,13 @@ Using the Josephson voltage-phase relation and the fact that $\dot{I}=\frac{V}{L
 
 In addition to ths inductive behaviour the Josephson junction also exibits capacitive properties due to its inherent capacitance $C_J$ with a corresponing energy of 
 \begin{equation}\label{eq:capacitive_energy}
-    E_{C_J} = \frac{Q^2}{2C_J}
+    E_{C_J} = \frac{Q^2}{2C_J},
 \end{equation}.
 
 Fom equation \ref{eq:LJ} it is possible to compute the energy stored in the nonlinear inductance as
 \begin{align}\label{eq:inductive_energy}
     E_{L_J} &= \int_{0}^{t}\text{d}\tau I_J(\tau)V(\tau) = \int_{0}^{t}\text{d}\tau I_c\sin{\phi(\tau)}\frac{\partial\phi(\tau)}{\partial\tau}\frac{\Phi_0}{2\pi}\\
-    &= \frac{\Phi_0 I_c}{2\pi}(1-\cos{\phi}) = E_J(1-\cos{\phi})
+    &= \frac{\Phi_0 I_c}{2\pi}(1-\cos{\phi}) = E_J(1-\cos{\phi}),
 \end{align}
 where $E_J$ represents the energy due to the behaviour of the junction as nonlinear inductor .
 
@@ -181,7 +181,7 @@ The circuit corresponding to CPB is similar to the circuit of a parallel resonat
 
 Combining the energy associated to the capacitance $C$ and the energy of the Josephson junction \ref{eq:inductive_energy} it is possible to write the classical Hamiltonian of the circuit
 \begin{equation}\label{eq:CPB_hamiltonian}
-    H_J = 4E_C n^2 - E_J\cos{\phi}
+    H_J = 4E_C n^2 - E_J\cos{\phi},
 \end{equation}
 where the constant term was ignored as it acts simply as a constant offset without influencing the dynamics of the system and where $E_C$ is the charging energy defined as \begin{equation}\label{eq:charging_energy}
     E_C = \frac{e^2}{2C}.
@@ -215,7 +215,7 @@ The presence of the external voltage source introduces an additional control par
 The resulting Hamiltonian of the Cooper Pair Box (CPB) takes the form
 
 \begin{equation}\label{eq:CPB_complete}
-    \hat{H} = 4E_C(\hat{n} - n_g)^2 - E_J \cos{\hat{\phi}}
+    \hat{H} = 4E_C(\hat{n} - n_g)^2 - E_J \cos{\hat{\phi}},
 \end{equation}
 
 where $n_g = \frac{C_g V_g}{2e}$ represents the normalized gate charge.
@@ -244,7 +244,7 @@ this architecture was first proposed in \cite{TransmonPaper}, the first and more
 Since the CPB and the transmon qubit have the same electrical circuit they are also described by the same Hamiltonian \ref{eq:CPB_hamiltonian}. 
 The difference is that in this case the transmon satisfies the condition $E_J/E_C \gg 1$ it is possible to expand the cosine term in \ref{eq:CPB_hamiltonian} with a Taylor series and neglect the higher order terms:
 \begin{equation}\label{eq:approx_transmon}
-    \hat{H}\approx 4E_C\hat{n}^2 + \frac{1}{2}E_J\hat{\phi}^2 - \frac{E_J}{4!}\hat{\phi}^4
+    \hat{H}\approx 4E_C\hat{n}^2 + \frac{1}{2}E_J\hat{\phi}^2 - \frac{E_J}{4!}\hat{\phi}^4,
 \end{equation}
 where the last term, proportional to $\hat{phi}^4$, makes the potential of the transmon slightly anharmonic.
 
@@ -291,20 +291,20 @@ In the SQUID configuration two Josephson junctions are connected in parallel on 
 
 Starting from the Hamiltonian of the single Josephson junction it is possible to write the Hamiltonian of a SQUID:
 \begin{equation}\label{eq:SQUID_Hamiltonian}
-    \hat{H} = 4E_C\hat{n}^2 - E_{J1}\cos{\hat{\phi_1}} - E_{J2}\cos{\hat{\phi_2}}
+    \hat{H} = 4E_C\hat{n}^2 - E_{J1}\cos{\hat{\phi_1}} - E_{J2}\cos{\hat{\phi_2}},
 \end{equation}
 where $E_{J1}$ and $E_{J2}$ are the Josephson energies of the two junctions, and the operators $\hat{\phi_1}$ and $\hat{\phi_2}$ are the phase differences across the junctions.
 
 Because od the quantization of the magnetic flux through the SQUID, the quantities $\hat{\phi_1}$ and $\hat{\phi_2}$ are not independet. 
 In particular, as show in \cite{manenti_quantum_2023}, the difference between $\hat{\phi_1}$ and $\hat{\phi_2}$ follows the following relation:
 \begin{equation}\label{eq:phases_relation}
-    \hat{\phi_1} - \hat{\phi_2} = \frac{2\pi}{\Phi_0}\Phi_{\text{ext}}\mathbb{I}(\text{mod}2\pi)
+    \hat{\phi_1} - \hat{\phi_2} = \frac{2\pi}{\Phi_0}\Phi_{\text{ext}}\mathbb{I}(\text{mod}2\pi),
 \end{equation}
 where $\Phi_{\text{ext}}$ is the flux of external magnetic field defined as the integral of the magnetic field over the SQUID area.
 
 Equation \ref{eq:phases_relation} can be simplified and rewritten as 
 \begin{equation}\label{eq:tunable_transmon_hamiltonian}
-    \hat{H} = 4E_C\hat{n}^2 - E_J(\Phi_{\text{ext}})\cos{\hat{\varphi}}
+    \hat{H} = 4E_C\hat{n}^2 - E_J(\Phi_{\text{ext}})\cos{\hat{\varphi}},
 \end{equation}
 where $\hat{\varphi} = \frac{\hat{\phi_1}+\hat{\phi_2}}{2}$, and the Josephson energy is flux-dependent: 
 \begin{equation}\label{eq:EJ_tunable}
@@ -385,7 +385,7 @@ These two non-hermitian operators are defined as
     \hat{\Phi} =  \Phi_{\text{zpf}}(\hat{a} + \hat{a}^\dagger),
 \end{equation}
 \begin{equation}\label{eq:Q_operator}
-    \hat{Q} = -iQ_{\text{zpf}}(\hat{a} - \hat{a}^\dagger)
+    \hat{Q} = -iQ_{\text{zpf}}(\hat{a} - \hat{a}^\dagger),
 \end{equation}
 where $\Phi_{\text{zpf}} = \sqrt{\frac{\hbar}{2C_r\omega_r}}$ and $Q_{\text{zpf}} = \sqrt{\frac{C_r\hbar \omega_r}{2}}$ are the zero-point fluctuations.
 
@@ -399,7 +399,7 @@ The system of the capacitively coupled transmon and resonator is built in such a
 The Hamiltonian of the system reads
 \begin{align}
     \hat{H} &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C (\hat{n} + \frac{C_{\text{read}}\hat{V}}{2e})^2- E_J \cos\hat{\phi}\\ 
-    &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C \hat{n}^2 - E_J \cos\hat{\phi} + \frac{4E_C}{e} \hat{n}_C \hat{V}
+    &= \hbar \omega_r \hat{a}^\dagger \hat{a} + 4E_C \hat{n}^2 - E_J \cos\hat{\phi} + \frac{4E_C}{e} \hat{n}_C \hat{V},
 \end{align}
 where $\hat{V} = \hat{Q}/C_r$ is the voltage across the resonator capacitor. Using equations \ref{eq:raising_lowering_operators} and \ref{eq:quant_resonator_hamiltonian} the Hamiltonian becomes
 \begin{equation}
@@ -427,7 +427,7 @@ When the coupling strength $g$ is much smaller than the detuning between the qub
 
 The Jaynes-Cummings Hamiltonian in the dispersive regime, which is the condition in which we operate to perform the qubit readout, can be approximated as 
 \begin{equation}\label{eq:dispersiveshift_hamiltonian}
-    \hat{H}_{\text{disp}} = \hbar (\omega_r - \chi \hat{\sigma}_z) \hat{a}^\dagger \hat{a} - \frac{\hbar}{2} (\omega_{01} + \chi) \hat{\sigma}_z
+    \hat{H}_{\text{disp}} = \hbar (\omega_r - \chi \hat{\sigma}_z) \hat{a}^\dagger \hat{a} - \frac{\hbar}{2} (\omega_{01} + \chi) \hat{\sigma}_z,
 \end{equation}
 where $\chi$ is the dispersive shift defined as \begin{equation}\label{eq:dispersiveshift}
     \chi = \frac{g^2}{\Delta}.
@@ -438,7 +438,7 @@ Equation \ref{eq:dispersiveshift_hamiltonian} shows that there is a shift in the
 The dispersive shift equation \ref{eq:dispersiveshift} was derives assuming that the qubit can be approximated as a two level system.
 Considering also the higher energy levels of the qubit a more accurate expression of the dispersive shift is given by 
 \begin{equation}
-    \chi = \frac{g^2}{\Delta(1+\Delta/\eta)}
+    \chi = \frac{g^2}{\Delta(1+\Delta/\eta)},
 \end{equation} 
 where $\eta$ is the qubit anharmonicity.
 
@@ -449,7 +449,7 @@ This pulse is generated by an AC voltage source located outside the dilution ref
 The driving pulse is brought to the qubit by an on-chip waveguide which is capacitively coupled to the qubit as shown in Figure \ref{fig:TransmonCircuit}, where the coupling capacitance is indicated with $c$.
 This signal path is commonly referred to as a control line or an XY line. The pulse that arrives at the device has the analytical form
 \begin{equation}\label{eq:drive_pulse}
-    V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)}
+    V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)},
 \end{equation}
 where $A$ is the pulse amplitude in volts, $\omega_d$ is the drive frequency in rad/s, $\alpha$ is the fase of the pulse and $\varepsilon(t)$ is the modulation of the pulse; the maximum of $\varepsilon(t)$ is fixed at one.
 As a first approximation, the envelope of the drive pulse is often chosen to have a Gaussian shape, which is preferred over a square pulse due to its smaller frequency bandwidth, minimizing the excitation of higher energy levels.
@@ -457,7 +457,7 @@ However, the study of pulse shapes that minimize leakage to states outside the c
 
 In a similar way to what was previously done to study the capacitive coupling between the qubit and the resonator, it is possible to derive th hamiltonian of the transmon capacitively coupled to the control line starting from the circuit shown in Figure \ref{fig:TransmonCircuit}
 \begin{equation}
-    \hat{H} = 4E_C(\hat{n} + \frac{C_d V_d(t)}{2e})^2 - E_J \cos{\hat{\phi}}
+    \hat{H} = 4E_C(\hat{n} + \frac{C_d V_d(t)}{2e})^2 - E_J \cos{\hat{\phi}},
 \end{equation}, 
 where $E_C = e^2/2C_\Sigma$ and $C_\Sigma =  C_d + C_q$. By expanding the parenthesis and dropping a constant term the Hamiltonian can be re-written as
 \begin{equation}\label{eq:tmp}
@@ -468,7 +468,7 @@ Since $\hat{n} = -i(\hat{b}-\hat{b}^\dagger)/2\sqrt{\xi}$ (from equation \ref{eq
     \hat{H}_d &= -2e\frac{C_d}{C_\Sigma}V_d(t)\hat{n}\\
     &=-i\frac{e}{\sqrt{\xi}}\frac{C_d}{C_{\Sigma}}V_d(t)(\hat{b}-\hat{b}^\dagger)\\
     &=-i\frac{e}{\sqrt{\xi}}\frac{C_d}{C_{\Sigma}}V_d(t)(\ket{0}\bra{1}-\ket{1}\bra{0})\\
-    &=\frac{e}{\sqrt{\xi}}\frac{C_d}{C_{\Sigma}}V_d(t)\hat{\sigma_y}
+    &=\frac{e}{\sqrt{\xi}}\frac{C_d}{C_{\Sigma}}V_d(t)\hat{\sigma}_y,
 \end{align}
 
 Regarding the first part of equation \ref{eq:tmp}, by focusing on the firs two levels of the transmon the qubit Hamiltonian can be rewritten as $\hat{H}_q = -\frac{1}{2}\hbar\omega_q\hat{\sigma}_z$.
@@ -483,26 +483,26 @@ where $\Omega$ is the Rabi frequency,
 \end{equation}
 The Rabi frequency quantifies the coupling between the control line and the qubit.
 
-To study the dynamics of the system it is convenient to use the rotating frame, the Hamiltonian becomes\footnote{For the complete derivation of the Hamiltonian in the rotating frame see Appendix ...}: %%add appendix per ricavare hamiltoniana nel rotating frame
+To study the dynamics of the system it is convenient to use the rotating frame, the Hamiltonian becomes: %%add appendix per ricavare hamiltoniana nel rotating frame
 \begin{align}
     \hat{H}' &= -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \hbar \Omega \varepsilon(t) \sin(\omega_d t + \alpha)\left( \hat{\sigma}_x \sin \omega_d t + \hat{\sigma}_y \cos \omega_d t \right)\\
     &= -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \hbar \Omega \varepsilon(t)\left(\frac{\hat{\sigma}_x}{2} \left( -\cos(2\omega_d t + \alpha) + \cos \alpha \right) + \frac{\hat{\sigma}_y}{2} \left( \sin(2\omega_d t + \alpha) + \sin \alpha \right)\right)\\
-    &=  -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \epsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right)
+    &=  -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \epsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right),
 \end{align}
 where in the last step I used the rotating wave approximation, meaning that as $\omega_d\approx\omega_q$ the terms $\cos(2\omega_d t + \alpha)$ and $\sin(2\omega_d t + \alpha)$ oscillate rapidly and their contribution to the dynamics can be neglected.
 
 For example, if $\omega_d = \omega_q$ and $\alpha=\frac{\pi}{2}$, the state evolution is described as follows:
 \begin{align}
-    \ket{\psi} = \exp{\frac{i}{\hbar}\int_{0}^{+\infty} \hat{H}(t')}\ket{0} = \exp{-i\frac{\Omega}{2}\int_{0}^{+\infty}\epsilon(t')dt'}\ket{0} = e^{-i\frac{\theta}{2}\hat{\sigma}_y}\ket{0}
+    \ket{\psi} = \exp{\frac{i}{\hbar}\int_{0}^{+\infty} \hat{H}(t')}\ket{0} = \exp{-i\frac{\Omega}{2}\int_{0}^{+\infty}\epsilon(t')dt'}\ket{0} = e^{-i\frac{\theta}{2}\hat{\sigma}_y}\ket{0},
 \end{align}
 where
 \begin{equation}
-    \theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'
+    \theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt',
 \end{equation}
 
 In general, a microwave pulse given by $V_d = A\epsilon(t) \sin(\omega_d t + \alpha)$ implements a single-qubit rotation $R_{\hat{n}(\alpha)}(\theta)$ around an axis $\hat{n}$ that lies on the equator of the Bloch sphere, so that
 \begin{equation}
-    R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta}
+    R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta},
 \end{equation}
 
 \section{Qubit state degradetion}
@@ -525,7 +525,7 @@ By definition, decoherence refers to the loss of coherence in a quantum system, 
 Decoherence is typically characterized by two key time constants: the energy relaxation time $T_1$ and the dephasing time $T_2$. 
 The energy relaxation time  describes the characteristic time over which a qubit in an excited state decays to its ground state due to interactions with the environment. The decay follows an exponential low:
 \begin{equation}\label{eq:gamma1}
-    p_e(t) = p_e(0) e^{-\Gamma_1 t}
+    p_e(t) = p_e(0) e^{-\Gamma_1 t},
 \end{equation}
 where $p_e(t)$ is the probability of the qubit being in the excited state at time $t$, $p_e(0)$ the probability of the qubit being in the excited state at time $t=0$ and $\Gamma_1=1/T_1$ is the decay rate of the qubit from state $\ket{0}$ to state $\ket{1}$.
 Energy relaxation is primarily due to transverse noise, namely noise that couples the qubit through $\hat{\sigma}_x$ and/or $\hat{\sigma}_y$, it is caused by coupling to electromagnetic noise and other dissipative processes that induce energy exchange with the environment.
@@ -559,7 +559,7 @@ Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by
 \subsubsection{Amplitude damping channel}
 The amplitude damping channel models energy dissipation due to interaction with a zero-temperature environment. The quantum map which descibes the process is 
 \begin{equation}\label{eq:amplitude_damping}
-    \mathcal{E}_{\text{ad}}(\hat{\rho}) = \hat{E}_0 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_1 \hat{\rho} \hat{E}_1^{\dagger}
+    \mathcal{E}_{\text{ad}}(\hat{\rho}) = \hat{E}_0 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_1 \hat{\rho} \hat{E}_1^{\dagger},
 \end{equation}
 where the Kraus operators:
 \begin{equation}
@@ -571,7 +571,7 @@ where $p = 1 - e^{-t/T_1}$ represents the probability of relaxation.
 \subsubsection{Generalized amplitude damping channel}
 The generalized amplitude damping channel models energy dissipation in a thermal environment where both relaxation and thermal excitation occur. 
 \begin{equation}\label{eq:GAD_channel}
-    \mathcal{E}_{\text{gad}}(\hat{\rho}) = p \left( \hat{E}_0 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_1 \hat{\rho} \hat{E}_1^{\dagger} \right) + (1 - p) \left( \hat{E}_2 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_3 \hat{\rho} \hat{E}_1^{\dagger} \right)
+    \mathcal{E}_{\text{gad}}(\hat{\rho}) = p \left( \hat{E}_0 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_1 \hat{\rho} \hat{E}_1^{\dagger} \right) + (1 - p) \left( \hat{E}_2 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_3 \hat{\rho} \hat{E}_1^{\dagger} \right),
 \end{equation}
 where:
 \begin{equation}
