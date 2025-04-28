@@ -509,13 +509,9 @@ An example of the expected output for the DRAG routine is shown in Figure \ref{f
 \section{Calibration results}
 
 In Table \ref{tab:cal_results}, are summarized the results obtained for the calibration of line D of the \tt{qw11q} chip. 
-The values of the assignment fidelity and readout fidelity are overall satisfactory, indicating reliable state discrimination during measurement. 
-Similarly, the relaxation time $T_1$ of the qubit shows acceptable values.
-
-On the other hand, the coherence time $T_2$ is generally low, especially when considering that its theoretical upper bound is $2T_1$. 
-This indicates the presence of significant pure dephasing mechanisms, which are limiting the coherence independently of energy relaxation processes. 
-A reduced $T_2$ can have important consequences for subsequent experiments, particularly impacting the performance of randomized benchmarking protocols. 
-Specifically, a short coherence time may degrade the fidelity of gate operations, leading to an overestimation of the average error per gate. 
+The readout and assignment fidelities were obtained by performing a classification exèperiment on each qubit with 5000 shots, while $T1$ and $T2$ measurements were carried out using the respective protocols, each with $2048$ shots.\\
+The standard randomized benchmarking was performed at four different circuit depths: $n=1,5,10,20$; for each depth the circuit was repeated $20$ times with $100$ shots per repetition. 
+The number of shots in the randomized benchmarking experiment was deliberately limited, as this routine is inherently very time-consuming.
 
 \begin{table}[h]
     \centering
@@ -533,6 +529,10 @@ Specifically, a short coherence time may degrade the fidelity of gate operations
     \label{tab:cal_results}
 \end{table}
 
-The readout and assignment fidelities were obtained by performing a classification exèperiment on each qubit with 5000 shots, while $T1$ and $T2$ measurements were carried out using the respective protocols, each with $2048$ shots.\\
-The standard randomized benchmarking was performed at four different circuit depths: $n=1,5,10,20$; for each depth the circuit was repeated $20$ times with $100$ shots per repetition. 
-The number of shots in the randomized benchmarking experiment was deliberately limited, as this routine is inherently very time-consuming.
+The values of the assignment fidelity and readout fidelity are overall satisfactory, indicating reliable state discrimination during measurement. 
+Similarly, the relaxation time $T_1$ of the qubit shows acceptable values.
+
+On the other hand, the coherence time $T_2$ is generally low, especially when considering that its theoretical upper bound is $2T_1$. 
+This indicates the presence of significant pure dephasing mechanisms, which are limiting the coherence independently of energy relaxation processes. 
+A reduced $T_2$ can have important consequences for subsequent experiments, particularly impacting the performance of randomized benchmarking protocols. 
+Specifically, a short coherence time may degrade the fidelity of gate operations, leading to an overestimation of the average error per gate. 
