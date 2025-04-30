@@ -5,13 +5,13 @@ Quantum computing emerged from Richard Feynman’s idea that simulating quantum 
 Classical computers struggle to model complex quantum interactions due to the exponential growth of computational requirements with system size, making exact simulations infeasible beyond small systems \cite{Brown2010}. 
 Quantum computers, taking advantage of quantum mechanics phenomena like superposition and entanglement, offer a natural framework for such simulations and have been demonstrated to provide exponential speedups for certain quantum systems \cite{Georgescu_2014}.
 
-Beyond quantum simulation, curren theoretical advancements suggest that quantum algorithms can outperform classical counterparts in solving specific problems \cite{Montanaro2016}.
+Beyond quantum simulation, current theoretical advancements suggest that quantum algorithms can outperform classical counterparts in solving specific problems \cite{Montanaro2016}.
 
 \section{Introduction}
 The physical realization of quantum computing necessitates the development of a system capable of functioning as quantum bits (qubits).\\
-Similar to classical logic, where the bits 0 and 1 are associated with two physical levels, typically represented by high and low voltage states, a qubit can, to a first approximation, be considered as a two-level physical system.
+Similarly to classical logic, where the bits 0 and 1 are associated with two physical levels, typically represented by high and low voltage states, a qubit can, to a first approximation, be considered as a two-level physical system.
 
-Mathematically, this system is described within a two-dimensional complex Hilbert space, where the basis states $\ket{0}$ and $\ket{1}$ correspond to two orthonormal vectors.
+Mathematically, this system is described with a two-dimensional complex Hilbert space, where the basis states $\ket{0}$ and $\ket{1}$ correspond to two orthonormal vectors.
 Any general state of the qubit can be expressed as a superporition of these basis states:
 \begin{equation}\label{eq:qubit}
     \ket{\psi} = \alpha\ket{0} + \beta\ket{1} \rightarrow \begin{pmatrix} 
@@ -55,7 +55,7 @@ Since only energy differences are physically relevant, it is possible to redefin
     \end{pmatrix},
 \end{equation}
 
-where $\omega_q = (E_1 - E_0)/\hbar$ is the qubit transition frequency, and we have used the relation $\hat{\sigma}^{+} \hat{\sigma}^{-} = \ket{1} \bra{1}$.
+where $\omega_q = (E_1 - E_0)/\hbar$ is the qubit transition frequency, and was used the relation $\hat{\sigma}^{+} \hat{\sigma}^{-} = \ket{1} \bra{1}$.
 For convenience, the Hamiltonian can also be rewritten in terms of the Pauli $z$-matrix, $\hat{\sigma}_z$, by adding a term proportional to the identity:
 \begin{equation}
     \hat{H}_q = \hbar \omega_q \ket{1} \bra{1} - \frac{\hbar \omega_q}{2}\mathbb{I} = 
@@ -335,7 +335,7 @@ At this point, small fluctuations in the bias, either increases or decreases, le
 Most importantly, since the charge dispersion has no slope there, linear noise contributions cannot change the qubit transition frequency.
 
 \section{Qubit readout}\label{sec:cQED}
-Up to this point, I have discussed the physical structure of a transmon qubit. 
+Up to this point only the physical structure of a transmon qubit was discussed. 
 However, in order to perform quantum computing, it is essential to be able to control and measure its quantum state.
 One approach to achieve this is to capacitively couple the qubit to both a drive line and a readout line. 
 The drive line is used to manipulate the state of the qubit, while the readout line is employed to measure it.
@@ -361,7 +361,6 @@ An example of such a system is shown in Figure \ref{fig:Transmon_model}, along w
 \end{figure}
 
 As mentioned in the introduction of this section, in circuit quantum electrodynamiccs (cQED), the qubit state is measured via a dispersive interaction between a qubit and a far-detuned microwave resonator.\\
-
 In Figure \ref{fig:TransmonCircuit}, in blue is represented the resonator circuit capacitively coupled to the (red) qubit that is used for the readout of the qubit state. 
 The resonator circuit is characterized by a an inductance $L_r$ and a capacitance $C_r$, then the characteristic frequency is $\omega_r =  1/\sqrt{L_r C_r}$. 
 
@@ -388,13 +387,10 @@ These two non-hermitian operators are defined as
     \hat{Q} = -iQ_{\text{zpf}}(\hat{a} - \hat{a}^\dagger),
 \end{equation}
 where $\Phi_{\text{zpf}} = \sqrt{\frac{\hbar}{2C_r\omega_r}}$ and $Q_{\text{zpf}} = \sqrt{\frac{C_r\hbar \omega_r}{2}}$ are the zero-point fluctuations.
-
-Then it is possible to write the Hamiltonian of a microwave resonator in a quantum regime:
-
+It is then possible to write the Hamiltonian of a microwave resonator in a quantum regime:
 \begin{equation}\label{eq:quant_resonator_hamiltonian}
     \hat{H}_r = \hbar\omega_r\left(\hat{a}^\dagger\hat{a} + \frac{1}{2}\right),
 \end{equation}
-
 The system of the capacitively coupled transmon and resonator is built in such a way that there is a maximum coupling between the qubit and the resonator.
 The Hamiltonian of the system reads
 \begin{align}
@@ -405,26 +401,25 @@ where $\hat{V} = \hat{Q}/C_r$ is the voltage across the resonator capacitor. Usi
 \begin{equation}
     \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a}  + \sqrt{8 E_J E_C} \, \hat{b}^\dagger \hat{b} - \frac{E_C}{12} (\hat{b} + \hat{b}^\dagger)^4 + \hbar g (\hat{b}^\dagger - \hat{b})(\hat{a} - \hat{a}^\dagger)
 \end{equation}
-where was introduced the parameter $g$, known as coupling strength, that quantities the strength of the coupling between the qubit and the resonator.:
+where the parameter $g$ was introduced. This parameter, known as coupling strength quantities the strength of the coupling between the qubit and the resonator, it is define as:
 
 \begin{equation}
     g = \frac{2 E_C}{\hbar e} \frac{C_{\text{read}}}{C_r} Q_{\text{zpf}} \sqrt{\xi} = \frac{E_C}{\hbar e} \left( \frac{E_J}{2 E_C} \right)^{1/4} \frac{C_{\text{read}}}{C_r} \sqrt{2 \hbar \omega_r C_r}.
 \end{equation} 
 The coupling strength can be adjust by varying the capacitance coupling the qubit and the resonator.
 
+\paragraph{}
 When $g\ll\omega_r$ and $g\ll\omega_q$ it is possible to use the rotating wave approximation (RWA) and write the Hamiltonian in the form
 \begin{equation}
     \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a} + \sqrt{8E_J E_C} \hat{b}^\dagger \hat{b} - \frac{E_C}{12} (\hat{b} + \hat{b}^\dagger)^4 + \hbar g (\hat{b}^\dagger \hat{a} + \hat{b} \hat{a}^\dagger).
 \end{equation}
-
 Focusing on the first two levels of the transmon we obtain the Jaynes-Cummings Hamiltonian that reads
 \begin{equation}\label{eq:Jaynes-Cummings}
     \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a} - \frac{\hbar \omega_{01}}{2} \hat{\sigma}_z + \hbar g (\hat{\sigma}_+ \hat{a} + \hat{\sigma}_- \hat{a}^\dagger),
 \end{equation}
-that describes the interaction between an atom, in this case an artificial atom, with an electromagnetic field in the approximation of the two-level system.
+and describes the interaction between an atom, in this case an artificial atom, with an electromagnetic field in the approximation of the two-level system.
 
 When the coupling strength $g$ is much smaller than the detuning between the qubit and the resonator $\Delta = \omega_q -\omega_r $ the system operates in the dispersive regime.
-
 The Jaynes-Cummings Hamiltonian in the dispersive regime, which is the condition in which we operate to perform the qubit readout, can be approximated as 
 \begin{equation}\label{eq:dispersiveshift_hamiltonian}
     \hat{H}_{\text{disp}} = \hbar (\omega_r - \chi \hat{\sigma}_z) \hat{a}^\dagger \hat{a} - \frac{\hbar}{2} (\omega_{01} + \chi) \hat{\sigma}_z,
@@ -457,8 +452,8 @@ However, the study of pulse shapes that minimize leakage to states outside the c
 
 In a similar way to what was previously done to study the capacitive coupling between the qubit and the resonator, it is possible to derive th hamiltonian of the transmon capacitively coupled to the control line starting from the circuit shown in Figure \ref{fig:TransmonCircuit}
 \begin{equation}
-    \hat{H} = 4E_C(\hat{n} + \frac{C_d V_d(t)}{2e})^2 - E_J \cos{\hat{\phi}},
-\end{equation}, 
+    \hat{H} = 4E_C \left(\hat{n} + \frac{C_d V_d(t)}{2e}\right)^2 - E_J \cos{\hat{\phi}},
+\end{equation} 
 where $E_C = e^2/2C_\Sigma$ and $C_\Sigma =  C_d + C_q$. By expanding the parenthesis and dropping a constant term the Hamiltonian can be re-written as
 \begin{equation}\label{eq:tmp}
     \hat{H} =  4E_C\hat{n}^2 -E_J\cos{\hat{\phi}} + 2e\frac{C_d}{C_\Sigma}V_d(t)\hat{n}.
@@ -481,8 +476,7 @@ where $\Omega$ is the Rabi frequency,
 \begin{equation}\label{eq:Rabi_frequency}
     \Omega = \frac{e}{\hbar\sqrt{\xi}}\frac{C_d}{C_\Sigma}A.
 \end{equation}
-The Rabi frequency quantifies the coupling between the control line and the qubit.
-
+The Rabi frequency quantifies the coupling between the control line and the qubit.\\
 To study the dynamics of the system it is convenient to use the rotating frame, the Hamiltonian becomes: %%add appendix per ricavare hamiltoniana nel rotating frame
 \begin{align}
     \hat{H}' &= -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \hbar \Omega \varepsilon(t) \sin(\omega_d t + \alpha)\left( \hat{\sigma}_x \sin \omega_d t + \hat{\sigma}_y \cos \omega_d t \right)\\
@@ -530,7 +524,7 @@ The energy relaxation time  describes the characteristic time over which a qubit
 where $p_e(t)$ is the probability of the qubit being in the excited state at time $t$, $p_e(0)$ the probability of the qubit being in the excited state at time $t=0$ and $\Gamma_1=1/T_1$ is the decay rate of the qubit from state $\ket{0}$ to state $\ket{1}$.
 Energy relaxation is primarily due to transverse noise, namely noise that couples the qubit through $\hat{\sigma}_x$ and/or $\hat{\sigma}_y$, it is caused by coupling to electromagnetic noise and other dissipative processes that induce energy exchange with the environment.
 
-Longitudinal noise instead is due to environmental fluctuations coupling to $\sigma_z$ that randomize the phase of the the superposition state without causing energy exchange with the environment.
+Longitudinal noise instead is due to environmental fluctuations coupling to $\hat{\sigma}_z$ that randomize the phase of the the superposition state without causing energy exchange with the environment.
 The charachteristic dephasing time of a qubit è indicato con $T_2^* = 1/\Gamma_\phi$ dove $\Gamma_\phi$ is the pure dephasing rate.
 
 The transverse relaxation rate $\Gamma_2$ describes the combined effets of pure dephasing and energy relaxation and is defined as 
@@ -546,14 +540,14 @@ For this reason, in an ideal system where pure dephasing is absent $T_2$ is simp
     T_{2,\text{max}} = 2T_1.
 \end{equation}
 This result follows from the Bloch equations \cite{krantz_quantum_2019}, where both energy relaxation and phase damping contribute to coherence loss. 
-However, in real systems, additional dephasing mechanisms, such as low-frequency noise from charge or flux fluctuations, reduce $T_2$ below this upper bound and limits it to \ref{eq:T2equation}
+However, in real systems, additional dephasing mechanisms, such as low-frequency noise from charge or flux fluctuations, reduce $T_2$ below this upper bound and limits it to \ref{eq:T2equation}.
 
 \subsection{Noise models}
 Quantum noise mentioned in the previous subsection can be described using quantum operations known as quantum channels. 
 A quantum operation is a mathematical transformation that describes how a quantum state changes as a consequence of a physical process. 
 Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by a density operator $\hat{\rho}$ into another state described by a new density operator $\hat{\rho}'$:
 \begin{equation}
-    \mathcal{E}(\rho) = \rho'\label{eq:quantum_map}.
+    \mathcal{E}(\hat{\rho}) = \hat{\rho}'\label{eq:quantum_map}.
 \end{equation}
 
 \subsubsection{Amplitude damping channel}
@@ -595,15 +589,15 @@ where $\lambda = 1 - e^{-t/T_2^*}$ quantifies the probability of phase randomiza
 \subsubsection{Depolarizing channel}
 The depolarizing channel captures the combined effects of relaxation $(T_1)$ and pure dephasing $(T_2^*)$, making it a natural model for total decoherence. The transformation applied by this channel is given by:
 \begin{equation}
-    \rho \rightarrow (1 - q) \rho + \frac{q}{3} (\sigma_x \rho \sigma_x + \sigma_y \rho \sigma_y + \sigma_z \rho \sigma_z),
+    \hat{\rho} \rightarrow (1 - q) \hat{\rho} + \frac{q}{3} (\hat{\sigma}_x \hat{\rho} \hat{\sigma}_x + \hat{\sigma}_y \hat{\rho} \hat{\sigma}_y + \hat{\sigma}_z \hat{\rho} \hat{\sigma}_z),
 \end{equation}
 meaning that the depolarizing channel leaves  $\hat{\rho}$ unchanged with probability $(1-q)$, while with probability $q/3$ one of the Pauli operators is applied to it.
 The corresponding Kraus operators are:
 \begin{equation}
-    \hat{E}_0 = \sqrt{1 - q} I, \quad
-    \hat{E}_1 = \sqrt{\frac{q}{3}} \sigma_x, \quad
-    \hat{E}_2 = \sqrt{\frac{q}{3}} \sigma_y, \quad
-    \hat{E}_3 = \sqrt{\frac{q}{3}} \sigma_z.
+    \hat{E}_0 = \sqrt{1 - q} \mathbb{I}, \quad
+    \hat{E}_1 = \sqrt{\frac{q}{3}} \hat{\sigma}_x, \quad
+    \hat{E}_2 = \sqrt{\frac{q}{3}} \hat{\sigma}_y, \quad
+    \hat{E}_3 = \sqrt{\frac{q}{3}} \hat{\sigma}_z.
 \end{equation}
 
 This channel models both energy relaxation and phase randomization, effectively representing total decoherence.
@@ -612,4 +606,4 @@ An alternative representation of the depolarizing channel describes the process 
 \begin{equation}\label{eq:depolarizing_channel}
     \mathcal{E}_{dc}(\rho) = p\frac{\id}{2}+(1-p)\rho.
 \end{equation}
-where the following relation holds between  $p$ and $q$, $q=3p/4$
+where the following relation holds between  $p$ and $q$, $q=3p/4$.

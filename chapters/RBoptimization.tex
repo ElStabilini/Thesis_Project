@@ -1,8 +1,19 @@
 \chapter{RB fidelity optimization}
+Accurate control of single-qubit gates is a fundamental requirement for quantum computing. 
+The single-gate fidelity quantifies the average performance of individual gates and directly impacts the error rates of quantum circuits and is a critical figure of merit.
 
-Durante il lavoro condotto per questo progetto di tesi entrambe le libererie, sia Qibocal che Qibolab undergo update and release, for this reason the first part of this work was realized using \Qibocal v0.1 and \Qibolab v0.1 while the second part of the work, 
-dato che puntava anche allo sviluppo di routine ch epotessero essere utili per la calibrazione dei qubit è stato realizzato direttamente con \Qibocal v0.2 e \Qibolab v0.2. 
+The calibration procedure detailed in Section \ref{sec:calibration} typically requires significant time and experimental expertise, especially to obtain state-of-the art calibration.
+In my work, the calibration started from a pre-existing, though non optimal, configuration and the task consisted of improving the quality the gates by using available \Qibocal protocols.
+Even under these conditions, the effort required to refine gate performance highlighted the limitations of manual methods.
 
+As quantum processors scale in size and complexity, manual calibration becomes increasingly impractical. 
+Frequent recalibrations are necessary to mitigate the effects of parameter drift and environmental fluctuations, especially in superconducting devices \cite{krantz_quantum_2019}.
+
+In this chapter, I present the results of an optimization procedure aimed at enhancing the fidelity of single-qubit gates on a superconducting quantum device.
+The focus was placed on the optimization of single-qubit gate fidelity, as it represents both a fundamental and relatively accessible figure of merit. 
+High single-qubit gate fidelities are essential for the reliable construction of quantum circuits, and their characterization and improvement are comparatively simpler than for two-qubit gates. 
+Moreover, considering the final goal of developing automated calibration procedures, a natural first step is to automate the re-calibration and optimization of existing gate parameters, building on a pre-existing calibration. 
+Starting from single-qubit gates thus provides a practical and effective testbed for validating optimization algorithms before extending them to more complex multi-qubit operations.
 
 \section{Randomized Benchmarking}\label{sec:RBsection}
 A strong limitation to the realization of quantum computing technologies is the loss of coherence that happens as a consequence of the application of many sequential quantum gates to to the quibts.
@@ -14,10 +25,6 @@ The main idea is that the error obtained from the combined action of random unit
 This last consideration simplifies the characterization of noise because it removes dependence on specific error structures and allows fidelity to be extracted through a simple exponential decay.
 
 It was later shown that it is possible to simplify this procedure even more, by restricting the unitaries to gates in the Clifford group \footnote{unitary rotations mapping the group of Puali operators in itself} and by not requiring that the sequence is strictly self-inverting \cite{knill_randomized_2008}.
-\begin{comment}
-    The Haar measure is crucial because it provides a unique, invariant way of selecting random elements from a group (in this case, unitary gates) that ensures the randomness is truly uniform and unbiased across the group's structure.
-\end{comment}
-
 The fundamental principle of RB is the application of sequences of randomly selected quantum gates from the Clifford group $\mathcal{C}$ followed by an inversion gate which, in absence of noise, return the system to its initial state. 
 For real systems, where noise is present, the observed survival probability provides an estimate of the avarage gate fidelity.
 
@@ -32,20 +39,14 @@ The process must be repeated for multiple sequence of the same length and with v
 
 In ideal systems without noise we should have 
 \begin{equation}\label{eq:CliffordIdeal}
-    C_{m+1}\circ C_m \circ ...\circ C_1 \ket{0} = (C_m\circ...\circ C_1)^{-1}\circ(C_m\circ...\circ C_1)\ket{0} = \ket{0}
+    C_{m+1}\circ C_m \circ ...\circ C_1 \ket{0} = (C_m\circ...\circ C_1)^{-1}\circ(C_m\circ...\circ C_1)\ket{0} = \ket{0}.
 \end{equation}
 
 In real systems, where noise is present, eq. \ref{eq:CliffordIdeal} does not hold; instead randomization with Clifford gates behave as a depolarizing channel \ref{eq:depolarizing_channel} with depolarization probability $d$.
-The survival probability of the initial state $\ket{0}$ for different sequence lengths follows the exponential decay model \begin{equation}
+The survival probability of the initial state $\ket{0}$ for different sequence lengths $m$ follows the exponential decay model \begin{equation}
     F(m) = Ap^m +B,
 \end{equation}
-where $1-p$ is the rate of depolarization and $A$ and $B$ capture the state preparation and measurement error but not the rate of decay $p$. 
-Note that the exponential form arises naturally due to the assumption that each gate introduces independent noise.
-
-\begin{comment}
-    The exponential form arises from modeling each gate application as an independent error process. When you compose multiple noisy gates, their error contributions multiply, leading naturally to an exponential decay.
-\end{comment}    
-
+where $1-p$ is the rate of depolarization and $A$ and $B$ capture the state preparation and measurement errors.\\
 The parameter $p$ is directly related to the depolarization probability $d$ through the avarage gate fidelity $F$ which, for a depolarizing channel, is given by \begin{equation}
     F = 1 - \frac{d}{2^n - 1}\label{eq:avarage_gate_fidelity}.
 \end{equation}
@@ -103,9 +104,7 @@ Nello specifico ho provato ad utilizzare l'algoritmo di Sequential Least Squares
 %Inserire descrizione algoritmo
 
 \subsection{Results}
-Di seguito riporto i risultai che abbiamo ottenuto utilizzando gli algoritmi descritti in precedenza per la minimizzazione del RB.
-Per prima cosa ho studiato come l'utilizzo di algoritmi di ottimizzazione che agiscono su ampiezza e durata ... sono in grado di migliorare la assignment fidelity partendo da una calibrazione non ottimalel de qubit 
-
+In the following I present the results obtained provando ad effettuare l'ottimizzaione con l'algoritmo di Nelder-Meads
 
 \section{CMA-ES}
 

@@ -65,7 +65,7 @@ This structure enables compatibility with heterogeneous platforms and facilitate
 \Qibocal interfaces directly with \Qibolab to apply calibration protocols on the physical device. The routines deployment takes place through the interpretation of declarative runcards written in YAML.
 \Qibocal allows an easy execution of pulse sequences, collection of measurement data, and interpretation of the results through the reports that are automatically generated upon completion of the routine.
 
-\section{Single qubit calibration experiments}
+\section{Single qubit calibration experiments}\label{sec:calibration}
 
 The first task that I needed to complete at the beginning of my thesis work was the calibration of at least a line of the superconducting quibts of the Contralto-D chip using the \Qibocal library.
 From this point onward, for the sake of brevity, I will refer to the chip interchangeably as Contralto-D or \tt{qw11q}, which is the name of the node under which it is registered on the QRC computing cluster.
@@ -108,7 +108,7 @@ An example of the measurement of the resonator frequency in the low-power regime
     \label{fig:res_low}
 \end{figure}
 
-Uno studio più preciso della risposta del risonatore può essere realizzato eseguendo la routine di resonator spectroscopy cambiando la funzione di fit,  questa variazione dell'esperimento è descritta nell'appendice \hyperref[app:AppendixA]{Appendix A}
+%Uno studio più preciso della risposta del risonatore può essere realizzato eseguendo la routine di resonator spectroscopy cambiando la funzione di fit,  questa variazione dell'esperimento è descritta nell'appendice \hyperref[app:AppendixA]{Appendix A}
 
 \subsubsection{Resonator punchout}
 After having found the bare resonator frequency it is necessary to identify the resonator frequency under qubit coupling. 
@@ -116,13 +116,13 @@ To do this it is possible to repeat the spectroscopy, this time over a narrower 
 The resonator frequency is expected to depend strongly on amplitude: it remains constant in the high-power regime, shifts during an intermediate transition phase, and stabilizes again at a different value once the qubit-resonator interaction becomes significant.
 For this calibration protocol the experimenterer must carefully choose the frequency and amplitude range to scan to avoid extremly long experiments, at the same time the frequency and amplitude steps must be small enough to clearly identify the frequency and amplitude in which the shift happens.   
 
-%The expected result from a resonator punchout experiment is shown in Figure \ref{fig:res_punchout}
-%\begin{figure}[h!]
-%    \centering
-%    \includegraphics[width=\textwidth]{figures/png/res_punchout.png}
-%    \caption{Output of resonator punchout on qubit B2.}
-%    \label{fig:res_punchout}
-%\end{figure}
+The expected result from a resonator punchout experiment is shown in Figure \ref{fig:res_punchout}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/res_punchout.png}
+    \caption{Output of resonator punchout on qubit B2.}
+    \label{fig:res_punchout}
+\end{figure}
 
 \subsubsection{Resonator flux dependence}
 As explained in section \ref{subsec:flux_tunable_transmon} it is suggested to work at the qubit sweetspot, where the qubit frequency is less sensitive to magnetic flux fluctuations.
@@ -136,14 +136,14 @@ where $f_r^{\text{bare}}$ is the bare resonator frequency, $g^2$ is the coupling
 
 In \Qibocal it is possible to perform a resonator flux dependence experiment to measure and fit and the curve described by Eq. \ref{eq:resonator_flux_dependence}.
 With this routine the experimenter performs a scan of the both the external bias and frequency, thihs experiment provides an approximate indication of the sweetspot.
-An example of the output of this experiment is shown in Figure
+An example of the output of this experiment is shown in Figure \ref{fig:res_flux_dep}
 
-%\begin{figure}[h!]
-%    \centering
-%    \includegraphics[width=\textwidth]{figures/png/res_punchout.png}
-%    \caption{Output of resonator punchout on qubit B2.}
-%    \label{fig:res_punchout}
-%\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/cute_flux.png}
+    \caption{Output of resonator flux dependence routine on qubit B2.}
+    \label{fig:res_flux_dep}
+\end{figure}
 
 \subsection{Qubit calibration}
 After having determined all the readout parameters it is possibile to continue the calibration process by calibrating the qubit.
@@ -199,9 +199,6 @@ This ensures that all mutual interactions and cross-couplings are properly accou
     \caption{Output of the qubit flux dependence on qubit B2.}
     \label{fig:qubit_flux}
 \end{figure}
-
-\subsubsection{Qubit crosstalk}
-To perform a more detailed study of the qubit crosstalk it is possible to perform a \tt{qubit\_crosstalk} experiment.
 
 \subsection{Drive pulse calibration}
 
@@ -460,7 +457,7 @@ An example of the output expected from the randomized benchmarking protocol is s
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/png/rb.png}
+    \includegraphics[width=\textwidth]{figures/png/rb.png}
     \caption{Output of the standard randomized benchmarking routine on qubit B2.}
     \label{fig:rb}
 \end{figure}
@@ -501,7 +498,7 @@ This intersection corresponds to the $\lambda$ value that minimizes phase errors
 An example of the expected output for the DRAG routine is shown in Figure \ref{fig:drag}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.65\textwidth]{figures/png/drag_simple.png}
+    \includegraphics[width=0.5\textwidth]{figures/png/drag_simple.png}
     \caption{Expected output of the DRAG routine. $\beta$ is the symbol used in \Qibocal for the $\lambda$ parameter.}
     \label{fig:drag}
 \end{figure}
@@ -517,15 +514,18 @@ The number of shots in the randomized benchmarking experiment was deliberately l
     \centering
     \begin{tabular}{lccccc}
     \toprule
-    \textbf{Qubit} & \textbf{Readout Fidelity} & \textbf{Assignment Fidelity} & \textbf{T1 [$\mu$s]} & \textbf{T2 [$\mu$s]} & \textbf{Gate infidelity (e-3)} \\
+    \textbf{Qubit} & \multicolumn{1}{c}{\textbf{Readout}} & \multicolumn{1}{c}{\textbf{Assignment}} & \textbf{T1 [$\mu$s]} & \textbf{T2 [$\mu$s]} & \textbf{Gate infidelity ($\cdot 10^{-3}$)} \\
+    \textbf{} & \textbf{Fidelity} & \textbf{Fidelity} & & & \\
     \midrule
     \textbf{D1} & $0.876$ & $0.938$ & $26.4 \pm 0.4$ & $13.0 \pm 2.0$ & $27.0 \pm 21.0$ \\
     \textbf{D2} & $0.945$ & $0.973$ & $14.9 \pm 0.1$ & $18.0 \pm 10.0$ & $20.5 \pm 6.2$ \\
     \textbf{D3} & $0.905$ & $0.952$ & $23.6 \pm 0.3$ & $28.0 \pm 12.0$ & $7.0 \pm 18$ \\
     \textbf{D4} & $0.929$ & $0.964$ & $20.6 \pm 0.2$ & $40.0 \pm 5.2$ & $4.4 \pm 4.8$ \\
+    \textbf{B2} & $0.929$ & $0.964$ & $20.6 \pm 0.2$ & $40.0 \pm 5.2$ & $4.4 \pm 4.8$ \\
     \bottomrule
     \end{tabular}
-    \caption{Single qubit gates calibration results.}
+    \caption{Single qubit gates calibration results. D line was the fist one I tried to calibrate.\\
+    For completeness in the table I report also the values for B2 which was calibrated lately for the purpose of showing calibration results in this chapter.}
     \label{tab:cal_results}
 \end{table}
 
@@ -535,4 +535,9 @@ Similarly, the relaxation time $T_1$ of the qubit shows acceptable values.
 On the other hand, the coherence time $T_2$ is generally low, especially when considering that its theoretical upper bound is $2T_1$. 
 This indicates the presence of significant pure dephasing mechanisms, which are limiting the coherence independently of energy relaxation processes. 
 A reduced $T_2$ can have important consequences for subsequent experiments, particularly impacting the performance of randomized benchmarking protocols. 
-Specifically, a short coherence time may degrade the fidelity of gate operations, leading to an overestimation of the average error per gate. 
+Specifically, a short coherence time may degrade the fidelity of gate operations, leading to an overestimation of the average error per gate.
+
+Undoubtedly, individuals with greater experience in the calibration of superconducting qubits are able to achieve significantly better figures of merit than those reported in table \ref{tab:cal_results}.
+For comparison, the current state-of-the-art in superconducting qubit calibration typically yields $T_1= 50-300 \mu$s \cite{Place2021-kc} and $T_2= 50-300 \mu$s \cite{Place2021-kc}, assignment fidelity of  and readout fidelities between $95\%$ and $99.5\%$ \cite{krantz_quantum_2019} and single gate fidelities in the range $99.5\% - 99.99\%$.
+
+The satisfactory, yet overall limited, results obtained from this initial calibration can be partially attributed to a non-optimal calibration procedure and partially to limitations of the experimental setup, which could be further investigated.
