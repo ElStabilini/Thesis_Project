@@ -21,17 +21,17 @@ The results presented in this chapter shows how different optimization strategie
 
 \section{Randomized Benchmarking}\label{sec:RBsection}
 A strong limitation to the realization of quantum computing technologies is the loss of coherence that happens as a consequence of the application of many sequential quantum gates to to the quibts.
-A possible approach to characterize gate error is the quantum process tomography which allows the experimenter to establish the behaviour of a quantum gates; the main drawback of this approach is that process tomography can be very time consumig since its time complexity scales exponentially with the number of qubits involved \cite{QPTomography} and the result is affected by state preparation and measurements (SPAM) errors.
+A possible approach to characterize gate error is the quantum process tomography which allows the experimenter to establish the behaviour of a quantum gates. 
+The main drawback of this approach is that process tomography can be very time consumig since its time complexity scales exponentially with the number of qubits involved \cite{QPTomography} and the result is affected by state preparation and measurements (SPAM) errors.
 
 To overcome these limitations, randomized benchmarking (RB) was introduced and is currently widely used to quantify the avarage error rate for a set of quantum gates.
 
-The main idea is that the error obtained from the combined action of random unitary gates drawn from a uniform distribution with respect to the Haar measure \cite{Mele_2024} and applied in sequence to the qubit will avarage out to behave like a depolarizing channel \cite{Emerson_2005_RB}.
+The main idea is that the error resulting from the combined action of random unitary gates, which are drawn from a uniform distribution according to the Haar measure \cite{Mele_2024} and applied sequentially to the qubit, averages out to effectively behave like a depolarizing channel \cite{Emerson_2005_RB}.
 This last consideration simplifies the characterization of noise because it removes dependence on specific error structures and allows fidelity to be extracted through a simple exponential decay.
 
 It was later shown that it is possible to simplify this procedure even more, by restricting the unitaries to gates in the Clifford group \footnote{unitary rotations mapping the group of Puali operators in itself} and by not requiring that the sequence is strictly self-inverting \cite{knill_randomized_2008}.
 The fundamental principle of RB is the application of sequences of randomly selected quantum gates from the Clifford group $\mathcal{C}$ followed by an inversion gate which, in absence of noise, return the system to its initial state. 
 For real systems, where noise is present, the observed survival probability provides an estimate of the avarage gate fidelity.
-
 
 The standard RB protocols consist of the following steps:\begin{enumerate}\label{routine:RB}
     \item Initialize the system in ground state $\ket{0}$
@@ -41,25 +41,25 @@ The standard RB protocols consist of the following steps:\begin{enumerate}\label
 \end{enumerate}
 The process must be repeated for multiple sequence of the same length and with varying length.
 
-In ideal systems without noise we should have 
+In an ideal systems, without noise, we should have 
 \begin{equation}\label{eq:CliffordIdeal}
     C_{m+1}\circ C_m \circ ...\circ C_1 \ket{0} = (C_m\circ...\circ C_1)^{-1}\circ(C_m\circ...\circ C_1)\ket{0} = \ket{0}.
 \end{equation}
-
-In real systems, where noise is present, eq. \ref{eq:CliffordIdeal} does not hold; instead randomization with Clifford gates behave as a depolarizing channel \ref{eq:depolarizing_channel} with depolarization probability $d$.
-The survival probability of the initial state $\ket{0}$ for different sequence lengths $m$ follows the exponential decay model \begin{equation}
+However in real systems Equation \ref{eq:CliffordIdeal} does not hold; instead randomization with Clifford gates behave as a depolarizing channel \ref{eq:depolarizing_channel} with depolarization probability $d$.\\
+The survival probability of the initial state $\ket{0}$ for different sequence lengths $m$ follows the exponential decay model \begin{equation}\label{eq:RB_decay}
     F(m) = Ap^m +B,
 \end{equation}
 where $1-p$ is the rate of depolarization and $A$ and $B$ capture the state preparation and measurement errors.\\
 The parameter $p$ is directly related to the depolarization probability $d$ through the avarage gate fidelity $F$ which, for a depolarizing channel, is given by \begin{equation}
-    F = 1 - \frac{d}{2^n - 1}\label{eq:avarage_gate_fidelity}.
+    F = 1 - \frac{d}{2^n - 1}\label{eq:avarage_gate_fidelity},
 \end{equation}
-For the details of the calculations to obtain eq. \ref{eq:avarage_gate_fidelity} see \hyperref[app:AppendixC]{Appendix C}.
-
-Now we can derive the avarage error per Clifford gate $\varepsilon_{Clifford}$ \begin{equation}
+where $n$ is the nuber of qubits.
+%For the details of the calculations to obtain eq. \ref{eq:avarage_gate_fidelity} see \hyperref[app:AppendixC]{Appendix C}.
+The avarage error per Clifford gate $\varepsilon_{Clifford}$ can be computed as \begin{equation}
     \varepsilon_{Clifford} = 1 - F \label{eq:avg_error_Clifford_gate},
 \end{equation}
-where $F$ is the avarage gate fidelity. Sobstituting in \ref{eq:avg_error_Clifford_gate} the formula for the avarage gate fidelity \ref{eq:avarage_gate_fidelity} we obtain \begin{equation}
+where $F$ is the avarage gate fidelity. 
+Sobstituting in \ref{eq:avg_error_Clifford_gate} the formula for the avarage gate fidelity \ref{eq:avarage_gate_fidelity} we obtain \begin{equation}
     \varepsilon_{Clifford} = \frac{d}{2^n -1} = \frac{1-p}{1-2^{-n}},
 \end{equation}
 which shows how the avarage error per Clifford gate is directly connected to the exponential decay rate.
