@@ -64,15 +64,21 @@ Sobstituting in \ref{eq:avg_error_Clifford_gate} the formula for the avarage gat
 \end{equation}
 which shows how the avarage error per Clifford gate is directly connected to the exponential decay rate.
 
-\subsubsection{Randomized Benchmarking evaluation}
+\paragraph{Randomized Benchmarking evaluation}
 
-
-%valutare se inserire spiegazione del fatto che ho usato l'RB di QUA
+In the results presented below, I employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
+This routine was used consistently across all tests, with the following set of parameters: I used $1000$ unique random Clifford sequences (\texttt{num\_of\_sequences = 1000}), ensuring robust statistical reliability across different realizations of gate noise. 
+Each sequence was evaluated at increasing circuit depths up to a maximum of $1000$ Clifford gates (\texttt{max\_circuit\_depth = 1000}), with the depths spaced by increments of $10$ (\texttt{delta\_clifford = 10}), resulting in benchmarking points at depths of $1, 10, 20, \ldots, 1000$. 
+For each depth and random sequence, I generated only one instance (\texttt{n\_avg = 1}), meaning that each sequence was distinct and not repeated with the same gate pattern. 
+Consequently, statistical averaging was achieved across the ensemble of random sequences at each depth rather than by repeating individual circuits. 
+To ensure high confidence in the estimation of the survival probabilities, each circuit was executed with $2000$ measurement shots.
+\footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
 
 \section{Scipy optimization methods}\label{Sec:OptimizationMethods}
 
 \subsection{Algorithm description}
-I primi metodi che abbiamo provato per l'ottimizzazione dei parametri sono quelli standard implementati nella libreria \tt{Scipy} \cite{SciPy-NMeth}.
+The initial optimization attempts were carried out using standard algorithms available in the \texttt{SciPy} library \cite{SciPy-NMeth}.
+In the following sections, I present the specific algorithm used and discuss the results obtained from its application to the problem of gate fidelity optimization.
 
 \subsubsection{Nelder-Mead}
 The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
