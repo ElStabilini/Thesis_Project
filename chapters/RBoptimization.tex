@@ -1,19 +1,23 @@
 \chapter{RB fidelity optimization}
-Accurate control of single-qubit gates is a fundamental requirement for quantum computing. 
-The single-gate fidelity quantifies the average performance of individual gates and directly impacts the error rates of quantum circuits and is a critical figure of merit.
+The calibration procedure described in Section \ref{sec:calibration} is typically time-consuming and demands significant experimental expertise, particularly when aiming for state-of-the-art performance. 
+In the work I presented in the previous chapter, the calibration process began from a pre-existing, even if suboptimal, configuration. 
+The goal was to enhance the quality of single-qubit gates by using the available \Qibocal protocols.
 
-The calibration procedure detailed in Section \ref{sec:calibration} typically requires significant time and experimental expertise, especially to obtain state-of-the art calibration.
-In my work, the calibration started from a pre-existing, though non optimal, configuration and the task consisted of improving the quality the gates by using available \Qibocal protocols.
-Even under these conditions, the effort required to refine gate performance highlighted the limitations of manual methods.
+Even under these ovverall favorable initial conditions, the effort required to refine gate performance showed the limitations of manual calibration approaches. 
+As quantum processors scale in both qubit count and architectural complexity, manual calibration becomes increasingly complex. 
+Frequent recalibrations are necessary to mitigate the effects of parameter drift and environmental fluctuations, especially in superconducting qubit platforms \cite{krantz_quantum_2019}.
 
-As quantum processors scale in size and complexity, manual calibration becomes increasingly impractical. 
-Frequent recalibrations are necessary to mitigate the effects of parameter drift and environmental fluctuations, especially in superconducting devices \cite{krantz_quantum_2019}.
+Furthermore, as gate fidelities approach the fault-tolerance threshold, enabling practical quantum computation across a variety of applications, accurate control of single-qubit gates becomes essential. 
+The fidelity of an individual gate quantifies its average operational performance, directly impacting circuit-level error rates and representing a critical figure of merit for quantum processors. 
+However, improving gate fidelity remains challenging because of the nontrivial mapping between gate parameters and the underlying process matrix, and errors from state preparation and measurement (SPAM) can make it difficult to distinguish between different sources of error.
 
-In this chapter, I present the results of an optimization procedure aimed at enhancing the fidelity of single-qubit gates on a superconducting quantum device.
-The focus was placed on the optimization of single-qubit gate fidelity, as it represents both a fundamental and relatively accessible figure of merit. 
-High single-qubit gate fidelities are essential for the reliable construction of quantum circuits, and their characterization and improvement are comparatively simpler than for two-qubit gates. 
-Moreover, considering the final goal of developing automated calibration procedures, a natural first step is to automate the re-calibration and optimization of existing gate parameters, building on a pre-existing calibration. 
+In this chapter, i present an initial attempt to address the dual challenges of calibration complexity and residual gate errors. 
+The goal is to find calibration procedures that are not only effective but also repeatable and accessible to non-expert users, lowering the entry barrier for experimental optimization of superconducting qubits. 
+Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of randomized benchmarking (RB) can improve gate performance, we explored an automatic recalibration procedure based on randomized benchmarking fidelity as an optimization target.
+
+The focus of this first study is the optimization of single-qubit gate fidelity, that was chosen both for its foundational importance and its relative accessibility compared to more complex operations.
 Starting from single-qubit gates thus provides a practical and effective testbed for validating optimization algorithms before extending them to more complex multi-qubit operations.
+The results presented in this chapter shows how different optimization strategies perform when applied to improving gate fidelity in realistic experimental settings.
 
 \section{Randomized Benchmarking}\label{sec:RBsection}
 A strong limitation to the realization of quantum computing technologies is the loss of coherence that happens as a consequence of the application of many sequential quantum gates to to the quibts.
@@ -60,16 +64,17 @@ where $F$ is the avarage gate fidelity. Sobstituting in \ref{eq:avg_error_Cliffo
 \end{equation}
 which shows how the avarage error per Clifford gate is directly connected to the exponential decay rate.
 
-\subsubsection{QUA Randomized Benchmarking}
-For the results we present in the following the technique used slightly differs from the one described in section \ref{sec:RBsection} 
-%dato che il tempo richiesto per eseguire una standard RB è dell'ordine di .. la routine su cui sono stari relizzati gli esperimenti è una variante più rapida che è stata implementata sulla base di quanto rirportato in
+\subsubsection{Randomized Benchmarking evaluation}
 
+
+%valutare se inserire spiegazione del fatto che ho usato l'RB di QUA
 
 \section{Scipy optimization methods}\label{Sec:OptimizationMethods}
 
 \subsection{Algorithm description}
 I primi metodi che abbiamo provato per l'ottimizzazione dei parametri sono quelli standard implementati nella libreria \tt{Scipy} \cite{SciPy-NMeth}.
 
+\subsubsection{Nelder-Mead}
 The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
 
 The Nelder-Mead optimization method, originally introduced by Nelder and Mead in 1965 \cite{NelderMeads}, is a widely used numerical optimization technique for unconstrained problems in multidimensional spaces. \\
@@ -99,12 +104,44 @@ When the cycle stops the point of the simplex associated to the lower function v
 
 The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
 
+\subsubsection{SLSQP}
 Per valutare eventuali miglioramenti nella performance abbiamo provato ad utilizzare un algoritmo che fosse gradient-based. 
 Nello specifico ho provato ad utilizzare l'algoritmo di Sequential Least Squares Programming (SLSQP) nella versione implementata all'interno della libreria scipy.
-%Inserire descrizione algoritmo
+Method SLSQP uses Sequential Least SQuares Programming to minimize a function of several variables with any combination of bounds, equality and inequality constraints. 
+The method wraps the SLSQP Optimization subroutine originally implemented by Dieter Kraft \cite{kraft1988slsqp}.  
+Note that the wrapper handles infinite values in bounds by converting them into large floating values.
+
+Sequential Least Squares Programming (SLSQP) is a numerical algorithm designed for solving constrained nonlinear optimization problems of the general form:
+\begin{align*}
+& \min_{x \in \mathbb{R}^n} \quad && f(x) \\
+& \text{subject to} \quad && c_i(x) = 0, \quad i = 1, \dots, m \\
+& && d_j(x) \geq 0, \quad j = 1, \dots, p
+\end{align*}
+
+It belongs to the family of Sequential Quadratic Programming (SQP) methods, which iteratively solve a sequence of quadratic programming subproblems that approximate the original nonlinear problem. 
+At each iteration, the nonlinear objective function is replaced by a quadratic model, and the constraints are linearized around the current iterate. 
+The resulting subproblem is a quadratic program whose solution provides a direction for updating the optimization variables.
+
+The quadratic model is typically derived from the Lagrangian function associated with the problem,
+\[
+\mathcal{L}(x, \lambda, \mu) = f(x) - \sum_{i} \lambda_i c_i(x) - \sum_{j} \mu_j d_j(x),
+\]
+where \( \lambda \) and \( \mu \) are the Lagrange multipliers associated with the equality and inequality constraints, respectively. 
+The Hessian of the Lagrangian is not computed explicitly; instead, SLSQP employs a quasi-Newton approximation, updated using a BFGS-like scheme. 
+Although it does not implement the BFGS algorithm in the strict sense, the use of such updates places SLSQP within the broader class of quasi-Newton SQP algorithms.
+
+A constrained line search is performed along the computed search direction to ensure sufficient decrease in a merit function that balances objective reduction and constraint satisfaction. 
+This ensures both global convergence and rapid local convergence near a solution. 
+The process continues until convergence criteria, typically based on the projected gradient norm and constraint residuals, are satisfied.
 
 \subsection{Results}
 In the following I present the results obtained provando ad effettuare l'ottimizzaione con l'algoritmo di Nelder-Meads
+
+\begin{tabular}{lcccccc}
+    \textbf{Method} & \textbf{Success} & \textbf{Status} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Duration}\\
+    \textbf{Nelder-Mead} & False & 2 & 0.002732 & 40 & 93 & No initial symplex\\
+    \textbf{Nelder-Mead}
+\end{tabular}
 
 \section{CMA-ES}
 
@@ -176,10 +213,19 @@ If the current trial's performance is worse than the median, it is pruned to pre
 
 \subsection{Results}
 
+\subsection{$\beta$ parameter impact on RB optimization}
+
 \paragraph{D1 - steps}
 
 \paragraph{D1 - 1000 steps}
 
 \paragraph{D2 - 1000 steps}
 
+
+
 \section{RB optimization conclusions}
+
+\begin{tabular}{lccccc}
+    \textbf{Method} & \textbf{Highest Fidelity} & \textbf{Amplitude [a.u.]} & \textbf{Frequency [GHz]} & \textbf{$\beta$} \\
+
+\end{tabular}
