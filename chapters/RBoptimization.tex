@@ -74,6 +74,9 @@ Consequently, statistical averaging was achieved across the ensemble of random s
 To ensure high confidence in the estimation of the survival probabilities, each circuit was executed with $2000$ measurement shots.
 \footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
 
+%TODO: descrivere quali parametri sto cercando di ottimizzare, per quali gate, perchè quella gate (è la mia native gate) e come procedo (quindi prima cerco di fare un fine tuning)
+%descrivere anche il fatto che in realtà questo procedimento di fine tuning non è così banale e che può decisamente influenzare i risultati (spiegare come sono inizializzati i parametri per l'ottimizzazione)
+
 \section{Scipy optimization methods}\label{Sec:OptimizationMethods}
 
 \subsection{Algorithm description}
