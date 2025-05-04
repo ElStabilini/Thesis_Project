@@ -64,18 +64,69 @@ Sobstituting in \ref{eq:avg_error_Clifford_gate} the formula for the avarage gat
 \end{equation}
 which shows how the avarage error per Clifford gate is directly connected to the exponential decay rate.
 
-\paragraph{Randomized Benchmarking evaluation}
+\section{RB evaluation and optimization}
+%TODO: inserire una introduzione per questa sezione
 
-In the results presented below, I employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
+\subsection{\Qibolab native gates}
+As discussed at the beginning of the chapter, the primary goal of this work is to explore an automated calibration approach aimed at optimizing the single-gate fidelity of logical gates. 
+In particular, we focused on the calibration of the $R_X$ gate, which corresponds to a microwave pulse with a specific frequency, amplitude, and duration that induces a rotation of the qubit state by an angle of $\pi$ around the $x$-axis of the Bloch sphere.
+
+The choice to optimize the $R_X$ gate dependes on its role as one of the native gates in the \texttt{Qibolab} control stack. 
+Native gates are physical operations that are directly implementable by the hardware, in contrast to abstract logical gates, which must be compiled into sequences of these hardware-supported primitives. 
+In the case of \texttt{Qibolab}\footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X$ pulses combined with virtual-Z (VZ) gates. 
+This native gate basis is both efficient to implement and expressive enough to support universal quantum computation.
+
+Indeed, it can be shown that any arbitrary single-qubit unitary operation $ U(\gamma, \theta, \phi) \in SU(2) $ can be expressed, up to a global phase, as a sequence of rotations around the $z$ and $x$ axes of the Bloch sphere:
+\begin{equation}
+U(\gamma, \theta, \phi) = R_Z(\gamma) R_X(\theta) R_Z(\phi).
+\end{equation}
+This decomposition ensures that all single-qubit operations can be realized using a combination of $ R_X $ and $ R_Z $ rotations. 
+
+When a qubit is driven by a resonant microwave pulse (with detuning $ \delta = 0 $), the resulting evolution is a rotation around an axis $\hat{n} = (\cos\phi, -\sin\phi, 0)$ lying in the equatorial plane of the Bloch sphere. 
+The associated unitary can be written as:
+\begin{equation}
+R_{\hat{n}(\phi)}(\theta) = \exp\left( -i \frac{\theta}{2} \left[ \cos(\phi)\sigma_x - \sin(\phi)\sigma_y \right] \right).
+\end{equation}
+
+This operation can be equivalently expressed through conjugation of an $R_X$ rotation by two $R_Z$ rotations:
+\begin{equation}
+R_{\hat{n}(\phi)}(\theta) = R_Z(-\phi) R_X(\theta) R_Z(\phi) = U(-\phi, \theta, \phi).
+\end{equation}
+From this, it follows that any arbitrary unitary $ U(\gamma, \theta, \phi) $ can be implemented as:
+\begin{equation}
+U(\gamma, \theta, \phi) = R_Z(\gamma + \phi) \cdot R_Z(-\phi) R_X(\theta) R_Z(\phi) = R_Z(\gamma + \phi) \cdot U(-\phi, \theta, \phi).
+\end{equation}
+
+Note that, in practice, this final $R_Z$ rotation does not need to be realized as a physical pulse. 
+Instead, it can be implemented virtually by adjusting the phase reference of subsequent pulses, a technique known as the virtual-Z gate\cite{McKay_2017}. \\
+The ability to compose any single-qubit gate using only $R_X$ and virtual-Z operations \cite{boykin1999universalfaulttolerantquantumcomputing} confirms the sufficiency of this native gate set for universal single-qubit control. For instance, even a restricted $ R_X $ rotation such as $ R_X(\pi) $, when combined with arbitrary-angle $ R_Z $ gates, forms a universal set due to the non-commuting nature of these operations. By alternating $ R_X(\pi) $ pulses with phase-adjustable $ R_Z $ gates, one can synthesize any $ SU(2) $ unitary up to global phase.
+
+Given these consideration, the optimization experiments described in the following sections focus on maximizing the $R_X$ gate fidelity using RB fidelity as a performance metric. 
+
+\subsection{RB evaluation parameters}
+In the results presented in the following, I employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
 This routine was used consistently across all tests, with the following set of parameters: I used $1000$ unique random Clifford sequences (\texttt{num\_of\_sequences = 1000}), ensuring robust statistical reliability across different realizations of gate noise. 
 Each sequence was evaluated at increasing circuit depths up to a maximum of $1000$ Clifford gates (\texttt{max\_circuit\_depth = 1000}), with the depths spaced by increments of $10$ (\texttt{delta\_clifford = 10}), resulting in benchmarking points at depths of $1, 10, 20, \ldots, 1000$. 
 For each depth and random sequence, I generated only one instance (\texttt{n\_avg = 1}), meaning that each sequence was distinct and not repeated with the same gate pattern. 
 Consequently, statistical averaging was achieved across the ensemble of random sequences at each depth rather than by repeating individual circuits. 
-To ensure high confidence in the estimation of the survival probabilities, each circuit was executed with $2000$ measurement shots.
+To ensure high confidence in the estimation of the survival probabilities, each circuit was executed with $2000$ measurement shots. %TODO: verify and check
 \footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
 
+\subsection{Parametri da ottimizzare}
 %TODO: descrivere quali parametri sto cercando di ottimizzare, per quali gate, perchè quella gate (è la mia native gate) e come procedo (quindi prima cerco di fare un fine tuning)
 %descrivere anche il fatto che in realtà questo procedimento di fine tuning non è così banale e che può decisamente influenzare i risultati (spiegare come sono inizializzati i parametri per l'ottimizzazione)
+I parametri su cui è stata performata l'ottimizzazione sulla base della gate infidelity ottenuta dall'RB come cost function sono 3 (voglio ottimizare la porta logica $RX(\pi)$): frequenza, ampiezza e forma dell'impulso.
+Per quanto rigaurda la forma dell'impulso in particolare il parametro da ottimizzare era il parametro $\beta$ dell'impulso di DRAG, vale a dire il parametro moltiplicativo sulla seconda quadratura.
+Questo significa che la closed loop optimization che è stata realizzata è avvenuta secondo un procedimento simile a quello descritto nel paper ORBIT \cite{kelly_optimal_2014}
+%TODO: spiegare un attimo meglio che cos'è ORBIT (Optimal Randomized Benchmarking)
+
+%TODO: inserire code snippet dove mostro come inizializzo i parametri 
+
+
+In un secondo momento invece è stata valuata anche l'evoluzione della gate fidelity ottenuta tramite RB ottimizzando solamente i parametri di ampiezza e frequenza dell'$RX(\pi)$ e tenendo un impulso Gaussiano.
+
+
+%TODO: try to run at least once the NM from not-fine tuned
 
 \section{Scipy optimization methods}\label{Sec:OptimizationMethods}
 
@@ -132,10 +183,10 @@ At each iteration, the nonlinear objective function is replaced by a quadratic m
 The resulting subproblem is a quadratic program whose solution provides a direction for updating the optimization variables.
 
 The quadratic model is typically derived from the Lagrangian function associated with the problem,
-\[
+\begin{equation}
 \mathcal{L}(x, \lambda, \mu) = f(x) - \sum_{i} \lambda_i c_i(x) - \sum_{j} \mu_j d_j(x),
-\]
-where \( \lambda \) and \( \mu \) are the Lagrange multipliers associated with the equality and inequality constraints, respectively. 
+\end{equation}
+where $ \lambda $ and $ \mu $ are the Lagrange multipliers associated with the equality and inequality constraints, respectively. 
 The Hessian of the Lagrangian is not computed explicitly; instead, SLSQP employs a quasi-Newton approximation, updated using a BFGS-like scheme. 
 Although it does not implement the BFGS algorithm in the strict sense, the use of such updates places SLSQP within the broader class of quasi-Newton SQP algorithms.
 
