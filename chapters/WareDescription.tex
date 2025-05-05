@@ -200,7 +200,7 @@ This ensures that all mutual interactions and cross-couplings are properly accou
     \label{fig:qubit_flux}
 \end{figure}
 
-\subsection{Drive pulse calibration}
+\subsection{Drive pulse calibration}\label{sec:Rabi}
 
 After defining all the readout parameters and the parameters for qubit control, it is necessary to calibrate the parameters of the drive pulses to be able to control rotations on the Bloch sphere.
 With Rabi experiments is possibile to calibrate the drive pulses to perform precise rotations (see \cite{Rabi1936}, \cite{Wallraff2005}) within approximately $40$ ns.
@@ -322,7 +322,7 @@ An example of the output of a Ramsey experiment is shown in Figure \ref{fig:rams
     \label{fig:ramsey}
 \end{figure}
 
-\subsubsection{Flipping experiment}
+\subsubsection{Flipping experiment}\label{subsec:Flipping}
 
 While the Ramsey experiment is typically used to fine-tune the drive frequency of a qubit, the Flipping experiment serves as an effective routine to calibrate the amplitude of the $\pi$-pulse, ensuring accurate implementation of $R_x(\pi)$ rotations. 
 This calibration is fundamental for achieving high-fidelity gate operations, and the flipping experiment can often reveal discrepancies in the amplitude that are not evident in Rabi oscillation measurements.\\
@@ -499,8 +499,27 @@ An example of the expected output for the DRAG routine is shown in Figure \ref{f
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{figures/png/drag_simple.png}
-    \caption{Expected output of the DRAG routine. $\beta$ is the symbol used in \Qibocal for the $\lambda$ parameter.}
+    \caption{Expected output of the \tt{drag\_simple} routine. $\beta$ is the symbol used in \Qibocal for the $\lambda$ parameter.}
     \label{fig:drag}
+\end{figure}
+
+In \Qibocal is implemented also another routine that can be used to determine the correct value of the DRAG parameter $\beta$. This method employs a pulse sequence of the form
+\begin{equation}
+    [X_{\pi} - X_{-\pi}]^N,
+\end{equation}
+where the repeated application of positive and negative $\pi$-rotations amplifies coherent errors arising from imperfect pulse shaping. 
+This approach is particularly sensitive to distortions introduced by an incorrectly tuned quadrature derivative component, which the DRAG technique is specifically designed to compensate for. 
+By varying $\beta$, which scales the amplitude of the derivative pulse on the quadrature channel, one observes oscillations in the qubit's return probability to the ground state $\ket{0}$, caused by constructive and destructive interference of the accumulated errors.
+The measured ground state population is recorded as a function of $\beta$ and fit to a cosine curve. 
+The optimal value of $\beta$ corresponds to the point where this oscillation is maximized—indicating minimal leakage and optimal cancellation of phase errors. 
+This approach to the calibration of the $\beta$ parameter was first introduced in \cite{DRAG2}. 
+A possible output of the routine is shown in Figure \ref{fig:drag_tuning}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/png/drag_tuning.png}
+    \caption{Expected output of the \tt{drag\_tuning} routine.}
+    \label{fig:drag_tuning}
 \end{figure}
 
 \section{Calibration results}

@@ -69,12 +69,13 @@ which shows how the avarage error per Clifford gate is directly connected to the
 
 \subsection{\Qibolab native gates}
 As discussed at the beginning of the chapter, the primary goal of this work is to explore an automated calibration approach aimed at optimizing the single-gate fidelity of logical gates. 
-In particular, we focused on the calibration of the $R_X$ gate, which corresponds to a microwave pulse with a specific frequency, amplitude, and duration that induces a rotation of the qubit state by an angle of $\pi$ around the $x$-axis of the Bloch sphere.
+In particular, we focused on the calibration of the $R_X(\pi)$ gate, which corresponds to a resonant microwave pulse with a amplitude, and duration that induces a rotation of the qubit state by an angle of $\pi$ around the $x$-axis of the Bloch sphere.
 
-The choice to optimize the $R_X$ gate dependes on its role as one of the native gates in the \texttt{Qibolab} control stack. 
-Native gates are physical operations that are directly implementable by the hardware, in contrast to abstract logical gates, which must be compiled into sequences of these hardware-supported primitives. 
-In the case of \texttt{Qibolab}\footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X$ pulses combined with virtual-Z (VZ) gates. 
-This native gate basis is both efficient to implement and expressive enough to support universal quantum computation.
+The decision to focus on the $R_X(\pi)$ gate dependes on its role as one of the native gates in \texttt{Qibolab}. 
+Native gates are those which can be directly implementable at the hardwarelevel, in contrast to abstract logical gates, which must be transpiled into sequences of hardware supported primitives. 
+In the case of \texttt{Qibolab}\footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X(\pi)$ gate, calibrated be performing the Rabi experiments described in Section \ref{sec:Rabi}, the measurement gate and the virtual-Z (VZ) gate which is not implemented via a physical pulse but rather through a dynamic adjustment of the phase of subsequent control pulses. 
+Additionally, the RX90 gate, corresponding to a $\frac{\pi}{2}$ rotation, is implemented by halving the amplitude of the calibrated $\pi$-pulse.
+This native gate set, consisting of physically implemented $R_X(\pi)$, $R_X(\pi/2)$, and virtual Z gates, is sufficient for universal single-qubit control.
 
 Indeed, it can be shown that any arbitrary single-qubit unitary operation $ U(\gamma, \theta, \phi) \in SU(2) $ can be expressed, up to a global phase, as a sequence of rotations around the $z$ and $x$ axes of the Bloch sphere:
 \begin{equation}
@@ -113,18 +114,75 @@ To ensure high confidence in the estimation of the survival probabilities, each 
 \footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
 
 \subsection{Parametri da ottimizzare}
-%TODO: descrivere quali parametri sto cercando di ottimizzare, per quali gate, perchè quella gate (è la mia native gate) e come procedo (quindi prima cerco di fare un fine tuning)
-%descrivere anche il fatto che in realtà questo procedimento di fine tuning non è così banale e che può decisamente influenzare i risultati (spiegare come sono inizializzati i parametri per l'ottimizzazione)
-I parametri su cui è stata performata l'ottimizzazione sulla base della gate infidelity ottenuta dall'RB come cost function sono 3 (voglio ottimizare la porta logica $RX(\pi)$): frequenza, ampiezza e forma dell'impulso.
-Per quanto rigaurda la forma dell'impulso in particolare il parametro da ottimizzare era il parametro $\beta$ dell'impulso di DRAG, vale a dire il parametro moltiplicativo sulla seconda quadratura.
-Questo significa che la closed loop optimization che è stata realizzata è avvenuta secondo un procedimento simile a quello descritto nel paper ORBIT \cite{kelly_optimal_2014}
+%TODO: descrivere anche il fatto che in realtà questo procedimento di fine tuning non è così banale e che può decisamente influenzare i risultati (spiegare come sono inizializzati i parametri per l'ottimizzazione)
 %TODO: spiegare un attimo meglio che cos'è ORBIT (Optimal Randomized Benchmarking)
 
-%TODO: inserire code snippet dove mostro come inizializzo i parametri 
+The optimization procedures described in this work aim to enhance the fidelity of the $R_X(\pi)$ gate by minimizing its infidelity, as determined through RB experiments. 
+The optimization is carried out over three control parameters: the amplitude and frequency of the microwave pulse and the DRAG correction parameter $\beta$, which modulates the second quadrature of the pulse shape. 
+This closed-loop optimization approach follows structure similar to the Optimal Randomized Benchmarking for Immediate Tune-up (ORBIT) protocol introduced in \cite{kelly_optimal_2014}, wherein the gate performance is iteratively improved based on benchmarking results.
 
+Prior to the application of the optimization algorithm, a fine-tuning phase is performed to obtain reliable starting values for each parameter. 
+This phase involves a sequence of calibration routines implemented within the \Qibocal\ framework.
+The qubit frequency is first refined using a Ramsey experiment (see Section \ref{subsec:Ramsey}), subsequently a flipping sequence (see Section \ref{subsec:Flipping}) is used to adjust the microwave pulse amplitude to ensure that the applied drive results in a precise $\pi$-rotation.
+Finally, the optimal value of the DRAG parameter $\beta$ is estimated through a dedicated DRAG calibration routine (see Section \ref{sec:DRAG}).
+After each of these routines, the platform configuration is updated accordingly in the \tt{platform.json} file, which stores the relevant parameters for the experimental setup 
+\footnote{In \Qibolab the \tt{qibolab.Platform} object holds all the information required to execute programs in a real QPU. It is comprised by different objects that contain information about the native gates and the lab's instrumentation. The QPU parameters can be saved in (and loaded from) the \tt{parameters.json} file.}.
 
-In un secondo momento invece è stata valuata anche l'evoluzione della gate fidelity ottenuta tramite RB ottimizzando solamente i parametri di ampiezza e frequenza dell'$RX(\pi)$ e tenendo un impulso Gaussiano.
+These calibrated values are then used to initialize the optimization algorithm, as illustrated in the code reported in Listing \ref{snippet:params_init}.
+%TODO: nel codice inserire delle linee che gestiscano il possibile fallimento della procedura di fine tuning e impediscano di partire con la procedura di ottimizzazione se il fine tuning non è andato a buon fine.
+%diciamo che lo inserisco dopo che scopro che effettivamente questo fine tuning potrebbe andare male.
 
+\begin{lstlisting}[language=Python, caption={Code to set up the RX gate optimization experiment.}, label={snippet:params_init}]
+    
+    with Executor.open(
+        "myexec",
+        path=executor_path,
+        platform=platform,
+        targets=[target],
+        update=True,
+        force=True,
+    ) as e:
+    
+        e.platform.settings.nshots = 2000
+        drag_output = e.drag_tuning(beta_start=-4, beta_end=4, beta_step=0.5)
+        ramsey_output = e.ramsey(
+            delay_between_pulses_end=1000,
+            delay_between_pulses_start=10,
+            delay_between_pulses_step=10,
+            detuning=3000000,
+            relaxation_time=200000,
+        )
+        flipping_output = e.flipping(
+            nflips_max=50,
+            delta_amplitude=0.0005,  
+            nflips_step=1,
+        )
+    
+        beta_best = drag_output.results.betas[target]
+        ampl_RX = e.platform.qubits[target].native_gates.RX.amplitude
+        freq_RX = e.platform.qubits[target].native_gates.RX.frequency
+    
+        init_guess = np.array([ampl_RX, freq_RX, beta_best])
+    
+        lower_bounds = np.array([-0.5, freq_RX - 4e6, beta_best - 0.25])
+        upper_bounds = np.array([0.5, freq_RX + 4e6, beta_best + 0.25])
+        bounds = Bounds(lower_bounds, upper_bounds)
+    
+        opt_results, optimization_history = rb_optimization(
+            e, target, method, init_guess, bounds
+        )
+    
+    report(e.path, e.history)
+    
+\end{lstlisting}
+
+In addition to defining the initial parameter values, explicit boundaries were also set for the optimization. 
+This choice was motivated by the need to constrain the search space to physically meaningful regions, avoid unstable pulse configurations, and ensure compatibility with the dynamic range and resolution of the control electronics.
+For the amplitude, the range was chosen to match the full extent accessible by the hardware. 
+The frequency parameter, expressed in Hz, was allowed to vary within a window of 4 MHz centered on the optimal resonance frequency obtained from the Ramsey experiment, ensuring that only physically meaningful detunings are explored. 
+For the DRAG parameter $\beta$, the search range was set to $0.25$ around the value returned by the initial DRAG calibration; this interval corresponds to the resolution used in the scan performed during the \tt{drag} routine, thus preserving consistency with earlier characterization steps.
+
+In a subsequent phase of this study, a comparative analysis was performed by repeating the optimization while keeping the pulse shape fixed to a Gaussian envelope, effectively removing $\beta$ as an optimization variable. 
 
 %TODO: try to run at least once the NM from not-fine tuned
 
@@ -217,7 +275,7 @@ The method adaptively updates the distribution's mean and covariance matrix base
 
 The fundamental idea behind CMA-ES is the use of a multivariate Gaussian distribution to model promising search directions. 
 Let $\mathbf{\mu}_t$ denote the mean of the distribution at iteration $t$, and $\Sigma_t$ the covariance matrix. 
-Then, a new population of $\lambda$ candidate solutions $\mathbf{x}_i^(t+1) \sim \mathbf{\mu}_t + \sigma_t\mathcal{N}(0, \Sigma_t)$, where $\sigma_t$ is a step size controlling the exploration.  
+Then, a new population of $\lambda$ candidate solutions $\mathbf{x}_i^{(t+1)} \sim \mathbf{\mu}_t + \sigma_t\mathcal{N}(0, \Sigma_t)$, where $\sigma_t$ is a step size controlling the exploration.  
 
 The CMA-ES algorithm follows the following steps:\begin{enumerate}
     \item If not otherwise specified, the initial parameters are set: mean vector $\mathbf{\mu_0}$, covariance matrix $\Sigma_0$\footnote{$\Sigma_0=\mathbb{I}$ for isotropic search}, step size $\sigma_0$, population size $\lambda$
