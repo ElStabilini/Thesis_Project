@@ -1,0 +1,14 @@
+\chapter*{Summary}
+
+Achieving high-fidelity quantum gates is one of the central challenges in gate-based quantum computing, particularly in superconducting qubit platforms where precise control is essential for scalable and fault-tolerant architectures. 
+
+During my thesis work, conducted within the Qibo collaboration and specifically in the Qibocal and Qibolab groups, I focused on the development and implementation of calibration and control routines aimed at improving both single-qubit and two-qubit gate fidelities.
+
+Most of this work involved close collaboration with experimental teams operating our quantum processing units, to identify common and critical sources of gate infidelity. 
+This informed the design of calibration protocols now integrated into the Qibocal and Qibolab software stacks.
+
+The first part of the project addressed the optimization of RX(π) gates, drawing inspiration from the ORBIT technique (Optimized Randomized Benchmarking for Immediate Tune-up) introduced by Kelly et al. in 2014. 
+We explored extensions of this method by testing modern optimization libraries to evaluate whether it is possible to efficiently reach gate fidelities approaching 99.9\%, starting from coarse calibrations, and to assess system stability under realistic drift conditions.
+
+The second part of the work focused on practical needs identified by the experimental teams, specifically the correction of distortions in flux pulses caused by imperfections in the control lines. 
+To address this, we implemented the Cryoscope protocol, originally introduced by M. A. Rol in 2019, which enables the characterization of these distortions and the application of corresponding pre-distortions. This allows for improved accuracy in flux-based gate operations and is now available in Qibocal.

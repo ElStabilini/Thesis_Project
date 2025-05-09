@@ -115,7 +115,6 @@ To ensure high confidence in the estimation of the survival probabilities, each 
 
 \subsection{Parametri da ottimizzare}
 %TODO: descrivere anche il fatto che in realtà questo procedimento di fine tuning non è così banale e che può decisamente influenzare i risultati (spiegare come sono inizializzati i parametri per l'ottimizzazione)
-%TODO: spiegare un attimo meglio che cos'è ORBIT (Optimal Randomized Benchmarking)
 
 The optimization procedures described in this work aim to enhance the fidelity of the $R_X(\pi)$ gate by minimizing its infidelity, as determined through RB experiments. 
 The optimization is carried out over three control parameters: the amplitude and frequency of the microwave pulse and the DRAG correction parameter $\beta$, which modulates the second quadrature of the pulse shape. 
@@ -188,11 +187,8 @@ In a subsequent phase of this study, a comparative analysis was performed by rep
 
 \section{Scipy optimization methods}\label{Sec:OptimizationMethods}
 
-\subsection{Algorithm description}
+\subsection{Nelder-Mead}
 The initial optimization attempts were carried out using standard algorithms available in the \texttt{SciPy} library \cite{SciPy-NMeth}.
-In the following sections, I present the specific algorithm used and discuss the results obtained from its application to the problem of gate fidelity optimization.
-
-\subsubsection{Nelder-Mead}
 The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
 
 The Nelder-Mead optimization method, originally introduced by Nelder and Mead in 1965 \cite{NelderMeads}, is a widely used numerical optimization technique for unconstrained problems in multidimensional spaces. \\
@@ -222,7 +218,16 @@ When the cycle stops the point of the simplex associated to the lower function v
 
 The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
 
-\subsubsection{SLSQP}
+\subsection{Results}
+In the following I present the results obtained provando ad effettuare l'ottimizzaione con l'algoritmo di Nelder-Meads
+
+\begin{tabular}{lcccccc}
+    \textbf{Method} & \textbf{Success} & \textbf{Status} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Duration}\\
+    \textbf{Nelder-Mead} & False & 2 & 0.002732 & 40 & 93 & No initial symplex\\
+    \textbf{Nelder-Mead}
+\end{tabular}
+
+\subsection{SLSQP}
 Per valutare eventuali miglioramenti nella performance abbiamo provato ad utilizzare un algoritmo che fosse gradient-based. 
 Nello specifico ho provato ad utilizzare l'algoritmo di Sequential Least Squares Programming (SLSQP) nella versione implementata all'interno della libreria scipy.
 Method SLSQP uses Sequential Least SQuares Programming to minimize a function of several variables with any combination of bounds, equality and inequality constraints. 
@@ -252,14 +257,7 @@ A constrained line search is performed along the computed search direction to en
 This ensures both global convergence and rapid local convergence near a solution. 
 The process continues until convergence criteria, typically based on the projected gradient norm and constraint residuals, are satisfied.
 
-\subsection{Results}
-In the following I present the results obtained provando ad effettuare l'ottimizzaione con l'algoritmo di Nelder-Meads
 
-\begin{tabular}{lcccccc}
-    \textbf{Method} & \textbf{Success} & \textbf{Status} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Duration}\\
-    \textbf{Nelder-Mead} & False & 2 & 0.002732 & 40 & 93 & No initial symplex\\
-    \textbf{Nelder-Mead}
-\end{tabular}
 
 \section{CMA-ES}
 
@@ -342,8 +340,48 @@ If the current trial's performance is worse than the median, it is pruned to pre
 
 
 \section{RB optimization conclusions}
+As mentioned in the introduction to this chapter, the primary objective of this work was to evaluate whether it is possible to develop an automated optimization routine that can be executed directly on quantum hardware to periodically improve the fidelity of single-qubit gates—specifically the  $R_X(\pi)$ gate. 
+For such a routine to be practically useful, two main conditions must be met: first, the optimization must lead to a consistent and measurable improvement in gate fidelity within a limited amount of time; 
+second, the routine must demonstrate stable convergence, such that the resulting optimized parameters (amplitude, frequency, and DRAG correction) can reliably be used to update the hardware configuration, ensuring a reproducible improvement in performance.
+
+While the protocol did yield fidelity improvements in several cases, the results indicate that the implementation we built to be run on hardware is not yet robust or efficient enough for routine use. 
+The main limiting factor is the duration of the Randomized Benchmarking routine used to evaluate gate fidelity, which is relatively long. 
+Because the optimization procedure requires several evaluations of this cost function, the total execution time quickly becomes a bottleneck. 
+Furthermore, we observed that convergence is not always guaranteed: in some cases, the optimization either stalls or does not lead to meaningful improvements within the time frame or number of iterations considered acceptable for practical deployment.
+
+In summary, although the method shows that automated gate fidelity optimization is possible, the current implementation does not meet the reliability and efficiency requirements needed for scheduled, hardware-level recalibration. 
+Improvements could focus on accelerating cost function evaluation or designing more robust optimization strategies with stronger convergence guarantees.
 
 \begin{tabular}{lccccc}
     \textbf{Method} & \textbf{Highest Fidelity} & \textbf{Amplitude [a.u.]} & \textbf{Frequency [GHz]} & \textbf{$\beta$} \\
 
 \end{tabular}
+
+\begin{tabular}{lcccccccccccccccccc}
+\textbf{Analysis Name} & \textbf{cost\_initial} & \textbf{cost\_best} & \textbf{index\_best} & \textbf{A best [a.u.]} & \textbf{f best [$\times10^9$ Hz]} & \textbf{B best} & \textbf{cost\_final} & \textbf{A final [a.u.]} & \textbf{f final [$\times10^9$ Hz]} & \textbf{B final} & \textbf{improv. best [\%]} & \textbf{improv. final [\%]} & \textbf{fid\_initial} & \textbf{fid\_best} & \textbf{fid\_final} & \textbf{fid impr. best [\%]} & \textbf{fid impr. final [\%]} \\
+\hline
+D1\_cma\_post\_ft\_true & 0.00728 & 0.00335 & 9 & -0.16634 & 4.95822 & 0.08802 & 0.02664 & 0.12956 & 4.95822 & 0.18364 & 54.04 & -265.93 & 0.99272 & 0.99665 & 0.97336 & 0.40 & -1.95 \\
+D1\_init\_simplex\_20241110\_211211 & 0.00633 & 0.00467 & 25 & 0.04069 & 4.95820 &  & 0.00517 & 0.04069 & 4.95820 &  & 26.23 & 18.41 & 0.99367 & 0.99533 & 0.99483 & 0.17 & 0.12 \\
+D1\_nelder-mead\_post\_ft\_true & 0.00983 & 0.00269 & 19 & 0.04063 & 4.95701 & -1.53253 & 0.00295 & 0.04067 & 4.95699 & -1.53976 & 72.59 & 70.02 & 0.99017 & 0.99731 & 0.99705 & 0.72 & 0.69 \\
+D1\_init\_simplex\_20241113\_181711 & 0.00607 & 0.00436 & 17 & 0.04131 & 4.95817 &  & 0.00437 & 0.04132 & 4.95817 &  & 28.27 & 28.10 & 0.99393 & 0.99564 & 0.99563 & 0.17 & 0.17 \\
+D1\_init\_simplex\_20241113\_200745 & 0.00585 & 0.00446 & 37 & 0.04058 & 4.95819 &  & 0.00512 & 0.04058 & 4.95819 &  & 23.73 & 12.46 & 0.99415 & 0.99554 & 0.99488 & 0.14 & 0.07 \\
+D1\_SLSQP\_post\_ft\_true & 0.02172 & 0.00482 & 13 & 0.04058 & 4.95822 & -0.00115 & 0.00507 & 0.04058 & 4.95822 & -0.00115 & 77.79 & 76.64 & 0.97828 & 0.99518 & 0.99493 & 1.73 & 1.70 \\
+\end{tabular}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lccc}
+        \textbf{Analysis Name} & \textbf{# function evaluations} & \textbf{# optimization steps} & \textbf{time [s]}
+        \hline
+        \textbf{D1\_nelder-mead\_post\_ft\_true} & 93 & 39 & 2892 \\
+        \textbf{D1_SLSQP} & 180 & 15 & 3873 \\
+        \textbf{D1\_cma\_post\_ft\_true} & 210 & 30 & 4836 \\
+        \textbf{D1\_init\_simplex\_20241110\_211211} & 99 & 39 & 3096 \\
+        \textbf{D1\_init\_simplex\_20241113\_181711} & 100 & 39 & 3128 \\
+        \textbf{D1\_init\_simplex\_20241113\_200745} & 106 & 39 & 3190 \\
+        \textbf{}
+    \bottomrule
+    \end{tabular}
+    \caption{}
+    \label{tab:cal_results}
+\end{table}
