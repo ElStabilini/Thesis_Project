@@ -7,6 +7,42 @@ The second is the implementation of the cryoscope, a routine first described in 
 
 \section{RX90 calibration}
 
+\subsection{\Qibolab native gates}\label{subsec:native_gates}
+As discussed at the beginning of the chapter, the primary goal of this work is to explore an automated calibration approach aimed at optimizing the single-gate fidelity of logical gates. 
+In particular, we focused on the calibration of the $R_X(\pi)$ gate, which corresponds to a resonant microwave pulse with a amplitude, and duration that induces a rotation of the qubit state by an angle of $\pi$ around the $x$-axis of the Bloch sphere.
+
+The decision to focus on the $R_X(\pi)$ gate dependes on its role as one of the native gates in \texttt{Qibolab}. 
+Native gates are those which can be directly implementable at the hardwarelevel, in contrast to abstract logical gates, which must be transpiled into sequences of hardware supported primitives. 
+In the case of \texttt{Qibolab}\footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X(\pi)$ gate, calibrated be performing the Rabi experiments described in Section \ref{sec:Rabi}, the measurement gate and the virtual-Z (VZ) gate which is not implemented via a physical pulse but rather through a dynamic adjustment of the phase of subsequent control pulses. 
+Additionally, the RX90 gate, corresponding to a $\frac{\pi}{2}$ rotation, is implemented by halving the amplitude of the calibrated $\pi$-pulse.
+This native gate set, consisting of physically implemented $R_X(\pi)$, $R_X(\pi/2)$, and virtual Z gates, is sufficient for universal single-qubit control.
+
+Indeed, it can be shown that any arbitrary single-qubit unitary operation $ U(\gamma, \theta, \phi) \in SU(2) $ can be expressed, up to a global phase, as a sequence of rotations around the $z$ and $x$ axes of the Bloch sphere:
+\begin{equation}
+U(\gamma, \theta, \phi) = R_Z(\gamma) R_X(\theta) R_Z(\phi).
+\end{equation}
+This decomposition ensures that all single-qubit operations can be realized using a combination of $ R_X $ and $ R_Z $ rotations. 
+
+When a qubit is driven by a resonant microwave pulse (with detuning $ \delta = 0 $), the resulting evolution is a rotation around an axis $\hat{n} = (\cos\phi, -\sin\phi, 0)$ lying in the equatorial plane of the Bloch sphere. 
+The associated unitary can be written as:
+\begin{equation}
+R_{\hat{n}(\phi)}(\theta) = \exp\left( -i \frac{\theta}{2} \left[ \cos(\phi)\sigma_x - \sin(\phi)\sigma_y \right] \right).
+\end{equation}
+
+This operation can be equivalently expressed through conjugation of an $R_X$ rotation by two $R_Z$ rotations:
+\begin{equation}
+R_{\hat{n}(\phi)}(\theta) = R_Z(-\phi) R_X(\theta) R_Z(\phi) = U(-\phi, \theta, \phi).
+\end{equation}
+From this, it follows that any arbitrary unitary $ U(\gamma, \theta, \phi) $ can be implemented as:
+\begin{equation}
+U(\gamma, \theta, \phi) = R_Z(\gamma + \phi) \cdot R_Z(-\phi) R_X(\theta) R_Z(\phi) = R_Z(\gamma + \phi) \cdot U(-\phi, \theta, \phi).
+\end{equation}
+
+Note that, in practice, this final $R_Z$ rotation does not need to be realized as a physical pulse. 
+Instead, it can be implemented virtually by adjusting the phase reference of subsequent pulses, a technique known as the virtual-Z gate\cite{McKay_2017}. \\
+The ability to compose any single-qubit gate using only $R_X$ and virtual-Z operations \cite{boykin1999universalfaulttolerantquantumcomputing} confirms the sufficiency of this native gate set for universal single-qubit control. For instance, even a restricted $ R_X $ rotation such as $ R_X(\pi) $, when combined with arbitrary-angle $ R_Z $ gates, forms a universal set due to the non-commuting nature of these operations.
+By alternating $ R_X(\pi) $ pulses with phase-adjustable $ R_Z $ gates, one can synthesize any $ SU(2) $ unitary up to global phase.
+
 
 
 \section{Flux pulse correction}

@@ -1,135 +1,103 @@
 \chapter{RB fidelity optimization}
 The calibration procedure described in Section \ref{sec:calibration} is typically time-consuming and demands significant experimental expertise, particularly when aiming for state-of-the-art performance. 
-In the work I presented in the previous chapter, the calibration process began from a pre-existing, even if suboptimal, configuration. 
-The goal was to enhance the quality of single-qubit gates by using the available \Qibocal protocols.
+In the work presented in the previous chapter, the calibration process began from a pre-existing, even if suboptimal, configuration. 
+The goal was to enhance the quality of single-qubit gates using the available \Qibocal protocols.
 
-Even under these ovverall favorable initial conditions, the effort required to refine gate performance showed the limitations of manual calibration approaches. 
-As quantum processors scale in both qubit count and architectural complexity, manual calibration becomes increasingly complex. 
+Even under these overall favorable initial conditions, the effort required to refine gate performance showed the limitations of manual calibration approaches. 
+As quantum processors scale in both qubit count and architectural complexity, calibration becomes increasingly difficult. 
 Frequent recalibrations are necessary to mitigate the effects of parameter drift and environmental fluctuations, especially in superconducting qubit platforms \cite{krantz_quantum_2019}.
 
-Furthermore, as gate fidelities approach the fault-tolerance threshold, enabling practical quantum computation across a variety of applications, accurate control of single-qubit gates becomes essential. 
-The fidelity of an individual gate quantifies its average operational performance, directly impacting circuit-level error rates and representing a critical figure of merit for quantum processors. 
-However, improving gate fidelity remains challenging because of the nontrivial mapping between gate parameters and the underlying process matrix, and errors from state preparation and measurement (SPAM) can make it difficult to distinguish between different sources of error.
+Furthermore, as gate fidelities approach the fault-tolerance threshold, accurate control of gates becomes critical for most practical quantum computing applications. 
+In this context, it is useful to introduce, in addition to native single-qubit gates—such as $RX_{\pi/2}$ pulses or virtual $RZ$ rotations, which are directly calibrated and implemented with a single pulse, the Clifford gates are typically composed of multiple native gates. 
+Standard randomized benchmarking (RB) protocols, as used in this chapter, measure the average fidelity of a single-qubit Clifford gate. 
+While this quantity does not directly reflect the fidelity of individual native gates, it remains a meaningful and widely used figure of merit. 
+Because single-qubit Clifford gates form a finite subgroup of unitary operations that map Pauli operators onto themselves under conjugation and they provide a useful tool to characterize gate performance. 
+Their structured algebra and invariance properties make them particularly suitable for randomized benchmarking protocols, where they enable depolarization of coherent errors and allow for SPAM-robust estimation of average gate fidelity \cite{knill_randomized_2008}.
 
 In this chapter, i present an initial attempt to address the dual challenges of calibration complexity and residual gate errors. 
-The goal is to find calibration procedures that are not only effective but also repeatable and accessible to non-expert users, lowering the entry barrier for experimental optimization of superconducting qubits. 
-Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of randomized benchmarking (RB) can improve gate performance, we explored an automatic recalibration procedure based on randomized benchmarking fidelity as an optimization target.
+The goal is to find calibration procedures that are not only effective but also repeatable and accessible to non-expert users.  
+Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of randomized benchmarking (RB) can improve gate performance, we explored an automatic calibration improvement procedure based on randomized benchmarking fidelity as an optimization target.
+In our implementation, the optimization is performed with respect to the $R_X$ pulse which is a native gate in \Qibolab (see Section \ref{subsec:native_gates}).
+The optimization is performed by adjusting its amplitude, frequency and possibly, the multiiplicative factor of the quadrature component of the DRAG, pulse parameters.
 
-The focus of this first study is the optimization of single-qubit gate fidelity, that was chosen both for its foundational importance and its relative accessibility compared to more complex operations.
-Starting from single-qubit gates thus provides a practical and effective testbed for validating optimization algorithms before extending them to more complex multi-qubit operations.
-The results presented in this chapter shows how different optimization strategies perform when applied to improving gate fidelity in realistic experimental settings.
+The focus of this first study is on improving the average Clifford gate fidelity for single qubits. 
+This choice was made considering the important role of these operations in quantum circuits and the relative simplicity of their control compared to multi-qubit gates.
+Optimizing Clifford gate fidelity provides a practical testbed for validating the effectiveness of closed-loop optimization strategies before generalizing them to more complex gates.
+The results presented in this chapter illustrate the performance of different optimization strategies applied to gate fidelity enhancement under realistic experimental conditions.
 
 \section{Randomized Benchmarking}\label{sec:RBsection}
-A strong limitation to the realization of quantum computing technologies is the loss of coherence that happens as a consequence of the application of many sequential quantum gates to to the quibts.
-A possible approach to characterize gate error is the quantum process tomography which allows the experimenter to establish the behaviour of a quantum gates. 
-The main drawback of this approach is that process tomography can be very time consumig since its time complexity scales exponentially with the number of qubits involved \cite{QPTomography} and the result is affected by state preparation and measurements (SPAM) errors.
+A strong limitation to the application of quantum computing technologies in different fields is the accumulation of errors due to the loss of coherence as more quantum gates are applied in sequence. 
+One approach to characterize gate performance is quantum process tomography, which provides a full description of the quantum process under investigation. 
+However, this method becomes impractical for systems with more than a few qubits, as its time complexity scales exponentially with the system size \cite{QPTomography}, and the results are highly sensitive to state preparation and measurement (SPAM) errors.
 
-To overcome these limitations, randomized benchmarking (RB) was introduced and is currently widely used to quantify the avarage error rate for a set of quantum gates.
+To overcome these limitations, randomized benchmarking (RB) was developed and is now widely used to estimate the average error rate for a set of quantum gates. 
+The main idea is that the cumulative error resulting from the combined action of random unitary gate sequences, which are drawn uniformly from a group of unitaries according to the Haar measure \cite{Mele_2024}, behaves like a depolarizing channel \cite{Emerson_2005_RB}. 
+This effectively removes the dependence on the specific structure of the noise and leads to a simple exponential decay model from which the average fidelity can be extracted.
 
-The main idea is that the error resulting from the combined action of random unitary gates, which are drawn from a uniform distribution according to the Haar measure \cite{Mele_2024} and applied sequentially to the qubit, averages out to effectively behave like a depolarizing channel \cite{Emerson_2005_RB}.
-This last consideration simplifies the characterization of noise because it removes dependence on specific error structures and allows fidelity to be extracted through a simple exponential decay.
+Later improvements showed that the procedure could be further simplified by restricting the unitaries to the Clifford group and removing the requirement for sequences to be strictly self-inverting \cite{knill_randomized_2008}.
+In the standard RB protocol, sequences of random Clifford gates $C_1, C_2, ..., C_m$ are followed by a final inversion gate $C_{m+1}$ which ideally returns the system to its initial state. 
+In real devices, the measured survival probability provides an estimate of the average fidelity over the set of applied Clifford gates.
 
-It was later shown that it is possible to simplify this procedure even more, by restricting the unitaries to gates in the Clifford group \footnote{unitary rotations mapping the group of Puali operators in itself} and by not requiring that the sequence is strictly self-inverting \cite{knill_randomized_2008}.
-The fundamental principle of RB is the application of sequences of randomly selected quantum gates from the Clifford group $\mathcal{C}$ followed by an inversion gate which, in absence of noise, return the system to its initial state. 
-For real systems, where noise is present, the observed survival probability provides an estimate of the avarage gate fidelity.
-
-The standard RB protocols consist of the following steps:\begin{enumerate}\label{routine:RB}
-    \item Initialize the system in ground state $\ket{0}$
-    \item For each sequence-length $m$ build a sequence of $m$ randomly drawn Clifford gates $C_1, C_2, ..., C_m$
+The standard RB procedure consists of the following steps:
+\begin{enumerate}\label{routine:RB}
+    \item Initialize the system in the ground state $\ket{0}$
+    \item For each sequence length $m$, build a sequence of $m$ random Clifford gates $C_1, C_2, ..., C_m$
     \item Determine the inverse gate $C_{m+1}=(C_m\circ...\circ C_1)^{-1}$
     \item Measure $C_{m+1}\circ C_m \circ ...\circ C_1 \ket{0}$
 \end{enumerate}
-The process must be repeated for multiple sequence of the same length and with varying length.
+This process is repeated for different sequence lengths and random sequences.
 
-In an ideal systems, without noise, we should have 
+In an ideal noiseless system, one would obtain:
 \begin{equation}\label{eq:CliffordIdeal}
     C_{m+1}\circ C_m \circ ...\circ C_1 \ket{0} = (C_m\circ...\circ C_1)^{-1}\circ(C_m\circ...\circ C_1)\ket{0} = \ket{0}.
 \end{equation}
-However in real systems Equation \ref{eq:CliffordIdeal} does not hold; instead randomization with Clifford gates behave as a depolarizing channel \ref{eq:depolarizing_channel} with depolarization probability $d$.\\
-The survival probability of the initial state $\ket{0}$ for different sequence lengths $m$ follows the exponential decay model \begin{equation}\label{eq:RB_decay}
+However, in real systems Equation \ref{eq:CliffordIdeal} does not hold; instead randomization with Clifford gates behave as a depolarizing channel \ref{eq:depolarizing_channel} with depolarization probability $d$.\\
+The observed survival probability as a function of sequence length $m$ follows the exponential decay model
+\begin{equation}\label{eq:RB_decay}
     F(m) = Ap^m +B,
 \end{equation}
-where $1-p$ is the rate of depolarization and $A$ and $B$ capture the state preparation and measurement errors.\\
-The parameter $p$ is directly related to the depolarization probability $d$ through the avarage gate fidelity $F$ which, for a depolarizing channel, is given by \begin{equation}
+where $1-p$ quantifies the depolarization rate, and $A$, $B$ capture SPAM contributions.\\
+The depolarization probability $d$ is related to the average gate fidelity $F$ for a system with $n$ qubits through
+\begin{equation}
     F = 1 - \frac{d}{2^n - 1}\label{eq:avarage_gate_fidelity},
 \end{equation}
-where $n$ is the nuber of qubits.
-%For the details of the calculations to obtain eq. \ref{eq:avarage_gate_fidelity} see \hyperref[app:AppendixC]{Appendix C}.
-The avarage error per Clifford gate $\varepsilon_{Clifford}$ can be computed as \begin{equation}
+from which the average error per Clifford gate $\varepsilon_{Clifford}$ is obtained as
+\begin{equation}
     \varepsilon_{Clifford} = 1 - F \label{eq:avg_error_Clifford_gate},
 \end{equation}
-where $F$ is the avarage gate fidelity. 
-Sobstituting in \ref{eq:avg_error_Clifford_gate} the formula for the avarage gate fidelity \ref{eq:avarage_gate_fidelity} we obtain \begin{equation}
-    \varepsilon_{Clifford} = \frac{d}{2^n -1} = \frac{1-p}{1-2^{-n}},
+leading to the final expression
+\begin{equation}
+    \varepsilon_{Clifford} = \frac{d}{2^n -1} = \frac{1-p}{1-2^{-n}}.
 \end{equation}
-which shows how the avarage error per Clifford gate is directly connected to the exponential decay rate.
+This shows how the average error per Clifford gate is directly determined by the exponential decay rate $p$ extracted from the RB protocol.
+
 
 \section{RB evaluation and optimization}
 %TODO: inserire una introduzione per questa sezione
 
-\subsection{\Qibolab native gates}
-As discussed at the beginning of the chapter, the primary goal of this work is to explore an automated calibration approach aimed at optimizing the single-gate fidelity of logical gates. 
-In particular, we focused on the calibration of the $R_X(\pi)$ gate, which corresponds to a resonant microwave pulse with a amplitude, and duration that induces a rotation of the qubit state by an angle of $\pi$ around the $x$-axis of the Bloch sphere.
-
-The decision to focus on the $R_X(\pi)$ gate dependes on its role as one of the native gates in \texttt{Qibolab}. 
-Native gates are those which can be directly implementable at the hardwarelevel, in contrast to abstract logical gates, which must be transpiled into sequences of hardware supported primitives. 
-In the case of \texttt{Qibolab}\footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X(\pi)$ gate, calibrated be performing the Rabi experiments described in Section \ref{sec:Rabi}, the measurement gate and the virtual-Z (VZ) gate which is not implemented via a physical pulse but rather through a dynamic adjustment of the phase of subsequent control pulses. 
-Additionally, the RX90 gate, corresponding to a $\frac{\pi}{2}$ rotation, is implemented by halving the amplitude of the calibrated $\pi$-pulse.
-This native gate set, consisting of physically implemented $R_X(\pi)$, $R_X(\pi/2)$, and virtual Z gates, is sufficient for universal single-qubit control.
-
-Indeed, it can be shown that any arbitrary single-qubit unitary operation $ U(\gamma, \theta, \phi) \in SU(2) $ can be expressed, up to a global phase, as a sequence of rotations around the $z$ and $x$ axes of the Bloch sphere:
-\begin{equation}
-U(\gamma, \theta, \phi) = R_Z(\gamma) R_X(\theta) R_Z(\phi).
-\end{equation}
-This decomposition ensures that all single-qubit operations can be realized using a combination of $ R_X $ and $ R_Z $ rotations. 
-
-When a qubit is driven by a resonant microwave pulse (with detuning $ \delta = 0 $), the resulting evolution is a rotation around an axis $\hat{n} = (\cos\phi, -\sin\phi, 0)$ lying in the equatorial plane of the Bloch sphere. 
-The associated unitary can be written as:
-\begin{equation}
-R_{\hat{n}(\phi)}(\theta) = \exp\left( -i \frac{\theta}{2} \left[ \cos(\phi)\sigma_x - \sin(\phi)\sigma_y \right] \right).
-\end{equation}
-
-This operation can be equivalently expressed through conjugation of an $R_X$ rotation by two $R_Z$ rotations:
-\begin{equation}
-R_{\hat{n}(\phi)}(\theta) = R_Z(-\phi) R_X(\theta) R_Z(\phi) = U(-\phi, \theta, \phi).
-\end{equation}
-From this, it follows that any arbitrary unitary $ U(\gamma, \theta, \phi) $ can be implemented as:
-\begin{equation}
-U(\gamma, \theta, \phi) = R_Z(\gamma + \phi) \cdot R_Z(-\phi) R_X(\theta) R_Z(\phi) = R_Z(\gamma + \phi) \cdot U(-\phi, \theta, \phi).
-\end{equation}
-
-Note that, in practice, this final $R_Z$ rotation does not need to be realized as a physical pulse. 
-Instead, it can be implemented virtually by adjusting the phase reference of subsequent pulses, a technique known as the virtual-Z gate\cite{McKay_2017}. \\
-The ability to compose any single-qubit gate using only $R_X$ and virtual-Z operations \cite{boykin1999universalfaulttolerantquantumcomputing} confirms the sufficiency of this native gate set for universal single-qubit control. For instance, even a restricted $ R_X $ rotation such as $ R_X(\pi) $, when combined with arbitrary-angle $ R_Z $ gates, forms a universal set due to the non-commuting nature of these operations. By alternating $ R_X(\pi) $ pulses with phase-adjustable $ R_Z $ gates, one can synthesize any $ SU(2) $ unitary up to global phase.
-
-Given these consideration, the optimization experiments described in the following sections focus on maximizing the $R_X$ gate fidelity using RB fidelity as a performance metric. 
-
-\subsection{RB evaluation parameters}
+\subsection{RB evaluation parameters}\label{sec:RB_parameters}
 In the results presented in the following, I employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
 This routine was used consistently across all tests, with the following set of parameters: I used $1000$ unique random Clifford sequences (\texttt{num\_of\_sequences = 1000}), ensuring robust statistical reliability across different realizations of gate noise. 
 Each sequence was evaluated at increasing circuit depths up to a maximum of $1000$ Clifford gates (\texttt{max\_circuit\_depth = 1000}), with the depths spaced by increments of $10$ (\texttt{delta\_clifford = 10}), resulting in benchmarking points at depths of $1, 10, 20, \ldots, 1000$. 
 For each depth and random sequence, I generated only one instance (\texttt{n\_avg = 1}), meaning that each sequence was distinct and not repeated with the same gate pattern. 
 Consequently, statistical averaging was achieved across the ensemble of random sequences at each depth rather than by repeating individual circuits. 
-To ensure high confidence in the estimation of the survival probabilities, each circuit was executed with $2000$ measurement shots. %TODO: verify and check
 \footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
 
 \subsection{Parametri da ottimizzare}
 %TODO: descrivere anche il fatto che in realtà questo procedimento di fine tuning non è così banale e che può decisamente influenzare i risultati (spiegare come sono inizializzati i parametri per l'ottimizzazione)
 
-The optimization procedures described in this work aim to enhance the fidelity of the $R_X(\pi)$ gate by minimizing its infidelity, as determined through RB experiments. 
+The optimization procedures described in this work aim to enhance the average fidelity of a Clifford gate by minimizing its infidelity, as determined through RB experiments. 
 The optimization is carried out over three control parameters: the amplitude and frequency of the microwave pulse and the DRAG correction parameter $\beta$, which modulates the second quadrature of the pulse shape. 
-This closed-loop optimization approach follows structure similar to the Optimal Randomized Benchmarking for Immediate Tune-up (ORBIT) protocol introduced in \cite{kelly_optimal_2014}, wherein the gate performance is iteratively improved based on benchmarking results.
+This closed-loop optimization approach follows a structure similar to the Optimal Randomized Benchmarking for Immediate Tune-up (ORBIT) protocol introduced in \cite{kelly_optimal_2014}, wherein the gate performance is iteratively improved based on benchmarking results.
 
 Prior to the application of the optimization algorithm, a fine-tuning phase is performed to obtain reliable starting values for each parameter. 
-This phase involves a sequence of calibration routines implemented within the \Qibocal\ framework.
+This phase involves a sequence of calibration routines implemented within the \Qibocal framework.
 The qubit frequency is first refined using a Ramsey experiment (see Section \ref{subsec:Ramsey}), subsequently a flipping sequence (see Section \ref{subsec:Flipping}) is used to adjust the microwave pulse amplitude to ensure that the applied drive results in a precise $\pi$-rotation.
 Finally, the optimal value of the DRAG parameter $\beta$ is estimated through a dedicated DRAG calibration routine (see Section \ref{sec:DRAG}).
 After each of these routines, the platform configuration is updated accordingly in the \tt{platform.json} file, which stores the relevant parameters for the experimental setup 
 \footnote{In \Qibolab the \tt{qibolab.Platform} object holds all the information required to execute programs in a real QPU. It is comprised by different objects that contain information about the native gates and the lab's instrumentation. The QPU parameters can be saved in (and loaded from) the \tt{parameters.json} file.}.
 
 These calibrated values are then used to initialize the optimization algorithm, as illustrated in the code reported in Listing \ref{snippet:params_init}.
-%TODO: nel codice inserire delle linee che gestiscano il possibile fallimento della procedura di fine tuning e impediscano di partire con la procedura di ottimizzazione se il fine tuning non è andato a buon fine.
-%diciamo che lo inserisco dopo che scopro che effettivamente questo fine tuning potrebbe andare male.
 
 \begin{lstlisting}[language=Python, caption={Code to set up the RX gate optimization experiment.}, label={snippet:params_init}]
     
@@ -189,8 +157,10 @@ In a subsequent phase of this study, a comparative analysis was performed by rep
 
 \subsection{Nelder-Mead}
 The initial optimization attempts were carried out using standard algorithms available in the \texttt{SciPy} library \cite{SciPy-NMeth}.
-The first gradient-free optimization method to be tested was Nelder-Mead since in letteratura era già stato riportato il suo utilizzo per obiettivi simili \cite{kelly_optimal_2014}.
+Come primo metodo di ottimizzazione è stato utilizzato un metodo che fosse gradient-free in modo tale che fosse meno sensibile al rumore delle misure. 
+Nello specifico siamo partiti da Nelder-Mead il cui utilizzo per l'ottimizzazione della fidelity dell'RB era già riportata in letteratura in \cite{kelly_optimal_2014}.
 
+\subsubsection{Algorithm information}
 The Nelder-Mead optimization method, originally introduced by Nelder and Mead in 1965 \cite{NelderMeads}, is a widely used numerical optimization technique for unconstrained problems in multidimensional spaces. \\
 This derivative-free method is operates using simplex, which is a polytope of $n+1$ vertices in a $n$-dimensional space.
 The algorithm iteratively updates the simplex by replacing its worst-performing vertex with a new candidate point, thereby guiding the search towards an optimal solution. 
@@ -219,13 +189,66 @@ When the cycle stops the point of the simplex associated to the lower function v
 The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
 
 \subsection{Results}
-In the following I present the results obtained provando ad effettuare l'ottimizzaione con l'algoritmo di Nelder-Meads
+In all applications of the Nelder-Mead optimization algorithm presented in this work, a maximum number of function evaluations was imposed to prevent excessively long experimental runtimes. 
+The primary limitation arises from the cost function itself, which corresponds to the average gate fidelity estimated via RB. 
+By using the parameters reported in Section \ref{sec:RB_parameters}, each RB sequence evaluation requires a minimum of 20 seconds, subsequently the evaluation of the cost function is particularly resource-intensive in terms of computation time.
+To mitigate these constraints, both a cap on the total number of cost function evaluations and a maximum number of optimization steps were defined. 
+It is important to note that each iteration of the NM algorithm typically involves the evaluation of multiple points in parameter space: at least four in the case of optimization over three parameters, and at least three when optimizing over two parameters (i.e., in a two-dimensional space).
 
+In the first run of the algorithm, the maximum number of iterations was limited at 40 such that no more than 120 cost function evaluations were performed.
+dditionally, a convergence tolerance of $1\cdot10^{-4}$ was set (\texttt{tol=1e-4} \footnote{In \texttt{scipy.optimize.minimize}, this parameter sets both the tolerance on the optimization variables, referred to as \texttt{xtol}, and the tolerance on the cost function value (\texttt{ftol}).}), applying stopping criteria to both parameter updates and cost function changes.
+
+The results of this initial optimization attempt are shown in Figure \ref{fig:NM_plots}. As illustrated in Figure \ref{NM_true_fig:fidelity}, a clear improvement in gate fidelity was achieved, increasing from an initial value of $99.02\%$ to a final value of $99.71\%$.
+Despite this apparent improvement, the optimizer did not converge within the specified tolerance. After forty steps, the stopping criterion was not satisfied, and the optimization was formally marked as unsuccessful. 
+Nevertheless, the progression of the fidelity suggests a stable improvement trend, indicating that the algorithm was moving toward a local optimum even if convergence, as defined by the stopping conditions, was not strictly achieved.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_fid.png}
+        \caption{Plot of the average Clifford gate fidelity as a function of the function evaluations.}
+        \label{NM_true_fig:fidelity}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_frequency.png}
+        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \label{NM_true_fig:frequency}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_amplitude.png}
+        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \label{NM_true_fig:amplitude}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_beta.png}
+        \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
+        \label{NM_true_fig:beta}
+    \end{subfigure}
+
+    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step.}
+    \label{fig:NM_plots}
+\end{figure}
+
+In Figure \ref{NM_true_fig:fidelity}, the evolution of the fidelity during the optimization is shown. 
+The corresponding values of the parameters being optimized are reported in Figures \ref{NM_true_fig:frequency}, \ref{NM_true_fig:amplitude}, and \ref{NM_true_fig:beta}. 
+From these plots, it is again evident that the optimization is converging (possibly to a local minimum) as the parameters stabilize around specific values: \texttt{amplitude} $= 0.04$, \texttt{frequency} $= 4.957$ GHz, and \texttt{beta} $= -1.54$.
+
+However, a possible limitation to the performance of this optimization approach may lie in the absence of an explicitly defined initial simplex. 
+Setting only the initial parameter values, without specifying the full simplex, can lead the algorithm to explore the parameter space inefficiently. 
+For this reason, further runs of the same method were carried out, this time also initializing the simplex explicitly.
+
+\begin{comment}
 \begin{tabular}{lcccccc}
     \textbf{Method} & \textbf{Success} & \textbf{Status} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Duration}\\
     \textbf{Nelder-Mead} & False & 2 & 0.002732 & 40 & 93 & No initial symplex\\
     \textbf{Nelder-Mead}
 \end{tabular}
+\end{comment}
 
 \subsection{SLSQP}
 Per valutare eventuali miglioramenti nella performance abbiamo provato ad utilizzare un algoritmo che fosse gradient-based. 
@@ -352,6 +375,7 @@ Furthermore, we observed that convergence is not always guaranteed: in some case
 In summary, although the method shows that automated gate fidelity optimization is possible, the current implementation does not meet the reliability and efficiency requirements needed for scheduled, hardware-level recalibration. 
 Improvements could focus on accelerating cost function evaluation or designing more robust optimization strategies with stronger convergence guarantees.
 
+\begin{comment}
 \begin{tabular}{lccccc}
     \textbf{Method} & \textbf{Highest Fidelity} & \textbf{Amplitude [a.u.]} & \textbf{Frequency [GHz]} & \textbf{$\beta$} \\
 
@@ -385,3 +409,4 @@ D1\_SLSQP\_post\_ft\_true & 0.02172 & 0.00482 & 13 & 0.04058 & 4.95822 & -0.0011
     \caption{}
     \label{tab:cal_results}
 \end{table}
+\end{comment}
