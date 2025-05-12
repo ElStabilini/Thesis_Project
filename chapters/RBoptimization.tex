@@ -153,7 +153,7 @@ In a subsequent phase of this study, a comparative analysis was performed by rep
 
 %TODO: try to run at least once the NM from not-fine tuned
 
-\section{Scipy optimization methods}\label{Sec:OptimizationMethods}
+\section{SciPy optimization methods}\label{Sec:OptimizationMethods}
 
 \subsection{Nelder-Mead}
 The initial optimization attempts were carried out using standard algorithms available in the \texttt{SciPy} library \cite{SciPy-NMeth}.
@@ -166,14 +166,14 @@ This derivative-free method is operates using simplex, which is a polytope of $n
 The algorithm iteratively updates the simplex by replacing its worst-performing vertex with a new candidate point, thereby guiding the search towards an optimal solution. 
 If the goal is to minimize a given function $f(\mathbf{x})$ where $\mathbf{x} \in \mathbb{R}^n$ the algorithms proceeds with the following steps:\begin{enumerate}
     \item If not otherwise initialized, $n+1$ points are sampled for building the initial symplex
-    \item \tt{Order} the test points according to their values at vertices: $f(\mathbf{x}_1) \leq f(\mathbf{x}_2) \leq \dots \leq f(\mathbf{x}_{n+1})$ and check whether the algorithm should terminate.
-    \item \tt{Calculate} $\mathbf{x}_0$, the centroid of all points except $\mathbf{x}_{n+1}$.
-    \item \tt{Reflection}: Compute the reflected point $\mathbf{x}_r = \mathbf{x}_0 + \alpha(\mathbf{x}_0 - \mathbf{x}_{n+1})$ with $\alpha > 0$. 
+    \item \textit{Order} the test points according to their values at vertices: $f(\mathbf{x}_1) \leq f(\mathbf{x}_2) \leq \dots \leq f(\mathbf{x}_{n+1})$ and check whether the algorithm should terminate.
+    \item \textit{Calculate} $\mathbf{x}_0$, the centroid of all points except $\mathbf{x}_{n+1}$.
+    \item \textit{Reflection}: Compute the reflected point $\mathbf{x}_r = \mathbf{x}_0 + \alpha(\mathbf{x}_0 - \mathbf{x}_{n+1})$ with $\alpha > 0$. 
             If $\mathbf{x}_r$ satisfies $f(\mathbf{x}_1) \leq f(\mathbf{x}_r) < f(\mathbf{x}_n)$, then a new simplex is obtained by replacing the worst-performing point $\mathbf{x}_{n+1}$ with $\mathbf{x}_r$ and then go to step 1.
-    \item \tt{Expansion}: If $\mathbf{x_r}$ is the current best point, meaning that $f(\mathbf{x}_r) < f(\mathbf{x}_1)$, then the expanded point is computed: $\mathbf{x}_e = \mathbf{x}_0 + \gamma(\mathbf{x}_r-\mathbf{x}_0)$ with $\gamma>1$.
+    \item \textit{Expansion}: If $\mathbf{x_r}$ is the current best point, meaning that $f(\mathbf{x}_r) < f(\mathbf{x}_1)$, then the expanded point is computed: $\mathbf{x}_e = \mathbf{x}_0 + \gamma(\mathbf{x}_r-\mathbf{x}_0)$ with $\gamma>1$.
            If $\mathbf{x}_e$ satisfies $f(\mathbf{x}_e) < f(\mathbf{x}_r)$, then a new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with the expanded point $\mathbf{x}_e$ and then go to step 1.\\
             If instead $f(\mathbf{x}_e) \geq f(\mathbf{x}_r)$, the new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with $\mathbf{x}_r$, and then go to step 1.
-    \item \tt{Contraction}: In this case is certain that $f(\mathbf{x}_r) \geq f(\mathbf{x}_n)$ then:\begin{itemize}
+    \item \textit{Contraction}: In this case is certain that $f(\mathbf{x}_r) \geq f(\mathbf{x}_n)$ then:\begin{itemize}
         \item If $f(\mathbf{x}_r) < f(\mathbf{x}_{n+1})$: compute the contracted point $\mathbf{x}_c=\mathbf{x}_0 +\rho(\mathbf{x}_{r}-\mathbf{x}_0)$ with $0<\rho \leq 0.5$.
                 If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{r})$, then a new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with  $\mathbf{x}_c$ and go to step 1.\\
                 Else go to step 6.
@@ -181,21 +181,21 @@ If the goal is to minimize a given function $f(\mathbf{x})$ where $\mathbf{x} \i
                 If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{n+1})$, the a new simplex is constructed with $\mathbf{x}_c$ and go to step 1.\\
                 Else go to step 6.
     \end{itemize}
-    \item \tt{Shrinkage}: Replace all points except the best, $\mathbf{x}_1$, with $\mathbf{x}_i = \sigma(\mathbf{x}_i - \mathbf{x}_1), 0<\sigma \leq 0.5$  
+    \item \textit{Shrinkage}: Replace all points except the best, $\mathbf{x}_1$, with $\mathbf{x}_i = \sigma(\mathbf{x}_i - \mathbf{x}_1), 0<\sigma \leq 0.5$  
 \end{enumerate}
 The algorithm terminates when the standard deviation of the function values of the current simplex fall below a user-initialized tolerance. 
 When the cycle stops the point of the simplex associated to the lower function value is returned as proposed optimum
 
-The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{scipy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
+The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{SciPy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
 
-\subsection{Results}
+\subsubsection{Results}
 In all applications of the Nelder-Mead optimization algorithm presented in this work, a maximum number of function evaluations was imposed to prevent excessively long experimental runtimes. 
 The primary limitation arises from the cost function itself, which corresponds to the average gate fidelity estimated via RB. 
 By using the parameters reported in Section \ref{sec:RB_parameters}, each RB sequence evaluation requires a minimum of 20 seconds, subsequently the evaluation of the cost function is particularly resource-intensive in terms of computation time.
 To mitigate these constraints, both a cap on the total number of cost function evaluations and a maximum number of optimization steps were defined. 
 It is important to note that each iteration of the NM algorithm typically involves the evaluation of multiple points in parameter space: at least four in the case of optimization over three parameters, and at least three when optimizing over two parameters (i.e., in a two-dimensional space).
 
-In the first run of the algorithm, the maximum number of iterations was limited at 40 such that no more than 120 cost function evaluations were performed.
+In the first run of the algorithm, the maximum number of iterations was limited at 40 such that no more than 160 cost function evaluations were performed.
 dditionally, a convergence tolerance of $1\cdot10^{-4}$ was set (\texttt{tol=1e-4} \footnote{In \texttt{scipy.optimize.minimize}, this parameter sets both the tolerance on the optimization variables, referred to as \texttt{xtol}, and the tolerance on the cost function value (\texttt{ftol}).}), applying stopping criteria to both parameter updates and cost function changes.
 
 The results of this initial optimization attempt are shown in Figure \ref{fig:NM_plots}. As illustrated in Figure \ref{NM_true_fig:fidelity}, a clear improvement in gate fidelity was achieved, increasing from an initial value of $99.02\%$ to a final value of $99.71\%$.
@@ -211,7 +211,7 @@ Nevertheless, the progression of the fidelity suggests a stable improvement tren
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_frequency.png}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/frequency.png}
         \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
         \label{NM_true_fig:frequency}
     \end{subfigure}
@@ -219,13 +219,13 @@ Nevertheless, the progression of the fidelity suggests a stable improvement tren
     \vspace{0.5cm}
 
     \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_amplitude.png}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/amplitude.png}
         \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
         \label{NM_true_fig:amplitude}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_beta.png}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/beta.png}
         \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
         \label{NM_true_fig:beta}
     \end{subfigure}
@@ -238,48 +238,180 @@ In Figure \ref{NM_true_fig:fidelity}, the evolution of the fidelity during the o
 The corresponding values of the parameters being optimized are reported in Figures \ref{NM_true_fig:frequency}, \ref{NM_true_fig:amplitude}, and \ref{NM_true_fig:beta}. 
 From these plots, it is again evident that the optimization is converging (possibly to a local minimum) as the parameters stabilize around specific values: \texttt{amplitude} $= 0.04$, \texttt{frequency} $= 4.957$ GHz, and \texttt{beta} $= -1.54$.
 
-However, a possible limitation to the performance of this optimization approach may lie in the absence of an explicitly defined initial simplex. 
+However, a possible limitation to the performance of this optimization approach may lie in the absence of an explicitly defined initial simplex.
 Setting only the initial parameter values, without specifying the full simplex, can lead the algorithm to explore the parameter space inefficiently. 
 For this reason, further runs of the same method were carried out, this time also initializing the simplex explicitly.
 
-\begin{comment}
-\begin{tabular}{lcccccc}
-    \textbf{Method} & \textbf{Success} & \textbf{Status} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Duration}\\
-    \textbf{Nelder-Mead} & False & 2 & 0.002732 & 40 & 93 & No initial symplex\\
-    \textbf{Nelder-Mead}
-\end{tabular}
-\end{comment}
+Furthermore, considering that the allowed variation range for the $\beta$ parameter was restricted to only $\pm0.25$ around the value determined by the \tt{drag\_tuning} routine, I explored the possibility of improving the efficiency of the optimization by reducing the number of free parameters. 
+Specifically, additional optimization runs were performed in which only the amplitude and frequency of the $R_X$ pulse were optimized, while $\beta$ was kept fixed.
 
+This choice was motivated by the working assumption that, at least in this initial phase, leakage errors were not the dominant source of infidelity. 
+Since the DRAG correction primarily addresses leakage to higher energy levels, it was hypothesized that optimizing $\beta$ would have a limited effect on the overall gate fidelity compared to the more significant impact of accurately calibrating the native gate's amplitude and frequency. 
+As such, the focus was placed on parameters expected to yield the greatest improvements in fidelity while maintaining a limited run time.
+
+Some optimization runs were performed with this nrevised configuration.
+The results of these runs are reported in the following sections and are labeled as \tt{init\_symp\_1}, \tt{init\_symp\_2}, and \tt{init\_symp\_3}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/fidelity.png}
+    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_symp\_1}.}
+    \label{fig:20241110_211211:fidelity}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/amplitude.png}
+        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:20241110_211211:amplitude}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/frequency.png}
+        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:20241110_211211:frequency}
+    \end{subfigure}
+    \caption{Plots of the optimization parameters as a function of the number of optimization step for the first round optimization - \tt{init\_symp\_2}.}
+    \label{fig:20241110_211211:parameters}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/fidelity.png}
+    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the second round optimization - \tt{init\_symp\_2}.}
+    \label{fig:20241113_181711:fidelity}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Amplitude.png}
+        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:20241113_181711:amplitude}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Frequency.png}
+        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:20241113_181711:frequency}
+    \end{subfigure}
+    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_symp\_2}.}
+    \label{fig:20241113_181711:parameters}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/fidelity.png}
+    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_symp\_3}.}
+    \label{fig:20241113_200745:fidelity}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Amplitude.png}
+        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:20241113_200745:amplitude}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Frequency.png}
+        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:20241113_200745:frequency}
+    \end{subfigure}
+    \caption{Plots of the optimization parameters as a function of the number of optimization step for the first round optimization - \tt{init\_symp\_3}.}
+    \label{fig:20241113_200745:parameters}
+\end{figure}
+
+
+Un riassunto dei risultati ottenuti utilizzando l'algoritmo di Nelder-Mead nelle diverse configurazioni è riportato nelle prime righe di Table \ref{tab:scipy_opt}.
+    
 \subsection{SLSQP}
+\subsubsection{Algorithm description}
 Per valutare eventuali miglioramenti nella performance abbiamo provato ad utilizzare un algoritmo che fosse gradient-based. 
-Nello specifico ho provato ad utilizzare l'algoritmo di Sequential Least Squares Programming (SLSQP) nella versione implementata all'interno della libreria scipy.
-Method SLSQP uses Sequential Least SQuares Programming to minimize a function of several variables with any combination of bounds, equality and inequality constraints. 
-The method wraps the SLSQP Optimization subroutine originally implemented by Dieter Kraft \cite{kraft1988slsqp}.  
-Note that the wrapper handles infinite values in bounds by converting them into large floating values.
+Nello specifico ho provato ad utilizzare l'algoritmo di Sequential Least Squares Programming (SLSQP) nella versione implementata all'interno della libreria \tt{SciPy}.
 
-Sequential Least Squares Programming (SLSQP) is a numerical algorithm designed for solving constrained nonlinear optimization problems of the general form:
+The Sequential Least Squares Programming (SLSQP) method, originally developed by Dieter Kraft in 1988 \cite{kraft1988slsqp}, is a gradient-based algorithm for solving constrained nonlinear optimization problems.
+The algorithm solves a nonlinear constrained problem of the form:
 \begin{align*}
 & \min_{x \in \mathbb{R}^n} \quad && f(x) \\
 & \text{subject to} \quad && c_i(x) = 0, \quad i = 1, \dots, m \\
 & && d_j(x) \geq 0, \quad j = 1, \dots, p
+& && \mathbf{x}^{(L)} \leq \mathbf{x} \leq \mathbf{x}^{(U)}
 \end{align*}
 
-It belongs to the family of Sequential Quadratic Programming (SQP) methods, which iteratively solve a sequence of quadratic programming subproblems that approximate the original nonlinear problem. 
-At each iteration, the nonlinear objective function is replaced by a quadratic model, and the constraints are linearized around the current iterate. 
-The resulting subproblem is a quadratic program whose solution provides a direction for updating the optimization variables.
+It belongs to the class of Sequential Quadratic Programming (SQP) methods, which iteratively solve a sequence of quadratic programming subproblems that locally approximate the original nonlinear problem. 
+\begin{enumerate}
+    \item \textit{Linearization}: At iteration $k$, the nonlinear constraints are approximated by their first-order Taylor expansion around the current point $\mathbf{x}_k$.
+    This transforms the nonlinear constraints into a linear system locally.
+    \item \textit{Quadratic subproblem construction}: The objective is approximated by a quadratic model of the Lagrangian function: \begin{equation}
+        \mathcal{L}(\mathbf{x}, \lambda, \mu) = f(\mathbf{x}) - \sum_{i=1}^{m} \lambda_i c_i(\mathbf{x}) - \sum_{j=1}^{p} \mu_j d_j(\mathbf{x}),
+    \end{equation}
+    where $\lambda_i$ and $\mu_j$ are Lagrange multipliers. 
+    The Hessian of the Lagrangian is not computed explicitly, but approximated using a BFGS-like quasi-Newton update.
+    \item \textit{QP Subproblem solution}: A quadratic program is solved to determine a search direction $\mathbf{p}_k$, subject to the linearized constraints and bounds. 
+    The subproblem minimizes the quadratic model subject to these constraints.
+    \item \textit{Constrained line search}: A line search is performed along $\mathbf{p}_k$ using a merit function that balances reduction in the objective with feasibility of constraints. 
+    This helps ensure global convergence.
+    \item \textit{Update}: The iterate is updated via $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k$, where $\alpha_k$ is the step size determined by the line search. 
+    The quasi-Newton approximation of the Hessian is also updated.
+    \item \textit{Termination}: The algorithm terminates when the norm of the projected gradient and constraint violations fall below a specified tolerance.
+\end{enumerate}
 
-The quadratic model is typically derived from the Lagrangian function associated with the problem,
-\begin{equation}
-\mathcal{L}(x, \lambda, \mu) = f(x) - \sum_{i} \lambda_i c_i(x) - \sum_{j} \mu_j d_j(x),
-\end{equation}
-where $ \lambda $ and $ \mu $ are the Lagrange multipliers associated with the equality and inequality constraints, respectively. 
-The Hessian of the Lagrangian is not computed explicitly; instead, SLSQP employs a quasi-Newton approximation, updated using a BFGS-like scheme. 
-Although it does not implement the BFGS algorithm in the strict sense, the use of such updates places SLSQP within the broader class of quasi-Newton SQP algorithms.
+If analytic derivatives for the objective or constraints are not provided, they are approximated using forward finite differences. 
+In such cases, each gradient estimation requires $n+1$ function evaluations per iteration, where $n$ is the number of variables.
+The values of internal parameters, such as merit function balancing terms and quasi-Newton updates, are managed internally and are not user-configurable through \tt{SciPy}.
 
-A constrained line search is performed along the computed search direction to ensure sufficient decrease in a merit function that balances objective reduction and constraint satisfaction. 
-This ensures both global convergence and rapid local convergence near a solution. 
-The process continues until convergence criteria, typically based on the projected gradient norm and constraint residuals, are satisfied.
+\subsubsection{Results}
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/fidelity.png}
+        \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps.}
+        \label{NM_true_fig:fidelity}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/frequency.png}
+        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \label{NM_true_fig:frequency}
+    \end{subfigure}
 
+    \vspace{0.5cm}
+
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/amplitude.png}
+        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \label{NM_true_fig:amplitude}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/beta.png}
+        \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
+        \label{NM_true_fig:beta}
+    \end{subfigure}
+
+    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step for the SLSQP optimization method.}
+    \label{fig:NM_plots}
+\end{figure}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcccccc}
+        \toprule
+        \textbf{Method} & \textbf{Success} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Function Evaluations} & \textbf{Duration [s]}\\
+        \hline
+        \textbf{Nelder-Mead} & False & 0.002732 & 40 & 93 & 2892 \\
+        \textbf{init\_symplex\_1} & False & & 40 & 99 & 3096\\
+        \textbf{init\_symplex\_2} & False & & 40 & 100 & 3128\\
+        \textbf{init\_symplex\_3} & False & & 40 & 106 & 3190\\
+        \textbf{SLSQP} & True & & 15 & 180 & 3873\\
+        \bottomrule
+    \end{tabular}
+    \caption{}
+    \label{tab:scipy_opt}
+\end{table}
 
 
 \section{CMA-ES}
