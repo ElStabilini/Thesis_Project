@@ -166,14 +166,14 @@ This derivative-free method is operates using simplex, which is a polytope of $n
 The algorithm iteratively updates the simplex by replacing its worst-performing vertex with a new candidate point, thereby guiding the search towards an optimal solution. 
 If the goal is to minimize a given function $f(\mathbf{x})$ where $\mathbf{x} \in \mathbb{R}^n$ the algorithms proceeds with the following steps:\begin{enumerate}
     \item If not otherwise initialized, $n+1$ points are sampled for building the initial symplex
-    \item \textit{Order} the test points according to their values at vertices: $f(\mathbf{x}_1) \leq f(\mathbf{x}_2) \leq \dots \leq f(\mathbf{x}_{n+1})$ and check whether the algorithm should terminate.
-    \item \textit{Calculate} $\mathbf{x}_0$, the centroid of all points except $\mathbf{x}_{n+1}$.
-    \item \textit{Reflection}: Compute the reflected point $\mathbf{x}_r = \mathbf{x}_0 + \alpha(\mathbf{x}_0 - \mathbf{x}_{n+1})$ with $\alpha > 0$. 
+    \item Order the test points according to their values at vertices: $f(\mathbf{x}_1) \leq f(\mathbf{x}_2) \leq \dots \leq f(\mathbf{x}_{n+1})$ and check whether the algorithm should terminate.
+    \item Calculate $\mathbf{x}_0$, the centroid of all points except $\mathbf{x}_{n+1}$.
+    \item Reflection: Compute the reflected point $\mathbf{x}_r = \mathbf{x}_0 + \alpha(\mathbf{x}_0 - \mathbf{x}_{n+1})$ with $\alpha > 0$. 
             If $\mathbf{x}_r$ satisfies $f(\mathbf{x}_1) \leq f(\mathbf{x}_r) < f(\mathbf{x}_n)$, then a new simplex is obtained by replacing the worst-performing point $\mathbf{x}_{n+1}$ with $\mathbf{x}_r$ and then go to step 1.
-    \item \textit{Expansion}: If $\mathbf{x_r}$ is the current best point, meaning that $f(\mathbf{x}_r) < f(\mathbf{x}_1)$, then the expanded point is computed: $\mathbf{x}_e = \mathbf{x}_0 + \gamma(\mathbf{x}_r-\mathbf{x}_0)$ with $\gamma>1$.
+    \item Expansion: If $\mathbf{x_r}$ is the current best point, meaning that $f(\mathbf{x}_r) < f(\mathbf{x}_1)$, then the expanded point is computed: $\mathbf{x}_e = \mathbf{x}_0 + \gamma(\mathbf{x}_r-\mathbf{x}_0)$ with $\gamma>1$.
            If $\mathbf{x}_e$ satisfies $f(\mathbf{x}_e) < f(\mathbf{x}_r)$, then a new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with the expanded point $\mathbf{x}_e$ and then go to step 1.\\
             If instead $f(\mathbf{x}_e) \geq f(\mathbf{x}_r)$, the new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with $\mathbf{x}_r$, and then go to step 1.
-    \item \textit{Contraction}: In this case is certain that $f(\mathbf{x}_r) \geq f(\mathbf{x}_n)$ then:\begin{itemize}
+    \item Contraction: In this case is certain that $f(\mathbf{x}_r) \geq f(\mathbf{x}_n)$ then:\begin{itemize}
         \item If $f(\mathbf{x}_r) < f(\mathbf{x}_{n+1})$: compute the contracted point $\mathbf{x}_c=\mathbf{x}_0 +\rho(\mathbf{x}_{r}-\mathbf{x}_0)$ with $0<\rho \leq 0.5$.
                 If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{r})$, then a new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with  $\mathbf{x}_c$ and go to step 1.\\
                 Else go to step 6.
@@ -181,7 +181,7 @@ If the goal is to minimize a given function $f(\mathbf{x})$ where $\mathbf{x} \i
                 If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{n+1})$, the a new simplex is constructed with $\mathbf{x}_c$ and go to step 1.\\
                 Else go to step 6.
     \end{itemize}
-    \item \textit{Shrinkage}: Replace all points except the best, $\mathbf{x}_1$, with $\mathbf{x}_i = \sigma(\mathbf{x}_i - \mathbf{x}_1), 0<\sigma \leq 0.5$  
+    \item Shrinkage: Replace all points except the best, $\mathbf{x}_1$, with $\mathbf{x}_i = \sigma(\mathbf{x}_i - \mathbf{x}_1), 0<\sigma \leq 0.5$  
 \end{enumerate}
 The algorithm terminates when the standard deviation of the function values of the current simplex fall below a user-initialized tolerance. 
 When the cycle stops the point of the simplex associated to the lower function value is returned as proposed optimum
@@ -202,7 +202,7 @@ The results of this initial optimization attempt are shown in Figure \ref{fig:NM
 Despite this apparent improvement, the optimizer did not converge within the specified tolerance. After forty steps, the stopping criterion was not satisfied, and the optimization was formally marked as unsuccessful. 
 Nevertheless, the progression of the fidelity suggests a stable improvement trend, indicating that the algorithm was moving toward a local optimum even if convergence, as defined by the stopping conditions, was not strictly achieved.
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_fid.png}
@@ -252,14 +252,14 @@ As such, the focus was placed on parameters expected to yield the greatest impro
 Some optimization runs were performed with this nrevised configuration.
 The results of these runs are reported in the following sections and are labeled as \tt{init\_symp\_1}, \tt{init\_symp\_2}, and \tt{init\_symp\_3}.
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/fidelity.png}
     \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_symp\_1}.}
     \label{fig:20241110_211211:fidelity}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/amplitude.png}
@@ -276,14 +276,20 @@ The results of these runs are reported in the following sections and are labeled
     \label{fig:20241110_211211:parameters}
 \end{figure}
 
-\begin{figure}
+Dai plot che mostrano il risultato della prima ottimizzazione si osserva che la fidelity aumenta anche se dopo una quindicina di iterazioni si assesta attorno ad un valore di circa [inserire valore].
+Due considerazioni degni di nota sono il punto relativo al sedicesimo step per cui la fidelity diminuisce notevolmente scendo sotto la soglia del 97\% (Figure \ref{fig:20241110_211211:fidelity}) nonostante ampiezza e frequenza dell'impulso $R_X$ non varino sensibilmente rispetto agli step di ottimizzazione precedenti
+(see Figure \ref{fig:20241110_211211:parameters}). Il motivo di questo è da ricercarsi nel fatto che il fit per la stima della infidelity del RB fallisce (see Figure ).
+Questo stesso comportamente sarà evidente anche negli altri plot che mostrano il progresso dell'ottimizzazione per questo algoritmo. 
+D'altra parte una dipendenza così forte della valutazione della funzione costo dal fallimento o successo del fit dell'esponenziale della curva RB 
+
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/fidelity.png}
     \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the second round optimization - \tt{init\_symp\_2}.}
     \label{fig:20241113_181711:fidelity}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[ht!]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Amplitude.png}
@@ -300,14 +306,14 @@ The results of these runs are reported in the following sections and are labeled
     \label{fig:20241113_181711:parameters}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/fidelity.png}
     \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_symp\_3}.}
     \label{fig:20241113_200745:fidelity}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[ht!]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Amplitude.png}
@@ -324,6 +330,10 @@ The results of these runs are reported in the following sections and are labeled
     \label{fig:20241113_200745:parameters}
 \end{figure}
 
+In questo terzo e ultimo caso invece, già dal plot per la fidelity (\ref{fig:20241113_200745:fidelity}) è evidente che l'ottimizzazione non converge.
+
+Potrebbe essere interessante confrontare i risultati per i valori dei parametri ottenuti in questi diversi tentativi di ottimizzazione, bisogna però tenere conto del fatto che, ad eccezione degli ultimi due, tutti gli esperimenti were run on different days.
+Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure . Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
 
 Un riassunto dei risultati ottenuti utilizzando l'algoritmo di Nelder-Mead nelle diverse configurazioni è riportato nelle prime righe di Table \ref{tab:scipy_opt}.
     
@@ -337,26 +347,26 @@ The algorithm solves a nonlinear constrained problem of the form:
 \begin{align*}
 & \min_{x \in \mathbb{R}^n} \quad && f(x) \\
 & \text{subject to} \quad && c_i(x) = 0, \quad i = 1, \dots, m \\
-& && d_j(x) \geq 0, \quad j = 1, \dots, p
-& && \mathbf{x}^{(L)} \leq \mathbf{x} \leq \mathbf{x}^{(U)}
+& && d_j(x) \geq 0, \quad j = 1, \dots, p \\
+& && \mathbf{x}^{(L)} \leq \mathbf{x} \leq \mathbf{x}^{(U)}\\
 \end{align*}
 
 It belongs to the class of Sequential Quadratic Programming (SQP) methods, which iteratively solve a sequence of quadratic programming subproblems that locally approximate the original nonlinear problem. 
 \begin{enumerate}
-    \item \textit{Linearization}: At iteration $k$, the nonlinear constraints are approximated by their first-order Taylor expansion around the current point $\mathbf{x}_k$.
+    \item Linearization: At iteration $k$, the nonlinear constraints are approximated by their first-order Taylor expansion around the current point $\mathbf{x}_k$.
     This transforms the nonlinear constraints into a linear system locally.
-    \item \textit{Quadratic subproblem construction}: The objective is approximated by a quadratic model of the Lagrangian function: \begin{equation}
+    \item Quadratic subproblem construction: The objective is approximated by a quadratic model of the Lagrangian function: \begin{equation}
         \mathcal{L}(\mathbf{x}, \lambda, \mu) = f(\mathbf{x}) - \sum_{i=1}^{m} \lambda_i c_i(\mathbf{x}) - \sum_{j=1}^{p} \mu_j d_j(\mathbf{x}),
     \end{equation}
     where $\lambda_i$ and $\mu_j$ are Lagrange multipliers. 
     The Hessian of the Lagrangian is not computed explicitly, but approximated using a BFGS-like quasi-Newton update.
-    \item \textit{QP Subproblem solution}: A quadratic program is solved to determine a search direction $\mathbf{p}_k$, subject to the linearized constraints and bounds. 
+    \item QP Subproblem solution: A quadratic program is solved to determine a search direction $\mathbf{p}_k$, subject to the linearized constraints and bounds. 
     The subproblem minimizes the quadratic model subject to these constraints.
-    \item \textit{Constrained line search}: A line search is performed along $\mathbf{p}_k$ using a merit function that balances reduction in the objective with feasibility of constraints. 
+    \item Constrained line search: A line search is performed along $\mathbf{p}_k$ using a merit function that balances reduction in the objective with feasibility of constraints. 
     This helps ensure global convergence.
-    \item \textit{Update}: The iterate is updated via $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k$, where $\alpha_k$ is the step size determined by the line search. 
+    \item Update: The iterate is updated via $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k$, where $\alpha_k$ is the step size determined by the line search. 
     The quasi-Newton approximation of the Hessian is also updated.
-    \item \textit{Termination}: The algorithm terminates when the norm of the projected gradient and constraint violations fall below a specified tolerance.
+    \item Termination: The algorithm terminates when the norm of the projected gradient and constraint violations fall below a specified tolerance.
 \end{enumerate}
 
 If analytic derivatives for the objective or constraints are not provided, they are approximated using forward finite differences. 
@@ -364,52 +374,72 @@ In such cases, each gradient estimation requires $n+1$ function evaluations per 
 The values of internal parameters, such as merit function balancing terms and quasi-Newton updates, are managed internally and are not user-configurable through \tt{SciPy}.
 
 \subsubsection{Results}
-\begin{figure}[htbp]
+As shown in Figure \ref{fig:SLSQP:fidelity}, the optimization procedure appears to converge, a result that is also confirmed by the object returned by the \texttt{SciPy} optimizer.
+This indicates that the algorithm successfully reached a local minimum within the specified tolerance of $1\cdot10^{-4}$ in less the 15 optimization steps. On the other hand, it is important to consider that SLSQP is a gradient-based method and, as such, may lack robustness in the presence of a noisy or irregular cost landscape.
+This makes it susceptible to becoming trapped in local minima, especially if the optimization is not ideal.
+
+For this run, the same constraints and parameter bounds used in the Nelder-Mead optimization were applied: a maximum of 40 optimization steps and parameter ranges setted by the initial fine-tuning routine carried out before to the fidelity optimization.
+
+\begin{figure}[h]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/fidelity.png}
         \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps.}
-        \label{NM_true_fig:fidelity}
+        \label{fig:SLSQP:fidelity}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/frequency.png}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/frequency.png}
         \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
-        \label{NM_true_fig:frequency}
+        \label{fig:SLSQP:frequency}
     \end{subfigure}
 
     \vspace{0.5cm}
 
     \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/amplitude.png}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/amplitude.png}
         \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
-        \label{NM_true_fig:amplitude}
+        \label{fig:SLSQP:amplitude}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/beta.png}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/beta.png}
         \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
-        \label{NM_true_fig:beta}
+        \label{fig:SLSQP:beta}
     \end{subfigure}
 
     \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step for the SLSQP optimization method.}
-    \label{fig:NM_plots}
+    \label{fig:SLSQP_plots}
 \end{figure}
+
+In this case, an interesting observation is that, as expected, a sharp drop in fidelity corresponds to a frequency value that deviates significantly from the optimal one for the $R_X$ gate.
+This behavior is consistent with the assumption that frequency and amplitude are the two dominant parameters in determining the quality of the $R_X$ gate and as a consequence  the average fidelity of Clifford gates.
+
+However, as can be seen in Figure \ref{fig:SLSQP:fidelity}, the convergence behavior is not particularly stable: the fidelity exhibits large step-to-step fluctuations. 
+As mentioned previously, this indicates that the SLSQP method is not robust enough to be reliably used as a systematic approach for optimizing average Clifford gate fidelity.
+In particular, it becomes difficult to define a minimum number of steps beyond which a certain fidelity level can be guaranteed.
+
+Furthermore, from a computational standpoint, this method is relatively inefficient. 
+Since the gradient must be estimated numerically, each step involves multiple evaluations of the cost function, significantly increasing the total number of function calls required (see Table \ref{tab:scipy_opt}).
 
 \begin{table}[h]
     \centering
     \begin{tabular}{lcccccc}
         \toprule
         \textbf{Method} & \textbf{Success} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Function Evaluations} & \textbf{Duration [s]}\\
-        \hline
+        \midrule
         \textbf{Nelder-Mead} & False & 0.002732 & 40 & 93 & 2892 \\
-        \textbf{init\_symplex\_1} & False & & 40 & 99 & 3096\\
-        \textbf{init\_symplex\_2} & False & & 40 & 100 & 3128\\
-        \textbf{init\_symplex\_3} & False & & 40 & 106 & 3190\\
-        \textbf{SLSQP} & True & & 15 & 180 & 3873\\
+        \textbf{init\_symplex\_1} & False &  0.004593 & 40 & 99 & 3096\\
+        \textbf{init\_symplex\_2} & False & 0.004297 & 40 & 100 & 3128\\
+        \textbf{init\_symplex\_3} & False & 0.004507 & 40 & 106 & 3190\\
+        \textbf{SLSQP} & True & 0.004861 & 15 & 180 & 3873\\
         \bottomrule
     \end{tabular}
-    \caption{}
+    \caption{This table provides a summary of the results obtained using different optimization methods available in \texttt{SciPy}.\\ 
+    The \textit{Success} column indicates whether the algorithm converged successfully. 
+    A value of True denotes that convergence was achieved within the specified tolerance of $1\cdot10^{-4}$ and before reaching the maximum number of iterations; otherwise, the value is False.
+    The reported value of the objective function corresponds to the average Clifford gate infidelity obtained via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
+    The \textit{Duration} column refers to the total runtime of the script, including the initial fine-tuning stage preceding the optimization.\\}
     \label{tab:scipy_opt}
 \end{table}
 
@@ -447,50 +477,90 @@ The CMA-ES algorithm follows the following steps:\begin{enumerate}
     \end{equation} where $c_\sigma$ is the learning rate for step-size adaptation, $d_\sigma$ is a damping factor $\| \mathbf{p}_{\sigma} \|$ is the length of the evolution path and $E \| \mathcal{N}(0, I) \|$ is the expected length of a standard normally distributed random vector.
 \end{enumerate}
 
-Nel seguito, a meno che non sia diversamente specificato, i parametri sono stati inizializzati ai valori di default della libereria \tt{CMA-ES}
 \subsection{Results}
 
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/fidelity.png}
+        \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps.}
+        \label{fig:CMA:fidelity}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/CMA_frequency.png}
+        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:CMA:frequency}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/CMA_amplitude.png}
+        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \label{fig:CMA:amplitude}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/beta_CMA.png}
+        \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
+        \label{fig:CMA:beta}
+    \end{subfigure}
+
+    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step for the CMA optimization method.}
+    \label{fig:CMA_plots}
+\end{figure}
 
 \section{Optuna}
 
 \subsection{Algorithm description}
 
-In addition to the optimization methods mentioned earlier, the Tree-Structured Parzen Estimator (TPE) method was employed, using its implementation available in the \texttt{optuna} library \cite{optuna_2019}.
+The Tree-Structured Parzen Estimator (TPE) algorithm, as implemented in the \tt{Optuna} optimization framework \cite{optuna_2019}, is a model-based, derivative-free optimization method. 
+\tt{Optuna} belongs to the class of Sequential Model-Based Optimization (SMBO) strategies \cite{SMBO_proceedings}, which iteratively refine a surrogate model of the objective function based on past evaluations and select new points in parameter space by balancing exploration and exploitation \cite{BayesianOptimizationReview}.
 
-Tree-Structured Parzen Estimator (TPE) is a Sequential Model-Based Optimization (SMBO) approach \cite{SMBO_proceedings}. 
-SMBO methods sequentially construct models to approximate the performance of optimization parameters based on historical measurements, and then subsequently choose new parameters values to test based on this model. \cite{BayesianOptimizationReview}
-At the heart of SMBO is the idea of building a surrogate model, which is used to predict the objective function's values for unseen parameters configurations. 
-The surrogate model is iteratively updated as new observations are made, and the optimization process balances exploration, which focuses on uncertain regions of the search space, and exploitation, which focuses on areas that are more likely to improve the objective based on past evaluations. 
-This balance ensures that the optimization process makes efficient use of resources and avoids wasting time on suboptimal regions.\\
+The TPE method differs from classical Gaussian Process-based Bayesian optimization by using non-parametric density estimation to guide the search through parameter space. 
+Instead of directly modeling the objective function $f(\mathbf{x})$, TPE models the conditional probability distribution of the parameters $\mathbf{x}$ given the value of the objective function.
 
-The TPE algorithm is a probabilistic model-based optimization method that uses non-parametric density estimation to guide the search. 
-The TPE algorithm differs from traditional Bayesian optimization approaches, such as Gaussian Process-based methods, in its modeling strategy. 
-Rather than directly approximating the objective function, TPE constructs two separate probabilistic models:
+Given a set of past observations $\{ (\mathbf{x}_i, y_i) \}_{i=1}^N$, where $ y_i = f(\mathbf{x}_i) $, the algorithm proceeds as follows:
 
-\begin{itemize}
-    \item $p(x | y < y^*)$, the likelihood of observing a parameter configuration $x$ given that the objective function value $y$ is below a chosen threshold $y^*$.
-    \item $p(x | y \geq y^*)$, the likelihood of observing $X$ for less promising function values.
-\end{itemize}
+\begin{enumerate}
+    \item Split the observations: Define a threshold value $ y^* $, typically chosen as a quantile of the observed objective values. 
+        The dataset is then split into two subsets:
+        \begin{itemize}
+            \item $\mathcal{L} = \{ \mathbf{x}_i : y_i < y^* \}$, the set of promising configurations
+            \item $\mathcal{G} = \{ \mathbf{x}_i : y_i \geq y^* \}$, the set of less promising configurations
+        \end{itemize}
+    \item Estimate densities: Construct two kernel density estimators (KDEs) to approximate the conditional densities:
+    \[
+    l(\mathbf{x}) \approx p(\mathbf{x} \mid y < y^*) \quad \text{and} \quad g(\mathbf{x}) \approx p(\mathbf{x} \mid y \geq y^*).
+    \]
+    \item Candidate sampling: Draw a number of candidate parameter configurations $\mathbf{x}$ from the distribution $l(\mathbf{x})$, which is biased toward more promising regions of the search space.
+    \item Acquisition function: For each sampled candidate $\mathbf{x}$, compute the ratio
+    \[
+    \text{EI}(\mathbf{x}) = \frac{l(\mathbf{x})}{g(\mathbf{x})},
+    \]
+    which serves as an acquisition function analogous to expected improvement. The candidate with the highest ratio is selected for evaluation.
+    \item Evaluate and update: Evaluate the objective function $ y = f(\mathbf{x}) $ at the selected configuration and append the result to the history. Return to step 1.
+\end{enumerate}
+This process continues until a stopping criterion is met, such as a maximum number of trials or convergence of the best observed value.
 
-These probability densities are estimated using non-parametric methods such as kernel density estimation (KDE). 
-New candidate points are then generated by sampling from $p(x | y < y^*)$, favoring configurations that are expected to yield lower objective values. The threshold $y^*$ is typically set as a quantile of observed values, ensuring a focus on the most promising regions of the search space.
+Differently from other TPE implementations, \tt{Optuna} supports automatic pruning designed to terminate unpromising trials early, thus reducing computational cost. 
+In common applications such as neural network training, pruning is enabled by reporting intermediate objective values via \texttt{trial.report(...)} and comparing them to statistics of previously completed trials. 
+By default, \texttt{Optuna} employs the \texttt{MedianPruner}, which terminates a trial if its intermediate value is worse than the median of completed trials at the same step.
 
-The TPE method is the default optimization strategy in \tt{Optuna}, an advantage in the optimization algorithm as implemented in optuna is the addition of an authomatic \textit{pruning} mechanism that stops  unpromising trials early, which can significantly speed up the optimization process by avoiding unnecessary computations.
-In our case, this is particularly relevant because the execution of the RB routine, which is performed at each call to the cost function, requires [insert approximate execution time]
-
-As implemented in our code, the default pruner used is the median pruner \tt{optuna.pruners.MedianPruner}. 
-This pruner works by evaluating the intermediate results of a trial and comparing them to the median of completed trials at the same step. 
-If the current trial's performance is worse than the median, it is pruned to prevent wasting computational resources on unpromising configurations. 
+In the present work, the cost function is defined as the infidelity extracted from a complete randomized benchmarking (RB) routine and the optimization problem involves a low-dimensional parameter space, comprising only three continuous parameters; given these characteristics pruning was not applied.
 
 \subsection{Results}
 
 \subsection{$\beta$ parameter impact on RB optimization}
 
-\paragraph{D1 - steps}
+\paragraph{D1 - 30 steps}
+
+\paragraph{D1 - 100 steps}
 
 \paragraph{D1 - 1000 steps}
 
-\paragraph{D2 - 1000 steps}
+\paragraph{D1 - 1000 steps}
 
 
 
@@ -504,25 +574,79 @@ The main limiting factor is the duration of the Randomized Benchmarking routine 
 Because the optimization procedure requires several evaluations of this cost function, the total execution time quickly becomes a bottleneck. 
 Furthermore, we observed that convergence is not always guaranteed: in some cases, the optimization either stalls or does not lead to meaningful improvements within the time frame or number of iterations considered acceptable for practical deployment.
 
-In summary, although the method shows that automated gate fidelity optimization is possible, the current implementation does not meet the reliability and efficiency requirements needed for scheduled, hardware-level recalibration. 
+In summary, although the tests suggests that automated gate fidelity optimization is in principle possible, the current implementation does not meet the reliability and efficiency requirements needed for scheduled, hardware-level recalibration. 
 Improvements could focus on accelerating cost function evaluation or designing more robust optimization strategies with stronger convergence guarantees.
 
+
+\begin{sidewaystable}[h]
+    \centering
+    \begin{tabular}{lccccccccccc}
+        \toprule
+        \textbf{Analysis} & \textbf{Initial} & \textbf{Best} & \textbf{Best} & \textbf{Amplitude} & \textbf{Frequency} & \textbf{$\beta$} & \textbf{Best cost} & \textbf{Initial} & \textbf{Best} & \textbf{Best fidelity} \\
+        \textbf{Name} & \textbf{cost} & \textbf{cost} & \textbf{index} & \textbf{best [a.u.]} & \textbf{ best [$\times10^9$ Hz]} & \textbf{best} & \textbf{improv. [\%]} & \textbf{fidelity} & \textbf{fidelity} & \textbf{improv[\%]} \\
+        \midrule
+        \textbf{Nelder\_Mead} & 0.00983 & 0.00269 & 19 & 0.04063 & 4.95701 & -1.53253 & 72.59 & 0.99017 & 0.99731 & 0.72 \\
+        \textbf{init\_simplex\_1} & 0.00633 & 0.00467 & 25 & 0.04069 & 4.95820 &  & 26.23 & 0.99367 & 0.99533 & 0.17 \\
+        \textbf{init\_simplex\_2} & 0.00607 & 0.00436 & 17 & 0.04131 & 4.95817 &  & 28.27 & 0.99393 & 0.99564 & 0.17 \\
+        \textbf{init\_simplex\_3} & 0.00585 & 0.00446 & 37 & 0.04058 & 4.95819 &  & 23.73 & 0.99415 & 0.99554 & 0.14 \\
+        \textbf{SLSQP} & 0.02172 & 0.00482 & 13 & 0.04058 & 4.95822 & -0.00115 & 77.79 & 0.97828 & 0.99518 & 1.73 \\
+        \textbf{CMA-ES} & 0.00728 & 0.00335 & 9 & -0.16634 & 4.95822 & 0.08802 & 54.04 & 0.99272 & 0.99665 & 0.40 \\
+        \textbf{optuna\_30} & & & & & & & & & & \\
+        \textbf{optuna\_100} & & & & & & & & & & \\
+        \textbf{optuna\_1000} & & & & & & & & & & \\
+        \textbf{optuna} & & & & & & & & & & \\
+        \bottomrule
+    \end{tabular}
+    \caption{Comparison of Initial and Best Values}
+    \label{tab:best_values}
+\end{sidewaystable}
+
+\begin{sidewaystable}[h]
+    \centering
+    \begin{tabular}{lcccccccccc}
+        \toprule
+        \textbf{Analysis} & \textbf{Initial} & \textbf{Final} & \textbf{Amplitude} & \textbf{Frequency} & \textbf{$\beta$} & \textbf{Final cost} & \textbf{Initial} & \textbf{Final} & \textbf{Final fidelity} \\
+        \textbf{Name} & \textbf{cost} & \textbf{cost} & \textbf{final [a.u.]} & \textbf{final [$\times10^9$ Hz]} & \textbf{final} & \textbf{improv. [\%]} & \textbf{fidelity} & \textbf{fidelity} & \textbf{improv. [\%]} \\
+        \midrule
+        \textbf{Nelder\_Mead} & 0.00983 & 0.00295 & 0.04067 & 4.95699 & -1.53976 & 70.02 & 0.99017 & 0.99705 & 0.69 \\
+        \textbf{init\_simplex\_1} & 0.00633 & 0.00517 & 0.04069 & 4.95820 &  & 18.41 & 0.99367 & 0.99483 & 0.12 \\
+        \textbf{init\_simplex\_2} & 0.00607 & 0.00437 & 0.04132 & 4.95817 &  & 28.10 & 0.99393 & 0.99563 & 0.17 \\
+        \textbf{init\_simplex\_3} & 0.00585 & 0.00512 & 0.04058 & 4.95819 &  & 12.46 & 0.99415 & 0.99488 & 0.07 \\
+        \textbf{SLSQP} & 0.02172 & 0.00507 & 0.04058 & 4.95822 & -0.00115 & 76.64 & 0.97828 & 0.99493 & 1.70 \\
+        \textbf{CMA-ES} & 0.00728 & 0.02664 & 0.12956 & 4.95822 & 0.18364 & -265.93 & 0.99272 & 0.97336 & -1.95 \\
+        \textbf{optuna\_30} & & & & & & & & & \\
+        \textbf{optuna\_100} & & & & & & & & & \\
+        \textbf{optuna\_1000} & & & & & & & & & \\
+        \textbf{optuna} & & & & & & & & & \\
+        \bottomrule
+    \end{tabular}
+    \caption{}
+    \label{tab:final_values}
+\end{sidewaystable}
+
 \begin{comment}
-\begin{tabular}{lccccc}
-    \textbf{Method} & \textbf{Highest Fidelity} & \textbf{Amplitude [a.u.]} & \textbf{Frequency [GHz]} & \textbf{$\beta$} \\
-
-\end{tabular}
-
-\begin{tabular}{lcccccccccccccccccc}
-\textbf{Analysis Name} & \textbf{cost\_initial} & \textbf{cost\_best} & \textbf{index\_best} & \textbf{A best [a.u.]} & \textbf{f best [$\times10^9$ Hz]} & \textbf{B best} & \textbf{cost\_final} & \textbf{A final [a.u.]} & \textbf{f final [$\times10^9$ Hz]} & \textbf{B final} & \textbf{improv. best [\%]} & \textbf{improv. final [\%]} & \textbf{fid\_initial} & \textbf{fid\_best} & \textbf{fid\_final} & \textbf{fid impr. best [\%]} & \textbf{fid impr. final [\%]} \\
-\hline
-D1\_cma\_post\_ft\_true & 0.00728 & 0.00335 & 9 & -0.16634 & 4.95822 & 0.08802 & 0.02664 & 0.12956 & 4.95822 & 0.18364 & 54.04 & -265.93 & 0.99272 & 0.99665 & 0.97336 & 0.40 & -1.95 \\
-D1\_init\_simplex\_20241110\_211211 & 0.00633 & 0.00467 & 25 & 0.04069 & 4.95820 &  & 0.00517 & 0.04069 & 4.95820 &  & 26.23 & 18.41 & 0.99367 & 0.99533 & 0.99483 & 0.17 & 0.12 \\
-D1\_nelder-mead\_post\_ft\_true & 0.00983 & 0.00269 & 19 & 0.04063 & 4.95701 & -1.53253 & 0.00295 & 0.04067 & 4.95699 & -1.53976 & 72.59 & 70.02 & 0.99017 & 0.99731 & 0.99705 & 0.72 & 0.69 \\
-D1\_init\_simplex\_20241113\_181711 & 0.00607 & 0.00436 & 17 & 0.04131 & 4.95817 &  & 0.00437 & 0.04132 & 4.95817 &  & 28.27 & 28.10 & 0.99393 & 0.99564 & 0.99563 & 0.17 & 0.17 \\
-D1\_init\_simplex\_20241113\_200745 & 0.00585 & 0.00446 & 37 & 0.04058 & 4.95819 &  & 0.00512 & 0.04058 & 4.95819 &  & 23.73 & 12.46 & 0.99415 & 0.99554 & 0.99488 & 0.14 & 0.07 \\
-D1\_SLSQP\_post\_ft\_true & 0.02172 & 0.00482 & 13 & 0.04058 & 4.95822 & -0.00115 & 0.00507 & 0.04058 & 4.95822 & -0.00115 & 77.79 & 76.64 & 0.97828 & 0.99518 & 0.99493 & 1.73 & 1.70 \\
-\end{tabular}
+    \begin{sidewaystable}[h]
+    \centering
+    \begin{tabular}{lcccccccccccccccccc}
+        \toprule
+        \textbf{Analysis} & \textbf{Initial} & \textbf{Best} & \textbf{Best} & \textbf{Amplitude} & \textbf{Frequency} & \textbf{$\beta$} & \textbf{Cost} & \textbf{Amplitude} & \textbf{Frequency} & \textbf{$\beta$} & \textbf{Best cost} & \textbf{Final cost} & \textbf{Initial} & \textbf{Best} & \textbf{Final} & \textbf{Best fidelity} & \textbf{Final fidelity} \\
+        \textbf{Name} & \textbf{cost} & \textbf{cost} & \textbf{index} & \textbf{best [a.u.]} & \textbf{best [$\times10^9$ Hz]} & \textbf{best} & \textbf{final} & \textbf{final [a.u.]} & \textbf{final [$\times10^9$ Hz]} & \textbf{final} & \textbf{improv. [\%]} & \textbf{improv. [\%]} & \textbf{fidelity} & \textbf{fidelity} & \textbf{fidelity} & \textbf{improv. [\%]} & \textbf{improv. [\%]} \\
+        \midrule
+        \textbf{Nelder\_Mead} & 0.00983 & 0.00269 & 19 & 0.04063 & 4.95701 & -1.53253 & 0.00295 & 0.04067 & 4.95699 & -1.53976 & 72.59 & 70.02 & 0.99017 & 0.99731 & 0.99705 & 0.72 & 0.69 \\
+        \textbf{init\_simplex\_1} & 0.00633 & 0.00467 & 25 & 0.04069 & 4.95820 &  & 0.00517 & 0.04069 & 4.95820 &  & 26.23 & 18.41 & 0.99367 & 0.99533 & 0.99483 & 0.17 & 0.12 \\
+        \textbf{init\_simplex\_2} & 0.00607 & 0.00436 & 17 & 0.04131 & 4.95817 &  & 0.00437 & 0.04132 & 4.95817 &  & 28.27 & 28.10 & 0.99393 & 0.99564 & 0.99563 & 0.17 & 0.17 \\
+        \textbf{init\_simplex\_3} & 0.00585 & 0.00446 & 37 & 0.04058 & 4.95819 &  & 0.00512 & 0.04058 & 4.95819 &  & 23.73 & 12.46 & 0.99415 & 0.99554 & 0.99488 & 0.14 & 0.07 \\
+        \textbf{SLSQP} & 0.02172 & 0.00482 & 13 & 0.04058 & 4.95822 & -0.00115 & 0.00507 & 0.04058 & 4.95822 & -0.00115 & 77.79 & 76.64 & 0.97828 & 0.99518 & 0.99493 & 1.73 & 1.70 \\
+        \textbf{CMA-ES} & 0.00728 & 0.00335 & 9 & -0.16634 & 4.95822 & 0.08802 & 0.02664 & 0.12956 & 4.95822 & 0.18364 & 54.04 & -265.93 & 0.99272 & 0.99665 & 0.97336 & 0.40 & -1.95 \\
+        \textbf{optuna\_30} & & & & & & & & & & & & & & & & & \\
+        \textbf{optuna\_100} & & & & & & & & & & & & & & & & & \\
+        \textbf{optuna\_1000} & & & & & & & & & & & & & & & & & \\
+        \textbf{optuna} & & & & & & & & & & & & & & & & & \\
+        \bottomrule
+    \end{tabular}
+    \caption{}
+    \label{tab:detailed_results}
+\end{sidewaystable}
 
 \begin{table}[h]
     \centering

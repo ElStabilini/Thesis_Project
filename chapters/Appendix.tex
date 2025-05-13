@@ -1,8 +1,43 @@
 \chapter*{Appendix A} 
 \label{app:AppendixA}
 
+A more accurate description of the resonance profile for a two-dimensional notch-type resonator is provided in the literature \cite{Gao2008}, where the transmitted signal is modeled as a complex function of frequency. 
+The complete expression for the complex transmission coefficient is given by
 
+\begin{equation}
+S_{21}(f) = ae^{i\alpha}e^{-2\pi i f \tau}\left[ 1 - \frac{(Q_l/|Q_c|)e^{i\phi}}{1 + 2iQ_l(f/f_r -1)} \right].
+\end{equation}
 
+This formulation provides a deeper insight into both the environmental and resonator-specific contributions to the observed response. 
+The prefactor accounts for the attenuation and gain in the measurement chain through the amplitude $a$, introduces a global phase shift $\alpha$, and models the effect of finite cable length via a frequency-dependent delay term characterized by the parameter $\tau$. 
+These components collectively represent systematic effects that shape the baseline response of the system.
+
+The second part of the expression captures the physical behavior of the resonator itself. 
+It includes the loaded quality factor $Q_l$, which reflects the total energy loss in the system, and the coupling quality factor $Q_c$, which quantifies the interaction between the resonator and the transmission line. 
+The resonance frequency $f_r$ marks the center of the frequency response, while the phase offset $\phi$ accounts for impedance mismatches and Fano-type interferences caused by reflections within the setup.
+This model exploits all the information encoded in both the magnitude and phase of the complex transmission signal, allowing for a more comprehensive characterization. 
+
+\paragraph{}
+However, directly fitting the complete model involves a nonlinear optimization over seven parameters, which is inherently sensitive to initial conditions and often non-robust. 
+To improve the stability and reliability of the fitting process, the problem is decomposed and approached in stages, each targeting a subset of parameters.
+
+First, the cable delay is estimated by fitting a linear function to the phase response across frequency. 
+The delay introduces a phase tilt proportional to the frequency, and its removal reveals the underlying circular shape of the resonance response in the complex plane. 
+Once the delay is corrected, a geometric circle fit is performed on the data.
+
+Then the phase angle $\theta$ is fit according to the following expression:
+\begin{equation}
+    \theta(f) = \theta_0 - 2\pi \tau (f - f_r) + 2 \arctan \left[ 2 Q_l \left( 1 - \frac{f}{f_r} \right) \right],
+\end{equation}
+where an additional linear term accounts for any residual cable delay not captured in the initial correction. 
+This protocol is implemented in \Qibocal and available by selecting the \tt{s21} fitting routine for the resonator spectroscopy, an example of the expected output obtained from running such experiment is shown in Figure \ref{fig:res_s21}.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/s21.png}
+    \caption{Output of resonator spectroscopy performed with \tt{s21} fit function.}
+    \label{fig:res_s21}
+\end{figure}
 
 \chapter*{Appendix B}
 \label{app:AppendixB}
@@ -125,20 +160,48 @@ If we then compute $\int_{0}^{\tau} h(t - t')dt'$ we obtain
 \end{align}
 which is equal to \ref{eq:final} and then concludes the demonstration.
 
-\chapter{Appendix C}\label{app:AppendixC}
+\chapter*{Appendix C}
+\label{app:AppendixC}
 
 In this appendix are reported the plots of all the Randomized Benchmarking evaluations that have been performed during the optimization using different optimization methods.
-\begin{figure}[!h]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_complete.png}
-    \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations.}
-    \label{fig:NM}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_complete.png}
+        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations. First optimization attempt with Nelder-Mead algorithm.}
+        \label{NM_true_fig:complete}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/complete.png}
+        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
+                Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_1}.}
+        \label{NM_true_fig:}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/complete.png }
+        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
+                Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_2}.}
+        \label{NM_true_fig:}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/complete.png}
+        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
+                Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_3}.}
+        \label{NM_true_fig:}
+    \end{subfigure}
+
+    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step.}
+    \label{fig:complete}
 \end{figure}
 
 \begin{comment}
 Possibili esensioni dell'appendice in ordine di priorità:
 * resonator spectroscopy s21
-* dimostrazione della single gate fidelity dal randomized benchmarking
 * spiegare com'è Qibo
 * spiegare come ho gestito il passaggio a ruff
 \end{comment}
