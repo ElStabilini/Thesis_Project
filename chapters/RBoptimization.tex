@@ -249,7 +249,7 @@ This choice was motivated by the working assumption that, at least in this initi
 Since the DRAG correction primarily addresses leakage to higher energy levels, it was hypothesized that optimizing $\beta$ would have a limited effect on the overall gate fidelity compared to the more significant impact of accurately calibrating the native gate's amplitude and frequency. 
 As such, the focus was placed on parameters expected to yield the greatest improvements in fidelity while maintaining a limited run time.
 
-Some optimization runs were performed with this nrevised configuration.
+Some optimization runs were performed with this revised configuration.
 The results of these runs are reported in the following sections and are labeled as \tt{init\_symp\_1}, \tt{init\_symp\_2}, and \tt{init\_symp\_3}.
 
 \begin{figure}[h!]
@@ -279,8 +279,7 @@ The results of these runs are reported in the following sections and are labeled
 Dai plot che mostrano il risultato della prima ottimizzazione si osserva che la fidelity aumenta anche se dopo una quindicina di iterazioni si assesta attorno ad un valore di circa [inserire valore].
 Due considerazioni degni di nota sono il punto relativo al sedicesimo step per cui la fidelity diminuisce notevolmente scendo sotto la soglia del 97\% (Figure \ref{fig:20241110_211211:fidelity}) nonostante ampiezza e frequenza dell'impulso $R_X$ non varino sensibilmente rispetto agli step di ottimizzazione precedenti
 (see Figure \ref{fig:20241110_211211:parameters}). Il motivo di questo è da ricercarsi nel fatto che il fit per la stima della infidelity del RB fallisce (see Figure ).
-Questo stesso comportamente sarà evidente anche negli altri plot che mostrano il progresso dell'ottimizzazione per questo algoritmo. 
-D'altra parte una dipendenza così forte della valutazione della funzione costo dal fallimento o successo del fit dell'esponenziale della curva RB 
+Questo stesso comportamente sarà evidente anche negli altri plot che mostrano il progresso dell'ottimizzazione per questo algoritmo (see Figure \ref{fig:20241113_181711:fidelity}). 
 
 \begin{figure}[h!]
     \centering
@@ -289,7 +288,7 @@ D'altra parte una dipendenza così forte della valutazione della funzione costo 
     \label{fig:20241113_181711:fidelity}
 \end{figure}
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Amplitude.png}
@@ -306,6 +305,10 @@ D'altra parte una dipendenza così forte della valutazione della funzione costo 
     \label{fig:20241113_181711:parameters}
 \end{figure}
 
+In particolare, per quanto riguarda l'ottimizzazione indicata con \tt{init\_symp\_2} the most interesting aspect is again il fatto che a parametri quasi fissati, quindi qausi a parità di ampiezza e frequenza quello che si osserva sono valori di fidelity molto distanti.
+Si considerino in particolare gli step di ottimizzazione per cui si osserva un picco negativo della fidelity in Figure \ref{fig:20241113_181711:fidelity}, looking at these same optimization steps in Figure \ref{fig:20241113_181711:parameters} è evidente che ampiezza e frequenza non variate notevolmente.
+Ancora una volta un valore di fidelity così basso è da attribuire ad un fallimento della routine di Randomized Benchmarking.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/fidelity.png}
@@ -313,7 +316,7 @@ D'altra parte una dipendenza così forte della valutazione della funzione costo 
     \label{fig:20241113_200745:fidelity}
 \end{figure}
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Amplitude.png}
@@ -331,11 +334,15 @@ D'altra parte una dipendenza così forte della valutazione della funzione costo 
 \end{figure}
 
 In questo terzo e ultimo caso invece, già dal plot per la fidelity (\ref{fig:20241113_200745:fidelity}) è evidente che l'ottimizzazione non converge.
+In questo caso, soprattutto se si considera (la frequenza si stabilizza al valore minimo, è possibile che sia fallito Ramsey nonostante i range e tutto fossero stati calibrati in precedenza)
+
 
 Potrebbe essere interessante confrontare i risultati per i valori dei parametri ottenuti in questi diversi tentativi di ottimizzazione, bisogna però tenere conto del fatto che, ad eccezione degli ultimi due, tutti gli esperimenti were run on different days.
 Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure . Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
 
 Un riassunto dei risultati ottenuti utilizzando l'algoritmo di Nelder-Mead nelle diverse configurazioni è riportato nelle prime righe di Table \ref{tab:scipy_opt}.
+
+In generale è evidente che l'ottimizzazione anche del parametro $\beta$ per il DRAG ha consentito il raggiungimento di avarage Clifford gate fidelity più alte, per questo motivo nei tentativi di ottimizzazione successivi si è deciso di re-introdurre l'ottimizzazione del parametro $\beta$.
     
 \subsection{SLSQP}
 \subsubsection{Algorithm description}
@@ -426,7 +433,7 @@ Since the gradient must be estimated numerically, each step involves multiple ev
     \centering
     \begin{tabular}{lcccccc}
         \toprule
-        \textbf{Method} & \textbf{Success} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
+        \textbf{Method} & \textbf{Success} & \textbf{RB Value} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
         \midrule
         \textbf{Nelder-Mead} & False & 0.002732 & 40 & 93 & 2892 \\
         \textbf{init\_symplex\_1} & False &  0.004593 & 40 & 99 & 3096\\
@@ -435,7 +442,7 @@ Since the gradient must be estimated numerically, each step involves multiple ev
         \textbf{SLSQP} & True & 0.004861 & 15 & 180 & 3873\\
         \bottomrule
     \end{tabular}
-    \caption{This table provides a summary of the results obtained using different optimization methods available in \texttt{SciPy}.\\ 
+    \caption{This table provides a short summary of the results obtained using different optimization methods available in \texttt{SciPy}.\\ 
     The \textit{Success} column indicates whether the algorithm converged successfully. 
     A value of True denotes that convergence was achieved within the specified tolerance of $1\cdot10^{-4}$ and before reaching the maximum number of iterations; otherwise, the value is False.
     The reported value of the objective function corresponds to the average Clifford gate infidelity obtained via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
@@ -543,6 +550,7 @@ Another factor that negatively influenced the algorithm convergence is the choic
 In \tt{CMA-ES} $\sigma$ controls the standard deviation of the multivariate normal distribution used to generate the first population, thereby determining how broadly the algorithm explores the parameter space around the initial guess. 
 A smaller $\sigma$ would have concentrated the search in a narrower region, possibly leading to faster convergence to a local optimum. 
 However, this value of $\sigma = 0.25$ was chosen with the goal to explore a wider portion of the parameter space than in previous \texttt{SciPy}-based optimizations, in order to investigate the possible presence of higher-fidelity regions that had not yet been sampled.
+An evaluation of the computational cost of running the \tt{CMA-ES} algorithm is reported in Table \ref{tab:optuna_opt}.
 
 \section{Optuna}
 
@@ -595,7 +603,25 @@ In the present work, the cost function is defined as the infidelity extracted fr
 
 \paragraph{D1 - 1000 steps}
 
-
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcccccc}
+        \toprule
+        \textbf{Method} & \textbf{RB Value} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
+        \midrule
+        \textbf{CMA-ES} & 0.002732 & 30 & 210 & 4 536 \\
+        \textbf{Optuna 30 steps} &  0.004593 & 30 & 30 & 763\\
+        \textbf{Optuna 100 steps} & 0.004297 & 100 & 100 & 2 257\\
+        \textbf{Optuna 1000 steps} & 0.004507 & 1000 & 1000 & 21 811\\
+        \textbf{Optuna no $\beta$} & 0.004861 & 1000 & 1000 & 21 820\\
+        \bottomrule
+    \end{tabular}
+    \caption{This table provides a short summary of the results obtained using the \tt{CMA-ES} and \tt{Optuna} algorithm.\\ 
+    In particular, regarding the \tt{Optuna} optimization algorithm the number of optimization iterations and of Randomized Benchmarking optimization is the same as the number of function evaluations coincides with the numer of trials and no pruning was performed.
+    The reported value of the objective function corresponds to the average Clifford gate infidelity obtained via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
+    The \textit{Duration} column refers to the total runtime of the script, including the initial fine-tuning stage preceding the optimization.\\}
+    \label{tab:optuna_opt}
+\end{table}
 
 \section{RB optimization conclusions}
 As mentioned in the introduction to this chapter, the primary objective of this work was to evaluate whether it is possible to develop an automated optimization routine that can be executed directly on quantum hardware to periodically improve the fidelity of single-qubit gates—specifically the  $R_X(\pi)$ gate. 
