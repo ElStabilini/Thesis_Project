@@ -426,7 +426,7 @@ Since the gradient must be estimated numerically, each step involves multiple ev
     \centering
     \begin{tabular}{lcccccc}
         \toprule
-        \textbf{Method} & \textbf{Success} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{Function Evaluations} & \textbf{Duration [s]}\\
+        \textbf{Method} & \textbf{Success} & \textbf{Objective Value} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
         \midrule
         \textbf{Nelder-Mead} & False & 0.002732 & 40 & 93 & 2892 \\
         \textbf{init\_symplex\_1} & False &  0.004593 & 40 & 99 & 3096\\
@@ -452,21 +452,21 @@ It belongs to the broader class of Evolution Strategies (ES), a subset of Evolut
 
 Evolution Strategies (ES) are a class of optimization methods that employ self-adaptive mechanisms to explore the search space efficiently. 
 Unlike classical optimization techniques that rely on gradient descent, ES leverage stochastic sampling to navigate rugged and multimodal landscapes.
-In this context, CMA-ES is an adaptive stochastic search method that iteratively refines a probability distribution over the search space. 
-Unlike traditional Genetic Algorithms (GAs), which rely on crossover and mutation operators, CMA-ES employs a multivariate normal distribution to generate candidate solutions. 
+In this context, \tt{CMA-ES} is an adaptive stochastic search method that iteratively refines a probability distribution over the search space. 
+Unlike traditional Genetic Algorithms (GAs), which rely on crossover and mutation operators, \tt{CMA-ES} employs a multivariate normal distribution to generate candidate solutions. 
 The method adaptively updates the distribution's mean and covariance matrix based on the fitness of sampled points.
 
-The fundamental idea behind CMA-ES is the use of a multivariate Gaussian distribution to model promising search directions. 
+The fundamental idea behind \tt{CMA-ES} is the use of a multivariate Gaussian distribution to model promising search directions. 
 Let $\mathbf{\mu}_t$ denote the mean of the distribution at iteration $t$, and $\Sigma_t$ the covariance matrix. 
-Then, a new population of $\lambda$ candidate solutions $\mathbf{x}_i^{(t+1)} \sim \mathbf{\mu}_t + \sigma_t\mathcal{N}(0, \Sigma_t)$, where $\sigma_t$ is a step size controlling the exploration.  
+Then, a new population of $\lambda$ candidate solutions $\mathbf{x}_i^{(t+1)} \sim \mathbf{\mu}_t + \sigma_t\mathcal{N}(\mathbf{\mu}_t,\mathbf{\sigma}_t^2, \Sigma_t)$, where $\sigma_t$ is a step size controlling the exploration.  
 
-The CMA-ES algorithm follows the following steps:\begin{enumerate}
+The \tt{CMA-ES} algorithm follows the following steps:\begin{enumerate}
     \item If not otherwise specified, the initial parameters are set: mean vector $\mathbf{\mu_0}$, covariance matrix $\Sigma_0$\footnote{$\Sigma_0=\mathbb{I}$ for isotropic search}, step size $\sigma_0$, population size $\lambda$
     \item Generate $\lambda$ new candidate solutions $\mathbf{x}_i$ according to a multivariate normal distribution.
     \item Evaluate the objective function $f(\mathbf{x}_i)$ for each candidate solution.
     \item Sort the new candidate solutions based on fitness: $f(\mathbf{x}_0) \leq ... \leq f(\mathbf{x}_{\lambda})$.
     \item Update the mean vector $\mathbf{\mu}$ with the $m=\lfloor \lambda / 2 \rfloor$ top performing solutions:\begin{equation}
-        \mathbf{\mu} \leftarrow \sum_{i=0}^m \mathbf{w}_i\mathbf{x}_1,
+        \mathbf{\mu} \leftarrow \sum_{i=0}^m \mathbf{w}_i\mathbf{x}_i,
     \end{equation} where $\mathbf{w}_i$ are internally defined weights.
     \item Update the isotropic and anisotropic evolution path $\mathbf{p}_{\sigma}$, $\mathbf{p}_c$ \footnote{For details on the update process of the evolution paths see \cite{cmaessimplepractical}.}.
     \item Update the covariance matrix: \begin{equation}
@@ -477,7 +477,26 @@ The CMA-ES algorithm follows the following steps:\begin{enumerate}
     \end{equation} where $c_\sigma$ is the learning rate for step-size adaptation, $d_\sigma$ is a damping factor $\| \mathbf{p}_{\sigma} \|$ is the length of the evolution path and $E \| \mathcal{N}(0, I) \|$ is the expected length of a standard normally distributed random vector.
 \end{enumerate}
 
+We decided to test \tt{CMA-ES} for the RB optimization as it is particularly well-suited for noisy or non-smooth objective functions. 
+The stochastic nature of \tt{CMA-ES} allows it to remain robust against such perturbations, as it does not rely on local gradient information and instead samples across a distribution to infer promising search directions.
+
+Unless manually specified, \tt{CMA-ES} employs internal heuristics to determine several of its hyperparameters. 
+For instance, the population size $\lambda$ is typucally set according to the dimensionality of the problem:
+\begin{equation}\label{eq:pop_size}
+    \lambda = 4+3\lfloor \log{n}\rfloor
+\end{equation}
+where $n$ is the problem dimension \cite{hansen_pycma_2024}.
+For full details on default parameter settings and adaptation rules, see \cite{cmaessimplepractical}.
+
 \subsection{Results}
+
+In the \tt{CMA-ES} optimization run, parameter settings were chosen to be as consistent as possible with those used in previous optimization algorithms.
+Specifically, the initial values and the parameter bounds were defined as shown in Listing \ref{snippet:params_init}, based on the results of the preliminary fine-tuning procedure. 
+The maximum number of generations was set to 30, slightly lower than the iteration limits used in the \texttt{SciPy}-based methods.
+This choice was motivated by two main considerations. First, we expected a performance comparable to that of the previously tested algorithms, and that consequently 30 optimization steps (or generations) would be enough to reach an improved fidelity value.
+Second we expected the algorithm to require longer execution times due to the larger number of cost functions evaluation: the population size was not manually setted but allowed to default to the internal rule od the \tt{CMA-ES} implementation, as in Equation \ref{eq:pop_size}.
+In this case, with three parameters, pulse amplitude, frequency and DRAG correction parameter $\beta$, the population consisted of 7 candidate solutions per generation.
+Given a population of 7 individuals and a total of 30 generations, the optimization required 210 evaluations of the objective function to complete. 
 
 \begin{figure}[h]
     \centering
@@ -510,6 +529,20 @@ The CMA-ES algorithm follows the following steps:\begin{enumerate}
     \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step for the CMA optimization method.}
     \label{fig:CMA_plots}
 \end{figure}
+
+The results of the fidelity optimization using the \tt{CMA-ES} algorithm are presented in Figure \ref{fig:CMA_plots}. 
+Each point in the plots corresponds to the best-performing individual within the population at each of the 30 optimization steps (generations). 
+As shown, the algorithm does not achieve full convergence within the allowed number of generations. 
+This outcome is likely influenced by the relatively small population size used. 
+Indeed, previous studies in the literature have demonstrated that larger populations can significantly improve the performance per function evaluation \cite{hansen2004evaluating}, obviously at the cost of increased computational time.
+
+The choice to limit both the number of generations and the population size was made deliberately to maintain a manageable total runtime. 
+Increasing either of these parameters would have led to a substantial rise in computational cost, as \tt{CMA-ES} evaluates the objective function $\lambda$ times per generation where $\lambda$ is the population size.
+
+Another factor that negatively influenced the algorithm convergence is the choice of the initial step size parameter, $\sigma = 0.25$. 
+In \tt{CMA-ES} $\sigma$ controls the standard deviation of the multivariate normal distribution used to generate the first population, thereby determining how broadly the algorithm explores the parameter space around the initial guess. 
+A smaller $\sigma$ would have concentrated the search in a narrower region, possibly leading to faster convergence to a local optimum. 
+However, this value of $\sigma = 0.25$ was chosen with the goal to explore a wider portion of the parameter space than in previous \texttt{SciPy}-based optimizations, in order to investigate the possible presence of higher-fidelity regions that had not yet been sampled.
 
 \section{Optuna}
 
@@ -577,6 +610,16 @@ Furthermore, we observed that convergence is not always guaranteed: in some case
 In summary, although the tests suggests that automated gate fidelity optimization is in principle possible, the current implementation does not meet the reliability and efficiency requirements needed for scheduled, hardware-level recalibration. 
 Improvements could focus on accelerating cost function evaluation or designing more robust optimization strategies with stronger convergence guarantees.
 
+Due possibili estensioni degli studi e dei risultati che sono stati presentati in questo capitolo, entrambi interessanti possono essere innanzitutto un tentativo di ottimizzazione dei parametri del RB per rendere più efficiente la procedura.
+In questo caso sono stati utilizzati circuiti con una profondità di 1000 e per ogni profondità da valutare sono state campionati 1000 diversi circuiti.
+Considerando il costo computazionale della valutazione dell'RB sicuramente potrebbe essere utile cercare di rendere questa ottimizzazione più efficiente riducendo la profondità del circuiuto o il numero di circuiti fenerati, in questo senso potrebbe essere utile fare uno studio più dettagliato sia sul piano teorico che sul piano computazionale (tipo hyperparameter optimization) per studiare 
+i valori migliori per questi parametri. È probabile che entrambi questi valori possano essere ridotti rendendo quindi l'ottimizzazione più efficiente e potenzialmente feasable e utilizzabile per migliorare la avarage Clifford gate fidelity in maniera automatica sul chip e quindi renderla una routine utilizzabile prima di girare circuiti o algoritmi quantistici.
+
+L'altro studio che potrebbe essere effettuato partendo da questi risultati riguarda l'ottimizzazione dei parametri con cui sono stati runnati gli algoritmi di ottimizzazione, nel caso di CMA ad esempio è evidente che l'algoritmo non converge ma ad esempio si può studiare l'impatto dell'aumento della popolazione in ciascuna generazione (che però ha l'inevitabile trade-off di aumentare il costo computazionale dell'ottimizzazione) o della riduzione della sigma nella generazione della popolazione stessa.
+Questa seconda operazione in particolare indubbiamente migliorerebbe la convergenza dell'algoritmo riducendone tuttavia l'esplorazione di altre configurazioni di parametri.
+Entrambi questi studi potrebbero essere particolarmente interessanti soprattutto in un contesto in cui però la calibrazione si mostra più stabile (inserire riferimento al confronto + distanza percentuale tra i valori dei parametri).
+
+In questo caso abbiamo scelto di non procedere in questa direzione soprattutto per via dei risultati che sono stati ottenuti con \tt{optuna}, gli ultimi studi in particolare con un numero elevato di trials hanno messo in luce quanto, nonostane una buona esplorazione dello spazio dei parametri non sia facile ottenere una configurazione con una buuona fidelity sufficientemente stabile. 
 
 \begin{sidewaystable}[h]
     \centering
