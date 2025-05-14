@@ -249,7 +249,10 @@ This choice was motivated by the working assumption that, at least in this initi
 Since the DRAG correction primarily addresses leakage to higher energy levels, it was hypothesized that optimizing $\beta$ would have a limited effect on the overall gate fidelity compared to the more significant impact of accurately calibrating the native gate's amplitude and frequency. 
 As such, the focus was placed on parameters expected to yield the greatest improvements in fidelity while maintaining a limited run time.
 
-Some optimization runs were performed with this revised configuration.
+Some optimization runs were performed with this revised configuration, in this case the initial symplex was constructed based on preliminary fine tuning routines. 
+Specifically, I considered the uncertainties on amplitude and frequency obtained respectively from the flipping and Ramsey procedures.
+These values were scaled by a factor of 1.5 to define the characteristic step sizes; using these values, a triangular simplex was generated in the amplitude-frequency parameter space, centered around the initial guess and offset along each axis to ensure sufficient coverage of the local landscape.
+
 The results of these runs are reported in the following sections and are labeled as \tt{init\_symp\_1}, \tt{init\_symp\_2}, and \tt{init\_symp\_3}.
 
 \begin{figure}[h!]
@@ -276,10 +279,10 @@ The results of these runs are reported in the following sections and are labeled
     \label{fig:20241110_211211:parameters}
 \end{figure}
 
-Dai plot che mostrano il risultato della prima ottimizzazione si osserva che la fidelity aumenta anche se dopo una quindicina di iterazioni si assesta attorno ad un valore di circa [inserire valore].
-Due considerazioni degni di nota sono il punto relativo al sedicesimo step per cui la fidelity diminuisce notevolmente scendo sotto la soglia del 97\% (Figure \ref{fig:20241110_211211:fidelity}) nonostante ampiezza e frequenza dell'impulso $R_X$ non varino sensibilmente rispetto agli step di ottimizzazione precedenti
-(see Figure \ref{fig:20241110_211211:parameters}). Il motivo di questo è da ricercarsi nel fatto che il fit per la stima della infidelity del RB fallisce (see Figure ).
-Questo stesso comportamente sarà evidente anche negli altri plot che mostrano il progresso dell'ottimizzazione per questo algoritmo (see Figure \ref{fig:20241113_181711:fidelity}). 
+From the plots showing the outcome of the first optimization run, it can be observed that the fidelity increases over the initial iterations and then stabilizes around a value of approximately 99.45\% after about fifteen steps.
+Two aspects are particularly noteworthy. The first concerns the noticeable drop in fidelity observed at the sixteenth iteration, where the fidelity falls below the 97\% threshold (Figure \ref{fig:20241110_211211:fidelity}), despite the amplitude and frequency of the $R_X$ pulse showing no significant changes compared to the previous optimization steps (see Figure \ref{fig:20241110_211211:parameters}).
+This anomaly is due to a failure in the fitting procedure used to estimate the randomized benchmarking infidelity at that step (see Figure [TODO: insert reference]).
+A similar behavior can be seen in other plots depicting the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), indicating that such fitting failures can occasionally impact the apparent fidelity trend during the optimization process.
 
 \begin{figure}[h!]
     \centering
@@ -305,9 +308,11 @@ Questo stesso comportamente sarà evidente anche negli altri plot che mostrano i
     \label{fig:20241113_181711:parameters}
 \end{figure}
 
-In particolare, per quanto riguarda l'ottimizzazione indicata con \tt{init\_symp\_2} the most interesting aspect is again il fatto che a parametri quasi fissati, quindi qausi a parità di ampiezza e frequenza quello che si osserva sono valori di fidelity molto distanti.
-Si considerino in particolare gli step di ottimizzazione per cui si osserva un picco negativo della fidelity in Figure \ref{fig:20241113_181711:fidelity}, looking at these same optimization steps in Figure \ref{fig:20241113_181711:parameters} è evidente che ampiezza e frequenza non variate notevolmente.
-Ancora una volta un valore di fidelity così basso è da attribuire ad un fallimento della routine di Randomized Benchmarking.
+In particular, regarding the optimization labeled as \tt{init\_symp\_2}, the most important observation is again the presence of large variations in fidelity despite nearly fixed parameters. 
+That is, for comparable values of amplitude and frequency, significantly different fidelity outcomes are observed.
+This is especially evident when examining the optimization steps corresponding to the pronounced fidelity dips in Figure \ref{fig:20241113_181711:fidelity}.
+By comparing those same steps with the parameter evolution shown in Figure \ref{fig:20241113_181711:parameters}, it becomes clear that neither the amplitude nor the frequency of the $R_X$ pulse changes significantly.
+Once again, such low fidelity values are attributed to failures in the Randomized Benchmarking fitting procedure, rather than real changes in gate performance.
 
 \begin{figure}[h!]
     \centering
@@ -333,9 +338,12 @@ Ancora una volta un valore di fidelity così basso è da attribuire ad un fallim
     \label{fig:20241113_200745:parameters}
 \end{figure}
 
-In questo terzo e ultimo caso invece, già dal plot per la fidelity (\ref{fig:20241113_200745:fidelity}) è evidente che l'ottimizzazione non converge.
-In questo caso, soprattutto se si considera (la frequenza si stabilizza al valore minimo, è possibile che sia fallito Ramsey nonostante i range e tutto fossero stati calibrati in precedenza)
-
+In this third and final case, the lack of convergence is apparent directly from the fidelity plot shown in Figure \ref{fig:20241113_200745:fidelity}.
+Upon closer inspection, it was observed that the frequency parameter quickly settles at the lower bound of its defined range. 
+This initially led to the hypothesis that the preceding Ramsey-based fine-tuning step—used to initialize the optimization—had failed.
+However, this assumption was disproven by the diagnostic report automatically generated for each operation performed with \Qibocal.
+The corresponding Ramsey experiment, which confirms successful execution, is shown in \hyperref[app:AppendixC]{Appendix C}, Figure \ref{fig:Ramsey_NM}.
+These findings lead us to conclude that in this case, the Nelder Mead algorithm simply failed to converge with the same stability observed in the previous optimization runs.
 
 Potrebbe essere interessante confrontare i risultati per i valori dei parametri ottenuti in questi diversi tentativi di ottimizzazione, bisogna però tenere conto del fatto che, ad eccezione degli ultimi due, tutti gli esperimenti were run on different days.
 Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure . Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
@@ -593,9 +601,9 @@ In the present work, the cost function is defined as the infidelity extracted fr
 
 \subsection{Results}
 
-\subsection{$\beta$ parameter impact on RB optimization}
-
 \paragraph{D1 - 30 steps}
+Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementato nella libreria \tt{Optuna} ho scelto di utilizzare 30 step, equivalenti a 30 trials, per osservare quale miglioramento fosse possibile applicando approssimativamente lo stesso numero di optimization step utilizzato per i metodi di ottimizzazione testati in precedenza,
+
 
 \paragraph{D1 - 100 steps}
 

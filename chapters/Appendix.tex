@@ -168,13 +168,13 @@ In this appendix are reported the plots of all the Randomized Benchmarking evalu
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_complete.png}
-        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations. First optimization attempt with Nelder-Mead algorithm.}
+        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations. First optimization attempt with Nelder-Mead algorithm.}
         \label{NM_true_fig:complete}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/complete.png}
-        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
+        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
                 Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_1}.}
         \label{NM_true_fig:}
     \end{subfigure}
@@ -183,14 +183,14 @@ In this appendix are reported the plots of all the Randomized Benchmarking evalu
 
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/complete.png }
-        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
+        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
                 Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_2}.}
         \label{NM_true_fig:}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/complete.png}
-        \caption{PPlot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
+        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
                 Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_3}.}
         \label{NM_true_fig:}
     \end{subfigure}
@@ -199,9 +199,15 @@ In this appendix are reported the plots of all the Randomized Benchmarking evalu
     \label{fig:complete}
 \end{figure}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Ramsey.png}
+    \caption{Ramsey experiment performed to fine tune the $R_X$ gate frequency before the optimization process.}
+    \label{fig:Ramsey_NM}
+\end{figure}
+
 \begin{comment}
 Possibili esensioni dell'appendice in ordine di priorità:
-* resonator spectroscopy s21
 * spiegare com'è Qibo
 * spiegare come ho gestito il passaggio a ruff
 \end{comment}
