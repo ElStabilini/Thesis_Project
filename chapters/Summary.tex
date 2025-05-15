@@ -13,13 +13,26 @@ The discussion then proceeds to early models of superconducting qubits, from Coo
 The final part of the chapter focuses on the mechanisms for qubit state readout and control, concluding with a discussion on the degradation of the qubit state over time.
 
 \paragraph{}
-Chapter 2 provides a detailed description of the experimental setup used for all measurements and protocols carried out during this thesis work. 
+Chapter 2 provides a description of the experimental setup used for all measurements and protocols carried out during this thesis work. 
 Specifically, the experiments were performed on the Contralto-D chip developed by QuantWare \cite{qw11q}, hosted at the Technology Innovation Institute (TII) in Abu Dhabi. 
 The control and data acquisition electronics were supplied by Quantum Machines, in particular the OPX100 platform \cite{opx1000}.
+Moreover, the chapter includes a detailed description of the single gate calibration procedure using the \texttt{Qibocal}. 
+Learning how to calibrate single qubits and single qubit gates is a prerequisite for implementing optimal control techniques in subsequent stages of the work.
+
+The procedure began with the calibration of the readout resonator, aimed at determining the decoupled resonator frequency and optimizing the amplitude and frequency of the readout pulse. 
+This step exploits the dispersive coupling between the resonator and the qubit to enable reliable state discrimination.
+Next, the qubit parameters were characterized by identifying its resonance frequency and sweet spot. 
+With these parameters, the qubit's ground state configuration could be accurately described.
+Subsequently, the focus shifted to the calibration of native single-qubit gates, specifically the RX gate. 
+his involved tuning the pulse amplitude and frequency to ensure correct population transfer between the qubit states.
+Once these calibrations were completed, a single-shot readout calibration was performed to enable state discrimination in the IQ plane, distinguishing the ground and first excited states.
+Finally, fine-tuning experiments were conducted to further correct any residual errors in the RX pulse parameters. 
+The chapter concludes with the implementation of randomized benchmarking, a protocol used to quantify gate fidelities by applying sequences of random gates and measuring the decay of state fidelity. This benchmarking routine serves as the foundation for the optimization strategies presented in the following chapter.
+
 
 %chapter 3 . gate optimization
 \paragraph{}
-The first part of the project addressed the optimization of $R_X(\pi)$ gates, drawing inspiration from the ORBIT technique (Optimized Randomized Benchmarking for Immediate Tune-up) introduced by Kelly et al. in 2014 \cite{kelly_optimal_2014}. 
+The first part of the project addressed the optimization of avarge Clifford gates fidelity, drawing inspiration from the ORBIT technique (Optimized Randomized Benchmarking for Immediate Tune-up) introduced by Kelly et al. in 2014 \cite{kelly_optimal_2014}. 
 We explored extensions of this method by testing modern optimization libraries to evaluate whether it is possible to efficiently reach gate fidelities approaching 99.9\%, starting from coarse calibrations, and to assess system stability under realistic drift conditions.
 
 %chapter 4 - pulse correction and control
