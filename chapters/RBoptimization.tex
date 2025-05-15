@@ -345,13 +345,13 @@ However, this assumption was disproven by the diagnostic report automatically ge
 The corresponding Ramsey experiment, which confirms successful execution, is shown in \hyperref[app:AppendixC]{Appendix C}, Figure \ref{fig:Ramsey_NM}.
 These findings lead us to conclude that in this case, the Nelder Mead algorithm simply failed to converge with the same stability observed in the previous optimization runs.
 
+A summary of the results obtained using the Nelder–Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt}.
+
+Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization process enabled the achievement of higher average Clifford gate fidelities. For this reason, the optimization of $\beta$ was reintroduced in the subsequent optimization attempts.    
+
 Potrebbe essere interessante confrontare i risultati per i valori dei parametri ottenuti in questi diversi tentativi di ottimizzazione, bisogna però tenere conto del fatto che, ad eccezione degli ultimi due, tutti gli esperimenti were run on different days.
 Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure . Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
 
-Un riassunto dei risultati ottenuti utilizzando l'algoritmo di Nelder-Mead nelle diverse configurazioni è riportato nelle prime righe di Table \ref{tab:scipy_opt}.
-
-In generale è evidente che l'ottimizzazione anche del parametro $\beta$ per il DRAG ha consentito il raggiungimento di avarage Clifford gate fidelity più alte, per questo motivo nei tentativi di ottimizzazione successivi si è deciso di re-introdurre l'ottimizzazione del parametro $\beta$.
-    
 \subsection{SLSQP}
 \subsubsection{Algorithm description}
 Per valutare eventuali miglioramenti nella performance abbiamo provato ad utilizzare un algoritmo che fosse gradient-based. 
@@ -617,11 +617,11 @@ Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementa
         \toprule
         \textbf{Method} & \textbf{RB Value} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
         \midrule
-        \textbf{CMA-ES} & 0.002732 & 30 & 210 & 4 536 \\
-        \textbf{Optuna 30 steps} &  0.004593 & 30 & 30 & 763\\
-        \textbf{Optuna 100 steps} & 0.004297 & 100 & 100 & 2 257\\
-        \textbf{Optuna 1000 steps} & 0.004507 & 1000 & 1000 & 21 811\\
-        \textbf{Optuna no $\beta$} & 0.004861 & 1000 & 1000 & 21 820\\
+        \textbf{CMA-ES} & 0.003346 & 30 & 210 & 4 536 \\
+        \textbf{Optuna 30 steps} & 0.018178  & 30 & 30 & 763\\
+        \textbf{Optuna 100 steps} & 0.042908 & 100 & 100 & 2 257\\
+        \textbf{Optuna 1000 steps} & 0.003424 & 1000 & 1000 & 21 811\\
+        \textbf{Optuna no $\beta$} & 0.137907 & 1000 & 1000 & 21 820\\
         \bottomrule
     \end{tabular}
     \caption{This table provides a short summary of the results obtained using the \tt{CMA-ES} and \tt{Optuna} algorithm.\\ 
@@ -652,6 +652,7 @@ i valori migliori per questi parametri. È probabile che entrambi questi valori 
 L'altro studio che potrebbe essere effettuato partendo da questi risultati riguarda l'ottimizzazione dei parametri con cui sono stati runnati gli algoritmi di ottimizzazione, nel caso di CMA ad esempio è evidente che l'algoritmo non converge ma ad esempio si può studiare l'impatto dell'aumento della popolazione in ciascuna generazione (che però ha l'inevitabile trade-off di aumentare il costo computazionale dell'ottimizzazione) o della riduzione della sigma nella generazione della popolazione stessa.
 Questa seconda operazione in particolare indubbiamente migliorerebbe la convergenza dell'algoritmo riducendone tuttavia l'esplorazione di altre configurazioni di parametri.
 Entrambi questi studi potrebbero essere particolarmente interessanti soprattutto in un contesto in cui però la calibrazione si mostra più stabile (inserire riferimento al confronto + distanza percentuale tra i valori dei parametri).
+Utilizzando \tt{Optuna} avrebbe potuto essere interessante anche provare a fare uno studio con una multi-objective minimization cercando non solo di minimizzare l'infidelity ma anche di minimizzare il tempo di esecuzione dell'ottimizzazione.
 
 In questo caso abbiamo scelto di non procedere in questa direzione soprattutto per via dei risultati che sono stati ottenuti con \tt{optuna}, gli ultimi studi in particolare con un numero elevato di trials hanno messo in luce quanto, nonostane una buona esplorazione dello spazio dei parametri non sia facile ottenere una configurazione con una buuona fidelity sufficientemente stabile. 
 

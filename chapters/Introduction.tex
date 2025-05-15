@@ -246,11 +246,11 @@ The difference is that in this case the transmon satisfies the condition $E_J/E_
 \begin{equation}\label{eq:approx_transmon}
     \hat{H}\approx 4E_C\hat{n}^2 + \frac{1}{2}E_J\hat{\phi}^2 - \frac{E_J}{4!}\hat{\phi}^4,
 \end{equation}
-where the last term, proportional to $\hat{phi}^4$, makes the potential of the transmon slightly anharmonic.
+where the last term, proportional to $\hat{\phi}^4$, makes the potential of the transmon slightly anharmonic.
 
-As happens in the standard harmonic oscillator case, the operators $\hat{phi}$ and $\hat{n}$ satisfy the cnaonical commutation relation $[\hat{\phi},\hat{n}]=i\mathbb{I}$, it is possible to introduce the raising and lowering operators $\hat{b},\hat{b}^\dagger$ as
+As happens in the standard harmonic oscillator case, the operators $\hat{\phi}$ and $\hat{n}$ satisfy the cnaonical commutation relation $[\hat{\phi},\hat{n}]=i\mathbb{I}$, it is possible to introduce the raising and lowering operators $\hat{b},\hat{b}^\dagger$ as
 \begin{equation}\label{eq:raising_lowering_operators}
-    \hat{\phi} = \sqrt{\xi}(\hat{b}+\hat{b}^\dagger), \quad\quad \hat{n} = -\frac{i}{2\sqrt{xi}}(\hat{b}-\hat{b}^\dagger),
+    \hat{\phi} = \sqrt{\xi}(\hat{b}+\hat{b}^\dagger), \quad\quad \hat{n} = -\frac{i}{2\sqrt{\xi}}(\hat{b}-\hat{b}^\dagger),
 \end{equation}
 where $\xi =  \sqrt{2E_C/E_J}$.
 
@@ -259,7 +259,7 @@ Substituting equations \ref{eq:raising_lowering_operators} in the Hamiltonian, e
     \hat{H} = \sqrt{8E_JE_C}\hat{b}^\dagger\hat{b} - \frac{E_C}{12}(\hat{b}+\hat{b}^\dagger)^4.
 \end{equation}
 
-Given equation \ref{eq:transmon_hamiltonian} it is possible to solve the eigenvalue proble $\hat{H}\ket{k}=E_k\ket{k}$ and calculate the energy levels $E_k$.
+Given equation \ref{eq:transmon_hamiltonian} it is possible to solve the eigenvalue problem $\hat{H}\ket{k}=E_k\ket{k}$ and calculate the energy levels $E_k$.
 The first term of Hamiltonian \ref{eq:transmon_hamiltonian} is the harmonic oscillator contribution with eigenstates $\ket{k}$ and eigenvalues $\sqrt{8E_JE_C}k$. 
 Since $E_C \ll E_J$, the second term $ \hat{V} = -\frac{E_C}{12}(\hat{b} + \hat{b}^\dagger)^4$ represents a small perturbative contribution to the Hamiltonian and can be treated using perturbation theory. 
 The first-order correction to the energy levels is given by the diagonal matrix elements of the perturbation operator: $\Delta E_k^{(1)} = \langle k | \hat{V} | k \rangle$.
@@ -282,7 +282,7 @@ The anharmonicity $\eta$ is defined as the difference between the second and fir
 \end{equation}
 For a transmon, the anharmonicity $\eta$ is negative, reflecting the fact that the level spacing decreases with increasing energy. 
 Ideally, the absolute value  $|\eta|$ should be sufficiently large to allow external microwave drives to selectively address the $\ket{0}\leftrightarrow\ket{1}$ transition without inadvertently exciting higher-energy states.
-
+Typical values per le frequenze of superconducting qubits lies between 4 - 8 GHz with an anharmonicity ranging from 100 to 300 MHz.z
 
 \subsection{Flux-tunable transmon}\label{subsec:flux_tunable_transmon}
 To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
@@ -328,6 +328,7 @@ where $f_q^{\text{max}} = (\sqrt{8E_C E_J}-E_C)/h$ is the maximum qubit frequenc
     \label{fig:FrequencyTunableTransmon}
 \end{figure}
 
+%TOD: guarda correzioni perchè qui ci sono errori un po' grossolani
 The main drawback of having the qubit fequency depending on the magnetic flux is that the qubit frequency becomes also sensitive to spurios magnetic currents.
 A strategy to minimize the sensitivity of the transition frequency consists in using a special bias value, known as sweetspot. 
 This corresponds to the charge-degeneracy point, $n_g = 1/2$, where the qubit reaches its maximum transition frequency. 
@@ -406,14 +407,14 @@ where the parameter $g$ was introduced. This parameter, known as coupling streng
 \begin{equation}
     g = \frac{2 E_C}{\hbar e} \frac{C_{\text{read}}}{C_r} Q_{\text{zpf}} \sqrt{\xi} = \frac{E_C}{\hbar e} \left( \frac{E_J}{2 E_C} \right)^{1/4} \frac{C_{\text{read}}}{C_r} \sqrt{2 \hbar \omega_r C_r}.
 \end{equation} 
-The coupling strength can be adjust by varying the capacitance coupling the qubit and the resonator.
+The coupling strength can be adjusted by varying the capacitance coupling the qubit and the resonator.
 
 \paragraph{}
 When $g\ll\omega_r$ and $g\ll\omega_q$ it is possible to use the rotating wave approximation (RWA) and write the Hamiltonian in the form
 \begin{equation}
     \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a} + \sqrt{8E_J E_C} \hat{b}^\dagger \hat{b} - \frac{E_C}{12} (\hat{b} + \hat{b}^\dagger)^4 + \hbar g (\hat{b}^\dagger \hat{a} + \hat{b} \hat{a}^\dagger).
 \end{equation}
-Focusing on the first two levels of the transmon we obtain the Jaynes-Cummings Hamiltonian that reads
+Focusing on the first two levels of the transmon we obtain the Jaynes-Cummings Hamiltonian \cite{1443594} that reads
 \begin{equation}\label{eq:Jaynes-Cummings}
     \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a} - \frac{\hbar \omega_{01}}{2} \hat{\sigma}_z + \hbar g (\hat{\sigma}_+ \hat{a} + \hat{\sigma}_- \hat{a}^\dagger),
 \end{equation}
@@ -430,7 +431,7 @@ where $\chi$ is the dispersive shift defined as \begin{equation}\label{eq:disper
 
 Equation \ref{eq:dispersiveshift_hamiltonian} shows that there is a shift in the resonator frequency from $\omega_r$ to $\omega_r - \chi$ if the qubit is in the ground state and a shift from $\omega_r$ to $\omega_r + \chi$ if the qubit is in the excited state.
 
-The dispersive shift equation \ref{eq:dispersiveshift} was derives assuming that the qubit can be approximated as a two level system.
+The dispersive shift equation \ref{eq:dispersiveshift} was derived assuming that the qubit can be approximated as a two level system.
 Considering also the higher energy levels of the qubit a more accurate expression of the dispersive shift is given by 
 \begin{equation}
     \chi = \frac{g^2}{\Delta(1+\Delta/\eta)},
@@ -439,18 +440,18 @@ where $\eta$ is the qubit anharmonicity.
 
 \section{Qubit control}\label{sec:qubit_control}
 Another necessary element for performing quantum computation is the implementation, starting with single-qubit gates. 
-A qubit can be driven into any arbitrary superposition state by applying an electrical pulse with a carefully controlled amplitude, duration, and phase.
+A qubit can be driven into any arbitrary superposition state by applying an electrical microwave pulse with a carefully tuned amplitude, duration, and phase.
 This pulse is generated by an AC voltage source located outside the dilution refrigerator that hosts the qubit.
-The driving pulse is brought to the qubit by an on-chip waveguide which is capacitively coupled to the qubit as shown in Figure \ref{fig:TransmonCircuit}, where the coupling capacitance is indicated with $c$.
+The drive pulse is brought to the qubit by an on-chip waveguide which is capacitively coupled to the qubit as shown in Figure \ref{fig:TransmonCircuit}, where the coupling capacitance is indicated with $c$.
 This signal path is commonly referred to as a control line or an XY line. The pulse that arrives at the device has the analytical form
 \begin{equation}\label{eq:drive_pulse}
     V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)},
 \end{equation}
-where $A$ is the pulse amplitude in volts, $\omega_d$ is the drive frequency in rad/s, $\alpha$ is the fase of the pulse and $\varepsilon(t)$ is the modulation of the pulse; the maximum of $\varepsilon(t)$ is fixed at one.
+where $A$ is the pulse amplitude in volts, $\omega_d$ is the drive frequency in rad/s, $\alpha$ is the phase of the pulse and $\varepsilon(t)$ is the modulation of the pulse; the maximum of $\varepsilon(t)$ is fixed at one.
 As a first approximation, the envelope of the drive pulse is often chosen to have a Gaussian shape, which is preferred over a square pulse due to its smaller frequency bandwidth, minimizing the excitation of higher energy levels.
 However, the study of pulse shapes that minimize leakage to states outside the computational basis remains an active area of research \cite{chiaro2025activeleakagecancellationsingle}.
 
-In a similar way to what was previously done to study the capacitive coupling between the qubit and the resonator, it is possible to derive th hamiltonian of the transmon capacitively coupled to the control line starting from the circuit shown in Figure \ref{fig:TransmonCircuit}
+In a similar way to what was previously done to study the capacitive coupling between the qubit and the resonator, it is possible to derive th Hamiltonian of the transmon capacitively coupled to the control line starting from the circuit shown in Figure \ref{fig:TransmonCircuit}
 \begin{equation}
     \hat{H} = 4E_C \left(\hat{n} + \frac{C_d V_d(t)}{2e}\right)^2 - E_J \cos{\hat{\phi}},
 \end{equation} 
@@ -525,7 +526,7 @@ where $p_e(t)$ is the probability of the qubit being in the excited state at tim
 Energy relaxation is primarily due to transverse noise, namely noise that couples the qubit through $\hat{\sigma}_x$ and/or $\hat{\sigma}_y$, it is caused by coupling to electromagnetic noise and other dissipative processes that induce energy exchange with the environment.
 
 Longitudinal noise instead is due to environmental fluctuations coupling to $\hat{\sigma}_z$ that randomize the phase of the the superposition state without causing energy exchange with the environment.
-The charachteristic dephasing time of a qubit è indicato con $T_2^* = 1/\Gamma_\phi$ dove $\Gamma_\phi$ is the pure dephasing rate.
+The charachteristic dephasing time of a qubit is $T_2^* = 1/\Gamma_\phi$ dove $\Gamma_\phi$ is the pure dephasing rate.
 
 The transverse relaxation rate $\Gamma_2$ describes the combined effets of pure dephasing and energy relaxation and is defined as 
 \begin{equation}\label{eq:gamma2}
