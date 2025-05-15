@@ -4,7 +4,7 @@ In this chapter I will describe the process of calibration for superconducting f
 
 \section{Experimental setup}
 All the results presented in this work were obtained using the Contralto-D chip \cite{qw11q}, which offers up to 21 fully connected qubits and 4 isolated qubits, for a total of 25 physical qubits.
-The distinction between fully connected and isolated qubits is important as only the fully connected subset supports direct two-qubit gate operations, which are essential for implementing entangling gates and complex quantum circuits. 
+The distinction between fully connected and isolated qubits is important as only the fully connected subset supports native two-qubit gate operations, which are essential for implementing entangling gates and complex quantum circuits. 
 Isolated qubits, while still operational for single-qubit tasks, do not participate in multi-qubit interactions and thus are not functionally equivalent in terms of computational capabilities.
 The topology of the qubit is shown in Figure \ref{fig:qw11q_topology}.
 
@@ -41,12 +41,12 @@ The system operates as a closed loop: \ce{^{3}He} gas is circulated using a comb
 The refrigerator includes several thermalization stages—typically at $50$ K, $4$ K, $800$ mK, $100$ mK, and finally below $20$ mK—each connected to a corresponding cooling stage and separated by radiation shields and thermal filters to minimize heat load and noise from higher-temperature stages.
 Dilution refrigerators are highly stable and capable of reaching base temperatures below $10$ mK, with hold times on the order of days or even weeks. 
 These temperatures are crucial for achieving the low thermal noise and long coherence times necessary for high-fidelity quantum operations in superconducting circuits.
-Specifically the cryostat employed in the lab is the XLDsl from Bluefors \cite{XLD1000}, an image of the cryostat is shown in Figure \ref{fig:XLDsl}.
+Specifically the cryostat employed in the lab is the XLD from Bluefors \cite{XLD1000}, an image of the cryostat is shown in Figure \ref{fig:XLDsl}.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.35\textwidth]{figures/png/XLD1000.png}
-    \caption{Picture of the XLDsl dilution refrigerator at the QRC Lab}
+    \caption{Picture of the XLD dilution refrigerator at the QRC Lab}
     \label{fig:XLDsl}
 \end{figure}
 
@@ -72,7 +72,7 @@ From this point onward, for the sake of brevity, I will refer to the chip interc
 In the following I will describe the experiments that I performed and commenting on the results.
 
 \subsection{Resonator calibration}
-Before starting with the calibration of the gates necessary for quantum computing it is necessary to charachterize the qubit an clibrate the readout pulses. 
+Before starting with the calibration of the gates necessary for quantum computing it is necessary to charachterize the qubit an calibrate the readout pulses. 
 For this reason the calibration process starts with the charachterization of the resonator coupled to the qubit that will be used to perform non-destructive measurements of the qubit state.
 
 \subsubsection{Resonator spectroscopy}
@@ -88,7 +88,7 @@ In this case, the resonator becomes effectively decoupled from the qubit, and th
 During the first calibration operations it is not necessary to have the qubit coupled to the resonator but is helpful to improve the SNR to have a more defined peak in the signal, for this reason the first calibration routines are run in a high-power regime.
 
 In this experiment the main variables on which the experimenterer can operate are the frequency range that is willing to scan and the step of the scan. 
-Regarding the frequency range a very wide scan can be useful if nothing is known about the studied resonator, but usually the design parameters are provided by the produttore; t is possible that they are not exact, but can give an idea of the region to scan.
+Regarding the frequency range a very wide scan can be useful if nothing is known about the studied resonator, but usually the design parameters are provided by the manufacturer; t is possible that they are not exact, but can give an idea of the region to scan.
 Regarding the step for the scan, usually a step of 200 MHz can be used to probe the resonator frequency but can be reduced if a more precise scan is needed. 
 An example of measurement of the bare resonator frequency is shown in Figure \ref{fig:res_high}.
  

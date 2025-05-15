@@ -226,7 +226,13 @@ In particular, the energy levels are anharmonic, allowing the first two levels t
 This anharmonicity enables the use of the subspace spanned by the ground state $\ket{0}$ and the first excited state $\ket{1}$ as a qubit.
 
 The qubit frequency is defined as the frequency associated with the energy difference between these two states: $f_{01}(n_g) = f_q = \frac{(E_1 - E_0)}{h}$.
-This frequency can be tuned by varying the externally applied DC voltage, which modifies the system’s parameters and, consequently, its energy level spacing.\\
+This frequency can be tuned by varying the externally applied DC voltage, which modifies the system’s parameters and, consequently, its energy level spacing.
+
+In practice, however, fluctuations in the offset charge caused by random motion of nearby charges or coupling to the electromagnetic environment introduce dephasing in the qubit. 
+To minimize this sensitivity to charge noise, the qubit can be biased at the charge sweetspot, defined by $n_g=\frac{1}{2}$.
+At this point, the qubit transition frequency reaches a local maximum, and the first derivative of the energy levels with respect to $n_g$ vanishes.
+As a result, since the charge dispersion has no slope there, linear noise contributions cannot change the qubit transition frequency.
+
 
 \begin{figure}[h!]
     \centering
@@ -318,7 +324,7 @@ Then, it's easy to see that the frequency $f_q$ of a two-junction transmon depen
 \end{equation}
 where $f_q^{\text{max}} = (\sqrt{8E_C E_J}-E_C)/h$ is the maximum qubit frequency. For symmetric junctions this relation can be approximated by \cite{rol_time-domain_2020}
 \begin{equation}\label{eq:freqdepndenceonflux_approx}
-    f_q(\Phi_q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_q}{\Phi_0} \right)} - E_C \right).    
+    f_q(\Phi_q) \approx \frac{1}{h} \left( \sqrt{8E_J E_C \cos\left(\pi \frac{\Phi_q}{\Phi_0} \right)} - E_C \right).
 \end{equation}
 
 \begin{figure}[ht!]
@@ -328,12 +334,9 @@ where $f_q^{\text{max}} = (\sqrt{8E_C E_J}-E_C)/h$ is the maximum qubit frequenc
     \label{fig:FrequencyTunableTransmon}
 \end{figure}
 
-%TOD: guarda correzioni perchè qui ci sono errori un po' grossolani
 The main drawback of having the qubit fequency depending on the magnetic flux is that the qubit frequency becomes also sensitive to spurios magnetic currents.
-A strategy to minimize the sensitivity of the transition frequency consists in using a special bias value, known as sweetspot. 
-This corresponds to the charge-degeneracy point, $n_g = 1/2$, where the qubit reaches its maximum transition frequency. 
-At this point, small fluctuations in the bias, either increases or decreases, lead to a small change in frequency, making the qubit less susceptible to noise.
-Most importantly, since the charge dispersion has no slope there, linear noise contributions cannot change the qubit transition frequency.
+To mitigate this issue, the qubit can be biased at a special value of external magnetic flux, known as flux sweetspot where the first derivative of the qubit frequency with respect to flux vanishes.
+As a consequence small fluctuations in flux lead only to second-order changes in frequency, thereby reducing dephasing due to flux noise.
 
 \section{Qubit readout}\label{sec:cQED}
 Up to this point only the physical structure of a transmon qubit was discussed. 
