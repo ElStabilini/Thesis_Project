@@ -6,15 +6,16 @@ To achieve this, qubits must have sufficiently long coherence times to support m
 During my thesis work, conducted within the Qibo collaboration and specifically in the Qibocal and Qibolab groups, I focused on the study and development of calibration routines for the \Qibocal library aimed at improving both single-qubit and two-qubit gate fidelities.
 In the following I will briefly illustrate the content of my thesis report e il lavoro che ho svolto.
 
-%chapter 1 - introduction to quantum computing & superconducting qubits
 \paragraph{}
+In chapter one I introduce the theoretical framework underlying this work, beginning with a description of Josephson junctions and their operation \cite{JOSEPHSON1962251}. 
+These nonlinear electronic elements enable the definition of a two-dimensional subspace that constitutes the qubit. 
+The discussion then proceeds to early models of superconducting qubits, from Cooper Pair Boxes (CPBs) \cite{Vion2002} to flux-tunable transmon qubits \cite{TransmonPaper}, and how these systems can be employed to implement single and two qubit gates. 
+The final part of the chapter focuses on the mechanisms for qubit state readout and control, concluding with a discussion on the degradation of the qubit state over time.
 
-
-%chapter 2 - experimental setup - software -calibration 
 \paragraph{}
-Chapter 2 contiene una descrizione dell'apparato sperimentale su cui sono state eseguite tutte le misure e i protocolli svolti durante il lavoro di tesi.
-Nello specifico questi sono stati eseguiti sul chip Contralto-D di QuantWare \cite{qw11q} situato al Technology Innovation Institute (TII) di Abu Dhabi. 
-Per quanto riguarda l'acquisizione l'elettronica questa era quella fornita da Quantum Machines, nello specifico l'OPX100 \cite{opx1000}.
+Chapter 2 provides a detailed description of the experimental setup used for all measurements and protocols carried out during this thesis work. 
+Specifically, the experiments were performed on the Contralto-D chip developed by QuantWare \cite{qw11q}, hosted at the Technology Innovation Institute (TII) in Abu Dhabi. 
+The control and data acquisition electronics were supplied by Quantum Machines, in particular the OPX100 platform \cite{opx1000}.
 
 %chapter 3 . gate optimization
 \paragraph{}
@@ -28,8 +29,4 @@ To address this, we implemented the Cryoscope protocol, originally introduced by
 
 %chapter 5 - conclusions
 \paragraph{}
-
-This can be done by optimizing specific figures of merit for quantum circuits, for example, minimizing the gate infidelity measured through randomized benchmarking. 
-In particular, in superconducting qubit systems, gate operations are realized by applying electromagnetic pulses. Subsequently, key tunable parameters for optimization include pulse amplitude and frequency. 
-
-Once fine-tuning is complete, eventual calibration issues can be assessed by implementing routines to correct specific sources of error. For superconducting flux-tunable qubits a possible error source is the distortions in the applied flux pulses that can arise from imperfections in the transmission lines can lead to deviations from the intended pulse shape. To compensate for this effect it is necessary to characterize distortions and then apply pre-distortions which ensures that the applied pulses more accurately correspond to the desired gate operations.
+The conclusion chapter summarizes the main results of the work
