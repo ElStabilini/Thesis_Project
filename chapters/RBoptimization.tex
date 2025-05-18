@@ -150,7 +150,6 @@ The frequency parameter, expressed in Hz, was allowed to vary within a window of
 For the DRAG parameter $\beta$, the search range was set to $0.25$ around the value returned by the initial DRAG calibration; this interval corresponds to the resolution used in the scan performed during the \tt{drag} routine, thus preserving consistency with earlier characterization steps.
 
 In a subsequent phase of this study, a comparative analysis was performed by repeating the optimization while keeping the pulse shape fixed to a Gaussian envelope, effectively removing $\beta$ as an optimization variable. 
-
 %TODO: try to run at least once the NM from not-fine tuned
 
 \section{SciPy optimization methods}\label{Sec:OptimizationMethods}
@@ -281,8 +280,7 @@ The results of these runs are reported in the following sections and are labeled
 
 From the plots showing the outcome of the first optimization run, it can be observed that the fidelity increases over the initial iterations and then stabilizes around a value of approximately 99.45\% after about fifteen steps.
 Two aspects are particularly noteworthy. The first concerns the noticeable drop in fidelity observed at the sixteenth iteration, where the fidelity falls below the 97\% threshold (Figure \ref{fig:20241110_211211:fidelity}), despite the amplitude and frequency of the $R_X$ pulse showing no significant changes compared to the previous optimization steps (see Figure \ref{fig:20241110_211211:parameters}).
-This anomaly is due to a failure in the fitting procedure used to estimate the randomized benchmarking infidelity at that step (see Figure [TODO: insert reference]).
-A similar behavior can be seen in other plots depicting the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), indicating that such fitting failures can occasionally impact the apparent fidelity trend during the optimization process.
+A similar behavior can be seen in other plots depicting the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), indicating that che ci possono essere possibili problemi di misura o di acquisizione con l'hardware o anche possibili problemi di controllo dello stato del qubit.
 
 \begin{figure}[h!]
     \centering
@@ -312,7 +310,6 @@ In particular, regarding the optimization labeled as \tt{init\_symp\_2}, the mos
 That is, for comparable values of amplitude and frequency, significantly different fidelity outcomes are observed.
 This is especially evident when examining the optimization steps corresponding to the pronounced fidelity dips in Figure \ref{fig:20241113_181711:fidelity}.
 By comparing those same steps with the parameter evolution shown in Figure \ref{fig:20241113_181711:parameters}, it becomes clear that neither the amplitude nor the frequency of the $R_X$ pulse changes significantly.
-Once again, such low fidelity values are attributed to failures in the Randomized Benchmarking fitting procedure, rather than real changes in gate performance.
 
 \begin{figure}[h!]
     \centering
@@ -340,15 +337,23 @@ Once again, such low fidelity values are attributed to failures in the Randomize
 
 In this third and final case, the lack of convergence is apparent directly from the fidelity plot shown in Figure \ref{fig:20241113_200745:fidelity}.
 Upon closer inspection, it was observed that the frequency parameter quickly settles at the lower bound of its defined range. 
-This initially led to the hypothesis that the preceding Ramsey-based fine-tuning step—used to initialize the optimization—had failed.
-However, this assumption was disproven by the diagnostic report automatically generated for each operation performed with \Qibocal.
-The corresponding Ramsey experiment, which confirms successful execution, is shown in \hyperref[app:AppendixC]{Appendix C}, Figure \ref{fig:Ramsey_NM}.
+This initially led to the hypothesis that the preceding Ramsey-based fine-tuning step used to initialize the optimization had failed.
+However, this assumption was disproven by the report automatically generated for each operation performed with \Qibocal.
+The corresponding Ramsey experiment, which confirms successful execution, is shown in Figure \ref{fig:Ramsey_NM}.
 These findings lead us to conclude that in this case, the Nelder Mead algorithm simply failed to converge with the same stability observed in the previous optimization runs.
 
-A summary of the results obtained using the Nelder–Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Ramsey.png}
+    \caption{Ramsey experiment performed to fine tune the $R_X$ gate frequency before the optimization process.}
+    \label{fig:Ramsey_NM}
+\end{figure}
+
+A summary of the results obtained using the Nelder Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt}.
 
 Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization process enabled the achievement of higher average Clifford gate fidelities. For this reason, the optimization of $\beta$ was reintroduced in the subsequent optimization attempts.    
 
+%TODO: completare studio del confronto
 Potrebbe essere interessante confrontare i risultati per i valori dei parametri ottenuti in questi diversi tentativi di ottimizzazione, bisogna però tenere conto del fatto che, ad eccezione degli ultimi due, tutti gli esperimenti were run on different days.
 Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure . Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
 
@@ -601,7 +606,8 @@ In the present work, the cost function is defined as the infidelity extracted fr
 
 \subsection{Results}
 
-Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementato nella libreria \tt{Optuna} ho scelto di utilizzare 30 step, equivalenti a 30 trials, per osservare quale miglioramento fosse possibile applicando approssimativamente lo stesso numero di optimization step utilizzato per i metodi di ottimizzazione testati in precedenza,
+Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementato nella libreria \tt{Optuna} ho scelto di utilizzare 30 step, equivalenti a 30 trials, per osservare quale miglioramento fosse possibile applicando approssimativamente lo stesso numero di optimization step utilizzato per i metodi di ottimizzazione testati in precedenza.
+Anche in questo caso ho fornito all'algoritmo dei dati iniziali e delle boundaries che sono state determinate, come per i casi predenti, dalle routine di fine-tuning.
 
 %30 steps
 \begin{figure}[h!]
@@ -615,7 +621,7 @@ Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementa
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials.
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate avarage fidelity.
     The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna30:amplitude}
 \end{figure}
@@ -638,12 +644,18 @@ Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementa
     \label{fig:optuna30:beta}
 \end{figure}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/terminator.png}
-    \caption{}
-    \label{fig:optuna30:terminator}
-\end{figure}
+La prima cosa che si osserva dai grafici è che non c'è una vera e propria convergenza ma questo probabilmente dipende dalla natura dell'algoritmo %TODO: (optuna deve convergere o no? Su due piedi direi di no, eventualmente però approfondire e discuterne un po').
+Sicuramente però questo ci fa capire che non posso usare optuna come se fosse una routine di calibrazione, nel senso che non posso pensare di dire faccio un tot di step (trials) di ottimizzazione e poi sicuramente posso procedere a fare quello che voglio.
+Quello che può essere interessante fare è utilizzarlo per esplorare lo spazio dei parametri e cercare di capire se ci sono delle regioni dello spazio dei parametri che possono garantire una migliore fidelity. 
+In questo caso infatti la miglior fidelity viene raggiunta al 23esimo step e si ottiene un valore di fidelity di 99.58\%, complessivamente un buon valore e paragonabile ai migliori valori di fidelity che abbiamo ottenuto finora con gli altri metodi.
+
+L'indubbio vantaggio di \tt{Optuna} però è che è molto più efficiente per raggiungere questa fidelity sono state fatte solamente 30 valutazioni della funzione ottenute in circa 12 minuti (per il valore preciso in secondi see Table \ref{tab:optuna_opt}).
+Proprio perchè l'ottimizzazione è così veloce può essere interessante provare ad effettuare un numero maggiore di trials per vedere se è possibile far converege l'algoritmo o quanto meno raggiungere una fidelity più alta.
+
+Sulla scorta di questa idea abbiamo deciso di provare a ripetere lo stesso procedimento di ottimiazzazione utilizzando in questo caso 100 step di ottimizzazione e 100 trials. 
+L'evoluzione della fidelity durante questa ottimizzazione è riportata in Figure \ref{fig:optuna100:optimization}.
+Contrariamente alle aspettative per cui si pensava si potesse ottenere una migliore fidelity aumentando il numero di step di ottimizzazione però si osserva che in questo caso il minimo della funzione costo (la infidelity) si ottiene entro i primi 20 steps,
+in particolare al 13esimo step si ottiene the best avarage fidelity fo Clifford gate which correspond to 99.64\%.
 
 %100 steps
 \begin{figure}[h!]
@@ -680,20 +692,97 @@ Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementa
     \label{fig:optuna100:beta}
 \end{figure}
 
+Osservando i plot e i valori ottenuti per i ampiezza frequenza e parametro beta dell'impulso di DRAG si osserva che il valore migliore della fidielity è associato a valori di ampiezza frequenza e parametro beta diversi.
+Questo è vero soprattutto se si osservano l'ampiezza e il parametro beta, mentre però per l'ampiezza dell'impulso il range di variabilità è lo stesso ('altronde è determinato sulla base dei limiti strumentali), quello che si osserva è che il range per la ricerca del $\beta$ ottimale è molto diverso.
+Per quanto il parametro $\beta$ non sia il parametro più importante dell'ottimizzazione (in particolare dall'analisi dell'ottimizzazione di optuna sappiamo che in media conta per circa il 9\% del miglioramento della fidelity), sicuramente la sua determinazione ha un impatto sull'impulso che staimo mandando.
+
+La ragione di questa ampia diffferenza tra i range di variabilità consentiti per i parametri $\beta$ è da ricercarsi nel fatto (di cui purtorppo mi sono accorta solo a posteriori), del afallimento della routine per il fine tuning del parametro per il DRAG pulse.
+I plot delle routine fallite sono riportati in Figure \ref{fig:failed_beta}.
+A seguito di questo è stato parzialmente modificato il codice per monitorare il possibile fallimento delle routine di fitting nel fine tuning precedente l'ottimiazzazione.
+
 \begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/terminator.png}
-    \caption{}
-    \label{fig:optuna100:terminator}
+        \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/beta30.png}
+        \caption{Plot of the output of the \tt{drag\_tuning} routine performed before running the 30 steps optimization with \tt{Optuna}.}
+        \label{fig:failed_beta:30}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/beta100.png}
+        \caption{Plot of the output of the \tt{drag\_tuning} routine performed before running the 100 steps optimization with \tt{Optuna}.}
+        \label{fig:failed_beta:100}
+    \end{subfigure}
+
+    \caption{Plots failed fine tuning routines for estimating the $\beta$ parameter for the DRAG pulse shape. 
+    From the plot is clear that the fitting procedure failed, a possible improvement to allow for a better fit could have been the choice of a smaller step size to scan the possible $\beta$ values.}
+    \label{fig:failed_beta}
 \end{figure}
 
 %1000 steps
+Considerati i risultati ottenuti durante i due precedenti cicli di ottimiazzazione con \tt{Optuna} abbiamo deciso di provare a fare una nuova ottimiazzazione, questa volta controllando meglio il funzionamento delle routine di fine tuning precedenti l'ottimizzazione.
+Sempre alla luce del tempo impiegato da \tt{Optuna} per completare l'ottimizzazione, nel caso precedente circa 40 min per 100 trials di ottimizzazione, abbiamo deciso di aumentare ulteriormente il numero di trials per l'ottimizzazione, abbiamo quindi deciso di imporre un limite di 1000 trials,
+sempre per provare a vedere se riuscivamo ad esplorare meglio lo spazio ed eventualmente a convergere.
+
+La storia dell'ottimizzazione è riportata in Figure \ref{fig:optuna1000beta}, la prima cosa evidente è che apparentemente riusciamo a raggiungere una avarage fidelity per Clifford gate di 99.98\%.
+Tuttavia, se si studiano dli output di tutte le routine di RB a cui corrispondono avarage Clifford gate infidelities inferiori a $1.5\cdot10^{-3}$ si osserva che in realtà questo dovuto ad un fallimento del fit esponenziale.
+In Figure \ref{fig:RBfailed} riporto alcuni esempi di questi plot, nello specifico riporto i plot corrispondenti alle 4 infidelities più basse ottenute.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/optimization.png}
     \caption{Plot of the optimization history using \tt{Optuna} for 1000 trials. Infidelity as a function of trials.}
     \label{fig:optuna1000beta:optimization}
 \end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed1.png}
+        \caption{Plot of the output of RB protocol for trial 250.}
+        \label{fig:optuna1000beta:failed1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed2.png}
+        \caption{Plot of the output of RB protocol for trial 486.}
+        \label{fig:optuna1000beta:failed2}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed3.png}
+        \caption{Plot of the output of RB protocol for trial 192.}
+        \label{fig:optuna1000beta:failed3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed4.png}
+        \caption{Plot of the output of RB protocol for trial 148.}
+        \label{fig:optuna1000beta:failed4}
+    \end{subfigure}
+
+    \caption{Plots of the failed RB fit for different \tt{Optuna} trials.}
+    \label{fig:RBfailed}
+\end{figure}
+
+A questo punto sono state ripetute le analisi escludendo tutti i data-points con cost function inferiore a $1.5\cdot10^{-3}$, la nuova optimization history e riportata in Figure \ref{fig:optuna1000beta:optimization_true}.
+In questo caso la miglior fidelity ottenuta è pari a $99.85\%$, decisamente inferiore a quella precedente di $99.98\%$ ma comunque soddisfacente visto che corrisponde a un miglioramento del TODO:inserire migliorament percentuale. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/optimization_true.png}
+    \caption{Plot of the optimization history using \tt{Optuna} for 1000 trials and exluding the data-points associate to RB routines where the fititng procedure failed. 
+    Infidelity as a function of trials.}
+    \label{fig:optuna1000beta:optimization_true}
+\end{figure}
+
+In Figure \ref{fig:optuna1000beta:amplitude} - \ref{fig:optuna1000beta:beta} è riportata la storia dei parametri per l'ottimizzazione.
+Ancora una volta il parametro più interessante da osservare è il parametro $\beta$ per cui la distribuzione dei valori è chiaramente centrata attorno allo zero.
+Inoltre il miglior valore per il parametro $\beta$ sembra essere $-510\cdot10^{-6}$ talmente vicino a zero da rendere l'impulso praticamente gaussiano.
+
+Per quanto riguarda invece ampiezza e frequenza, il fatto che i valori migliori si trovino nella zona più densamente cmapionata ci tranquillizza circa l'effettivo funzionamento dell'ottimizzazione con optuna.
 
 \begin{figure}[h!]
     \centering
@@ -722,15 +811,10 @@ Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementa
     \label{fig:optuna1000beta:beta}
 \end{figure}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/Terminator.png}
-    \caption{}
-    \label{fig:optuna1000beta:terminator}
-\end{figure}
-
 
 %1000stepsnobeta
+Sulla base di quanto osservato sul parametro $\beta$ durante il precedente ciclo di ottimizzazione abbiamo deciso ripetere il processo di ottimizzazione senza il parametro $\beta$ per vedere qaunto cambiasse il risultato.
+Il risultato dell'ottimizzazione è riportato in Figure 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000/optimization.png}
@@ -754,13 +838,6 @@ Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementa
     The colormap indicates the Clifford gate avarage fidelity.  
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity.}
     \label{fig:optuna1000:frequency}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000/terminator.png}
-    \caption{}
-    \label{fig:optuna1000:terminator}
 \end{figure}
 
 \begin{table}[h]
@@ -807,6 +884,9 @@ Entrambi questi studi potrebbero essere particolarmente interessanti soprattutto
 Utilizzando \tt{Optuna} avrebbe potuto essere interessante anche provare a fare uno studio con una multi-objective minimization cercando non solo di minimizzare l'infidelity ma anche di minimizzare il tempo di esecuzione dell'ottimizzazione.
 
 In questo caso abbiamo scelto di non procedere in questa direzione soprattutto per via dei risultati che sono stati ottenuti con \tt{optuna}, gli ultimi studi in particolare con un numero elevato di trials hanno messo in luce quanto, nonostane una buona esplorazione dello spazio dei parametri non sia facile ottenere una configurazione con una buuona fidelity sufficientemente stabile. 
+
+%TODO: completare tabelle per optuna
+%TODO: correggere tabelle per optuna (cambiare la miglior fidelity raggiunta se quella raggiunta non è davvero la miglior fidelity)
 
 \begin{sidewaystable}[h]
     \centering
