@@ -1,18 +1,23 @@
 \chapter{Pulses analysis and tuning}
 
-Having concluded that closed-loop optimization would not significantly improve fidelity, we shifted our focus towards improvement and implementation of individual protocols to improve the accuracy of qubit operations.\\
+Having concluded that the closed-loop optimization protocol we tested would not significantly improve our circuits performance, we shifted our focus towards improvement and implementation of individual protocols to improve the accuracy of qubit operations.\\
 In this chapter, I present the results of two additions to the \texttt{Qibocal} software. 
 The first is the inclusion of an $RX90$ gate as a native gate, which can enhance the performance of protocols requiring qubit rotations of $\frac{\pi}{2}$.
 The second is the implementation of the cryoscope, a routine first described in \cite{rol_time-domain_2020}, which is useful for correcting distortions in the magnetic flux pulse applied to the SQUID.
 
 \section{RX90 calibration}
+As discussed in Section \ref{sec:calibration}, it is possible to calibrate system parameters and perform fine-tuning routines to accurately determine the amplitude and frequency of the drive pulse required to transition the qubit from the $\ket{0}$ state to the $\ket{1}$ state. 
+This calibration is essential for the correct implementation of single-qubit gates, such as the $R_X(\pi)$ rotation used in our setup.
+
+However, executing more complex quantum circuits and algorithms requires the ability to perform a broader set of quantum operations. 
+In gate-based quantum computing, and in particular for superconducting hardware platforms, this is achieved by composing more general unitary operations from a limited set of pre-defined, hardware-native quantum gates. 
+These native gates are the elementary operations that are directly implementable and physically calibrated on the quantum processor.
+
+The choice and quality of these native gates are extremly important as all higher-level gates will be decomposed into sequences of native gates, and any calibration errors in the latter can accumulate and propagate through a circuit, degrading the overall fidelity. 
+Therefore, having a small, universal, and very well-calibrated set of native gates is essential for the reliable execution of quantum algorithms.
 
 \subsection{\Qibolab native gates}\label{subsec:native_gates}
-As discussed at the beginning of the chapter, the primary goal of this work is to explore an automated calibration approach aimed at optimizing the single-gate fidelity of logical gates. 
-In particular, we focused on the calibration of the $R_X(\pi)$ gate, which corresponds to a resonant microwave pulse with a amplitude, and duration that induces a rotation of the qubit state by an angle of $\pi$ around the $x$-axis of the Bloch sphere.
-
-The decision to focus on the $R_X(\pi)$ gate dependes on its role as one of the native gates in \texttt{Qibolab}. 
-Native gates are those which can be directly implementable at the hardwarelevel, in contrast to abstract logical gates, which must be transpiled into sequences of hardware supported primitives. 
+Native gates are those which can be directly implemented at the hardware level, in contrast to abstract logical gates, which must be transpiled into sequences of hardware supported primitives. 
 In the case of \texttt{Qibolab}\footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X(\pi)$ gate, calibrated be performing the Rabi experiments described in Section \ref{sec:Rabi}, the measurement gate and the virtual-Z (VZ) gate which is not implemented via a physical pulse but rather through a dynamic adjustment of the phase of subsequent control pulses. 
 Additionally, the RX90 gate, corresponding to a $\frac{\pi}{2}$ rotation, is implemented by halving the amplitude of the calibrated $\pi$-pulse.
 This native gate set, consisting of physically implemented $R_X(\pi)$, $R_X(\pi/2)$, and virtual Z gates, is sufficient for universal single-qubit control.
@@ -41,7 +46,15 @@ U(\gamma, \theta, \phi) = R_Z(\gamma + \phi) \cdot R_Z(-\phi) R_X(\theta) R_Z(\p
 Note that, in practice, this final $R_Z$ rotation does not need to be realized as a physical pulse. 
 Instead, it can be implemented virtually by adjusting the phase reference of subsequent pulses, a technique known as the virtual-Z gate\cite{McKay_2017}. \\
 The ability to compose any single-qubit gate using only $R_X$ and virtual-Z operations \cite{boykin1999universalfaulttolerantquantumcomputing} confirms the sufficiency of this native gate set for universal single-qubit control. For instance, even a restricted $ R_X $ rotation such as $ R_X(\pi) $, when combined with arbitrary-angle $ R_Z $ gates, forms a universal set due to the non-commuting nature of these operations.
-By alternating $ R_X(\pi) $ pulses with phase-adjustable $ R_Z $ gates, one can synthesize any $ SU(2) $ unitary up to global phase.
+By alternating $ R_X(\pi) $ pulses with phase-adjustable $ R_Z $ gates, one can synthesize any $SU(2)$ unitary up to global phase.
+
+\subsection{RX90 as native gate}
+Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, abbiamo deciso di aggiungere la $R_X(\pi/2)$ gate to the native set of Qibolab.
+Il motivo fondamentale è che, fino a questo punto, abbiamo lavoraro che the amplitude or duration of the $R_X(\pi/2)$ gate were exactly half that of the $R_X(\pi)$ pulse.
+This assumption implies a perfectly linear response of the qubit to the drive pulse, which may be violated in practice due to nonlinearities in the system or imperfections in the pulse generation and delivery.
+
+Per farlo oltre a inserirla ne [vedi file specifico] I also modified the calibration experiments presented in Section \ref{sec:calibration} per supportare anche la calibrazione di questa nuova gate.
+
 
 
 
@@ -87,11 +100,9 @@ Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting eq. \ref{e
 
 \subsection{Corrected pulse}
 
-\begin{comment}
-    TO DO LIST:
-    * calcoli analitici di convoluzioni per dimostrare che è giusto il modo in cui combiniamo i filtri
-    * eventualmente provare ad aggiungere più correzioni esponenziali
-\end{comment}
+
+%TODO: provare ad aggiungere più correzioni esponenziali
+
 \subsection{Filter determination}
 \subsubsection{IIR corrections}
 \subsubsection{FIR corrections}
@@ -186,3 +197,5 @@ In general, for different forms of the detuning flux $\Delta f(\Phi) = a\Phi^k$,
 \end{align}
 
 The demonstration of this equality is reported in \hyperref[app:AppendixB]{Appendix B}.
+
+\subsection{Results on chevron pattern}

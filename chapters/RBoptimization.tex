@@ -82,10 +82,9 @@ Each sequence was evaluated at increasing circuit depths up to a maximum of $100
 For each depth and random sequence, I generated only one instance (\texttt{n\_avg = 1}), meaning that each sequence was distinct and not repeated with the same gate pattern. 
 Consequently, statistical averaging was achieved across the ensemble of random sequences at each depth rather than by repeating individual circuits. 
 \footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
+All the results presented in the following were obtained running the protocols on qubit \tt{D1}.
 
 \subsection{Parametri da ottimizzare}
-%TODO: descrivere anche il fatto che in realtà questo procedimento di fine tuning non è così banale e che può decisamente influenzare i risultati (spiegare come sono inizializzati i parametri per l'ottimizzazione)
-
 The optimization procedures described in this work aim to enhance the average fidelity of a Clifford gate by minimizing its infidelity, as determined through RB experiments. 
 The optimization is carried out over three control parameters: the amplitude and frequency of the microwave pulse and the DRAG correction parameter $\beta$, which modulates the second quadrature of the pulse shape. 
 This closed-loop optimization approach follows a structure similar to the Optimal Randomized Benchmarking for Immediate Tune-up (ORBIT) protocol introduced in \cite{kelly_optimal_2014}, wherein the gate performance is iteratively improved based on benchmarking results.
@@ -351,16 +350,18 @@ These findings lead us to conclude that in this case, the Nelder Mead algorithm 
 
 A summary of the results obtained using the Nelder Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt}.
 
-Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization process enabled the achievement of higher average Clifford gate fidelities. For this reason, the optimization of $\beta$ was reintroduced in the subsequent optimization attempts.    
+Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization process enabled the achievement of higher average Clifford gate fidelities. 
+For this reason, the optimization of $\beta$ was reintroduced in the subsequent optimization attempts.
 
 %TODO: completare studio del confronto
 Potrebbe essere interessante confrontare i risultati per i valori dei parametri ottenuti in questi diversi tentativi di ottimizzazione, bisogna però tenere conto del fatto che, ad eccezione degli ultimi due, tutti gli esperimenti were run on different days.
-Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure . Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
+Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure [TODO:insert ref]. 
+Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
 
 \subsection{SLSQP}
 \subsubsection{Algorithm description}
-Per valutare eventuali miglioramenti nella performance abbiamo provato ad utilizzare un algoritmo che fosse gradient-based. 
-Nello specifico ho provato ad utilizzare l'algoritmo di Sequential Least Squares Programming (SLSQP) nella versione implementata all'interno della libreria \tt{SciPy}.
+To explore possible improvements in performance, we tried using a gradient-based algorithm. 
+In particular, we used the Sequential Least Squares Programming (SLSQP) method available in the \texttt{SciPy} library.
 
 The Sequential Least Squares Programming (SLSQP) method, originally developed by Dieter Kraft in 1988 \cite{kraft1988slsqp}, is a gradient-based algorithm for solving constrained nonlinear optimization problems.
 The algorithm solves a nonlinear constrained problem of the form:
@@ -458,7 +459,7 @@ Since the gradient must be estimated numerically, each step involves multiple ev
     \caption{This table provides a short summary of the results obtained using different optimization methods available in \texttt{SciPy}.\\ 
     The \textit{Success} column indicates whether the algorithm converged successfully. 
     A value of True denotes that convergence was achieved within the specified tolerance of $1\cdot10^{-4}$ and before reaching the maximum number of iterations; otherwise, the value is False.
-    The reported value of the objective function corresponds to the average Clifford gate infidelity obtained via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
+    The reported value of the objective function corresponds to the average Clifford gate infidelity obtained at the end of optimization via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
     The \textit{Duration} column refers to the total runtime of the script, including the initial fine-tuning stage preceding the optimization.\\}
     \label{tab:scipy_opt}
 \end{table}
@@ -881,12 +882,38 @@ It also reports the number of optimization steps and function evaluations perfor
     \end{tabular}
     \caption{This table provides a short summary of the results obtained using the \tt{CMA-ES} and \tt{Optuna} algorithm.\\ 
     In particular, regarding the \tt{Optuna} optimization algorithm the number of optimization iterations and of Randomized Benchmarking optimization is the same as the number of function evaluations coincides with the numer of trials and no pruning was performed.
-    The reported value of the objective function corresponds to the average Clifford gate infidelity obtained via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
+    The reported value of the objective function corresponds to the average Clifford gate infidelity obtained at the end of optimization via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
     The \textit{Duration} column refers to the total runtime of the script, including the initial fine-tuning stage preceding the optimization.\\}
     \label{tab:optuna_opt}
 \end{table}
 
 \section{RB optimization conclusions}
+
+As outlined at the beginning of this chapter, the primary goal was to evaluate whether an automated optimization procedure—executed directly on quantum hardware—could reliably improve the average fidelity of single-qubit Clifford gates, specifically the $R_X(\pi)$ gate. 
+The desired outcome was a routine that could be executed periodically, improving gate fidelity in a reproducible and time-efficient manner.
+
+The results obtained from various optimization strategies—Nelder-Mead, CMA-ES, and Optuna—demonstrate that while meaningful improvements in fidelity are achievable, the current implementation does not yet meet the robustness and efficiency requirements for routine deployment. 
+The primary bottleneck remains the cost of the Randomized Benchmarking (RB) routine, which is necessary for fidelity evaluation. Because each optimization requires multiple evaluations of this cost function, the total execution time quickly becomes a limiting factor.
+
+Additionally, we found that convergence is not guaranteed. 
+In several cases, especially those involving Optuna or CMA-ES with a broader parameter search, the optimization did not yield stable or reproducible results.
+ Even when high fidelities were reached (up to 99.85\%), the fidelity showed large sensitivity to small changes in parameter values, casting doubt on the practical stability of the identified configurations.
+
+Two directions for future improvement emerged from this work. 
+First, the RB evaluation process itself could be optimized. 
+In the present study, sequences of depth 1000 were used, and for each depth, 1000 Clifford circuits were sampled. 
+This approach, while reliable, is computationally expensive. A detailed study—possibly involving hyperparameter optimization techniques—could help determine whether shorter sequences or fewer samples still yield meaningful fidelity estimates, potentially reducing total runtime and making on-chip calibration more feasible.
+
+Second, the performance of the optimization algorithms themselves could be refined. 
+For example, in the case of CMA-ES, adjusting the population size or reducing the initial value of $\sigma$ could improve convergence, albeit at the cost of reduced parameter space exploration or increased computational load. 
+These modifications may be particularly relevant in a more stable calibration regime, where parameter values show limited drift over time.
+
+Another promising direction, particularly with \tt{Optuna}, would be to adopt a multi-objective optimization strategy, where both fidelity and optimization time are minimized simultaneously. 
+However, this approach was not pursued in this work due to the instability of the fidelity results observed even in high-trial regimes, highlighting the current limitations of fidelity optimization using this method.
+
+In conclusion, while the results suggest that automated, hardware-level gate fidelity optimization is feasible in principle, substantial improvements are still needed in both the fidelity evaluation routine and the optimization algorithm design before such a protocol can be adopted for regular use on quantum hardware
+
+\begin{comment}
 As mentioned in the introduction to this chapter, the primary objective of this work was to evaluate whether it is possible to develop an automated optimization routine that can be executed directly on quantum hardware to periodically improve the fidelity of single-qubit gates—specifically the  $R_X(\pi)$ gate. 
 For such a routine to be practically useful, two main conditions must be met: first, the optimization must lead to a consistent and measurable improvement in gate fidelity within a limited amount of time; 
 second, the routine must demonstrate stable convergence, such that the resulting optimized parameters (amplitude, frequency, and DRAG correction) can reliably be used to update the hardware configuration, ensuring a reproducible improvement in performance.
@@ -910,7 +937,7 @@ Entrambi questi studi potrebbero essere particolarmente interessanti soprattutto
 Utilizzando \tt{Optuna} avrebbe potuto essere interessante anche provare a fare uno studio con una multi-objective minimization cercando non solo di minimizzare l'infidelity ma anche di minimizzare il tempo di esecuzione dell'ottimizzazione.
 
 In questo caso abbiamo scelto di non procedere in questa direzione soprattutto per via dei risultati che sono stati ottenuti con \tt{optuna}, gli ultimi studi in particolare con un numero elevato di trials hanno messo in luce quanto, nonostane una buona esplorazione dello spazio dei parametri non sia facile ottenere una configurazione con una buuona fidelity sufficientemente stabile. 
-
+\end{comment}
 %TODO: completare tabelle per optuna
 %TODO: correggere tabelle per optuna (cambiare la miglior fidelity raggiunta se quella raggiunta non è davvero la miglior fidelity)
 
@@ -922,18 +949,18 @@ In questo caso abbiamo scelto di non procedere in questa direzione soprattutto p
         \textbf{Name} & \textbf{cost} & \textbf{cost} & \textbf{index} & \textbf{best [a.u.]} & \textbf{ best [$\times10^9$ Hz]} & \textbf{best} & \textbf{improv. [\%]} & \textbf{fidelity} & \textbf{fidelity} & \textbf{improv[\%]} \\
         \midrule
         \textbf{Nelder\_Mead} & 0.00983 & 0.00269 & 19 & 0.04063 & 4.95701 & -1.53253 & 72.59 & 0.99017 & 0.99731 & 0.72 \\
-        \textbf{init\_simplex\_1} & 0.00633 & 0.00467 & 25 & 0.04069 & 4.95820 &  & 26.23 & 0.99367 & 0.99533 & 0.17 \\
-        \textbf{init\_simplex\_2} & 0.00607 & 0.00436 & 17 & 0.04131 & 4.95817 &  & 28.27 & 0.99393 & 0.99564 & 0.17 \\
-        \textbf{init\_simplex\_3} & 0.00585 & 0.00446 & 37 & 0.04058 & 4.95819 &  & 23.73 & 0.99415 & 0.99554 & 0.14 \\
+        \textbf{init\_simplex\_1} & 0.00633 & 0.00467 & 25 & 0.04069 & 4.95820 & - & 26.23 & 0.99367 & 0.99533 & 0.17 \\
+        \textbf{init\_simplex\_2} & 0.00607 & 0.00436 & 17 & 0.04131 & 4.95817 & - & 28.27 & 0.99393 & 0.99564 & 0.17 \\
+        \textbf{init\_simplex\_3} & 0.00585 & 0.00446 & 37 & 0.04058 & 4.95819 & - & 23.73 & 0.99415 & 0.99554 & 0.14 \\
         \textbf{SLSQP} & 0.02172 & 0.00482 & 13 & 0.04058 & 4.95822 & -0.00115 & 77.79 & 0.97828 & 0.99518 & 1.73 \\
         \textbf{CMA-ES} & 0.00728 & 0.00335 & 9 & -0.16634 & 4.95822 & 0.08802 & 54.04 & 0.99272 & 0.99665 & 0.40 \\
-        \textbf{optuna\_30} & & & & & & & & & & \\
-        \textbf{optuna\_100} & & & & & & & & & & \\
-        \textbf{optuna\_1000} & & & & & & & & & & \\
-        \textbf{optuna} & & & & & & & & & & \\
+        \textbf{optuna\_30} & 0.016471 & 0.00416 & 23 & 0.28059 & 4.95601 & 2.75519 & 74.70 & 0.98352 & 0.99583 & 1.25 \\
+        \textbf{optuna\_100} & 0.017535 & 0.00354& 13 & 0.29026 & 4.955279 & -1.46504 & 79.77 & 0.98246 & 0.99645 & 1.42\\
+        \textbf{optuna\_1000} & 0.005307 & 0.00152 & 405 & -0.00051 & 4.961836 & 0.2222 & 71.18 & 0.99469 & 0.99847 & 0.37\\
+        \textbf{optuna no $\beta$} & 0.006983 & 0.00153 & 870 & 0.04104 & 4.957374 & - & 77.96 & 0.99301 & 0.99846 & 0.54\\
         \bottomrule
     \end{tabular}
-    \caption{Comparison of Initial and Best Values}
+    \caption{The table contain the results ottenuti dall'ottimizzazione dei}
     \label{tab:best_values}
 \end{sidewaystable}
 
@@ -945,60 +972,17 @@ In questo caso abbiamo scelto di non procedere in questa direzione soprattutto p
         \textbf{Name} & \textbf{cost} & \textbf{cost} & \textbf{final [a.u.]} & \textbf{final [$\times10^9$ Hz]} & \textbf{final} & \textbf{improv. [\%]} & \textbf{fidelity} & \textbf{fidelity} & \textbf{improv. [\%]} \\
         \midrule
         \textbf{Nelder\_Mead} & 0.00983 & 0.00295 & 0.04067 & 4.95699 & -1.53976 & 70.02 & 0.99017 & 0.99705 & 0.69 \\
-        \textbf{init\_simplex\_1} & 0.00633 & 0.00517 & 0.04069 & 4.95820 &  & 18.41 & 0.99367 & 0.99483 & 0.12 \\
-        \textbf{init\_simplex\_2} & 0.00607 & 0.00437 & 0.04132 & 4.95817 &  & 28.10 & 0.99393 & 0.99563 & 0.17 \\
-        \textbf{init\_simplex\_3} & 0.00585 & 0.00512 & 0.04058 & 4.95819 &  & 12.46 & 0.99415 & 0.99488 & 0.07 \\
+        \textbf{init\_simplex\_1} & 0.00633 & 0.00517 & 0.04069 & 4.95820 & - & 18.41 & 0.99367 & 0.99483 & 0.12 \\
+        \textbf{init\_simplex\_2} & 0.00607 & 0.00437 & 0.04132 & 4.95817 & - & 28.10 & 0.99393 & 0.99563 & 0.17 \\
+        \textbf{init\_simplex\_3} & 0.00585 & 0.00512 & 0.04058 & 4.95819 & - & 12.46 & 0.99415 & 0.99488 & 0.07 \\
         \textbf{SLSQP} & 0.02172 & 0.00507 & 0.04058 & 4.95822 & -0.00115 & 76.64 & 0.97828 & 0.99493 & 1.70 \\
-        \textbf{CMA-ES} & 0.00728 & 0.02664 & 0.12956 & 4.95822 & 0.18364 & -265.93 & 0.99272 & 0.97336 & -1.95 \\
-        \textbf{optuna\_30} & & & & & & & & & \\
-        \textbf{optuna\_100} & & & & & & & & & \\
-        \textbf{optuna\_1000} & & & & & & & & & \\
-        \textbf{optuna} & & & & & & & & & \\
+        \textbf{CMA-ES} & 0.00728 & 0.003346 & 0.12956 & 4.95822 & 0.18364 & -265.93 & 0.99272 & 0.97336 & -1.95 \\
+        \textbf{optuna\_30} & 0.016471 & 0.018178 & 0.46076 & 4.95479 & 2.92767 & -10.36 & 0.98352 & 0.98182 & -0.17\\
+        \textbf{optuna\_100} & 0.017535 & 0.042908 &  0.386175 & 4.95469 & -1.31692 & -144.68 & 0.98246 & 0.95709 & -2.58\\
+        \textbf{optuna\_1000} & 0.005307 & 0.003424 & -0.042718 & 4.95794 & 0.0626649 & 35.48 & 0.99469 & 0.99657 & 0.1893\\
+        \textbf{optuna no $\beta$} & 0.006983 & 0.137907 & 0.058214 & 4.95818 & - & -1874.74 & 0.99301 & 0.86209 & -13.184\\
         \bottomrule
     \end{tabular}
     \caption{}
     \label{tab:final_values}
 \end{sidewaystable}
-
-\begin{comment}
-    \begin{sidewaystable}[h]
-    \centering
-    \begin{tabular}{lcccccccccccccccccc}
-        \toprule
-        \textbf{Analysis} & \textbf{Initial} & \textbf{Best} & \textbf{Best} & \textbf{Amplitude} & \textbf{Frequency} & \textbf{$\beta$} & \textbf{Cost} & \textbf{Amplitude} & \textbf{Frequency} & \textbf{$\beta$} & \textbf{Best cost} & \textbf{Final cost} & \textbf{Initial} & \textbf{Best} & \textbf{Final} & \textbf{Best fidelity} & \textbf{Final fidelity} \\
-        \textbf{Name} & \textbf{cost} & \textbf{cost} & \textbf{index} & \textbf{best [a.u.]} & \textbf{best [$\times10^9$ Hz]} & \textbf{best} & \textbf{final} & \textbf{final [a.u.]} & \textbf{final [$\times10^9$ Hz]} & \textbf{final} & \textbf{improv. [\%]} & \textbf{improv. [\%]} & \textbf{fidelity} & \textbf{fidelity} & \textbf{fidelity} & \textbf{improv. [\%]} & \textbf{improv. [\%]} \\
-        \midrule
-        \textbf{Nelder\_Mead} & 0.00983 & 0.00269 & 19 & 0.04063 & 4.95701 & -1.53253 & 0.00295 & 0.04067 & 4.95699 & -1.53976 & 72.59 & 70.02 & 0.99017 & 0.99731 & 0.99705 & 0.72 & 0.69 \\
-        \textbf{init\_simplex\_1} & 0.00633 & 0.00467 & 25 & 0.04069 & 4.95820 &  & 0.00517 & 0.04069 & 4.95820 &  & 26.23 & 18.41 & 0.99367 & 0.99533 & 0.99483 & 0.17 & 0.12 \\
-        \textbf{init\_simplex\_2} & 0.00607 & 0.00436 & 17 & 0.04131 & 4.95817 &  & 0.00437 & 0.04132 & 4.95817 &  & 28.27 & 28.10 & 0.99393 & 0.99564 & 0.99563 & 0.17 & 0.17 \\
-        \textbf{init\_simplex\_3} & 0.00585 & 0.00446 & 37 & 0.04058 & 4.95819 &  & 0.00512 & 0.04058 & 4.95819 &  & 23.73 & 12.46 & 0.99415 & 0.99554 & 0.99488 & 0.14 & 0.07 \\
-        \textbf{SLSQP} & 0.02172 & 0.00482 & 13 & 0.04058 & 4.95822 & -0.00115 & 0.00507 & 0.04058 & 4.95822 & -0.00115 & 77.79 & 76.64 & 0.97828 & 0.99518 & 0.99493 & 1.73 & 1.70 \\
-        \textbf{CMA-ES} & 0.00728 & 0.00335 & 9 & -0.16634 & 4.95822 & 0.08802 & 0.02664 & 0.12956 & 4.95822 & 0.18364 & 54.04 & -265.93 & 0.99272 & 0.99665 & 0.97336 & 0.40 & -1.95 \\
-        \textbf{optuna\_30} & & & & & & & & & & & & & & & & & \\
-        \textbf{optuna\_100} & & & & & & & & & & & & & & & & & \\
-        \textbf{optuna\_1000} & & & & & & & & & & & & & & & & & \\
-        \textbf{optuna} & & & & & & & & & & & & & & & & & \\
-        \bottomrule
-    \end{tabular}
-    \caption{}
-    \label{tab:detailed_results}
-\end{sidewaystable}
-
-\begin{table}[h]
-    \centering
-    \begin{tabular}{lccc}
-        \textbf{Analysis Name} & \textbf{# function evaluations} & \textbf{# optimization steps} & \textbf{time [s]}
-        \hline
-        \textbf{D1\_nelder-mead\_post\_ft\_true} & 93 & 39 & 2892 \\
-        \textbf{D1_SLSQP} & 180 & 15 & 3873 \\
-        \textbf{D1\_cma\_post\_ft\_true} & 210 & 30 & 4836 \\
-        \textbf{D1\_init\_simplex\_20241110\_211211} & 99 & 39 & 3096 \\
-        \textbf{D1\_init\_simplex\_20241113\_181711} & 100 & 39 & 3128 \\
-        \textbf{D1\_init\_simplex\_20241113\_200745} & 106 & 39 & 3190 \\
-        \textbf{}
-    \bottomrule
-    \end{tabular}
-    \caption{}
-    \label{tab:cal_results}
-\end{table}
-\end{comment}
