@@ -606,8 +606,11 @@ In the present work, the cost function is defined as the infidelity extracted fr
 
 \subsection{Results}
 
-Come primo tentativo di applicazione dell'algoritmo di ottimizzazione implementato nella libreria \tt{Optuna} ho scelto di utilizzare 30 step, equivalenti a 30 trials, per osservare quale miglioramento fosse possibile applicando approssimativamente lo stesso numero di optimization step utilizzato per i metodi di ottimizzazione testati in precedenza.
-Anche in questo caso ho fornito all'algoritmo dei dati iniziali e delle boundaries che sono state determinate, come per i casi predenti, dalle routine di fine-tuning.
+As a first attempt at applying the optimization algorithm implemented in the \texttt{Optuna} library, a total of 30 optimization steps, or trials as referred in the library itself, were performed. 
+This choice was made to maintain consistency with the number of steps used in previous optimization methods. 
+As in the earlier cases, initial parameter values and search boundaries were provided to the algorithm and derived from the fine-tuning routines executed prior to the optimization.
+
+The results obtained with this first optimization attempt are reported in Figure \ref{fig:optuna30:optimization} - \ref{fig:optuna30:beta}.
 
 %30 steps
 \begin{figure}[h!]
@@ -644,18 +647,23 @@ Anche in questo caso ho fornito all'algoritmo dei dati iniziali e delle boundari
     \label{fig:optuna30:beta}
 \end{figure}
 
-La prima cosa che si osserva dai grafici è che non c'è una vera e propria convergenza ma questo probabilmente dipende dalla natura dell'algoritmo %TODO: (optuna deve convergere o no? Su due piedi direi di no, eventualmente però approfondire e discuterne un po').
-Sicuramente però questo ci fa capire che non posso usare optuna come se fosse una routine di calibrazione, nel senso che non posso pensare di dire faccio un tot di step (trials) di ottimizzazione e poi sicuramente posso procedere a fare quello che voglio.
-Quello che può essere interessante fare è utilizzarlo per esplorare lo spazio dei parametri e cercare di capire se ci sono delle regioni dello spazio dei parametri che possono garantire una migliore fidelity. 
-In questo caso infatti la miglior fidelity viene raggiunta al 23esimo step e si ottiene un valore di fidelity di 99.58\%, complessivamente un buon valore e paragonabile ai migliori valori di fidelity che abbiamo ottenuto finora con gli altri metodi.
+The first observation from the optimization plots is that no clear convergence is achieved. 
+This behavior is not unexpected and can be attributed to the nature of the \tt{Optuna} optimization framework, which is not designed to guarantee convergence in the traditional sense. 
+Unlike gradient-based methods or some evolutionary strategies, Optuna is more exploratory by design and may not settle into a stable optimum within a fixed number of trials.
 
-L'indubbio vantaggio di \tt{Optuna} però è che è molto più efficiente per raggiungere questa fidelity sono state fatte solamente 30 valutazioni della funzione ottenute in circa 12 minuti (per il valore preciso in secondi see Table \ref{tab:optuna_opt}).
-Proprio perchè l'ottimizzazione è così veloce può essere interessante provare ad effettuare un numero maggiore di trials per vedere se è possibile far converege l'algoritmo o quanto meno raggiungere una fidelity più alta.
+Instead, Optuna proves valuable as a tool for systematically exploring the parameter space. 
+In doing so, it may identify previously unvisited regions that yield better performance. 
+In this specific run, the highest fidelity was achieved at the 23rd trial, reaching an average Clifford gate fidelity of 99.58\%. 
+A result that is comparable to the best fidelities obtained using the other optimization strategies tested.
 
-Sulla scorta di questa idea abbiamo deciso di provare a ripetere lo stesso procedimento di ottimiazzazione utilizzando in questo caso 100 step di ottimizzazione e 100 trials. 
-L'evoluzione della fidelity durante questa ottimizzazione è riportata in Figure \ref{fig:optuna100:optimization}.
-Contrariamente alle aspettative per cui si pensava si potesse ottenere una migliore fidelity aumentando il numero di step di ottimizzazione però si osserva che in questo caso il minimo della funzione costo (la infidelity) si ottiene entro i primi 20 steps,
-in particolare al 13esimo step si ottiene the best avarage fidelity fo Clifford gate which correspond to 99.64\%.
+However, a clear advantage of using \tt{Optuna} is its efficiency. 
+The entire optimization process, comprising only 30 function evaluations, was completed in approximately 12 minutes; see Table \ref{tab:optuna_opt} for the exact runtime in seconds. 
+Due to this relatively low computational cost, it becomes feasible to explore a larger number of trials to assess whether higher fidelities can be achieved or whether the algorithm can exhibit more stable convergence patterns.
+
+Based on this reasoning, a second optimization run was performed using 100 trials. 
+The evolution of the fidelity during this extended optimization is shown in Figure \ref{fig:optuna100:optimization}. 
+Contrary to initial expectations that a longer optimization would yield better results, it was observed that the lowest cost function value (i.e., highest fidelity) was reached within the first 20 steps. 
+In particular, the best average Clifford gate fidelity of 99.64\% was obtained at the 13th trial.
 
 %100 steps
 \begin{figure}[h!]
@@ -669,7 +677,7 @@ in particolare al 13esimo step si ottiene the best avarage fidelity fo Clifford 
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials.
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate avarage fidelity.
     The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna100:amplitude}
 \end{figure}
@@ -692,13 +700,17 @@ in particolare al 13esimo step si ottiene the best avarage fidelity fo Clifford 
     \label{fig:optuna100:beta}
 \end{figure}
 
-Osservando i plot e i valori ottenuti per i ampiezza frequenza e parametro beta dell'impulso di DRAG si osserva che il valore migliore della fidielity è associato a valori di ampiezza frequenza e parametro beta diversi.
-Questo è vero soprattutto se si osservano l'ampiezza e il parametro beta, mentre però per l'ampiezza dell'impulso il range di variabilità è lo stesso ('altronde è determinato sulla base dei limiti strumentali), quello che si osserva è che il range per la ricerca del $\beta$ ottimale è molto diverso.
-Per quanto il parametro $\beta$ non sia il parametro più importante dell'ottimizzazione (in particolare dall'analisi dell'ottimizzazione di optuna sappiamo che in media conta per circa il 9\% del miglioramento della fidelity), sicuramente la sua determinazione ha un impatto sull'impulso che staimo mandando.
+An analysis of the plots and the numerical values obtained for the $R_X(\pi)$ pulse parameters shows that the highest Clifford gate avarage fidelity corresponds to distinct values of these parameters. 
+%TODO: inserire valori per ampiezza e frequenza per i due esperimenti precedenti
+This effect is particularly evident for the amplitude and $\beta$ parameters. 
+While the amplitude range remains fixed, being constrained by hardware limitations, the range used to search for the optimal $\beta$ varies significantly across different optimization runs.
 
-La ragione di questa ampia diffferenza tra i range di variabilità consentiti per i parametri $\beta$ è da ricercarsi nel fatto (di cui purtorppo mi sono accorta solo a posteriori), del afallimento della routine per il fine tuning del parametro per il DRAG pulse.
-I plot delle routine fallite sono riportati in Figure \ref{fig:failed_beta}.
-A seguito di questo è stato parzialmente modificato il codice per monitorare il possibile fallimento delle routine di fitting nel fine tuning precedente l'ottimiazzazione.
+Although $\beta$ is not the most critical parameter in determining the fidelity outcome, as highlighted also by the Optuna analysis, which indicates that $\beta$ accounts on average for approximately 9\% of the fidelity improvement, 
+its proper calibration does have a measurable impact on the shape of the control pulse and, therefore, on the overall gates performance.
+
+The reason for the significant variation in the allowed search ranges for $\beta$ can be traced back to a failure in the fine-tuning routine responsible for calibrating the DRAG parameter.
+The failed fitting routines are shown in Figure \ref{fig:failed_beta}. 
+As a result of this issue, the optimization workflow was modified to include control on the $\chi^2$ value obtained from the fitting procedure to monitor potential failures in the pre-optimization stage.
 
 \begin{figure}[h!]
         \centering
@@ -720,13 +732,15 @@ A seguito di questo è stato parzialmente modificato il codice per monitorare il
 \end{figure}
 
 %1000 steps
-Considerati i risultati ottenuti durante i due precedenti cicli di ottimiazzazione con \tt{Optuna} abbiamo deciso di provare a fare una nuova ottimiazzazione, questa volta controllando meglio il funzionamento delle routine di fine tuning precedenti l'ottimizzazione.
-Sempre alla luce del tempo impiegato da \tt{Optuna} per completare l'ottimizzazione, nel caso precedente circa 40 min per 100 trials di ottimizzazione, abbiamo deciso di aumentare ulteriormente il numero di trials per l'ottimizzazione, abbiamo quindi deciso di imporre un limite di 1000 trials,
-sempre per provare a vedere se riuscivamo ad esplorare meglio lo spazio ed eventualmente a convergere.
+Given the results obtained in the two previous optimization runs using \tt{Optuna}, we proceeded with a third round of optimization, this time ensuring control over the execution of the fine-tuning routines that precede the optimization itself. 
+In consideration of the relatively short time required by Optuna in the previous attempt, approximately 40 minutes for 100 trials, we decided to significantly increase the number of optimization trials. 
+Specifically, we set an upper limit of 1000 trials, with the goal of improving parameter space exploration and potentially achieving better convergence.
 
-La storia dell'ottimizzazione è riportata in Figure \ref{fig:optuna1000beta}, la prima cosa evidente è che apparentemente riusciamo a raggiungere una avarage fidelity per Clifford gate di 99.98\%.
-Tuttavia, se si studiano dli output di tutte le routine di RB a cui corrispondono avarage Clifford gate infidelities inferiori a $1.5\cdot10^{-3}$ si osserva che in realtà questo dovuto ad un fallimento del fit esponenziale.
-In Figure \ref{fig:RBfailed} riporto alcuni esempi di questi plot, nello specifico riporto i plot corrispondenti alle 4 infidelities più basse ottenute.
+The optimization history is shown in Figure \ref{fig:optuna1000beta}. 
+At first the results appear promising: the algorithm seems to achieve an average Clifford gate fidelity of 99.98\%. 
+However a closer examination of the outputs corresponding to all RB routines with reported avarage Clifford gate infidelities below $1.5 \cdot 10^{-3}$, it becomes evident that these results are actually the consequence of failed exponential fits on the RB output.
+
+Figure \ref{fig:RBfailed} presents a few representative examples of such cases, specifically showing the RB plots corresponding to the four lowest infidelities obtained during the optimization.
 
 \begin{figure}[h!]
     \centering
@@ -767,8 +781,10 @@ In Figure \ref{fig:RBfailed} riporto alcuni esempi di questi plot, nello specifi
     \label{fig:RBfailed}
 \end{figure}
 
-A questo punto sono state ripetute le analisi escludendo tutti i data-points con cost function inferiore a $1.5\cdot10^{-3}$, la nuova optimization history e riportata in Figure \ref{fig:optuna1000beta:optimization_true}.
-In questo caso la miglior fidelity ottenuta è pari a $99.85\%$, decisamente inferiore a quella precedente di $99.98\%$ ma comunque soddisfacente visto che corrisponde a un miglioramento del TODO:inserire migliorament percentuale. 
+At this point, the analysis was repeated after discarding all data points associated with a cost function value lower than $1.5 \cdot 10^{-3}$. 
+The revised optimization history is shown in Figure \ref{fig:optuna1000beta:optimization_true}. 
+In this analysis, the best fidelity achieved was 99.85\% much lower than the previously reported 99.98\%, but still a satisfactory result. 
+This outcome corresponds to an improvement of approximately [TODO: insert percentage improvement]\% compared to the initial configuration.
 
 \begin{figure}[h!]
     \centering
@@ -782,7 +798,7 @@ In Figure \ref{fig:optuna1000beta:amplitude} - \ref{fig:optuna1000beta:beta} è 
 Ancora una volta il parametro più interessante da osservare è il parametro $\beta$ per cui la distribuzione dei valori è chiaramente centrata attorno allo zero.
 Inoltre il miglior valore per il parametro $\beta$ sembra essere $-510\cdot10^{-6}$ talmente vicino a zero da rendere l'impulso praticamente gaussiano.
 
-Per quanto riguarda invece ampiezza e frequenza, il fatto che i valori migliori si trovino nella zona più densamente cmapionata ci tranquillizza circa l'effettivo funzionamento dell'ottimizzazione con optuna.
+Per quanto riguarda invece ampiezza e frequenza, il fatto che i valori migliori si trovino nella zona più densamente campionata ci tranquillizza circa l'effettivo funzionamento dell'ottimizzazione con optuna.
 
 \begin{figure}[h!]
     \centering
@@ -813,8 +829,15 @@ Per quanto riguarda invece ampiezza e frequenza, il fatto che i valori migliori 
 
 
 %1000stepsnobeta
-Sulla base di quanto osservato sul parametro $\beta$ durante il precedente ciclo di ottimizzazione abbiamo deciso ripetere il processo di ottimizzazione senza il parametro $\beta$ per vedere qaunto cambiasse il risultato.
-Il risultato dell'ottimizzazione è riportato in Figure 
+The evolution of the optimized parameters over the trials of the \tt{Optuna} run is shown in Figures \ref{fig:optuna1000beta:amplitude} - \ref{fig:optuna1000beta:beta}. 
+Once again, the most interesting parameter to analyze is the DRAG coefficient $\beta$, whose sampled values are clearly centered around zero. 
+Notably, the optimal value found for $\beta$ is approximately $-510 \cdot 10^{-6}$, a value so close to zero that it effectively corresponds to a purely Gaussian pulse shape.
+
+As for the amplitude and frequency parameters, it is reassuring to observe that the best-performing values lie within the most densely sampled regions of the parameter space. 
+This supports the conclusion that the optimization process executed by \texttt{Optuna} behaved as expected, effectively concentrating the search around the most promising areas.
+Despite these observations, the system does not appear to be particularly stable, as small variations in the parameter values lead to significant fluctuations in the resulting fidelity. 
+Overall, i risultati mostrati fino a qui suggests that the optimization process carried out by \tt{Optuna} does not exhibit clear convergence.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000/optimization.png}
@@ -839,6 +862,9 @@ Il risultato dell'ottimizzazione è riportato in Figure
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity.}
     \label{fig:optuna1000:frequency}
 \end{figure}
+
+The table below summarizes the infidelity values obtained at the final iteration for each of the optimization algorithms tested in this study. 
+It also reports the number of optimization steps and function evaluations performed, as well as the total runtime required to complete each optimization.
 
 \begin{table}[h]
     \centering
