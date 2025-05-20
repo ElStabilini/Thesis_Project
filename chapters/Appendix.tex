@@ -42,17 +42,16 @@ This protocol is implemented in \Qibocal and available by selecting the \tt{s21}
 \chapter*{Appendix B}
 \label{app:AppendixB}
 
-In the following we will demonstrate the corrctness of equation \ref{eq:demonstarted}:
-
+In general, it is possible to show that for different forms of the detuning flux 
+\begin{equation}\label{eq:det_flux}
+    \Delta f(\Phi) = a\Phi^k
+\end{equation}
+where $k \in \mathbb{Z}^+$, the relative phase $\varphi_{\tau}$ can be calculated as follows:
 \begin{align}
     \varphi_\tau &= 2\pi a \int_{0}^{\infty} \left[ \int_{0}^{\infty} h(t - t') dt' - \int_{0}^{\infty} h(t - \tau - t') dt' \right]^k dt \\
     &= 2\pi a \int_{0}^{\tau} \left[ \int_{0}^{t} h(t - t') dt' \right]^k dt + 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') dt' \right]^k dt,
 \end{align}
-for different forms of the detuning flux 
-\begin{equation}\label{eq:det_flux}
-    \Delta f(\Phi) = a\Phi^k
-\end{equation}
-where $k \in \mathbb{Z}^+$.
+
 From the calculations showed in \ref{eq:phi} we know that the relative phase $\phi_\tau$ for a general form of the detuning flux \ref{eq:det_flux}, with $T_{\text{sep}} = \infty$ is
 \begin{equation}\label{eq:phi_here}
     \varphi_{\tau} = 2\pi \int_{0}^{+\infty} a \left[ \left( s(t) - s(t - \tau) \right) \right]^k dt = 2\pi a \int_{0}^{+\infty} \left[ \left( s(t) - s(t - \tau) \right) \right]^k dt

@@ -7,18 +7,21 @@ Even under these overall favorable initial conditions, the effort required to re
 As quantum processors scale in both qubit count and architectural complexity, calibration becomes increasingly difficult. 
 Frequent recalibrations are necessary to mitigate the effects of parameter drift and environmental fluctuations, especially in superconducting qubit platforms \cite{krantz_quantum_2019}.
 
-Furthermore, as gate fidelities approach the fault-tolerance threshold, accurate control of gates becomes critical for most practical quantum computing applications. 
-In this context, it is useful to introduce, in addition to native single-qubit gates—such as $RX_{\pi/2}$ pulses or virtual $RZ$ rotations, which are directly calibrated and implemented with a single pulse, the Clifford gates are typically composed of multiple native gates. 
-Standard randomized benchmarking (RB) protocols, as used in this chapter, measure the average fidelity of a single-qubit Clifford gate. 
-While this quantity does not directly reflect the fidelity of individual native gates, it remains a meaningful and widely used figure of merit. 
-Because single-qubit Clifford gates form a finite subgroup of unitary operations that map Pauli operators onto themselves under conjugation and they provide a useful tool to characterize gate performance. 
-Their structured algebra and invariance properties make them particularly suitable for randomized benchmarking protocols, where they enable depolarization of coherent errors and allow for SPAM-robust estimation of average gate fidelity \cite{knill_randomized_2008}.
+Furthermore, as gate fidelities approach the fault-tolerance threshold, accurate control of gates becomes critical for most practical quantum computing applications.
+In this context, it is useful to introduce, in addition to native single-qubit gates, such as $RX_{\pi/2}$ pulses or virtual $RZ$ rotations, the Clifford gates. 
+While native gates are implemented with a single pulse and can be directly calibrated, Clifford gates are typically composed of multiple native gates.
 
-In this chapter, i present an initial attempt to address the dual challenges of calibration complexity and residual gate errors. 
-The goal is to find calibration procedures that are not only effective but also repeatable and accessible to non-expert users.  
-Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of randomized benchmarking (RB) can improve gate performance, we explored an automatic calibration improvement procedure based on randomized benchmarking fidelity as an optimization target.
-In our implementation, the optimization is performed with respect to the $R_X$ pulse which is a native gate in \Qibolab (see Section \ref{subsec:native_gates}).
-The optimization is performed by adjusting its amplitude, frequency and possibly, the multiiplicative factor of the quadrature component of the DRAG, pulse parameters.
+Clifford gates are particularly important in quantum computing because they form a finite subgroup of unitary operations that map Pauli operators onto themselves under conjugation. 
+This property makes them a useful tool to characterize gate performance, their structured algebra and invariance properties make them particularly suitable for randomized benchmarking protocols \cite{knill_randomized_2008}.  
+In such protocols, Clifford gates enable the depolarization of coherent errors and allow for SPAM-robust estimation of average gate fidelity. 
+Standard randomized benchmarking (RB) protocols, as used in this chapter, measure the average fidelity of a single-qubit Clifford gate. 
+While this quantity does not directly reflect the fidelity of individual native gates, it remains a meaningful and widely used figure of merit.
+
+In this chapter, i present an initial attempt to address both the challenges of calibration complexity and residual gate errors. 
+The goal is to test calibration procedures that are not only effective but also repeatable and accessible to non-expert users.  
+Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of randomized benchmarking (RB) can improve gate performance, we explored an automatic calibration improvement procedure based on average Clifford gate fidelity obtained from standard RB evaluation as an optimization target.
+In our implementation, the optimization is performed with respect to the $R_X(\pi)$ pulse which is a native gate in \Qibolab (see Section \ref{subsec:native_gates}).
+The optimization is performed by adjusting its amplitude, frequency and possibly, the multiplicative factor of the quadrature component of the DRAG, pulse parameters.
 
 The focus of this first study is on improving the average Clifford gate fidelity for single qubits. 
 This choice was made considering the important role of these operations in quantum circuits and the relative simplicity of their control compared to multi-qubit gates.
@@ -56,10 +59,10 @@ The observed survival probability as a function of sequence length $m$ follows t
 \begin{equation}\label{eq:RB_decay}
     F(m) = Ap^m +B,
 \end{equation}
-where $1-p$ quantifies the depolarization rate, and $A$, $B$ capture SPAM contributions.\\
-The depolarization probability $d$ is related to the average gate fidelity $F$ for a system with $n$ qubits through
+where $1-p$ quantifies the depolarization rate, and $A$, $B$ capture SPAM contributions but not the initial state preparation error.\\
+The depolarization probability $d$ is related to the average Clifford gate fidelity $F$ for a system with $n$ qubits through
 \begin{equation}
-    F = 1 - \frac{d}{2^n - 1}\label{eq:avarage_gate_fidelity},
+    F = 1 - \frac{d}{2^n - 1}\label{eq:average_gate_fidelity},
 \end{equation}
 from which the average error per Clifford gate $\varepsilon_{Clifford}$ is obtained as
 \begin{equation}
@@ -73,7 +76,6 @@ This shows how the average error per Clifford gate is directly determined by the
 
 
 \section{RB evaluation and optimization}
-%TODO: inserire una introduzione per questa sezione
 
 \subsection{RB evaluation parameters}\label{sec:RB_parameters}
 In the results presented in the following, I employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
@@ -84,13 +86,13 @@ Consequently, statistical averaging was achieved across the ensemble of random s
 \footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
 All the results presented in the following were obtained running the protocols on qubit \tt{D1}.
 
-\subsection{Parametri da ottimizzare}
+\subsection{Parameters for the optimization}
 The optimization procedures described in this work aim to enhance the average fidelity of a Clifford gate by minimizing its infidelity, as determined through RB experiments. 
 The optimization is carried out over three control parameters: the amplitude and frequency of the microwave pulse and the DRAG correction parameter $\beta$, which modulates the second quadrature of the pulse shape. 
 This closed-loop optimization approach follows a structure similar to the Optimal Randomized Benchmarking for Immediate Tune-up (ORBIT) protocol introduced in \cite{kelly_optimal_2014}, wherein the gate performance is iteratively improved based on benchmarking results.
 
-Prior to the application of the optimization algorithm, a fine-tuning phase is performed to obtain reliable starting values for each parameter. 
-This phase involves a sequence of calibration routines implemented within the \Qibocal framework.
+Prior to the application of the optimization algorithm, a fine-tuning sequence is executed to obtain reliable starting values for each parameter. 
+This preliminary step involves a sequence of calibration routines implemented within the \Qibocal framework.
 The qubit frequency is first refined using a Ramsey experiment (see Section \ref{subsec:Ramsey}), subsequently a flipping sequence (see Section \ref{subsec:Flipping}) is used to adjust the microwave pulse amplitude to ensure that the applied drive results in a precise $\pi$-rotation.
 Finally, the optimal value of the DRAG parameter $\beta$ is estimated through a dedicated DRAG calibration routine (see Section \ref{sec:DRAG}).
 After each of these routines, the platform configuration is updated accordingly in the \tt{platform.json} file, which stores the relevant parameters for the experimental setup 
@@ -154,9 +156,9 @@ In a subsequent phase of this study, a comparative analysis was performed by rep
 \section{SciPy optimization methods}\label{Sec:OptimizationMethods}
 
 \subsection{Nelder-Mead}
-The initial optimization attempts were carried out using standard algorithms available in the \texttt{SciPy} library \cite{SciPy-NMeth}.
-Come primo metodo di ottimizzazione è stato utilizzato un metodo che fosse gradient-free in modo tale che fosse meno sensibile al rumore delle misure. 
-Nello specifico siamo partiti da Nelder-Mead il cui utilizzo per l'ottimizzazione della fidelity dell'RB era già riportata in letteratura in \cite{kelly_optimal_2014}.
+The initial optimization attempts were carried out using standard algorithms available in the \texttt{SciPy} library~\cite{SciPy-NMeth}. 
+As a first approach, a gradient-free optimization method was selected to reduce sensitivity to measurement noise. 
+Specifically, we employed the Nelder-Mead algorithm, whose application to the optimization of randomized benchmarking (RB) fidelity has already been reported in the literature~\cite{kelly_optimal_2014}.
 
 \subsubsection{Algorithm information}
 The Nelder-Mead optimization method, originally introduced by Nelder and Mead in 1965 \cite{NelderMeads}, is a widely used numerical optimization technique for unconstrained problems in multidimensional spaces. \\
@@ -188,10 +190,10 @@ The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to de
 
 \subsubsection{Results}
 In all applications of the Nelder-Mead optimization algorithm presented in this work, a maximum number of function evaluations was imposed to prevent excessively long experimental runtimes. 
-The primary limitation arises from the cost function itself, which corresponds to the average gate fidelity estimated via RB. 
+The primary limitation arises from the cost function itself, which corresponds to the average Clifford gate fidelity estimated via RB. 
 By using the parameters reported in Section \ref{sec:RB_parameters}, each RB sequence evaluation requires a minimum of 20 seconds, subsequently the evaluation of the cost function is particularly resource-intensive in terms of computation time.
 To mitigate these constraints, both a cap on the total number of cost function evaluations and a maximum number of optimization steps were defined. 
-It is important to note that each iteration of the NM algorithm typically involves the evaluation of multiple points in parameter space: at least four in the case of optimization over three parameters, and at least three when optimizing over two parameters (i.e., in a two-dimensional space).
+It is important to note that each iteration of the NM algorithm typically involves the evaluation of multiple points in parameter space: at least four in the case of optimization over three parameters, and at least three when optimizing over two parameters.
 
 In the first run of the algorithm, the maximum number of iterations was limited at 40 such that no more than 160 cost function evaluations were performed.
 dditionally, a convergence tolerance of $1\cdot10^{-4}$ was set (\texttt{tol=1e-4} \footnote{In \texttt{scipy.optimize.minimize}, this parameter sets both the tolerance on the optimization variables, referred to as \texttt{xtol}, and the tolerance on the cost function value (\texttt{ftol}).}), applying stopping criteria to both parameter updates and cost function changes.
@@ -210,7 +212,7 @@ Nevertheless, the progression of the fidelity suggests a stable improvement tren
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/frequency.png}
-        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{NM_true_fig:frequency}
     \end{subfigure}
 
@@ -218,7 +220,7 @@ Nevertheless, the progression of the fidelity suggests a stable improvement tren
 
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/amplitude.png}
-        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{NM_true_fig:amplitude}
     \end{subfigure}
     \hfill
@@ -232,19 +234,18 @@ Nevertheless, the progression of the fidelity suggests a stable improvement tren
     \label{fig:NM_plots}
 \end{figure}
 
-In Figure \ref{NM_true_fig:fidelity}, the evolution of the fidelity during the optimization is shown. 
-The corresponding values of the parameters being optimized are reported in Figures \ref{NM_true_fig:frequency}, \ref{NM_true_fig:amplitude}, and \ref{NM_true_fig:beta}. 
-From these plots, it is again evident that the optimization is converging (possibly to a local minimum) as the parameters stabilize around specific values: \texttt{amplitude} $= 0.04$, \texttt{frequency} $= 4.957$ GHz, and \texttt{beta} $= -1.54$.
+The values of the parameters being optimized are reported in Figures \ref{NM_true_fig:frequency}, \ref{NM_true_fig:amplitude}, and \ref{NM_true_fig:beta}. 
+From these plots, it is again evident that the optimization is converging as the parameters stabilize around specific values: \texttt{amplitude} $= 0.04$, \texttt{frequency} $= 4.957$ GHz, and \texttt{beta} $= -1.54$.
 
 However, a possible limitation to the performance of this optimization approach may lie in the absence of an explicitly defined initial simplex.
 Setting only the initial parameter values, without specifying the full simplex, can lead the algorithm to explore the parameter space inefficiently. 
 For this reason, further runs of the same method were carried out, this time also initializing the simplex explicitly.
 
-Furthermore, considering that the allowed variation range for the $\beta$ parameter was restricted to only $\pm0.25$ around the value determined by the \tt{drag\_tuning} routine, I explored the possibility of improving the efficiency of the optimization by reducing the number of free parameters. 
-Specifically, additional optimization runs were performed in which only the amplitude and frequency of the $R_X$ pulse were optimized, while $\beta$ was kept fixed.
+Furthermore, considering that the allowed variation range for the $\beta$ parameter was restricted to only $\pm0.25$ around the value determined by the \tt{drag\_tuning} routine, quite a small interval, I explored the possibility of improving the efficiency of the optimization by reducing the number of free parameters. 
+Specifically, additional optimization runs were performed in which only the amplitude and frequency of the $R_X(\pi)$ pulse were optimized, while $\beta$ was kept fixed at $0$.
 
 This choice was motivated by the working assumption that, at least in this initial phase, leakage errors were not the dominant source of infidelity. 
-Since the DRAG correction primarily addresses leakage to higher energy levels, it was hypothesized that optimizing $\beta$ would have a limited effect on the overall gate fidelity compared to the more significant impact of accurately calibrating the native gate's amplitude and frequency. 
+Since the DRAG correction primarily addresses leakage to higher energy levels, we thought that $\beta$ would have a limited effect on the overall gate fidelity compared to the more significant impact of accurately calibrating the native gate's amplitude and frequency. 
 As such, the focus was placed on parameters expected to yield the greatest improvements in fidelity while maintaining a limited run time.
 
 Some optimization runs were performed with this revised configuration, in this case the initial symplex was constructed based on preliminary fine tuning routines. 
@@ -264,13 +265,13 @@ The results of these runs are reported in the following sections and are labeled
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/amplitude.png}
-        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241110_211211:amplitude}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/frequency.png}
-        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241110_211211:frequency}
     \end{subfigure}
     \caption{Plots of the optimization parameters as a function of the number of optimization step for the first round optimization - \tt{init\_symp\_2}.}
@@ -278,8 +279,8 @@ The results of these runs are reported in the following sections and are labeled
 \end{figure}
 
 From the plots showing the outcome of the first optimization run, it can be observed that the fidelity increases over the initial iterations and then stabilizes around a value of approximately 99.45\% after about fifteen steps.
-Two aspects are particularly noteworthy. The first concerns the noticeable drop in fidelity observed at the sixteenth iteration, where the fidelity falls below the 97\% threshold (Figure \ref{fig:20241110_211211:fidelity}), despite the amplitude and frequency of the $R_X$ pulse showing no significant changes compared to the previous optimization steps (see Figure \ref{fig:20241110_211211:parameters}).
-A similar behavior can be seen in other plots depicting the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), indicating that che ci possono essere possibili problemi di misura o di acquisizione con l'hardware o anche possibili problemi di controllo dello stato del qubit.
+Two aspects are particularly noteworthy. The first concerns the noticeable drop in fidelity observed at the sixteenth iteration, where the fidelity falls below the 97\% threshold (Figure \ref{fig:20241110_211211:fidelity}), despite the amplitude and frequency of the $R_X(\pi)$ pulse showing no significant changes compared to the previous optimization steps (see Figure \ref{fig:20241110_211211:parameters}).
+A similar behavior is observed in other plots illustrating the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), which may point to possible issues in measurement or data acquisition, or to imperfect control over the qubit state.
 
 \begin{figure}[h!]
     \centering
@@ -292,13 +293,13 @@ A similar behavior can be seen in other plots depicting the optimization progres
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Amplitude.png}
-        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_181711:amplitude}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Frequency.png}
-        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_181711:frequency}
     \end{subfigure}
     \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_symp\_2}.}
@@ -308,7 +309,8 @@ A similar behavior can be seen in other plots depicting the optimization progres
 In particular, regarding the optimization labeled as \tt{init\_symp\_2}, the most important observation is again the presence of large variations in fidelity despite nearly fixed parameters. 
 That is, for comparable values of amplitude and frequency, significantly different fidelity outcomes are observed.
 This is especially evident when examining the optimization steps corresponding to the pronounced fidelity dips in Figure \ref{fig:20241113_181711:fidelity}.
-By comparing those same steps with the parameter evolution shown in Figure \ref{fig:20241113_181711:parameters}, it becomes clear that neither the amplitude nor the frequency of the $R_X$ pulse changes significantly.
+By comparing those same steps with the parameter evolution shown in Figure \ref{fig:20241113_181711:parameters}, it becomes evident that neither the amplitude nor the frequency of the $R_X(\pi)$ pulse changes significantly. 
+It should be noted, as will be discussed in more detail in the conclusions, that this behavior may ultimately limit the effectiveness of the optimization process in improving the average Clifford gate fidelity. 
 
 \begin{figure}[h!]
     \centering
@@ -321,20 +323,20 @@ By comparing those same steps with the parameter evolution shown in Figure \ref{
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Amplitude.png}
-        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_200745:amplitude}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Frequency.png}
-        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_200745:frequency}
     \end{subfigure}
     \caption{Plots of the optimization parameters as a function of the number of optimization step for the first round optimization - \tt{init\_symp\_3}.}
     \label{fig:20241113_200745:parameters}
 \end{figure}
 
-In this third and final case, the lack of convergence is apparent directly from the fidelity plot shown in Figure \ref{fig:20241113_200745:fidelity}.
+In the third and final case, the lack of convergence is apparent directly from the fidelity plot shown in Figure \ref{fig:20241113_200745:fidelity}.
 Upon closer inspection, it was observed that the frequency parameter quickly settles at the lower bound of its defined range. 
 This initially led to the hypothesis that the preceding Ramsey-based fine-tuning step used to initialize the optimization had failed.
 However, this assumption was disproven by the report automatically generated for each operation performed with \Qibocal.
@@ -344,19 +346,14 @@ These findings lead us to conclude that in this case, the Nelder Mead algorithm 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Ramsey.png}
-    \caption{Ramsey experiment performed to fine tune the $R_X$ gate frequency before the optimization process.}
+    \caption{Ramsey experiment performed to fine tune the $R_X(\pi)$ gate frequency before the optimization process.}
     \label{fig:Ramsey_NM}
 \end{figure}
 
-A summary of the results obtained using the Nelder Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt}.
+A summary of the results obtained using the Nelder Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt} while a more detailed summury is reported in Table \ref{tab:best_values} and Table \ref{tab:final_values}, at the end of the present chapter.
 
 Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization process enabled the achievement of higher average Clifford gate fidelities. 
 For this reason, the optimization of $\beta$ was reintroduced in the subsequent optimization attempts.
-
-%TODO: completare studio del confronto
-Potrebbe essere interessante confrontare i risultati per i valori dei parametri ottenuti in questi diversi tentativi di ottimizzazione, bisogna però tenere conto del fatto che, ad eccezione degli ultimi due, tutti gli esperimenti were run on different days.
-Il confronto tra i valori ottenuti dall'ottimizzazione con i diversi metodi sono riportati in Figure [TODO:insert ref]. 
-Dai risultati è evidente che i parametri sono soggetti a drift e che probabilmente la calibrazione ottenuta non è particolarmente stabile.
 
 \subsection{SLSQP}
 \subsubsection{Algorithm description}
@@ -411,7 +408,7 @@ For this run, the same constraints and parameter bounds used in the Nelder-Mead 
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/frequency.png}
-        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:SLSQP:frequency}
     \end{subfigure}
 
@@ -419,7 +416,7 @@ For this run, the same constraints and parameter bounds used in the Nelder-Mead 
 
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/amplitude.png}
-        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:SLSQP:amplitude}
     \end{subfigure}
     \hfill
@@ -433,8 +430,8 @@ For this run, the same constraints and parameter bounds used in the Nelder-Mead 
     \label{fig:SLSQP_plots}
 \end{figure}
 
-In this case, an interesting observation is that, as expected, a sharp drop in fidelity corresponds to a frequency value that deviates significantly from the optimal one for the $R_X$ gate.
-This behavior is consistent with the assumption that frequency and amplitude are the two dominant parameters in determining the quality of the $R_X$ gate and as a consequence  the average fidelity of Clifford gates.
+In this case, an interesting observation is that, as expected, a sharp drop in fidelity corresponds to a frequency value that deviates significantly from the optimal one for the $R_X(\pi)$ gate.
+This behavior is consistent with the assumption that frequency and amplitude are the two dominant parameters in determining the quality of the $R_X(\pi)$ gate and as a consequence  the average fidelity of Clifford gates.
 
 However, as can be seen in Figure \ref{fig:SLSQP:fidelity}, the convergence behavior is not particularly stable: the fidelity exhibits large step-to-step fluctuations. 
 As mentioned previously, this indicates that the SLSQP method is not robust enough to be reliably used as a systematic approach for optimizing average Clifford gate fidelity.
@@ -447,7 +444,7 @@ Since the gradient must be estimated numerically, each step involves multiple ev
     \centering
     \begin{tabular}{lcccccc}
         \toprule
-        \textbf{Method} & \textbf{Success} & \textbf{RB Value} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
+        \textbf{Method} & \textbf{Success} & \textbf{Infidelity} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
         \midrule
         \textbf{Nelder-Mead} & False & 0.002732 & 40 & 93 & 2892 \\
         \textbf{init\_symplex\_1} & False &  0.004593 & 40 & 99 & 3096\\
@@ -458,7 +455,7 @@ Since the gradient must be estimated numerically, each step involves multiple ev
     \end{tabular}
     \caption{This table provides a short summary of the results obtained using different optimization methods available in \texttt{SciPy}.\\ 
     The \textit{Success} column indicates whether the algorithm converged successfully. 
-    A value of True denotes that convergence was achieved within the specified tolerance of $1\cdot10^{-4}$ and before reaching the maximum number of iterations; otherwise, the value is False.
+    A value of True denotes that convergence was achieved within the specified tolerance of $1\cdot10^{-4}$ and before reaching the maximum number of iterations; otherwise, the value is False.\\
     The reported value of the objective function corresponds to the average Clifford gate infidelity obtained at the end of optimization via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
     The \textit{Duration} column refers to the total runtime of the script, including the initial fine-tuning stage preceding the optimization.\\}
     \label{tab:scipy_opt}
@@ -529,7 +526,7 @@ Given a population of 7 individuals and a total of 30 generations, the optimizat
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/CMA_frequency.png}
-        \caption{Plot of the frequency of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:CMA:frequency}
     \end{subfigure}
 
@@ -537,7 +534,7 @@ Given a population of 7 individuals and a total of 30 generations, the optimizat
 
     \begin{subfigure}[t]{0.45\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/CMA_amplitude.png}
-        \caption{Plot of the amplitude of the $R_X$ gate corresponding to different optimization steps.}
+        \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:CMA:amplitude}
     \end{subfigure}
     \hfill
@@ -625,7 +622,7 @@ The results obtained with this first optimization attempt are reported in Figure
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials.
-    The colormap indicates the Clifford gate avarage fidelity.
+    The colormap indicates the Clifford gate average fidelity.
     The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna30:amplitude}
 \end{figure}
@@ -634,7 +631,7 @@ The results obtained with this first optimization attempt are reported in Figure
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/frequency.png}
     \caption{Plot of the $R_X(\pi)$ frequency as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate average fidelity.  
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity}
     \label{fig:optuna30:frequency}
 \end{figure}
@@ -643,16 +640,16 @@ The results obtained with this first optimization attempt are reported in Figure
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/beta.png}
     \caption{Plot of the value of the $\beta$ coefficient for the second quadrature of the $R_X(\pi)$ pulse as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate average fidelity.  
     The red cross denotes the $\beta$ value corresponding to the highest observed fidelity}
     \label{fig:optuna30:beta}
 \end{figure}
 
 The first observation from the optimization plots is that no clear convergence is achieved. 
 This behavior is not unexpected and can be attributed to the nature of the \tt{Optuna} optimization framework, which is not designed to guarantee convergence in the traditional sense. 
-Unlike gradient-based methods or some evolutionary strategies, Optuna is more exploratory by design and may not settle into a stable optimum within a fixed number of trials.
+Unlike gradient-based methods or some evolutionary strategies, \tt{Optuna} is more exploratory by design and may not settle into a stable optimum within a fixed number of trials.
 
-Instead, Optuna proves valuable as a tool for systematically exploring the parameter space. 
+Instead, \tt{Optuna} proves valuable as a tool for systematically exploring the parameter space. 
 In doing so, it may identify previously unvisited regions that yield better performance. 
 In this specific run, the highest fidelity was achieved at the 23rd trial, reaching an average Clifford gate fidelity of 99.58\%. 
 A result that is comparable to the best fidelities obtained using the other optimization strategies tested.
@@ -664,7 +661,7 @@ Due to this relatively low computational cost, it becomes feasible to explore a 
 Based on this reasoning, a second optimization run was performed using 100 trials. 
 The evolution of the fidelity during this extended optimization is shown in Figure \ref{fig:optuna100:optimization}. 
 Contrary to initial expectations that a longer optimization would yield better results, it was observed that the lowest cost function value (i.e., highest fidelity) was reached within the first 20 steps. 
-In particular, the best average Clifford gate fidelity of 99.64\% was obtained at the 13th trial.
+In particular, the best average Clifford gate fidelity of 99.64\% was obtained at the 13\textsuperscript{th} trial.
 
 %100 steps
 \begin{figure}[h!]
@@ -678,7 +675,7 @@ In particular, the best average Clifford gate fidelity of 99.64\% was obtained a
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials.
-    The colormap indicates the Clifford gate avarage fidelity.
+    The colormap indicates the Clifford gate average fidelity.
     The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna100:amplitude}
 \end{figure}
@@ -687,7 +684,7 @@ In particular, the best average Clifford gate fidelity of 99.64\% was obtained a
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/frequency.png}
     \caption{Plot of the $R_X(\pi)$ frequency as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate average fidelity.  
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity.}
     \label{fig:optuna100:frequency}
 \end{figure}
@@ -696,20 +693,20 @@ In particular, the best average Clifford gate fidelity of 99.64\% was obtained a
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/beta.png}
     \caption{Plot of the value of the $\beta$ coefficient for the second quadrature of the $R_X(\pi)$ pulse as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate average fidelity.  
     The red cross denotes the $\beta$ value corresponding to the highest observed fidelity}
     \label{fig:optuna100:beta}
 \end{figure}
 
-An analysis of the plots and the numerical values obtained for the $R_X(\pi)$ pulse parameters shows that the highest Clifford gate avarage fidelity corresponds to distinct values of these parameters. 
+An analysis of the plots and the numerical values obtained for the $R_X(\pi)$ pulse parameters shows that the highest Clifford gate average fidelity corresponds to distinct values of these parameters. 
 %TODO: inserire valori per ampiezza e frequenza per i due esperimenti precedenti
 This effect is particularly evident for the amplitude and $\beta$ parameters. 
-While the amplitude range remains fixed, being constrained by hardware limitations, the range used to search for the optimal $\beta$ varies significantly across different optimization runs.
+While the amplitude range remains fixed, being constrained by hardware limitations, the range used to search for the optimal $\beta$ varies significantly across the two optimization runs.
 
 Although $\beta$ is not the most critical parameter in determining the fidelity outcome, as highlighted also by the Optuna analysis, which indicates that $\beta$ accounts on average for approximately 9\% of the fidelity improvement, 
 its proper calibration does have a measurable impact on the shape of the control pulse and, therefore, on the overall gates performance.
 
-The reason for the significant variation in the allowed search ranges for $\beta$ can be traced back to a failure in the fine-tuning routine responsible for calibrating the DRAG parameter.
+The reason for the significant variation in the allowed search ranges for $\beta$ was then traced back to a failure in the fine-tuning routine responsible for calibrating the DRAG parameter.
 The failed fitting routines are shown in Figure \ref{fig:failed_beta}. 
 As a result of this issue, the optimization workflow was modified to include control on the $\chi^2$ value obtained from the fitting procedure to monitor potential failures in the pre-optimization stage.
 
@@ -734,12 +731,12 @@ As a result of this issue, the optimization workflow was modified to include con
 
 %1000 steps
 Given the results obtained in the two previous optimization runs using \tt{Optuna}, we proceeded with a third round of optimization, this time ensuring control over the execution of the fine-tuning routines that precede the optimization itself. 
-In consideration of the relatively short time required by Optuna in the previous attempt, approximately 40 minutes for 100 trials, we decided to significantly increase the number of optimization trials. 
-Specifically, we set an upper limit of 1000 trials, with the goal of improving parameter space exploration and potentially achieving better convergence.
+In consideration of the relatively short time required by \tt{Optuna} in the previous attempt, approximately 40 minutes for 100 trials, we decided to significantly increase the number of optimization trials. 
+Specifically, we set an upper limit of 1000 trials, with the goal of improving parameter space exploration and again potentially achieving better convergence.
 
-The optimization history is shown in Figure \ref{fig:optuna1000beta}. 
-At first the results appear promising: the algorithm seems to achieve an average Clifford gate fidelity of 99.98\%. 
-However a closer examination of the outputs corresponding to all RB routines with reported avarage Clifford gate infidelities below $1.5 \cdot 10^{-3}$, it becomes evident that these results are actually the consequence of failed exponential fits on the RB output.
+The optimization history is shown in Figure \ref{fig:optuna1000beta:fidelity}. 
+At first the results appear promising: the algorithm seems to achieve an average Clifford gate fidelity of 99.99\%. 
+However a closer examination of the outputs corresponding to all RB routines with reported average Clifford gate infidelities below $1.5 \cdot 10^{-3}$, it becomes evident that these results are actually the consequence of failed exponential fits on the RB output.
 
 Figure \ref{fig:RBfailed} presents a few representative examples of such cases, specifically showing the RB plots corresponding to the four lowest infidelities obtained during the optimization.
 
@@ -785,7 +782,7 @@ Figure \ref{fig:RBfailed} presents a few representative examples of such cases, 
 At this point, the analysis was repeated after discarding all data points associated with a cost function value lower than $1.5 \cdot 10^{-3}$. 
 The revised optimization history is shown in Figure \ref{fig:optuna1000beta:optimization_true}. 
 In this analysis, the best fidelity achieved was 99.85\% much lower than the previously reported 99.98\%, but still a satisfactory result. 
-This outcome corresponds to an improvement of approximately [TODO: insert percentage improvement]\% compared to the initial configuration.
+This outcome corresponds to an improvement in fidielity of approximately 0.37\% compared to the initial configuration.
 
 \begin{figure}[h!]
     \centering
@@ -795,17 +792,11 @@ This outcome corresponds to an improvement of approximately [TODO: insert percen
     \label{fig:optuna1000beta:optimization_true}
 \end{figure}
 
-In Figure \ref{fig:optuna1000beta:amplitude} - \ref{fig:optuna1000beta:beta} è riportata la storia dei parametri per l'ottimizzazione.
-Ancora una volta il parametro più interessante da osservare è il parametro $\beta$ per cui la distribuzione dei valori è chiaramente centrata attorno allo zero.
-Inoltre il miglior valore per il parametro $\beta$ sembra essere $-510\cdot10^{-6}$ talmente vicino a zero da rendere l'impulso praticamente gaussiano.
-
-Per quanto riguarda invece ampiezza e frequenza, il fatto che i valori migliori si trovino nella zona più densamente campionata ci tranquillizza circa l'effettivo funzionamento dell'ottimizzazione con optuna.
-
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity. 
+    The colormap indicates the Clifford gate average fidelity. 
     The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna1000beta:amplitude}
 \end{figure}
@@ -814,7 +805,7 @@ Per quanto riguarda invece ampiezza e frequenza, il fatto che i valori migliori 
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/frequency.png}
     \caption{Plot of the $R_X(\pi)$ frequency as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate average fidelity.  
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity.}
     \label{fig:optuna1000beta:frequency}
 \end{figure}
@@ -823,7 +814,7 @@ Per quanto riguarda invece ampiezza e frequenza, il fatto che i valori migliori 
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/beta.png}
     \caption{Plot of the value of the $\beta$ coefficient for the second quadrature of the $R_X(\pi)$ pulse as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate average fidelity.  
     The red cross denotes the $\beta$ value corresponding to the highest observed fidelity}
     \label{fig:optuna1000beta:beta}
 \end{figure}
@@ -839,6 +830,15 @@ This supports the conclusion that the optimization process executed by \texttt{O
 Despite these observations, the system does not appear to be particularly stable, as small variations in the parameter values lead to significant fluctuations in the resulting fidelity. 
 Overall, i risultati mostrati fino a qui suggests that the optimization process carried out by \tt{Optuna} does not exhibit clear convergence.
 
+Based on the results obtained from the previous optimization run, particularly with respect to the parameter $\beta$, a second optimization and measurement sequence was performed using the same configuration but varying only the amplitude and frequency of the $R_X(\pi)$ gate. 
+The results of this new optimization run are presented in Figure \ref{fig:optuna1000:optimization}. 
+In this case, the minimum of the cost function was reached at the 865\textsuperscript{th} step, corresponding to an average Clifford gate fidelity of 99.85\%.
+
+This result is comparable to that obtained in the previous run, and it suggests two main conclusions. 
+First, under the current fidelity regime, optimization over the parameter $\beta$ does not appear to play a significant role in improving performance. 
+Second, it is likely that we have reached a saturation point in the cost landscape, where further improvements to the average Clifford gate fidelity cannot be achieved by tuning only the three parameters considered so far. 
+This indicates that additional parameters or alternative control strategies may be required to surpass the current fidelity limit.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000/optimization.png}
@@ -850,7 +850,7 @@ Overall, i risultati mostrati fino a qui suggests that the optimization process 
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials.     
-    The colormap indicates the Clifford gate avarage fidelity. 
+    The colormap indicates the Clifford gate average fidelity. 
      The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna1000:amplitude}
 \end{figure}
@@ -859,7 +859,7 @@ Overall, i risultati mostrati fino a qui suggests that the optimization process 
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000/frequency.png}
     \caption{Plot of the $R_X(\pi)$ frequency as a function of the number of trials. 
-    The colormap indicates the Clifford gate avarage fidelity.  
+    The colormap indicates the Clifford gate average fidelity.  
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity.}
     \label{fig:optuna1000:frequency}
 \end{figure}
@@ -892,54 +892,75 @@ It also reports the number of optimization steps and function evaluations perfor
 As outlined at the beginning of this chapter, the primary goal was to evaluate whether an automated optimization procedure—executed directly on quantum hardware—could reliably improve the average fidelity of single-qubit Clifford gates, specifically the $R_X(\pi)$ gate. 
 The desired outcome was a routine that could be executed periodically, improving gate fidelity in a reproducible and time-efficient manner.
 
-The results obtained from various optimization strategies—Nelder-Mead, CMA-ES, and Optuna—demonstrate that while meaningful improvements in fidelity are achievable, the current implementation does not yet meet the robustness and efficiency requirements for routine deployment. 
-The primary bottleneck remains the cost of the Randomized Benchmarking (RB) routine, which is necessary for fidelity evaluation. Because each optimization requires multiple evaluations of this cost function, the total execution time quickly becomes a limiting factor.
+The results obtained from various optimization strategies, Nelder-Mead, \tt{CMA-ES}, and \tt{Optuna}, demonstrate that while meaningful improvements in fidelity are achievable, the current implementation does not yet meet the robustness and efficiency requirements for routine deployment. 
+The primary bottleneck remains the cost of the Randomized Benchmarking (RB) routine, which is necessary for fidelity evaluation. 
+Because each optimization requires multiple evaluations of this cost function, the total execution time quickly becomes a limiting factor.
 
 Additionally, we found that convergence is not guaranteed. 
-In several cases, especially those involving Optuna or CMA-ES with a broader parameter search, the optimization did not yield stable or reproducible results.
- Even when high fidelities were reached (up to 99.85\%), the fidelity showed large sensitivity to small changes in parameter values, casting doubt on the practical stability of the identified configurations.
+In several cases, especially those involving \tt{Optuna} or \tt{CMA-ES} with a broader parameter search, the optimization did not yield stable or reproducible results.
+Even when high fidelities were reached (up to 99.85\%), the fidelity showed large sensitivity to small changes in parameter values, casting doubt on the practical stability of the identified configurations.
+Questo è particolarmente evidente se si guarda quanto riportato in Table \ref{tab:best_param} o rappresentato in Figure \ref{fig:params_best}.
 
-Two directions for future improvement emerged from this work. 
+\begin{figure}[h!]
+        \centering
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/BestAmplitude.png}
+        \caption{Amplitude values corresponding to highest fidelity for each optimization method.}
+        \label{fig:amplitude_best}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/BestFrequency.png}
+        \caption{Frequency values corresponding to highest fidelity for each optimization method.}
+        \label{fig:frequency_best}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RB_optimization/BestBeta.png}
+        \caption{Values of the $\beta$ parameter corresponding to highest fidelity for each optimization method.
+        The cases in which the $\beta$ parameter was not updated during the optimization are not reported.}
+        \label{fig:beta_best}
+    \end{subfigure}
+    \caption{The plots show the best parameters value for the different optimization methods tested.} 
+    \label{fig:params_best}
+\end{figure}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Analysis} & \textbf{Fidelity} & \textbf{Amplitude [a.u.]} & \textbf{Frequency} & \textbf{$\beta$} \\
+        \textbf{Name} & \textbf{Best} & \textbf{Amplitude [a.u.]} & \textbf{Best [$\times10^9$ Hz]} & \textbf{Best} \\
+        \midrule
+        \textbf{Nelder\_Mead} & 0.99731 & 0.04063 & 4.95701 & -1.53253 \\
+        \textbf{init\_simplex\_1} & 0.99533 & 0.04069 & 4.95820 & - \\
+        \textbf{init\_simplex\_2} & 0.99564 & 0.04131 & 4.95817 & - \\
+        \textbf{init\_simplex\_3} & 0.99554 & 0.04058 & 4.95819 & - \\
+        \textbf{SLSQP} & 0.99518 & 0.04058 & 4.95822 & -0.00115 \\
+        \textbf{CMA-ES} & 0.99665 & -0.16634 & 4.95822 & 0.08802 \\
+        \textbf{optuna\_30} & 0.99583 & 0.28059 & 4.95601 & 2.75519 \\
+        \textbf{optuna\_100} & 0.99645 & 0.29026 & 4.955279 & -1.46504 \\
+        \textbf{optuna\_1000} & 0.99847 & -0.00051 & 4.961836 & 0.2222 \\
+        \textbf{optuna no $\beta$} & 0.99846 & 0.04104 & 4.957374 & - \\
+        \bottomrule
+    \end{tabular}
+    \caption{The table report the best fidelity, amplitude, frequency and $\beta$ from each optimization method allowing for an easy comparison.}
+    \label{tab:best_param}
+\end{table}
+
+Two directions for future improvement emerges from this work. 
 First, the RB evaluation process itself could be optimized. 
 In the present study, sequences of depth 1000 were used, and for each depth, 1000 Clifford circuits were sampled. 
 This approach, while reliable, is computationally expensive. A detailed study—possibly involving hyperparameter optimization techniques—could help determine whether shorter sequences or fewer samples still yield meaningful fidelity estimates, potentially reducing total runtime and making on-chip calibration more feasible.
 
 Second, the performance of the optimization algorithms themselves could be refined. 
-For example, in the case of CMA-ES, adjusting the population size or reducing the initial value of $\sigma$ could improve convergence, albeit at the cost of reduced parameter space exploration or increased computational load. 
+For example, in the case of \tt{CMA-ES}, adjusting the population size or reducing the initial value of $\sigma$ could improve convergence, albeit at the cost of reduced parameter space exploration or increased computational load. 
 These modifications may be particularly relevant in a more stable calibration regime, where parameter values show limited drift over time.
 
 Another promising direction, particularly with \tt{Optuna}, would be to adopt a multi-objective optimization strategy, where both fidelity and optimization time are minimized simultaneously. 
 However, this approach was not pursued in this work due to the instability of the fidelity results observed even in high-trial regimes, highlighting the current limitations of fidelity optimization using this method.
 
-In conclusion, while the results suggest that automated, hardware-level gate fidelity optimization is feasible in principle, substantial improvements are still needed in both the fidelity evaluation routine and the optimization algorithm design before such a protocol can be adopted for regular use on quantum hardware
-
-\begin{comment}
-As mentioned in the introduction to this chapter, the primary objective of this work was to evaluate whether it is possible to develop an automated optimization routine that can be executed directly on quantum hardware to periodically improve the fidelity of single-qubit gates—specifically the  $R_X(\pi)$ gate. 
-For such a routine to be practically useful, two main conditions must be met: first, the optimization must lead to a consistent and measurable improvement in gate fidelity within a limited amount of time; 
-second, the routine must demonstrate stable convergence, such that the resulting optimized parameters (amplitude, frequency, and DRAG correction) can reliably be used to update the hardware configuration, ensuring a reproducible improvement in performance.
-
-While the protocol did yield fidelity improvements in several cases, the results indicate that the implementation we built to be run on hardware is not yet robust or efficient enough for routine use. 
-The main limiting factor is the duration of the Randomized Benchmarking routine used to evaluate gate fidelity, which is relatively long. 
-Because the optimization procedure requires several evaluations of this cost function, the total execution time quickly becomes a bottleneck. 
-Furthermore, we observed that convergence is not always guaranteed: in some cases, the optimization either stalls or does not lead to meaningful improvements within the time frame or number of iterations considered acceptable for practical deployment.
-
-In summary, although the tests suggests that automated gate fidelity optimization is in principle possible, the current implementation does not meet the reliability and efficiency requirements needed for scheduled, hardware-level recalibration. 
-Improvements could focus on accelerating cost function evaluation or designing more robust optimization strategies with stronger convergence guarantees.
-
-Due possibili estensioni degli studi e dei risultati che sono stati presentati in questo capitolo, entrambi interessanti possono essere innanzitutto un tentativo di ottimizzazione dei parametri del RB per rendere più efficiente la procedura.
-In questo caso sono stati utilizzati circuiti con una profondità di 1000 e per ogni profondità da valutare sono state campionati 1000 diversi circuiti.
-Considerando il costo computazionale della valutazione dell'RB sicuramente potrebbe essere utile cercare di rendere questa ottimizzazione più efficiente riducendo la profondità del circuiuto o il numero di circuiti fenerati, in questo senso potrebbe essere utile fare uno studio più dettagliato sia sul piano teorico che sul piano computazionale (tipo hyperparameter optimization) per studiare 
-i valori migliori per questi parametri. È probabile che entrambi questi valori possano essere ridotti rendendo quindi l'ottimizzazione più efficiente e potenzialmente feasable e utilizzabile per migliorare la avarage Clifford gate fidelity in maniera automatica sul chip e quindi renderla una routine utilizzabile prima di girare circuiti o algoritmi quantistici.
-
-L'altro studio che potrebbe essere effettuato partendo da questi risultati riguarda l'ottimizzazione dei parametri con cui sono stati runnati gli algoritmi di ottimizzazione, nel caso di CMA ad esempio è evidente che l'algoritmo non converge ma ad esempio si può studiare l'impatto dell'aumento della popolazione in ciascuna generazione (che però ha l'inevitabile trade-off di aumentare il costo computazionale dell'ottimizzazione) o della riduzione della sigma nella generazione della popolazione stessa.
-Questa seconda operazione in particolare indubbiamente migliorerebbe la convergenza dell'algoritmo riducendone tuttavia l'esplorazione di altre configurazioni di parametri.
-Entrambi questi studi potrebbero essere particolarmente interessanti soprattutto in un contesto in cui però la calibrazione si mostra più stabile (inserire riferimento al confronto + distanza percentuale tra i valori dei parametri).
-Utilizzando \tt{Optuna} avrebbe potuto essere interessante anche provare a fare uno studio con una multi-objective minimization cercando non solo di minimizzare l'infidelity ma anche di minimizzare il tempo di esecuzione dell'ottimizzazione.
-
-In questo caso abbiamo scelto di non procedere in questa direzione soprattutto per via dei risultati che sono stati ottenuti con \tt{optuna}, gli ultimi studi in particolare con un numero elevato di trials hanno messo in luce quanto, nonostane una buona esplorazione dello spazio dei parametri non sia facile ottenere una configurazione con una buuona fidelity sufficientemente stabile. 
-\end{comment}
-%TODO: completare tabelle per optuna
-%TODO: correggere tabelle per optuna (cambiare la miglior fidelity raggiunta se quella raggiunta non è davvero la miglior fidelity)
+In conclusion, while the results suggest that automated, hardware-level gate fidelity optimization is feasible in principle, substantial improvements are still needed in both the fidelity evaluation routine and the optimization algorithm design before such a protocol can be adopted for regular use on our quantum hardware.
 
 \begin{sidewaystable}[h]
     \centering
@@ -957,10 +978,12 @@ In questo caso abbiamo scelto di non procedere in questa direzione soprattutto p
         \textbf{optuna\_30} & 0.016471 & 0.00416 & 23 & 0.28059 & 4.95601 & 2.75519 & 74.70 & 0.98352 & 0.99583 & 1.25 \\
         \textbf{optuna\_100} & 0.017535 & 0.00354& 13 & 0.29026 & 4.955279 & -1.46504 & 79.77 & 0.98246 & 0.99645 & 1.42\\
         \textbf{optuna\_1000} & 0.005307 & 0.00152 & 405 & -0.00051 & 4.961836 & 0.2222 & 71.18 & 0.99469 & 0.99847 & 0.37\\
-        \textbf{optuna no $\beta$} & 0.006983 & 0.00153 & 870 & 0.04104 & 4.957374 & - & 77.96 & 0.99301 & 0.99846 & 0.54\\
+        \textbf{optuna no $\beta$} & 0.006983 & 0.00153 & 865 & 0.04104 & 4.957374 & - & 77.96 & 0.99301 & 0.99846 & 0.54\\
         \bottomrule
     \end{tabular}
-    \caption{The table contain the results ottenuti dall'ottimizzazione dei}
+    \caption{This table reports the results obtained from the optimization of the average Clifford gate fidelity as a function of the pulse frequency, amplitude, and the parameter $\beta$, which scales the second quadrature component in the case of a DRAG pulse.
+    Specifically, it shows the initial and optimal values of the cost function, as well as the corresponding parameter values at the optimum. 
+    The table also includes the initial fidelity, the percentage decrease in the cost function, and the percentage improvement in fidelity achieved after optimization.}
     \label{tab:best_values}
 \end{sidewaystable}
 
@@ -979,10 +1002,12 @@ In questo caso abbiamo scelto di non procedere in questa direzione soprattutto p
         \textbf{CMA-ES} & 0.00728 & 0.003346 & 0.12956 & 4.95822 & 0.18364 & -265.93 & 0.99272 & 0.97336 & -1.95 \\
         \textbf{optuna\_30} & 0.016471 & 0.018178 & 0.46076 & 4.95479 & 2.92767 & -10.36 & 0.98352 & 0.98182 & -0.17\\
         \textbf{optuna\_100} & 0.017535 & 0.042908 &  0.386175 & 4.95469 & -1.31692 & -144.68 & 0.98246 & 0.95709 & -2.58\\
-        \textbf{optuna\_1000} & 0.005307 & 0.003424 & -0.042718 & 4.95794 & 0.0626649 & 35.48 & 0.99469 & 0.99657 & 0.1893\\
-        \textbf{optuna no $\beta$} & 0.006983 & 0.137907 & 0.058214 & 4.95818 & - & -1874.74 & 0.99301 & 0.86209 & -13.184\\
+        \textbf{optuna\_1000} & 0.005307 & 0.003424 & -0.042718 & 4.95794 & 0.0626649 & 35.48 & 0.99469 & 0.99657 & 0.18\\
+        \textbf{optuna no $\beta$} & 0.006983 & 0.137907 & 0.058214 & 4.95818 & - & -1874.74 & 0.99301 & 0.86209 & -13.18\\
         \bottomrule
     \end{tabular}
-    \caption{}
+    \caption{This table reports the results obtained from the optimization of the average Clifford gate fidelity as a function of the pulse frequency, amplitude, and the parameter $\beta$, which scales the second quadrature component in the case of a DRAG pulse.
+    Specifically, it shows the initial and final values of the cost function, as well as the corresponding parameter values at the final step. 
+    The table also includes the initial fidelity, the percentage decrease in the cost function, and the percentage improvement in fidelity achieved at the end of the optimization process.}
     \label{tab:final_values}
 \end{sidewaystable}
