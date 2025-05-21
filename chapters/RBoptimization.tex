@@ -8,7 +8,7 @@ As quantum processors scale in both qubit count and architectural complexity, ca
 Frequent recalibrations are necessary to mitigate the effects of parameter drift and environmental fluctuations, especially in superconducting qubit platforms \cite{krantz_quantum_2019}.
 
 Furthermore, as gate fidelities approach the fault-tolerance threshold, accurate control of gates becomes critical for most practical quantum computing applications.
-In this context, it is useful to introduce, in addition to native single-qubit gates, such as $RX_{\pi/2}$ pulses or virtual $RZ$ rotations, the Clifford gates. 
+In this context, it is useful to introduce, in addition to native single-qubit gates, such as $R_X(\pi)$ pulses or virtual $R_Z$ rotations, the Clifford gates. 
 While native gates are implemented with a single pulse and can be directly calibrated, Clifford gates are typically composed of multiple native gates.
 
 Clifford gates are particularly important in quantum computing because they form a finite subgroup of unitary operations that map Pauli operators onto themselves under conjugation. 
@@ -951,7 +951,8 @@ Questo è particolarmente evidente se si guarda quanto riportato in Table \ref{t
 Two directions for future improvement emerges from this work. 
 First, the RB evaluation process itself could be optimized. 
 In the present study, sequences of depth 1000 were used, and for each depth, 1000 Clifford circuits were sampled. 
-This approach, while reliable, is computationally expensive. A detailed study—possibly involving hyperparameter optimization techniques—could help determine whether shorter sequences or fewer samples still yield meaningful fidelity estimates, potentially reducing total runtime and making on-chip calibration more feasible.
+This approach, while reliable, is computationally expensive. 
+A detailed study, possibly involving hyperparameter optimization techniques, could help determine whether shorter sequences or fewer samples still yield meaningful fidelity estimates, potentially reducing total runtime and making on-chip calibration more feasible.
 
 Second, the performance of the optimization algorithms themselves could be refined. 
 For example, in the case of \tt{CMA-ES}, adjusting the population size or reducing the initial value of $\sigma$ could improve convergence, albeit at the cost of reduced parameter space exploration or increased computational load. 

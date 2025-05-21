@@ -16,3 +16,4 @@ __pycache__/
 #ignore temporary folder
 tmp/
 references/
+Backup*
