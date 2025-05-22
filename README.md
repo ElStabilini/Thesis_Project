@@ -16,10 +16,14 @@ Thesis_Project/
 │── figures/              
 │   ├── pdf/              
 │   ├── png/              
-│── chapters/             
-│   ├── Introduction.tex
-│   ├── Results.tex
-│   ├── Acknowledgement.tex
+├── chapters                
+│   ├── Acknowledgement.tex 
+│   ├── Appendix.tex        
+│   ├── Introduction.tex    
+│   ├── Pulses.tex          
+│   ├── RBoptimization.tex  
+│   ├── Summary.tex         
+│   └── WareDescription.tex 
 │── tmp/                  
 │── .gitignore            
 └── main.pdf             
