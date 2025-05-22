@@ -49,22 +49,39 @@ The ability to compose any single-qubit gate using only $R_X$ and virtual-Z oper
 By alternating $ R_X(\pi) $ pulses with phase-adjustable $ R_Z $ gates, one can synthesize any $SU(2)$ unitary up to global phase.
 
 \subsection{RX90 as native gate}
-Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, abbiamo deciso di aggiungere la $R_X(\pi/2)$ gate to the native set of Qibolab.
-Il motivo fondamentale è che, fino a questo punto, abbiamo lavoraro che the amplitude or duration of the $R_X(\pi/2)$ gate were exactly half that of the $R_X(\pi)$ pulse.
-This assumption implies a perfectly linear response of the qubit to the drive pulse, which may not be satisfied in practice due to nonlinearities in the system or imperfections in the pulse generation and delivery.
+Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, we decided to include the $R_X(\pi/2)$ gate in the native set of Qibolab.
+The main motivation for this addition is that, until now, we had assumed the amplitude or duration of the $R_X(\pi/2)$ gate were exactly half that of the $R_X(\pi)$ pulse.
+This assumption implies a perfectly linear response of the qubit to the drive pulse, an idealization which may not be satisfied in practice due to nonlinearities in the system or imperfections in the pulse generation and transmission.
 
-Per farlo oltre a inserirla ne [vedi file specifico] I also modified the calibration experiments presented in Section \ref{sec:calibration} per supportare anche la calibrazione di questa nuova gate.
-In particolare ho modificato il codice per le diverse varianti del protocollo per osservare le oscillazioni di Rabi. 
+To support this change I updated the \tt{native.py} module, which provides the data containers for holding the pulse parameters required for implementing every native gate.
+Additionally, I modified the calibration experiments presented in Section \ref{sec:calibration} to support the calibration of this new gate.
+In particular, I adapted the code used for the various implementations of the Rabi oscillation measurement protocol to include the $R_X(\pi/2)$ gate.
 
 \subsection{Results}
 In the following I will present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.
 
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|cc|cc|cc}
+        \toprule
+        \textbf{Qubit} & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} \\
+         & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} \\
+         & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]}\\
+        \midrule
+        \textbf{B1} & $8.72 \cdot 10^{-2}$ & $0.001 \cdot 10^{-2}$ & $4.36 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ & $3.711 \cdot 10^{-2}$ & $0.006 \cdot 10^{-2}$ \\
+        \textbf{B2} & $9.433 \cdot 10^{-2}$ & $0.008 \cdot 10^{-2}$ & $4.765 \cdot 10^{-2}$ & $0.004 \cdot 10^{-2}$ & $4.047 \cdot 10^{-2}$ & $0.004 \cdot 10^{-2}$ \\
+        \textbf{B3} & $1.292 \cdot 10^{-1}$ & $0.001 \cdot 10^{-1}$ & $0.646 \cdot 10^{-1}$ & $0.003 \cdot 10^{-2}$ & $6.058 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ \\
+        \textbf{B4} & $1.517 \cdot 10^{-1}$ & $0.001 \cdot 10^{-1}$ & $0.7585 \cdot 10^{-1}$ & $0.005 \cdot 10^{-2}$ & $7.216 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{Amplitude values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_amplitude} protocol with a fixed duration of 40 ns.}
+\end{table}
 
 
 \section{Flux pulse correction}
 
 \subsection{Cryoscope}
-The experiment that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
+The protocol that I describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to reconstruct the magnetic flux signal that bias the SQUID and then determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
 
 As explained in section \ref{sec:cQED}, accurate dynamical control of qubit frequency is of key importance to realize single- and two-qubit gates.
 One of the on-chip control variable that is used on QunatumWare chip is the magnteic flux through a SQUID loop, the signal for magnetic flux control originates from an arbitrary waveform genarator (AWG) which operates at room temperature.\\
@@ -72,7 +89,7 @@ As the signal propagates through various electrical components along the control
 If not properly compensated, these distortions can degrade gate performance, impacting experiments fidelity and repeatability.\\
 
 In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by directly measuring the qubit state.
-In this protocol we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
+In this routine we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
 The first $\frac{\pi}{2}$ pulse rotates the qubit of $\frac{\pi}{2}$ around the $y$ axis of the Bloch sphere changing its state from $\ket{0}$ to $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$.
 
 When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\footnote{To send a $\Phi_{Q,\tau}(t)$ flux pulse we are actually sending a $V_{\text{in},\tau}(t)$ DAC pulse} after the first $\frac{\pi}{2}$ pulse, the qubits evolve to the state $\frac{\ket{0}+e^{i\varphi_\tau}\ket{1}}{\sqrt{2}}$ with relative quantum phase 
@@ -94,19 +111,35 @@ Then we can estimate $\Phi_Q(t)$ in the interval $[\tau,\tau+\Delta\tau]$ as fol
 \end{align}  
 with \[\varepsilon = \frac{1}{\Delta\tau}\left(\int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\]
 The phase contribution from the turn-off transients is minimal due to the sharp return to the first-order flux-insensitive sweet spot of the nearly quadratic $\Delta f_Q(\Phi_Q)$; 
-numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the range of approximately $10^{-2}$ to $10^{-3}$ for typical dynamical distortions in commonly used electronic components \cite{negligible}\cite{Langford2017}, for this reason it will be neglected.\\
+numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the range of approximately $10^{-2}$ to $10^{-3}$ for typical dynamical distortions in commonly used electronic components \cite{negligible} \cite{Langford2017}, for this reason it will be neglected.\\
 
 Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting eq. \ref{eq:freqdepndenceonflux}.
+
+In the following sections I will describe how we used this protocol to reconstruct the voltage to flux step response, and then how to determine and apply pre-distortions corrections to the control waveforms.
+
 \subsubsection{Pulse reconstruction}
+La prima cosa è la costruzione della seuqneza di impulsi che devono essere mandati al qubit.
+Come descritto nella sezione precedente il protocollo per la ricostruzione dell'impulso di flusso è un esperimento Ramsey-like in cui embedded tra i due microwave pulses, separated by a constant time $T_{sep}$ a flux pulse of varying duration $\tau$.
+Nel nostro caso abbiamo deciso di fissare $T_{sep}$ pari a $100$ ns oltre la durata dell'impulso di flusso più lungo to negate the need for fine timing calibration, as suggested in \cite{rol_time-domain_2020}, mentre lo step $\Delta\tau$ con cui viene variata la durata dell'impulso di flusso è stabilita dall'utente.
+Nello specifico, the user può, tramite runcard \footnote{In qibocal tutte i protocolli vengono deployati tramite runcard scritta in YAML con cui l'utente può fissare i parametri relativi all'esperimento che vuole eseguire} fissare i valori per la durata minima (\tt{duration\_min}) e massima (\tt{duration\_max}) dell'impulso di flusso e lo step con cui variare la durata dell'impulso (\tt{duration\_step}) coincidente con l'intervallo $\Delta\tau$ in Equation \ref{eq:detuning}.
+
+The flux pulse amplitude can also be set by the user tramite il parametro \tt{flux\_pulse amplitude} ma è consigliabile utilizzare una ampiezza che induca nel qubit un detuning dallo sweetspot che sia vicino a quello necessario nella maggior parte dei casi in cui utilizzo l'impulso di flusso.
+Negli esempi presentati nel seguito the flux pulse amplitude è stata scelta in modo tale da indurre un detuning di circa 1 GHz che è quella che viene utilizzata nella maggior parte delle applicazioni \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
+
+Dopo aver costruito la pulse sequence, sia quella che si conclude con $R_X(\pi/2)$ per misurare $\langle Y \rangle$ e $R_Y(\pi/2)$ per misurare $\langle X \rangle$, questi dati vengono combinato per ottenere $\phi_\tau$
+\begin{comment}
+    *come otteniamo la fase
+    * come processiamo la fase
+    * savgol filter + discussione dei parametr
+\end{comment}
 
 \subsubsection{Corrections study}
-
-\subsection{Corrected pulse}
-
 
 %TODO: provare ad aggiungere più correzioni esponenziali
 
 \subsection{Filter determination}
+Our final goal is to predistort the waveforms digitally using finite- and infinite impulse response filters applied in real time.
+
 \subsubsection{IIR corrections}
 \subsubsection{FIR corrections}
 Una volta trovati i feedback e feedforward taps per gli IIR filters, è necessario trovare gli FIR per correggere il segnale su scale di tempo più brevi. 
@@ -114,6 +147,7 @@ Una volta trovati i feedback e feedforward taps per gli IIR filters, è necessar
 for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethods}
 
 \subsubsection{Output filters in QM}
+
 %Spiegare come applica i filtri quantum machines
 Each analog output port of the OPX system used in this work is equipped with a digital filter that is applied to the signal in the digital domain before conversion to analog. The filters are provided to the OPX via the \texttt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
 \begin{equation}\label{eq:OPX_filter}
@@ -193,8 +227,9 @@ where the feedforward (feedback) taps of the final filters, are given by the con
 
 \subsection{Results}
 
-One of the experiments in which the impact of DAC voltage pre-distortion for correcting flux pulses is most clearly observed is the routine known in \Qibocal as the chevron experiment.
-The name originates from the characteristic chevron-shaped interference pattern that emerges when the protocol is executed.
+The experiments in which the impact of flux signal distortions are ones where we expect to see a clear chevron pattern, deviation from the ideal chevron pattern often indicano presenza di distorsioni nel segnale di flusso \cite{Langford2017}.
+
+Un esempio di tale esperimento è quello che in \Qibocal è identificato come chevron, clearly the name originates from the characteristic chevron-shaped interference pattern that is expected as output of the routine.
 This calibration routine is used to characterize and tune native two-qubit gates, such as the CNOT or iSWAP, which are typically implemented using sequences of flux pulses, potentially applied to multiple qubits, combined with virtual $Z$-rotations.
 
 CNOT and iSWAP are two entangling gates: the CNOT gate flips the state of a target qubit conditional on the control qubit being in state $\ket{1}$ while the iSWAP gate exchanges the quantum states $\ket{10}\leftrightarrow\ket{01}$ introducing a phase of $i$.
@@ -208,18 +243,47 @@ In this regime the population oscillates between the two states with a frequency
 \begin{equation}
     p_e(t, \Delta) = \frac{\Delta^2}{\Delta^2 + 4g^2} + \frac{4g^2}{\Delta^2 + 4g^2} \cos^2\left(\frac{\sqrt{\Delta^2 + 4g^2}}{2}t\right)
 \end{equation}
-where $\Delta = \omega_1 - \omega_2$, and $g$ is the coupling constant for the two qubits.
-By adjusting the duration $t$ of the flux pulse such that $t=\pi/2g$, the system performs a full excitation exchange, implementing an iSWAP gate up to local phase corrections.
+where $\Delta = \omega_1 - \omega_2$, and $g$ is the coupling constant for the two qubits. This probability distribution descrive esattamente quello che in letteratura è noto come chevron pattern.
+In \Qibocal la routine è utilizzata per calibrare two qubits gate perchè per esempio, By adjusting the duration $t$ of the flux pulse such that $t=\pi/2g$, the system performs a full excitation exchange, implementing an iSWAP gate up to local phase corrections.
+Se anzichè calibrare l'iSWAP volessimo calibrare una CZ the pulse sequence will be the same except for the addition of an initial $\pi$ pulse applied to the qubit with the lower frequency so that both qubits are initially prepared in the $\ket{1}$ state.
 
-The pulse sequence used to calibrate the CZ gate is the same as the one for the iSWAP gate, with the addition of an initial $\pi$ pulse applied to the qubit with the lower frequency so that both qubits are initially prepared in the $\ket{1}$ state. With this sequence, the CZ gate is implemented leveraging the avoided crossing between the states $\ket{11}$ and $\ket{20}$.
-
-The expected output of the from chevron routine in \Qibocal is similar to the plot shown in Figure \ref{fig:expected_chevron}
+The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/png/BlochSphere.png}
-    \caption{Expected chevron pattern for the calibration of an iSWAP gate.}
+    \includegraphics[width=0.45\textwidth]{figures/png/IdealChevron.png}
+    \caption{Ideal chevron pattern.}
     \label{fig:expected_chevron}
 \end{figure}
 
-On our hardware the typical chevron output when not applying filters is more similar to the patterns shown in Figure 
+In Figure \ref{fig:B1B3_nofilter} and Figure \ref{fig:B2B4_nofilter}I show the actual chevron pattern obtained from the calibration of a CZ gate on our hardware without applying any digital filter.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B1B3_nofilter.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B1} and \tt{B3}.\\ No filters applied.}
+    \label{fig:B1B3_nofilter}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B2B4_nofilter.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B2} and \tt{B4}.\\ No filters applied.}
+    \label{fig:B2B4_nofilter}
+\end{figure}
+
+After the application of the filters determined by using the cryoscope protocol the chevron pattern that we obtained is shown in Figure \ref{fig:B1B3} and Figure \ref{fig:B2B4}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B1B3.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B1} and \tt{B3}.}
+    \label{fig:B1B3}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B2B4.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B2} and \tt{B4}.}
+    \label{fig:B2B4}
+\end{figure}
