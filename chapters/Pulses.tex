@@ -49,16 +49,33 @@ The ability to compose any single-qubit gate using only $R_X$ and virtual-Z oper
 By alternating $ R_X(\pi) $ pulses with phase-adjustable $ R_Z $ gates, one can synthesize any $SU(2)$ unitary up to global phase.
 
 \subsection{RX90 as native gate}
-Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, abbiamo deciso di aggiungere la $R_X(\pi/2)$ gate to the native set of Qibolab.
-Il motivo fondamentale è che, fino a questo punto, abbiamo lavoraro che the amplitude or duration of the $R_X(\pi/2)$ gate were exactly half that of the $R_X(\pi)$ pulse.
-This assumption implies a perfectly linear response of the qubit to the drive pulse, which may not be satisfied in practice due to nonlinearities in the system or imperfections in the pulse generation and delivery.
+Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, we decided to include the $R_X(\pi/2)$ gate in the native set of Qibolab.
+The main motivation for this addition is that, until now, we had assumed the amplitude or duration of the $R_X(\pi/2)$ gate were exactly half that of the $R_X(\pi)$ pulse.
+This assumption implies a perfectly linear response of the qubit to the drive pulse, an idealization which may not be satisfied in practice due to nonlinearities in the system or imperfections in the pulse generation and transmission.
 
-Per farlo oltre a inserirla ne [vedi file specifico] I also modified the calibration experiments presented in Section \ref{sec:calibration} per supportare anche la calibrazione di questa nuova gate.
-In particolare ho modificato il codice per le diverse varianti del protocollo per osservare le oscillazioni di Rabi. 
+To support this change I updated the \tt{native.py} module, which provides the data containers for holding the pulse parameters required for implementing every native gate.
+Additionally, I modified the calibration experiments presented in Section \ref{sec:calibration} to support the calibration of this new gate.
+In particular, I adapted the code used for the various implementations of the Rabi oscillation measurement protocol to include the $R_X(\pi/2)$ gate.
 
 \subsection{Results}
 In the following I will present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.
 
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|cc|cc|cc}
+        \toprule
+        \textbf{Qubit} & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} \\
+         & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} \\
+         & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]}\\
+        \midrule
+        \textbf{B1} & $8.72 \cdot 10^{-2}$ & $0.001 \cdot 10^{-2}$ & $4.36 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ & $3.711 \cdot 10^{-2}$ & $0.006 \cdot 10^{-2}$ \\
+        \textbf{B2} & $9.433 \cdot 10^{-2}$ & $0.008 \cdot 10^{-2}$ & $4.765 \cdot 10^{-2}$ & $0.004 \cdot 10^{-2}$ & $4.047 \cdot 10^{-2}$ & $0.004 \cdot 10^{-2}$ \\
+        \textbf{B3} & $1.292 \cdot 10^{-1}$ & $0.001 \cdot 10^{-1}$ & $0.646 \cdot 10^{-1}$ & $0.003 \cdot 10^{-2}$ & $6.058 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ \\
+        \textbf{B4} & $1.517 \cdot 10^{-1}$ & $0.001 \cdot 10^{-1}$ & $0.7585 \cdot 10^{-1}$ & $0.005 \cdot 10^{-2}$ & $7.216 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{Amplitude values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_amplitude} protocol with a fixed duration of 40 ns.}
+\end{table}
 
 
 \section{Flux pulse correction}
