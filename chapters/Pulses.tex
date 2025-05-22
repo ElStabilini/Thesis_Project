@@ -227,8 +227,9 @@ where the feedforward (feedback) taps of the final filters, are given by the con
 
 \subsection{Results}
 
-One of the experiments in which the impact of DAC voltage pre-distortion for correcting flux pulses is most clearly observed is the routine known in \Qibocal as the chevron experiment.
-The name originates from the characteristic chevron-shaped interference pattern that emerges when the protocol is executed.
+The experiments in which the impact of flux signal distortions are ones where we expect to see a clear chevron pattern, deviation from the ideal chevron pattern often indicano presenza di distorsioni nel segnale di flusso \cite{Langford2017}.
+
+Un esempio di tale esperimento è quello che in \Qibocal è identificato come chevron, clearly the name originates from the characteristic chevron-shaped interference pattern that is expected as output of the routine.
 This calibration routine is used to characterize and tune native two-qubit gates, such as the CNOT or iSWAP, which are typically implemented using sequences of flux pulses, potentially applied to multiple qubits, combined with virtual $Z$-rotations.
 
 CNOT and iSWAP are two entangling gates: the CNOT gate flips the state of a target qubit conditional on the control qubit being in state $\ket{1}$ while the iSWAP gate exchanges the quantum states $\ket{10}\leftrightarrow\ket{01}$ introducing a phase of $i$.
@@ -242,18 +243,47 @@ In this regime the population oscillates between the two states with a frequency
 \begin{equation}
     p_e(t, \Delta) = \frac{\Delta^2}{\Delta^2 + 4g^2} + \frac{4g^2}{\Delta^2 + 4g^2} \cos^2\left(\frac{\sqrt{\Delta^2 + 4g^2}}{2}t\right)
 \end{equation}
-where $\Delta = \omega_1 - \omega_2$, and $g$ is the coupling constant for the two qubits.
-By adjusting the duration $t$ of the flux pulse such that $t=\pi/2g$, the system performs a full excitation exchange, implementing an iSWAP gate up to local phase corrections.
+where $\Delta = \omega_1 - \omega_2$, and $g$ is the coupling constant for the two qubits. This probability distribution descrive esattamente quello che in letteratura è noto come chevron pattern.
+In \Qibocal la routine è utilizzata per calibrare two qubits gate perchè per esempio, By adjusting the duration $t$ of the flux pulse such that $t=\pi/2g$, the system performs a full excitation exchange, implementing an iSWAP gate up to local phase corrections.
+Se anzichè calibrare l'iSWAP volessimo calibrare una CZ the pulse sequence will be the same except for the addition of an initial $\pi$ pulse applied to the qubit with the lower frequency so that both qubits are initially prepared in the $\ket{1}$ state.
 
-The pulse sequence used to calibrate the CZ gate is the same as the one for the iSWAP gate, with the addition of an initial $\pi$ pulse applied to the qubit with the lower frequency so that both qubits are initially prepared in the $\ket{1}$ state. With this sequence, the CZ gate is implemented leveraging the avoided crossing between the states $\ket{11}$ and $\ket{20}$.
-
-The expected output of the from chevron routine in \Qibocal is similar to the plot shown in Figure \ref{fig:expected_chevron}
+The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/png/BlochSphere.png}
-    \caption{Expected chevron pattern for the calibration of an iSWAP gate.}
+    \includegraphics[width=0.45\textwidth]{figures/png/IdealChevron.png}
+    \caption{Ideal chevron pattern.}
     \label{fig:expected_chevron}
 \end{figure}
 
-On our hardware the typical chevron output when not applying filters is more similar to the patterns shown in Figure 
+In Figure \ref{fig:B1B3_nofilter} and Figure \ref{fig:B2B4_nofilter}I show the actual chevron pattern obtained from the calibration of a CZ gate on our hardware without applying any digital filter.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B1B3_nofilter.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B1} and \tt{B3}.\\ No filters applied.}
+    \label{fig:B1B3_nofilter}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B2B4_nofilter.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B2} and \tt{B4}.\\ No filters applied.}
+    \label{fig:B2B4_nofilter}
+\end{figure}
+
+After the application of the filters determined by using the cryoscope protocol the chevron pattern that we obtained is shown in Figure \ref{fig:B1B3} and Figure \ref{fig:B2B4}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B1B3.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B1} and \tt{B3}.}
+    \label{fig:B1B3}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B2B4.png}
+    \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B2} and \tt{B4}.}
+    \label{fig:B2B4}
+\end{figure}
