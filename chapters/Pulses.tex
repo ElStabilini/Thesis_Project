@@ -80,8 +80,10 @@ In the following I will present the results obtained performing the modified ver
 
 \section{Flux pulse correction}
 
+\section{Flux pulse correction}
+
 \subsection{Cryoscope}
-The experiment that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
+The protocol that I describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to reconstruct the magnetic flux signal that bias the SQUID and then determine predistortions that needs to be applied to a flux pulse signal so that the qubit receives the flux pulse as intended by the experimenter.
 
 As explained in section \ref{sec:cQED}, accurate dynamical control of qubit frequency is of key importance to realize single- and two-qubit gates.
 One of the on-chip control variable that is used on QunatumWare chip is the magnteic flux through a SQUID loop, the signal for magnetic flux control originates from an arbitrary waveform genarator (AWG) which operates at room temperature.\\
@@ -89,7 +91,7 @@ As the signal propagates through various electrical components along the control
 If not properly compensated, these distortions can degrade gate performance, impacting experiments fidelity and repeatability.\\
 
 In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by directly measuring the qubit state.
-In this protocol we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
+In this routine we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
 The first $\frac{\pi}{2}$ pulse rotates the qubit of $\frac{\pi}{2}$ around the $y$ axis of the Bloch sphere changing its state from $\ket{0}$ to $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$.
 
 When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\footnote{To send a $\Phi_{Q,\tau}(t)$ flux pulse we are actually sending a $V_{\text{in},\tau}(t)$ DAC pulse} after the first $\frac{\pi}{2}$ pulse, the qubits evolve to the state $\frac{\ket{0}+e^{i\varphi_\tau}\ket{1}}{\sqrt{2}}$ with relative quantum phase 
@@ -111,12 +113,27 @@ Then we can estimate $\Phi_Q(t)$ in the interval $[\tau,\tau+\Delta\tau]$ as fol
 \end{align}  
 with \[\varepsilon = \frac{1}{\Delta\tau}\left(\int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\]
 The phase contribution from the turn-off transients is minimal due to the sharp return to the first-order flux-insensitive sweet spot of the nearly quadratic $\Delta f_Q(\Phi_Q)$; 
-numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the range of approximately $10^{-2}$ to $10^{-3}$ for typical dynamical distortions in commonly used electronic components \cite{negligible}\cite{Langford2017}, for this reason it will be neglected.\\
+numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the range of approximately $10^{-2}$ to $10^{-3}$ for typical dynamical distortions in commonly used electronic components \cite{negligible} \cite{Langford2017}, for this reason it will be neglected.\\
 
 Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting eq. \ref{eq:freqdepndenceonflux}.
-\subsubsection{Pulse reconstruction}
 
-\subsubsection{Corrections study}
+In the following sections I will describe how we used this protocol to reconstruct the voltage to flux step response, and then how to determine and apply pre-distortions corrections to the control waveforms.
+
+\subsubsection{Pulse reconstruction}
+La prima cosa è la costruzione della seuqneza di impulsi che devono essere mandati al qubit.
+Come descritto nella sezione precedente il protocollo per la ricostruzione dell'impulso di flusso è un esperimento Ramsey-like in cui embedded tra i due microwave pulses, separated by a constant time $T_{sep}$ a flux pulse of varying duration $\tau$.
+Nel nostro caso abbiamo deciso di fissare $T_{sep}$ pari a $100$ ns oltre la durata dell'impulso di flusso più lungo to negate the need for fine timing calibration, as suggested in \cite{rol_time-domain_2020}, mentre lo step $\Delta\tau$ con cui viene variata la durata dell'impulso di flusso è stabilita dall'utente.
+Nello specifico, the user può, tramite runcard \footnote{In qibocal tutte i protocolli vengono deployati tramite runcard scritta in YAML con cui l'utente può fissare i parametri relativi all'esperimento che vuole eseguire} fissare i valori per la durata minima (\tt{duration\_min}) e massima (\tt{duration\_max}) dell'impulso di flusso e lo step con cui variare la durata dell'impulso (\tt{duration\_step}) coincidente con l'intervallo $\Delta\tau$ in Equation \ref{eq:detuning}.
+
+The flux pulse amplitude can also be set by the user tramite il parametro \tt{flux\_pulse amplitude} ma è consigliabile utilizzare una ampiezza che induca nel qubit un detuning dallo sweetspot che sia vicino a quello necessario nella maggior parte dei casi in cui utilizzo l'impulso di flusso.
+Negli esempi presentati nel seguito the flux pulse amplitude è stata scelta in modo tale da indurre un detuning di circa 1 GHz che è quella che viene utilizzata nella maggior parte delle applicazioni \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
+
+Dopo aver costruito la pulse sequence, sia quella che si conclude con $R_X(\pi/2)$ per misurare $\langle Y \rangle$ e $R_Y(\pi/2)$ per misurare $\langle X \rangle$, questi dati vengono combinato per ottenere $\phi_\tau$
+\begin{comment}
+    *come otteniamo la fase
+    * come processiamo la fase
+    * savgol filter + discussione dei parametr
+\end{comment}
 
 \subsection{Corrected pulse}
 
