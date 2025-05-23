@@ -58,14 +58,16 @@ Additionally, I modified the calibration experiments presented in Section \ref{s
 In particular, I adapted the code used for the various implementations of the Rabi oscillation measurement protocol to include the $R_X(\pi/2)$ gate.
 
 \subsection{Results}
-In the following I will present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.
+In this Section I present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.
+
+\subsubsection{Rabi amplitude}
 
 \begin{table}[h!]
     \centering
     \begin{tabular}{c|cc|cc|cc}
         \toprule
-        \textbf{Qubit} & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} \\
-         & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} \\
+         & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} \\
+        \textbf{Qubit} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} \\
          & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]}\\
         \midrule
         \textbf{B1} & $8.72 \cdot 10^{-2}$ & $0.001 \cdot 10^{-2}$ & $4.36 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ & $3.711 \cdot 10^{-2}$ & $0.006 \cdot 10^{-2}$ \\
@@ -77,8 +79,43 @@ In the following I will present the results obtained performing the modified ver
     \caption{Amplitude values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_amplitude} protocol with a fixed duration of 40 ns.}
 \end{table}
 
+\subsubsection{Rabi length}
 
-\section{Flux pulse correction}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|cc|cc|cc}
+        \toprule
+         & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} \\
+        \textbf{Qubit} & \textbf{Duration} & \textbf{Errors} & \textbf{Duration} & \textbf{Errors} & \textbf{Duration} & \textbf{Duration} \\
+         & \textbf{[ns]}  & \textbf{[ns]}  & \textbf{[ns]}  & \textbf{[ns]} & \textbf{[ns]} & \textbf{[ns]}\\
+        \midrule
+        \textbf{B1} & & & & & & \\
+        \textbf{B2} & & & & & & \\
+        \textbf{B3} & & & & & & \\
+        \textbf{B4} & & & & & & \\
+    \end{tabular}
+    \caption{Duration values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_length} protocol with a fixed amplitude of 40 ns.}
+\end{table}
+
+\subsubsection{Rabi amplitude frequency}
+Nelle Figure successive sono riportati i risultati per gli esperimenti di calibrazione di rabi amplitude frequency per stabilire ampiezza e frequenza corretta per una gate $R_X$ o $R_X(\pi/2)$ della durata di 40 ns.
+Come nei casi precedenti, tra il primo e il secondo esperimento i range per lo scan dell'ampiezza e della frequenza sono rimasti invariati, cambia soltanto la gate da calibrare.
+
+Mentre generalmente in un esperimento di questo tipo osserviamo solo un blob corrispondente al picco di probabilità che il qubit si trovi nello stato $\ket{1}$, 
+se si estendono i range di ricerca o, come nel nostro caso, si utilizzano gli stessi intervalli per calibrare una gate i cui parametri dovrebbero essere grosso modo la metà di quelli che consideriamo di solito, quello che osserviamo è un pattern according to Equation \ref{eq:P1_rabi} where both amplitude and frequency are varying.
+The ideal result is shown in Figure \ref{fig:expected_RX90}, the amplitude and frequency are not in scale with the real system.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/png/IdealRX90.png}
+    \caption{Ideal Rabi oscillation pattern for single qubit varying amplitude and frequency.}
+    \label{fig:expected_RX90}
+\end{figure}
+
+
+%inserire il fatto che l'idea iniziale era quella di sostituire un \pi con due impulsi \pi/2 però per mantenera la compatibilità 
+
+
 
 \section{Flux pulse correction}
 
@@ -101,11 +138,12 @@ When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\foo
 where in the second step we separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In \hyperref[app:AppendixB]{Appendix B} I calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
 
 The experiment is then completed with a $\frac{\pi}{2}$ rotation aroud the $y$- or $x$-axis of the Bloch sphere to measure respectively the $\langle X \rangle$ or $\langle Y \rangle$ components of the Bloch vector when applying the measurement gate $MZ$. 
-From the measurement of $\langle X \rangle$ and $\langle Y \rangle$ we can extract the relative phase $\phi_{\tau}$.\\
+From the measurement of $\langle X \rangle$ and $\langle Y \rangle$ we can extract the relative phase $\varphi_{\tau}$.
+For deatiled calculations on how $\langle X \rangle$ and $\langle Y \rangle$ are measured and $\varphi_{\tau}$ extracted see \hyperref[app:AppendixD]{Appendix D}. \\ 
 
-Then we can estimate $\Phi_Q(t)$ in the interval $[\tau,\tau+\Delta\tau]$ as follows. From the measurement of $\phi_{\tau + \Delta\tau}$ and $\phi_\tau$ we can compute $\overline{\Delta f_R}$:
+Then we can estimate $\Phi_Q(t)$ in the interval $[\tau,\tau+\Delta\tau]$ as follows. From the measurement of $\varphi_{\tau + \Delta\tau}$ and $\varphi_\tau$ we can compute $\overline{\Delta f_R}$:
 \begin{align}\label{eq:detuning}
-    \overline{\Delta f_R} &= \frac{\phi_{\tau+\Delta\tau} - \phi_\tau}{2\pi\Delta\tau}\\ 
+    \overline{\Delta f_R} &= \frac{\varphi_{\tau+\Delta\tau} - \varphi_\tau}{2\pi\Delta\tau}\\ 
     &= \frac{1}{\Delta\tau}\left(\int_{0}^{\tau+\Delta\tau}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt + \int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt\right) \\
     &-\frac{1}{\Delta\tau}\left(\int_{0}^{\tau}\Delta f_Q (\Phi_{Q,\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\\
     &=\frac{1}{\Delta\tau}\left(\int_{\tau}^{\tau+\Delta\tau} \Delta f_Q(\Phi_{Q,\tau+\Delta\tau})dt + \int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\\
@@ -115,43 +153,55 @@ with \[\varepsilon = \frac{1}{\Delta\tau}\left(\int_{\tau+\Delta\tau}^{T_{sep}}\
 The phase contribution from the turn-off transients is minimal due to the sharp return to the first-order flux-insensitive sweet spot of the nearly quadratic $\Delta f_Q(\Phi_Q)$; 
 numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the range of approximately $10^{-2}$ to $10^{-3}$ for typical dynamical distortions in commonly used electronic components \cite{negligible} \cite{Langford2017}, for this reason it will be neglected.\\
 
-Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting eq. \ref{eq:freqdepndenceonflux}.
+Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting Equation \ref{eq:freqdepndenceonflux}.
 
 In the following sections I will describe how we used this protocol to reconstruct the voltage to flux step response, and then how to determine and apply pre-distortions corrections to the control waveforms.
 
 \subsubsection{Pulse reconstruction}
-La prima cosa è la costruzione della seuqneza di impulsi che devono essere mandati al qubit.
-Come descritto nella sezione precedente il protocollo per la ricostruzione dell'impulso di flusso è un esperimento Ramsey-like in cui embedded tra i due microwave pulses, separated by a constant time $T_{sep}$ a flux pulse of varying duration $\tau$.
-Nel nostro caso abbiamo deciso di fissare $T_{sep}$ pari a $100$ ns oltre la durata dell'impulso di flusso più lungo to negate the need for fine timing calibration, as suggested in \cite{rol_time-domain_2020}, mentre lo step $\Delta\tau$ con cui viene variata la durata dell'impulso di flusso è stabilita dall'utente.
-Nello specifico, the user può, tramite runcard \footnote{In qibocal tutte i protocolli vengono deployati tramite runcard scritta in YAML con cui l'utente può fissare i parametri relativi all'esperimento che vuole eseguire} fissare i valori per la durata minima (\tt{duration\_min}) e massima (\tt{duration\_max}) dell'impulso di flusso e lo step con cui variare la durata dell'impulso (\tt{duration\_step}) coincidente con l'intervallo $\Delta\tau$ in Equation \ref{eq:detuning}.
+The first step in implementing the cryoscope protocol involves constructing the appropriate pulse sequence to be applied to the qubit. 
+As described in the previous section, the protocol for reconstructing the flux pulse is a Ramsey-like experiment in which a flux pulse of variable duration $\tau$ is embedded between two microwave $\frac{\pi}{2}$ pulses, separated by a fixed delay $T_{sep}$.
 
-The flux pulse amplitude can also be set by the user tramite il parametro \tt{flux\_pulse amplitude} ma è consigliabile utilizzare una ampiezza che induca nel qubit un detuning dallo sweetspot che sia vicino a quello necessario nella maggior parte dei casi in cui utilizzo l'impulso di flusso.
-Negli esempi presentati nel seguito the flux pulse amplitude è stata scelta in modo tale da indurre un detuning di circa 1 GHz che è quella che viene utilizzata nella maggior parte delle applicazioni \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
+In our implementation, we fixed $T_{sep}$ to $100$ ns longer than the maximum duration of the flux pulse.
+This approach avoids the need for fine timing calibration, as mentioned in Rol et al. \cite{rol_time-domain_2020}.
+The variation in pulse duration $\Delta\tau$ is user-defined and determines the sampling resolution of the time-dependet frequency shift.
+Specifically, users configure the experiment via a runcard \footnote{In Qibocal, all protocols are deployed through a YAML-based runcard, which allows the user to specify experiment-specific parameters.},
+where they set the minimum (\texttt{duration\_min}) and maximum (\texttt{duration\_max}) durations of the flux pulse, along with the duration increment (\texttt{duration\_step}), which corresponds to the interval $\Delta\tau$ used in Equation \ref{eq:detuning}.
+The lower bound $\Delta\tau$ is constrained by the sempling capabilities of the acquisition hardware.
+For all data and analyses reported in this work, we used the OPX1000 by Quantum Machines \cite{opx1000} as the acquisition device. 
+The OPX1000 has a sampling rate of 1 GSample/s, corresponding to a temporal resolution of $1$ ns which sets a lower limit $\Delta\tau \geq 1$ ns for the acquisition.
 
-Dopo aver costruito la pulse sequence, sia quella che si conclude con $R_X(\pi/2)$ per misurare $\langle Y \rangle$ e $R_Y(\pi/2)$ per misurare $\langle X \rangle$, questi dati vengono combinato per ottenere $\phi_\tau$
-\begin{comment}
-    *come otteniamo la fase
-    * come processiamo la fase
-    * savgol filter + discussione dei parametr
-\end{comment}
+The amplitude of the flux pulse, specified by the user through the parameter \texttt{flux\_pulse\_amplitude}, can also be configured in the runcard. 
+While this parameter is user-defined, it is advisable to select an amplitude that induces a detuning from the qubit's sweet spot comparable to that used in typical flux-pulsed gate operations. 
+This ensures that the measured system response is representative of practical use cases.
 
-In the following sections I will describe how we used this protocol to reconstruct the voltage to flux step response, and then how to determine and apply pre-distortions corrections to the control waveforms.
+In the examples presented her, we chose the flux pulse amplitude such that the induced frequency detuning is approximately 1 GHz. 
+This detuning value is commonly employed in high-fidelity entangling gate implementations \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
 
-\subsubsection{Pulse reconstruction}
-La prima cosa è la costruzione della seuqneza di impulsi che devono essere mandati al qubit.
-Come descritto nella sezione precedente il protocollo per la ricostruzione dell'impulso di flusso è un esperimento Ramsey-like in cui embedded tra i due microwave pulses, separated by a constant time $T_{sep}$ a flux pulse of varying duration $\tau$.
-Nel nostro caso abbiamo deciso di fissare $T_{sep}$ pari a $100$ ns oltre la durata dell'impulso di flusso più lungo to negate the need for fine timing calibration, as suggested in \cite{rol_time-domain_2020}, mentre lo step $\Delta\tau$ con cui viene variata la durata dell'impulso di flusso è stabilita dall'utente.
-Nello specifico, the user può, tramite runcard \footnote{In qibocal tutte i protocolli vengono deployati tramite runcard scritta in YAML con cui l'utente può fissare i parametri relativi all'esperimento che vuole eseguire} fissare i valori per la durata minima (\tt{duration\_min}) e massima (\tt{duration\_max}) dell'impulso di flusso e lo step con cui variare la durata dell'impulso (\tt{duration\_step}) coincidente con l'intervallo $\Delta\tau$ in Equation \ref{eq:detuning}.
+In the first preliminary analysis conducted to develop the cryoscope routine we for the flux pulse a waveform defined as the combination of two step functions. 
+Specifically, the waveform remains zero-valued for the first 10 ns, assumes a nominal unit amplitude for the subsequent 50 ns, and returns to zero for the final 10 ns. 
+In addition to this waveform, we also studied the results obtained using a rectangular pulse of unit amplitude and 100 ns duration with no initial or final padding. %TODO: controllare la durata effettiva
 
-The flux pulse amplitude can also be set by the user tramite il parametro \tt{flux\_pulse amplitude} ma è consigliabile utilizzare una ampiezza che induca nel qubit un detuning dallo sweetspot che sia vicino a quello necessario nella maggior parte dei casi in cui utilizzo l'impulso di flusso.
-Negli esempi presentati nel seguito the flux pulse amplitude è stata scelta in modo tale da indurre un detuning di circa 1 GHz che è quella che viene utilizzata nella maggior parte delle applicazioni \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
+The decision to perform tests on different waveform shapes was determined by practical considerations related to the pulse reconstruction process. 
+In particular, since the qubit's response is only altered during intervals in which a non-zero flux is applied, the system behavior prior to the onset of the pulse is less relevant for the purposes of reconstruction. 
+Our primary interest lies in characterizing the qubit's dynamics during the application of the flux pulse and possibly in the transient period following its termination to measure how long does it take to the qubit to go bacck to its idle frequency after the pulse is turned off.
+\footnote{Although we did not focus extensively on this aspect, this is relevant in practical applications, as it allows for shorter idle times between pulses and thus enables a higher number of gate operations within a given time window.}
 
-Dopo aver costruito la pulse sequence, sia quella che si conclude con $R_X(\pi/2)$ per misurare $\langle Y \rangle$ e $R_Y(\pi/2)$ per misurare $\langle X \rangle$, questi dati vengono combinato per ottenere $\phi_\tau$
-\begin{comment}
-    *come otteniamo la fase
-    * come processiamo la fase
-    * savgol filter + discussione dei parametr
-\end{comment}
+\paragraph{Phase reconstruction}
+Dopo aver costruito la pulse sequence, sia quella che si conclude con $R_X(\pi/2)$ per misurare $\langle Y \rangle$ e $R_Y(\pi/2)$ per misurare $\langle X \rangle$, questi dati vengono combinato per ottenere $\varphi_\tau$
+
+
+%mostro come vengono processati i dati per ottenere la fase
+Per processare i dati e ricostruire la fase prima e l'impulso di flusso dopo
+
+\subsubsection{Flux pulse reconstruction}
+According to quello che ho spiegato prima 
+
+
+\paragraph{Savitzky-Golay filter}
+
+
+
+
 
 %TODO: provare ad aggiungere più correzioni esponenziali
 
@@ -186,7 +236,7 @@ al segnale $y$ applico un secondo filtro IIR ottonendo quindi un segnale $z$ in 
     z[n] = \sum_{m=1}^{M} a'[m]z[n-m] + \sum_{k=0}^{N} b'[k] y[n-k].
 \end{equation}
 
-Now I consider equation \ref{eq:y_signal} and rewrite it as
+Now I consider Equation \ref{eq:y_signal} and rewrite it as
 \begin{equation}\label{eq:y_signal1}
     y[n] - \sum_{m=1}^{M} a[m]y[n-m] = \sum_{k=0}^{N} b[k] x[n-k],
 \end{equation} 
@@ -200,7 +250,7 @@ so that
     & \rightarrow Y(z) = H_1(z)X(z) = \frac{B(z)}{A(z)}X(z) \\ \label{eq:transfer1}
 \end{align}
 
-We can do the same also for equation \ref{eq:z_signal} and rewrite it as 
+We can do the same also for Equation \ref{eq:z_signal} and rewrite it as 
 \begin{equation}\label{eq:z_signal1}
     z[n] = \sum_{m=1}^{M} a'[m]z[n-m] + \sum_{k=0}^{N} b'[k] y[n-k],
 \end{equation}
@@ -241,9 +291,19 @@ then we apply the inverse-Z-transform and obtain
     & z[n] - \sum_{m=1}^{2M} c[m]z[n-m] = \sum_{k=0}^{2N} d[k] x[n-k]\\
     & z[n] = \sum_{m=1}^{2M} c[m]z[n-m] + \sum_{k=0}^{2N} d[k] x[n-k]\\
 \end{align}
-where the feedforward (feedback) taps of the final filters, are given by the convolution of the feedforward (feedback) taps of the two filters as shown in equations \ref{eq:ck} and \ref{eq:dk}.
+where the feedforward (feedback) taps of the final filters, are given by the convolution of the feedforward (feedback) taps of the two filters as shown in Equation \ref{eq:ck} and Equation \ref{eq:dk}.
 
 \subsection{Results}
+
+Nelle figure ... sono è riportato il ruslatato che ci si aspetta dell'applicazione dei filtri FIR ed IIR secondo le modalità descritte sopra.
+
+Dato che la nostra è una ampiezza rellativa la prima cosa di cui ci rendiamo conto è che, a differenza di quanto ci aspettiamo non è pari a uno, questo è possibile sia un errore di normalizzazione che però indagheremo più in dettaglio.
+È evidente che già l'applicazione di un singolo filtro esponenziale corregge la salita a regime del segnale.
+Tuttavia su scale temporali dell'ordine delle decine di nanosecondi e in generale su scale temporali della durata caratteristica delle gate si continuano a osservare a causa del ringing che può probabilmente essere dovuto a signal reflection.
+
+È evidente però che su scale temporali lunghe rimangano oscillazioni che non vengono corrette da nessuno dei due filtri.
+È possibile provare a combinare più filtri esponenziali, come fatto nelle analisi precedenti, il punto è che le oscillazioni e deviazioni dal segnale ideale che si osservano non sono deviazioni che possono essere dovute ad una salita esponenziale.
+%TODO: aggiungere commento sulla durata tipica degli effetti di ringing
 
 The experiments in which the impact of flux signal distortions are ones where we expect to see a clear chevron pattern, deviation from the ideal chevron pattern often indicano presenza di distorsioni nel segnale di flusso \cite{Langford2017}.
 
@@ -265,7 +325,7 @@ where $\Delta = \omega_1 - \omega_2$, and $g$ is the coupling constant for the t
 In \Qibocal la routine è utilizzata per calibrare two qubits gate perchè per esempio, By adjusting the duration $t$ of the flux pulse such that $t=\pi/2g$, the system performs a full excitation exchange, implementing an iSWAP gate up to local phase corrections.
 Se anzichè calibrare l'iSWAP volessimo calibrare una CZ the pulse sequence will be the same except for the addition of an initial $\pi$ pulse applied to the qubit with the lower frequency so that both qubits are initially prepared in the $\ket{1}$ state.
 
-The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}.
+The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}, the figure is meant to give a qualitative idea of how the chevron plot should look like, the scale is different from the real system.
 
 \begin{figure}[h!]
     \centering
@@ -274,18 +334,19 @@ The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}.
     \label{fig:expected_chevron}
 \end{figure}
 
+\newgeometry{a4paper, top=2.5cm, bottom=2.5cm, inner=2cm, outer=2cm, heightrounded}
 In Figure \ref{fig:B1B3_nofilter} and Figure \ref{fig:B2B4_nofilter}I show the actual chevron pattern obtained from the calibration of a CZ gate on our hardware without applying any digital filter.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B1B3_nofilter.png}
+    \includegraphics[width=\textwidth]{figures/png/Cryoscope/B1B3_nofilter.png}
     \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B1} and \tt{B3}.\\ No filters applied.}
     \label{fig:B1B3_nofilter}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B2B4_nofilter.png}
+    \includegraphics[width=\textwidth]{figures/png/Cryoscope/B2B4_nofilter.png}
     \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B2} and \tt{B4}.\\ No filters applied.}
     \label{fig:B2B4_nofilter}
 \end{figure}
@@ -294,14 +355,16 @@ After the application of the filters determined by using the cryoscope protocol 
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B1B3.png}
+    \includegraphics[width=\textwidth]{figures/png/Cryoscope/B1B3.png}
     \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B1} and \tt{B3}.}
     \label{fig:B1B3}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1.15\textwidth]{figures/png/Cryoscope/B2B4.png}
+    \includegraphics[width=\textwidth]{figures/png/Cryoscope/B2B4.png}
     \caption{Chevron pattern obtained from the calibration of a CZ gate on qubits \tt{B2} and \tt{B4}.}
     \label{fig:B2B4}
 \end{figure}
+
+\restoregeometry

@@ -52,7 +52,7 @@ where $k \in \mathbb{Z}^+$, the relative phase $\varphi_{\tau}$ can be calculate
     &= 2\pi a \int_{0}^{\tau} \left[ \int_{0}^{t} h(t - t') dt' \right]^k dt + 2\pi a \int_{\tau}^{\infty} \left[ \int_{0}^{\tau} h(t - t') dt' \right]^k dt,
 \end{align}
 
-From the calculations showed in \ref{eq:phi} we know that the relative phase $\phi_\tau$ for a general form of the detuning flux \ref{eq:det_flux}, with $T_{\text{sep}} = \infty$ is
+From the calculations showed in \ref{eq:phi} we know that the relative phase $\varphi_\tau$ for a general form of the detuning flux \ref{eq:det_flux}, with $T_{\text{sep}} = \infty$ is
 \begin{equation}\label{eq:phi_here}
     \varphi_{\tau} = 2\pi \int_{0}^{+\infty} a \left[ \left( s(t) - s(t - \tau) \right) \right]^k dt = 2\pi a \int_{0}^{+\infty} \left[ \left( s(t) - s(t - \tau) \right) \right]^k dt
 \end{equation}
@@ -197,6 +197,113 @@ In this appendix are reported the plots of all the Randomized Benchmarking evalu
     \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step.}
     \label{fig:complete}
 \end{figure}
+
+\chapter*{Appendix D}
+\label{app:AppendixD}
+
+In quantum computing, measurements are restricted to the computational basis, corresponding to projective measurements along the $z$-axis of the Bloch sphere. 
+As a result, direct access is limited to determining the probability of a qubit being in the $\ket{0}$ or $\ket{1}$ state.
+To extract information about other components of the qubit state, such as its projections along the $x-$ or $y-$ axes, indirect measurement techniques are required. 
+These involve applying single-qubit rotations that map the desired observable onto the $z-$axis before the readout.
+For example, in the cryoscope experiment we need to measure $\langle X \rangle$ and $\langle Y \rangle$ in order to then access the relative phase information.
+ 
+\paragraph{$\langle X \rangle$ measurement}
+To measure $\langle X \rangle$, we begin by applying a $\frac{\pi}{2}$ rotation around the $y$-axis, which transforms the ground state $\ket{0}$ into the superposition state $\ket{0}$ a $\frac{(\ket{0} + \ket{1})}{\sqrt{2}}$.
+Next, a flux pulse of duration $\tau$ is applied, introducing a phase $\varphi_\tau$ between the computational basis states. After this evolution, the qubit state become $\ket{\psi}=\frac{\ket{0} + e^{i\varphi_\tau} \ket{1}}{\sqrt{2}}$.
+
+The expectation value of the Pauli $X$ operator in this state is:
+\begin{align}
+    \langle X \rangle &= \left( \frac{\bra{0} + e^{- i\varphi_\tau} \bra{1}}{\sqrt{2}} \right) \hat{\sigma}_x \left( \frac{\ket{0} + e^{ i \varphi_\tau} \ket{1}}{\sqrt{2}} \right)\\
+    &= \left( \frac{\bra{0} + e^{- i \varphi_\tau} \bra{1}}{\sqrt{2}} \right)\left( \frac{\ket{1} + e^{ i \varphi_\tau} \ket{0}}{\sqrt{2}} \right)\\
+    &= \frac{e^{ i \varphi_\tau} + e^{- i\varphi_\tau}}{2} = \cos{(\varphi_\tau)}.
+\end{align}
+
+Since the measurement can only be performed along the $z$-axis, we apply a rotation $R_Y(\frac{\pi}{2})$ to map the $x$-axis component onto the $z$-axis. The operator for this rotation is
+\begin{align}\label{eq:RY90}
+    R_Y(\frac{\pi}{2}) &= \exp{\left( -i\frac{\pi}{4}\hat{\sigma}_y\right)}\\
+    &= \cos{\left(\frac{\pi}{4}\right)}\id - i\sin{\left(\frac{\pi}{4}\right)}\hat{\sigma}_y\\
+    &= \frac{\sqrt{2}}{2}(\id -i\hat{\sigma}_y) = \begin{pmatrix}
+        1 & -1 \\
+        1 & 1
+        \end{pmatrix}.
+\end{align}
+
+Applying this rotation to the state $\ket{\psi}$ gives:
+\begin{equation}
+    \ket{\psi'} = R_Y\left(\frac{\pi}{2}\right) \ket{\psi} = \frac{1}{\sqrt{2}} 
+\begin{pmatrix}
+1 & -1 \\
+1 & 1
+\end{pmatrix}
+\frac{1}{\sqrt{2}} 
+\begin{pmatrix}
+1 \\
+e^{i\varphi_\tau}
+\end{pmatrix}
+= \frac{1}{2}
+\begin{pmatrix}
+1 - e^{i\varphi_\tau} \\
+1 + e^{i\varphi_\tau}
+\end{pmatrix}
+\end{equation}
+
+We now measure the probability $P_1$ of finding the qubit in state $\ket{1}$:
+\begin{align}
+    P_1 &= |\braket{\psi'|1}|^2 = \left| \frac{1}{2} \left( (1 - e^{i\varphi_\tau})\bra{0} + (1 + e^{i\varphi_\tau})\bra{1} \right) \ket{1} \right|^2 = \left| \frac{1 + e^{i\varphi_\tau}}{2} \right|^2\\
+        &= \frac{1}{4} (1+e^{-i\varphi_\tau})(1+e^{+i\varphi_\tau}) = \frac{1}{4}(1 + e^{+i\varphi_\tau} + e^{-i\varphi_\tau} +1)\\ 
+        &=\frac{(2+ 2\cos{\varphi_\tau})}{4} = \frac{1 + \cos{\varphi_\tau}}{2}.
+\end{align}
+
+Thus, the expectation value $\langle X \rangle$ is recovered via $\langle X \rangle = 2\cdot P_1 - 1$.
+
+\paragraph{$\langle Y \rangle$ measurement}
+To measure $\langle Y \rangle$, the same initial sequence is applied: a $\frac{\pi}{2}$ rotation around the $y$-axis followed by a flux pulse of duration $\tau$, leading to the state: $\ket{\psi}=\frac{\ket{0} + e^{i\varphi_\tau} \ket{1}}{\sqrt{2}}$.
+
+The expectation value of the Pauli $Y$ operator is given by:
+\begin{align}
+    \langle Y \rangle &= \left( \frac{\bra{0} + e^{- i\varphi_\tau} \bra{1}}{\sqrt{2}} \right) \hat{\sigma}_y \left( \frac{\ket{0} + e^{ i \varphi_\tau} \ket{1}}{\sqrt{2}} \right)\\
+    &= \left( \frac{\bra{0} + e^{- i \varphi_\tau} \bra{1}}{\sqrt{2}} \right) \left( \frac{\ket{1} + e^{ i \varphi_\tau} \ket{0}}{\sqrt{2}} \right)\\
+    &= \frac{e^{ i \varphi_\tau} - e^{- i\varphi_\tau}}{2} = \sin{(\varphi_\tau)}
+\end{align}
+
+To access this observable through a $z$-axis measurement, we apply a rotation $R_X(\frac{\pi}{2})$:
+\begin{align}\label{eq:RX90}
+    R_X(\frac{\pi}{2}) &= \exp{\left( -i\frac{\pi}{4}\hat{\sigma}_x\right)}\\
+    &= \cos{\left(\frac{\pi}{4}\right)}\id - i\sin{\left(\frac{\pi}{4}\right)}\hat{\sigma}_x\\
+    &= \frac{\sqrt{2}}{2}(\id -i\hat{\sigma}_x) = \begin{pmatrix}
+        1 & -i \\
+        -i & 1
+        \end{pmatrix}.
+\end{align}
+
+The probability of measuring $\ket{1}$ is:
+\begin{equation}
+    \ket{\psi'} = R_X\left(\frac{\pi}{2}\right) \ket{\psi} = \frac{1}{\sqrt{2}} 
+\begin{pmatrix}
+1 & -i \\
+-i & 1
+\end{pmatrix}
+\frac{1}{\sqrt{2}} 
+\begin{pmatrix}
+1\\
+e^{i\varphi_\tau}
+\end{pmatrix}
+= \frac{1}{2}
+\begin{pmatrix}
+1 - ie^{i\varphi_\tau} \\
+-i + e^{i\varphi_\tau}
+\end{pmatrix}
+\end{equation}
+
+The probability of measuring $\ket{1}$ is:
+\begin{align}
+    P_1 &= |\braket{1 | \psi'}|^2 = \left| \frac{1}{2} \bra{1} \left( (1 - ie^{i\varphi_\tau})\ket{0} + (-i + e^{i\varphi_\tau})\ket{1} \right) \right|^2 = \left| \frac{-i + e^{i\varphi_\tau}}{2} \right|^2\\
+        &= \frac{1}{4} (i+e^{-i\varphi_\tau})(-i+e^{+i\varphi_\tau}) = \frac{1}{4}(1 + -ie^{-i\varphi_\tau} + e^{+i\varphi_\tau} +1)\\ 
+        &=\frac{(2- 2\sin{\varphi_\tau})}{4} = \frac{1 -\sin{\varphi_\tau}}{2}.
+\end{align}
+
+Therefore, the expectation value $\langle Y \rangle$ can be expressed as $\langle Y \rangle =- 2\cdot P_1 + 1$.
+
 
 \begin{comment}
 Possibili esensioni dell'appendice in ordine di priorità:
