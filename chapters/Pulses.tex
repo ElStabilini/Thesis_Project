@@ -157,7 +157,7 @@ Then we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting Equation \
 
 In the following sections I will describe how we used this protocol to reconstruct the voltage to flux step response, and then how to determine and apply pre-distortions corrections to the control waveforms.
 
-\subsubsection{Pulse reconstruction}
+\subsubsection{Experimental parameters}
 The first step in implementing the cryoscope protocol involves constructing the appropriate pulse sequence to be applied to the qubit. 
 As described in the previous section, the protocol for reconstructing the flux pulse is a Ramsey-like experiment in which a flux pulse of variable duration $\tau$ is embedded between two microwave $\frac{\pi}{2}$ pulses, separated by a fixed delay $T_{sep}$.
 
@@ -186,19 +186,49 @@ In particular, since the qubit's response is only altered during intervals in wh
 Our primary interest lies in characterizing the qubit's dynamics during the application of the flux pulse and possibly in the transient period following its termination to measure how long does it take to the qubit to go bacck to its idle frequency after the pulse is turned off.
 \footnote{Although we did not focus extensively on this aspect, this is relevant in practical applications, as it allows for shorter idle times between pulses and thus enables a higher number of gate operations within a given time window.}
 
-\paragraph{Phase reconstruction}
-Dopo aver costruito la pulse sequence, sia quella che si conclude con $R_X(\pi/2)$ per misurare $\langle Y \rangle$ e $R_Y(\pi/2)$ per misurare $\langle X \rangle$, questi dati vengono combinato per ottenere $\varphi_\tau$
+\subsubsection{Phase reconstruction}
+he first step in processing the cryoscope data is to isolate the oscillatory component of the signals associated with the $\langle X \rangle$ and $\langle Y \rangle$ measurements, which reflect the qubit's coherent evolution in response to the applied flux pulse.
+What we actually measure for each of these observables is the probability that the qubit is found in the excited state $\ket{1}$ at a given time $t$. 
+In order to extract the oscillation frequency associated with the qubit's coherent evolution, we need to fit the data with an exponentially decaying sinusoid, as we do with the signal observed in a Ramsey experiment.
 
+To perform this fit, we first reconstruct the temporal evolution of the $z$-component of the Bloch vector for each of the two measurements. 
+This is obtained from the measured probability $p_1(t)$ of finding the qubit in state $\ket{1}$ via the relation
+\begin{equation}
+    z(t) = 1 - p_1(t).
+\end{equation}
+We then fit this $z(t)$ signal with an exponentially decaying sine function in order to estimate the qubit's detuning during the pulse. 
+This fitting procedure is performed separately for the $\langle X(t) \rangle$ and $\langle Y(t) \rangle$ traces to identify the characteristic oscillation frequency.
 
-%mostro come vengono processati i dati per ottenere la fase
-Per processare i dati e ricostruire la fase prima e l'impulso di flusso dopo
+At this point, to access the phase evolution, we reconstruct the complex signal $s(t) = \langle X(t) \rangle + i\langle Y(t) \rangle$. 
+To do this, we invert the expressions \ref{eq:P1X} e \ref{eq:P1Y} quindi
+\begin{align}
+    & \langle X \rangle = 2p^X_1 - 1 \\
+    & \langle Y \rangle = 1 - 2p^Y_1 \\
+\end{align}
+where $p^X_1(t)$ and $p^Y_1(t)$ denote the measured probabilities of finding the qubit in state $\ket{1}$ from the $\langle X \rangle$ and $\langle Y \rangle$ measurements, respectively.
+
+Once the charachteristic oscillation frequency has been estimated, we demodulate the signal by this frequency: $s_{\text{demod}}(t) = e^{2\pi i f_{\text{demod}} t} \cdot s(t)$
+This operation shifts the signal's frequency content to near-zero removing the fast oscillations and leaving the slower variations in phase.
+
+This step is important because the raw signal oscillates rapidly, which makes it difficult to directly extract phase dynamics. 
+After demodulation, the phase evolution becomes a smooth, slowly varying function of time, enabling us to extract its derivative più facilmente and obtain the instantaneous detuning. 
+Without demodulation, the presence of the dominant carrier frequency would interfere with accurate phase extraction.
+
+%inserire immagini
+
+Once demodulated, the time-dependent phase of the signal is extracted from the complex argument of the demodulated data. 
 
 \subsubsection{Flux pulse reconstruction}
-According to quello che ho spiegato prima 
-
+According to quello che ho spiegato prima Differentiating this phase signal yields an estimate of the instantaneous frequency detuning of the qubit.
 
 \paragraph{Savitzky-Golay filter}
 
+To obtain the true detuning relative to the qubit's rest frame, we then reintroduce the demodulation frequency. 
+This gives us the total detuning from the idle point of the qubit during the flux pulse.
+
+
+Next, we use the known relation between detuning and applied flux amplitude to invert the data and recover the actual flux amplitude as a function of time. 
+Specifically, we assume a quadratic model of the form $f = c_1 A^2 + c_2 A + c_3$ where $f$ is the detuning, $A$ is the applied flux amplitude and $c_1,c_2,c_3$ are parameters che si ottengono tramite la routine \tt{flux\_amplitude\_frequency} (for more details on this routine see ).
 
 
 
@@ -334,6 +364,7 @@ The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}, the figure
     \label{fig:expected_chevron}
 \end{figure}
 
+\newpage
 \newgeometry{a4paper, top=2.5cm, bottom=2.5cm, inner=2cm, outer=2cm, heightrounded}
 In Figure \ref{fig:B1B3_nofilter} and Figure \ref{fig:B2B4_nofilter}I show the actual chevron pattern obtained from the calibration of a CZ gate on our hardware without applying any digital filter.
 
@@ -367,4 +398,5 @@ After the application of the filters determined by using the cryoscope protocol 
     \label{fig:B2B4}
 \end{figure}
 
+\newpage
 \restoregeometry

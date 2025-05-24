@@ -147,9 +147,17 @@
 \backmatter
 %BIBLIOGRAPHY
 \printbibliography
+
+% APPENDICES
+\appendix
+\cleardoublepage
+\renewcommand{\chaptermark}[1]{\markboth{##1}{}}
 \input{chapters/Appendix.tex}
+
 
 %ACKNOWLEDGEMENT
 \chapter*{Acknowledgement}
+\addcontentsline{toc}{chapter}{Acknowledgement}
+\markboth{Acknowledgement}{Acknowledgement}
 \input{chapters/Acknowledgement}
 \end{document}

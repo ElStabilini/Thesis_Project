@@ -1,4 +1,6 @@
 \chapter*{Appendix A} 
+\addcontentsline{toc}{chapter}{Appendix A}
+\markboth{Appendix A}{Appendix A}
 \label{app:AppendixA}
 
 A more accurate description of the resonance profile for a two-dimensional notch-type resonator is provided in the literature \cite{Gao2008}, where the transmitted signal is modeled as a complex function of frequency. 
@@ -40,6 +42,8 @@ This protocol is implemented in \Qibocal and available by selecting the \tt{s21}
 \end{figure}
 
 \chapter*{Appendix B}
+\addcontentsline{toc}{chapter}{Appendix B}
+\markboth{Appendix B}{Appendix B}
 \label{app:AppendixB}
 
 In general, it is possible to show that for different forms of the detuning flux 
@@ -160,6 +164,8 @@ If we then compute $\int_{0}^{\tau} h(t - t')dt'$ we obtain
 which is equal to \ref{eq:final} and then concludes the demonstration.
 
 \chapter*{Appendix C}
+\addcontentsline{toc}{chapter}{Appendix C}
+\markboth{Appendix C}{Appendix C}
 \label{app:AppendixC}
 
 In this appendix are reported the plots of all the Randomized Benchmarking evaluations that have been performed during the optimization using different optimization methods.
@@ -199,6 +205,8 @@ In this appendix are reported the plots of all the Randomized Benchmarking evalu
 \end{figure}
 
 \chapter*{Appendix D}
+\addcontentsline{toc}{chapter}{Appendix D}
+\markboth{Appendix D}{Appendix D}
 \label{app:AppendixD}
 
 In quantum computing, measurements are restricted to the computational basis, corresponding to projective measurements along the $z$-axis of the Bloch sphere. 
@@ -247,14 +255,14 @@ e^{i\varphi_\tau}
 \end{pmatrix}
 \end{equation}
 
-We now measure the probability $P_1$ of finding the qubit in state $\ket{1}$:
-\begin{align}
-    P_1 &= |\braket{\psi'|1}|^2 = \left| \frac{1}{2} \left( (1 - e^{i\varphi_\tau})\bra{0} + (1 + e^{i\varphi_\tau})\bra{1} \right) \ket{1} \right|^2 = \left| \frac{1 + e^{i\varphi_\tau}}{2} \right|^2\\
+We now measure the probability $p_1$ of finding the qubit in state $\ket{1}$:
+\begin{align}\label{eq:P1X}
+    p_1 &= |\braket{\psi'|1}|^2 = \left| \frac{1}{2} \left( (1 - e^{i\varphi_\tau})\bra{0} + (1 + e^{i\varphi_\tau})\bra{1} \right) \ket{1} \right|^2 = \left| \frac{1 + e^{i\varphi_\tau}}{2} \right|^2\\
         &= \frac{1}{4} (1+e^{-i\varphi_\tau})(1+e^{+i\varphi_\tau}) = \frac{1}{4}(1 + e^{+i\varphi_\tau} + e^{-i\varphi_\tau} +1)\\ 
         &=\frac{(2+ 2\cos{\varphi_\tau})}{4} = \frac{1 + \cos{\varphi_\tau}}{2}.
 \end{align}
 
-Thus, the expectation value $\langle X \rangle$ is recovered via $\langle X \rangle = 2\cdot P_1 - 1$.
+Thus, the expectation value $\langle X \rangle$ is recovered via $\langle X \rangle = 2\cdot p_1 - 1$.
 
 \paragraph{$\langle Y \rangle$ measurement}
 To measure $\langle Y \rangle$, the same initial sequence is applied: a $\frac{\pi}{2}$ rotation around the $y$-axis followed by a flux pulse of duration $\tau$, leading to the state: $\ket{\psi}=\frac{\ket{0} + e^{i\varphi_\tau} \ket{1}}{\sqrt{2}}$.
@@ -296,13 +304,13 @@ e^{i\varphi_\tau}
 \end{equation}
 
 The probability of measuring $\ket{1}$ is:
-\begin{align}
-    P_1 &= |\braket{1 | \psi'}|^2 = \left| \frac{1}{2} \bra{1} \left( (1 - ie^{i\varphi_\tau})\ket{0} + (-i + e^{i\varphi_\tau})\ket{1} \right) \right|^2 = \left| \frac{-i + e^{i\varphi_\tau}}{2} \right|^2\\
+\begin{align}\label{eq:P1Y}
+    p_1 &= |\braket{1 | \psi'}|^2 = \left| \frac{1}{2} \bra{1} \left( (1 - ie^{i\varphi_\tau})\ket{0} + (-i + e^{i\varphi_\tau})\ket{1} \right) \right|^2 = \left| \frac{-i + e^{i\varphi_\tau}}{2} \right|^2\\
         &= \frac{1}{4} (i+e^{-i\varphi_\tau})(-i+e^{+i\varphi_\tau}) = \frac{1}{4}(1 + -ie^{-i\varphi_\tau} + e^{+i\varphi_\tau} +1)\\ 
         &=\frac{(2- 2\sin{\varphi_\tau})}{4} = \frac{1 -\sin{\varphi_\tau}}{2}.
 \end{align}
 
-Therefore, the expectation value $\langle Y \rangle$ can be expressed as $\langle Y \rangle =- 2\cdot P_1 + 1$.
+Therefore, the expectation value $\langle Y \rangle$ can be expressed as $\langle Y \rangle =- 2\cdot p_1 + 1$.
 
 
 \begin{comment}
@@ -310,3 +318,57 @@ Possibili esensioni dell'appendice in ordine di priorità:
 * spiegare com'è Qibo
 * spiegare come ho gestito il passaggio a ruff
 \end{comment}
+
+\chapter*{Appendix E}
+\addcontentsline{toc}{chapter}{Appendix E}
+\markboth{Appendix E}{Appendix E}
+\label{app:AppendixE}
+
+Before running the cryoscope experiment, it is necessary to first execute the \texttt{flux\_amplitude\_frequency} routine. 
+The purpose of this routine is to determine the coefficients of the quadratic relationship between the detuning experienced by the qubit and the amplitude of the applied magnetic flux pulse. 
+According to equation, \ref{eq:freqdepndenceonflux} This relationship is assumed to take the form:
+\begin{equation}
+f = c_1 A^2 + c_2 A + c_3,
+\label{eq:freqdepndenceonflux}
+\end{equation}
+where $f$ is the detuning and $A$ is the flux amplitude. 
+Knowledge of this relation is essential for later reconstructing the time-dependent flux from the detuning profile extracted in the cryoscope measurement.
+
+The pulse sequence used in this calibration is identical to that of the cryoscope experiment, and measurements are again performed in both the $\langle X(t) \rangle$ and $\langle Y(t) \rangle$ bases. 
+
+However, in this case, the duration of the flux pulse is fixed and specified by the user via the \tt{duration} parameter, while the amplitude of the pulse is swept over a user-defined range. 
+This range is set through the \tt{amplitude\_min}, \tt{amplitude\_max}, and \tt{amplitude\_step} parameters defined in the experiment's runcard configuration.
+
+The postprocessing follows a procedure similar to that used for cryoscope data. 
+First, the raw measurement probabilities are converted to expectation values by inverting the relations:
+\begin{align}
+\langle X(t) \rangle &= 2p^X_1(t) - 1, \\
+\langle Y(t) \rangle &= 1 - 2p^Y_1(t),
+\end{align}
+where $p^X_1(t)$ and $p^Y_1(t)$ are the measured probabilities of finding the qubit in the excited state $\ket{1}$ from the $\langle X \rangle$ and $\langle Y \rangle$ measurements, respectively.
+
+From the reconstructed complex signal $s(t) = \langle X(t) \rangle + i\langle Y(t) \rangle$, the phase is extracted. 
+Since this phase is wrapped within the interval $[-\pi, \pi]$, we apply the \texttt{numpy.unwrap} function to eliminate $2\pi$ discontinuities and recover a smooth, continuous phase trajectory. 
+Knowing the idle qubit frequency, we then compute the detuning for each flux amplitude from the time derivative of the unwrapped phase.
+
+Finally, the detuning values are fit as a function of the applied flux amplitude using a second-order polynomial.
+The resulting coefficients are stored and used in the cryoscope postprocessing to invert Eq. \ref{eq:freqdepndenceonflux}, enabling the reconstruction of the applied flux amplitude from the observed detuning.
+
+Figure \ref{fig:flux_amplitude_frequency} shows an example of the output from this calibration routine.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/flux_amp_freq.png}
+    \caption{Expected output of the \tt{flux\_amplitude\_frequency} routine. Results obtained by executing the protocol on qubit \tt{B2}}
+    \label{fig:flux_amplitude_frequency}
+\end{figure}
+
+It is important to note that the choice of \tt{amplitude\_step} must be sufficiently small to ensure accurate sampling of the $\langle X(t) \rangle$ and $\langle Y(t) \rangle$ traces. 
+If the step size is too large, the oscillatory signals may be undersampled, leading to poor phase extraction and unreliable fit results, as illustrated in Figure \ref{fig:bad_sampling}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/png/low_sampling.png}
+    \caption{Example of failed \tt{flux\_amplitude\_frequency} routine due to large amplitude step size. Results obtained by executing the protocol on qubit \tt{B4}}
+    \label{fig:bad_sampling}
+\end{figure}
