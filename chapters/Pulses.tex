@@ -304,9 +304,6 @@ The choice of \texttt{window\_length} is particularly important because the Savi
 This has two main consequences. First, if the window is too small, the filter does not average over enough points to effectively suppress high-frequency noise, making the derivative signal noisier. 
 On the other hand, if the window is too large, it can oversmooth the signal and distort fast transitions. 
 This effect becomes especially relevant for the first flux pulse we analyzed, where the actual non-zero signal is preceded by $10$ ns of zero input. 
-In such cases, the edges of the signal are highly sensitive to the choice of \tt{window\_length}. 
-If the window is too large, the filter may incorporate data from the initial flat region into the fit, which can artificially stretch the signal's rising edge or introduce distortions at the boundaries. 
-This can give the impression of a slower onset of the phase response than what is physically accurate. 
 For this reason, selecting an appropriate window size is crucial: it must be large enough to suppress noise, but not so large that it smooths out or distorts meaningful short-time dynamics in the signal.
 
 The effect of different \texttt{window\_length} values on the reconstructed detuning is shown in Figure \ref{fig:detuning}.
@@ -343,28 +340,36 @@ The effect of different \texttt{window\_length} values on the reconstructed detu
     \label{fig:detuning}
 \end{figure}
 
-As explained before, the purpose of tuning the \texttt{window\_length} parameter is to effectively suppress noise in the phase signal without introducing non-physical signals. 
-This tuning is especially important because the detuning is obtained by differentiating the phase signal, which can amplify any residual oscillations or imperfections.
+As explained before, the purpose of tuning the \tt{window\_length} parameter is to effectively suppress noise in the phase signal without introducing non-physical signals. 
+This tuning is especially important because the detuning is obtained by differentiating the phase signal, which amplifies any residual oscillations or imperfections. 
+If the window is too large, the filter may incorporate data from the initial flat region into the fit, which can artificially stretch the signal's rising edge or introduce distortions at the boundaries. 
+This can give the impression of a slower onset of the phase response than what is physically accurate, and such edge effects are particularly noticeable when the signal includes an initial segment of zero flux.
 
-This effect is particularly visible in the acquisition performed with \texttt{waveform\_1} at an amplitude of $0.1$, where the flux pulse is preceded by 10~ns of zero signal. In this case, two issues arise: first, the detuning appears to evolve even before the flux pulse is applied, giving the impression of a non-causal response; second, an exponential rise is observed in the reconstructed detuning that is not actually present in the qubit phase signal. 
+This issue becomes evident in the acquisition performed with \tt{waveform\_1} at an amplitude of $0.1$, where the flux pulse is preceded by $10$ ns of zero signal. 
+In this case, two non-physical responses appears in the signal: first, the detuning appears to evolve even before the flux pulse is applied, giving the impression of a non-causal response; second, an exponential rise is observed in the reconstructed detuning that is not actually present in the qubit phase signal. 
 These spurious effects are largely absent when the acquisition window is extended and the signal starts immediately with the pulse, but we nonetheless explored how different values of \texttt{window\_length} affect the final result.
 
+In particular, we tested values of \tt{window\_length} corresponding to a range between $3$ and $10$. 
+The lower bound of 3 is set by the minimum required for a second-order polynomial fit, as the filter requires that \tt{polyorder} must be less than \tt{window\_length}.
+
 Figure \ref{fig:detuning} shows the reconstructed detuning under different conditions. 
-In particular, panels \ref{fig:detuning:step_no_dem} and \ref{fig:detuning:long_no_dem} include the case where the demodulation step is skipped. 
-For the first flux pulse, while demodulation seems to worsen the phase signal by increasing oscillations, it does not significantly affect the final detuning. 
-The only clear difference appears at the signal boundaries, where the detuning should ideally be zero but instead shows steep, unphysical changes likely due to the combination of edge artifacts and the effect of differentiation.
+In particular, panels \ref{fig:detuning:step_no_dem} and \ref{fig:detuning:long_no_dem} include results obtained without applying demodulation. 
+For the first flux pulse, although demodulation introduces additional oscillations in the phase signal, it does not substantially affect the final detuning.
+The main discrepancy appears at the signal boundaries, where the ideally zero detuning, shows sharp, unphysical variations amplified by the effect of differentiation.
 
-The situation changes for the second flux pulse. 
+The situation is different for the second flux pulse. 
 Without demodulation, the detuning reconstruction fails to reflect the expected physical behavior, as seen in Figure \ref{fig:detuning:long_no_dem}. 
-On the other hand, when demodulation is applied, as shown in Figure \ref{fig:detuning:long_dem}, the detuning exhibits the correct time dependence: a smooth exponential rise followed by a steady value, consistent with a qubit experiencing a constant-amplitude flux pulse.
+In contrast, when demodulation is applied, as shown in Figure \ref{fig:detuning:long_dem}, the reconstructed detuning clearly follows the anticipated pattern: an exponential onset followed by a stable plateau, consistent with a qubit experiencing a constant-amplitude flux pulse.
 
-Finally, after reconstructing the qubit detuning, we use the known relationship between detuning and applied flux amplitude to invert the data and recover the actual flux amplitude as a function of time. Specifically, we assume a quadratic model of the form
+Finally, after reconstructing the qubit detuning, we use the known relationship between detuning and applied flux amplitude to invert the data and recover the actual flux amplitude as a function of time. 
+Specifically, we assume a quadratic model of the form
 \begin{equation}
     f = c_1 A^2 + c_2 A + c_3,
 \end{equation}
 where $f$ denotes the detuning, $A$ is the applied flux amplitude, and $c_1$, $c_2$, and $c_3$ are coefficients obtained from the \tt{flux\_amplitude\_frequency} routine (see Section \ref{sec:flux_amplitude_frequency} for more details). 
 By inverting this relation, we reconstruct the time-dependent flux amplitude experienced by the qubit. 
-The results of this reconstruction are shown in Figure~\ref{fig:amplitude}.
+The results of this reconstruction are shown in Figure \ref{fig:amplitude}.
+Per completezza ho deciso di riportare i plot relativi alla ricostruzione dell'ampiezza realizzata per tutti i casi mostrati in precedenza, con e senza detuning.
 
 \begin{figure}[h!]
     \centering
@@ -401,11 +406,27 @@ The results of this reconstruction are shown in Figure~\ref{fig:amplitude}.
     \label{fig:amplitude}
 \end{figure}
 
+Based on the results presented so far regarding the reconstruction of the flux pulse, we chose to adopt a default \tt{window\_length} corresponding to 7 points, in line with the value recommended in the original work by Rol et al.
+
+Furthermore, given that our main interest lies in analyzing the qubit's behavior during the application of a nonzero flux pulse, we decided to focus primarily on signals that do not include initial or final padding.
+For this reason, in the subsequent analyses based on \tt{waveform\_1}, we not only considered the rising edge of the flux pulse but also removed the initial $10$ ns segment where the signal is zero. 
+This allows for a clearer interpretation of the qubit's response during the physically relevant part of the experiment.
 
 \subsection{Filter determination}
-Our final goal is to predistort the waveforms digitally using finite- and infinite impulse response filters applied in real time.
+Our goal in implementing the Cryoscope protocol is to determine how to predistort the flux pulse in order to produce the desired detuning on the qubit. 
+This predistortion is applied by filtering the waveform generated by the AWG using a combination of FIR and IIR digital filters. 
+The goal of these filters is to compensate for the linear-dynamical distortions in the flux control line that would otherwise distort the shape of the pulse as it reaches the qubit.
+
+In practice, the Cryoscope protocol allows us to extract the appropriate feedforward and feedback coefficients that define these filters. 
+In the \Qibo setup these coefficients are stored in the platform configuration file (parameters.json) and, once the setup is updated using the \tt{qq update} command, the filters are automatically applied to every flux pulse. 
+Since this correction is handled directly by the control hardware, it effectively acts in real time.
 
 \subsubsection{IIR corrections}
+The first step in our signal correction procedure involved determining the coefficients of an infinite impulse response (IIR) filter to compensate for exponential overshoot or undershoot in the system’s step response.
+These distortions are modeled as convolutions of the system's impulse response $h(t)$ with an ideal input $V_{in}(t) = V_0\cdot u(t)$, where $u(t)$ is the Heaviside step function.
+For a causal system 
+
+
 \subsubsection{FIR corrections}
 Una volta trovati i feedback e feedforward taps per gli IIR filters, è necessario trovare gli FIR per correggere il segnale su scale di tempo più brevi. 
 
@@ -414,7 +435,8 @@ for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethod
 \subsubsection{Output filters in QM}
 
 %Spiegare come applica i filtri quantum machines
-Each analog output port of the OPX system used in this work is equipped with a digital filter that is applied to the signal in the digital domain before conversion to analog. The filters are provided to the OPX via the \texttt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
+Each analog output port of the OPX system used in this work is equipped with a digital filter that is applied to the signal in the digital domain before conversion to analog. 
+The filters are provided to the OPX via the \texttt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
 \begin{equation}\label{eq:OPX_filter}
     y[n] = \sum_{m=1}^{M} a_m y[n - m] + \sum_{k=0}^{K} b_k x[n - k],
 \end{equation}
@@ -491,6 +513,10 @@ then we apply the inverse-Z-transform and obtain
 where the feedforward (feedback) taps of the final filters, are given by the convolution of the feedforward (feedback) taps of the two filters as shown in Equation \ref{eq:ck} and Equation \ref{eq:dk}.
 
 \subsection{Results}
+
+NB: a qeusto punto possiamo dire che il test sul funzionamento dei filtri e la determinazione dei relativi taps nel caso della \tt{waveform\_1} è più che altro un test interessante da fare per valutare l'efficacia e i limiti dell'approccio perchè la salita esponenziale che i filtri stanno correggendo è in realtà una salita esponenenziale non fisica determinata semplicemente dallo smoothing behaviour del filtro di Savitzky-Golay.
+Per ottenere dei taps che correggono un segnale reale è necessario utilizzare un'acquisizione del tipo della \tt{waveform\_2}. 
+Motivo per cui è anche stata scelta come waveform di default for the flux pulse per il cryoscope.
 
 Nelle figure ... sono è riportato il ruslatato che ci si aspetta dell'applicazione dei filtri FIR ed IIR secondo le modalità descritte sopra.
 
