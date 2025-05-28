@@ -366,7 +366,7 @@ Specifically, we assume a quadratic model of the form
 \begin{equation}
     f = c_1 A^2 + c_2 A + c_3,
 \end{equation}
-where $f$ denotes the detuning, $A$ is the applied flux amplitude, and $c_1$, $c_2$, and $c_3$ are coefficients obtained from the \tt{flux\_amplitude\_frequency} routine (see Section \ref{sec:flux_amplitude_frequency} for more details). 
+where $f$ denotes the detuning, $A$ is the applied flux amplitude, and $c_1$, $c_2$, and $c_3$ are coefficients obtained from the \tt{flux\_amplitude\_frequency} routine (see \hyperref[app:AppendixB]{Appendix B} for more details). 
 By inverting this relation, we reconstruct the time-dependent flux amplitude experienced by the qubit. 
 The results of this reconstruction are shown in Figure \ref{fig:amplitude}.
 Per completezza ho deciso di riportare i plot relativi alla ricostruzione dell'ampiezza realizzata per tutti i casi mostrati in precedenza, con e senza detuning.
@@ -422,15 +422,158 @@ In the \Qibo setup these coefficients are stored in the platform configuration f
 Since this correction is handled directly by the control hardware, it effectively acts in real time.
 
 \subsubsection{IIR corrections}
-The first step in our signal correction procedure involved determining the coefficients of an infinite impulse response (IIR) filter to compensate for exponential overshoot or undershoot in the system’s step response.
+
+Infinite Impulse Response (IIR) filters are a class of digital filters incorporate past input values and feedback from previous outputs.
+The general form of an IIR filter in discrete time is given by the difference equation:
+\begin{equation}
+        a_0 y[n] = \sum_{i=0}^{N} b_i x[n - i] - \sum_{i=1}^{M} a_i y[n - i],
+\end{equation}
+where $x[n]$ is the input signal, $y[n]$ is the output signal, $b_i$ are the feedforward coefficients, $a_i$ are the feedback coefficients, $N$ and $M$ are the orders of the feedforward and feedback components, respectively.
+
+This recursive structure allows IIR filters to approximate systems with exponential or resonant dynamics, which makes them especially suitable for correcting physical distortions like exponential overshoot or undershoot.
+
+Indeed, the first step in our signal correction procedure involved determining the coefficients of an infinite impulse response (IIR) filter to compensate for exponential overshoot or undershoot in the system’s step response.
 These distortions are modeled as convolutions of the system's impulse response $h(t)$ with an ideal input $V_{in}(t) = V_0\cdot u(t)$, where $u(t)$ is the Heaviside step function.
-For a causal system 
+For a causal system, where $h(t)=0$ for $t<0$ the output is 
+\begin{equation}
+    s(t) = (h \ast V_{in})(t).
+\end{equation}
+
+In practice, we observed that the step response of our system approximately follows an exponential rise described by
+\begin{equation}
+    s(t) = g(1-Ae^{t/\tau})\cdot u(t)
+\end{equation}
+which we interpret as the system response to an ideal step input $u(t)$. 
+
+A questo punto il nostro ptimo obiettivo è quello di apply a digital IIR filter that inverts this transformation such that the corrected response approximates an ideal step as closely as possible.
+To construct this inverse filter, we fit the measured step response using an inverted exponential model. Specifically, we define the model function as:
+\begin{equation}\label{eq:inverse}
+    s_{corr}(t) = \frac{s(t)}{g(1-Ae^{t/\tau})},
+\end{equation}
+where A is the exponential amplitude characterizing the overshoot or undershoot, $\tau$ is the charachteristic time constant, $g$ is a gain factor and $s(t)$ is the measured response.
+
+%inverse step
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/step_inverse.png}
+        \caption{Comparison between the ideal, actual and corrected flux pulse for a step signal.}
+        \label{fig:inverse:step}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/inverse_no_pad.png}
+        \caption{Comparison between the ideal, actual and corrected flux pulse for the step signal without the padding.}
+        \label{fig:inverse:no_pad}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/inverse.png}
+        \caption{Comparison between the ideal, actual and corrected flux pulse for a rectangular pulse with no padding.}
+        \label{fig:inverse:long}    
+    \end{subfigure}
+
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the correction (light green) for different pulse shapes.
+    The exponential correction is applied as described in Equation \label{eq:inverse}.}
+    \label{fig:inverse_short}
+\end{figure}
+
+Dato che nel lavoro originale di Rol et al. suggerivano di utilizzare 3-5 esponenziali per correggere il flux pulse su scale temporali tra i $30$ e i $200$ ns abbiamo provato ad applicare più correzioni esponenziali della forma indicata in Equation \ref{eq:inverse}.
+%TODO: quantificare questa 
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/step_5_inverse.png}
+        \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a step signal.}
+        \label{fig:5inverse:step}
+    \end{subfigure}
+    \vspace{0.5cm}
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/step_5_inverse.png}
+        \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a step signal without the initial padding.}
+        \label{fig:5inverse:no_pad}
+    \end{subfigure}
+    \vspace{0.5cm}
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/5_inverse.png}
+        \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a rectangular pulse with no padding.}
+        \label{fig:5inverse:no_pad}
+    \end{subfigure}
+    
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of a different number of exponential filters for different pulse shapes.
+    The exponential corrections are iteratively applied as described in Equation \label{eq:inverse}.}
+    \label{fig:5inverse_short}
+\end{figure} 
+
+Ovviamente queste correzioni esponenziali funzionano però per poter essere applicate real time devono essere discretizzate e passate come filtri digitali all'elettronica di controloo del qubit.
+Quindi, the fitted parameters are then used to compute the coefficients of a first-order IIR filter according to procedure described in \cite{rol_time-domain_2020}:
+\begin{align}
+    a_0 &= 1, \\
+    a_1 &= -(1 - \alpha), \\
+    b_0 &= 1 - k + k \alpha, \\
+    b_1 &= -(1 - k)(1 - \alpha),
+\end{align}
+where 
+\begin{equation}
+\alpha = 1 - \exp\left(-\frac{1}{f_s \cdot \tau (1 + A)}\right),
+\end{equation}
+and
+\begin{equation}
+    k =
+    \begin{cases}
+    \frac{A}{(1 + A)(1 - \alpha)}, & \text{if } A < 0, \\
+    \frac{A}{1 + A - \alpha}, & \text{if } A \geq 0,
+    \end{cases}
+\end{equation}
+with $f_S$ being the sampling frequency of the digital hardware.
+
+Ovviamente dato che questa è una approssimazione della risposta esponenziale ci aspettiamo che la qualità della correzione possa diminuire rispetto a quella che si ottiene dall'applicazione del filtro esponenziale continuo.
+%TOD0: quantificare la correzione
+I risultati dell'applicazione degli IIR sono riportati in Figure \ref{fig:IIR}.
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/IIR_nopad.png}
+        \caption{}
+        \label{fig:IIR:nopad}
+    \end{subfigure}
+    \vspace{0.5cm}
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/IIR.png}
+        \caption{}
+        \label{fig:IIR:long}        
+    \end{subfigure}
+    \caption{.}
+    \label{fig:IIR}
+\end{figure}
 
 
 \subsubsection{FIR corrections}
+%TODO: scrivere meglio e con più dettagli questa parte 
 Una volta trovati i feedback e feedforward taps per gli IIR filters, è necessario trovare gli FIR per correggere il segnale su scale di tempo più brevi. 
-
 for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethods}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/all_filters_no_pad.png}
+        \caption{}
+        \label{fig:IIR:nopad}
+    \end{subfigure}
+    \vspace{0.5cm}
+    \begin{subfigure}[t]{0.65\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/IIR_FIR.png}
+        \caption{}
+        \label{fig:IIR:long}        
+    \end{subfigure}
+    \caption{.}
+    \label{fig:IIR}
+\end{figure}
 
 \subsubsection{Output filters in QM}
 

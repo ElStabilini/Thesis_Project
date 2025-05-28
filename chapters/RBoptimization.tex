@@ -734,7 +734,7 @@ Given the results obtained in the two previous optimization runs using \tt{Optun
 In consideration of the relatively short time required by \tt{Optuna} in the previous attempt, approximately 40 minutes for 100 trials, we decided to significantly increase the number of optimization trials. 
 Specifically, we set an upper limit of 1000 trials, with the goal of improving parameter space exploration and again potentially achieving better convergence.
 
-The optimization history is shown in Figure \ref{fig:optuna1000beta:fidelity}. 
+The optimization history is shown in Figure \ref{fig:optuna1000beta:optimization}. 
 At first the results appear promising: the algorithm seems to achieve an average Clifford gate fidelity of 99.99\%. 
 However a closer examination of the outputs corresponding to all RB routines with reported average Clifford gate infidelities below $1.5 \cdot 10^{-3}$, it becomes evident that these results are actually the consequence of failed exponential fits on the RB output.
 
