@@ -479,7 +479,10 @@ where A is the exponential amplitude characterizing the overshoot or undershoot,
     \label{fig:inverse:long}
 \end{figure}
 
-Dato che nel lavoro originale di Rol et al. suggerivano di utilizzare 3-5 esponenziali per correggere il flux pulse su scale temporali tra i $30$ e i $200$ ns abbiamo provato ad applicare più correzioni esponenziali della forma indicata in Equation \ref{eq:inverse}.
+La prima cosa che si osserva da questi grafici è che l'IIR è effettivamente in grado di correggere la salita esponenziale, tuttavia soprattutto in Figure \ref{fig:inverse:long} sembra che non riesca a correggere l'overshoot.
+Tuttavia è anche possibile che questo apparente exponential overshoot sia in realtà un errore nella normalizzazione del segnale.
+
+A questo punto, dato che nel lavoro originale di Rol et al. suggerivano di utilizzare 3-5 esponenziali per correggere il flux pulse su scale temporali tra i $30$ e i $200$ ns abbiamo provato ad applicare più correzioni esponenziali della forma indicata in Equation \ref{eq:inverse}.
 %TODO: quantificare questa 
 
 \begin{figure}[h!]
@@ -508,7 +511,15 @@ Dato che nel lavoro originale di Rol et al. suggerivano di utilizzare 3-5 espone
     \label{fig:5inverse:long}
 \end{figure} 
 
-Ovviamente queste correzioni esponenziali funzionano però per poter essere applicate real time devono essere discretizzate e passate come filtri digitali all'elettronica di controloo del qubit.
+Soprattutto nel caso mostrato in Figure \ref{fig:5inverse_short}, è evidente che l'applicazione di più filtri esponenziali migliora il segnale, nel caso della seconda acquisizione invece l'applicazione di più filtri esponenziali non produce un miglioramento significativo nel segnale di flusso.
+Questo è molto probabilmente dovuto anche alle diverse condizioni con cui sono state eseguite le due acquisizioni, nel primo caso il segnale acquisito con una \tt{flux\_pulse\_amplitude} di $0.1$ è molto più distorto, nel caso in cui l'ampiezza dell'impulso di flusso e quindi anche l'intensità del segnale è superiore, 
+il segnale stesso - o meglio la sua ricostruzione - risulta molto meno distorta.
+
+L'ultima considerazione che prima di procedere dicenta particolarmente rilevante è il fatto che a qeusto punto possiamo dire che il test sul funzionamento dei filtri e la determinazione dei relativi taps nel caso della \tt{waveform\_1} è più che altro un test interessante da fare per valutare l'efficacia e i limiti dell'approccio perchè la salita esponenziale che i filtri stanno correggendo è in realtà una salita esponenenziale non fisica determinata semplicemente dallo smoothing behaviour del filtro di Savitzky-Golay.
+Per ottenere dei taps che correggono un segnale reale è necessario utilizzare un'acquisizione del tipo della \tt{waveform\_2}. 
+Motivo per cui è anche stata scelta come waveform di default for the flux pulse per il cryoscope.
+
+A questo punto abbiamo trovato i parameti per le correzioni esponenziali; queste correzioni esponenziali funzionano però per poter essere applicate real time devono essere discretizzate e passate come filtri digitali all'elettronica di controloo del qubit.
 Quindi, the fitted parameters are then used to compute the coefficients of a first-order IIR filter according to procedure described in \cite{rol_time-domain_2020}:
 \begin{align}
     a_0 &= 1, \\
@@ -566,6 +577,11 @@ where $x[n]$ is the input signal and $y[n]$ is the output signal of the filter.
 The filter coefficients are obtained by minimizing the average relative deviation between the filtered output, ovvero the result of applying the FIR filter to the IIR-corrected signal, and the ideal step response.
 This optimization is performed using the \tt{CMA-ES} algorithm (for details on the \tt{CMA-ES} algorithm see Section \ref{sec:CMA}).
 
+%TODO: tradurre in inglese ed estendere un po' questa parte
+Nella routine implementata per \Qibocal il numero di FIR taps può essere scelto dall'utente tramite l'entry \tt{fir}. 
+Nel nostro caso, per i primi test che abbiamo fatto abbiamo deciso di utilizzare 20 taps che, dato il sampling rate per l'OPX1000 che controlla il qw11q ha un sampling rate di 1GSa/s equivale ad un taps per ns.
+Nei primi tests che abbiamo fatto abbiamo utilizzato 20 parametri per determinare i 20 taps.
+
 I risultati ottenuti dall'applicazione degli FIR sono riportati in Figure \ref{fig:FIR}, in particolare in Figure \ref{fig:FIR:nopad} mostro i risultati dell'applicazione degli FIR sull output dell'impulso di flusso realizzato con la waveform\_1.
 Mentre in Figure \Ref{fig:FIR:long} mostro i risultati dell'applicazione del filtro all'impulso di flusso realizzato con waveform\_2.
 Entrambi sono stati realizzati utilizzando la funzione \tt{lfilter} di \tt{SciPy}.
@@ -587,11 +603,43 @@ Entrambi sono stati realizzati utilizzando la funzione \tt{lfilter} di \tt{SciPy
     \label{fig:FIR}
 \end{figure}
 
+La prima cosa che si osserva è che come ipotizzato osservando il risultato dell'applicazione dei filtri esponenziali in Figure \ref{fig:inverse_short}, \ref{fig:inverse:long} and Figure \ref{fig:IIR} è che è probabile ci sia un problema con la normalizzazione del segnale.
+Questo si capisce perchè in teoria io sto ottimizzando i coefficienti dei filtri FIR perchè, dopo la loro applicazione, il segnale si avvicini il più possibile al valore unitario, invece quello che si osserva è che anche dove l'applicazione degli FIR dovrebbe spostare il segnale di flusso a 1 questo rimane di poco sopra 1.
+
+Inoltre la seconda considerazione da fare è che utilizzando per l'ottimizzazione con CMA un numero di parametri coincidente con il numero di coefficienti che coincide a sua volta con il numero di campioni (ho una corrispondenza 1:1 parametro da ottimizzare, coefficiente del filtro FIR, sample del segnale) quello che succede nella pratica è che sto punto per punto spostando il segnale perchè assuma il valore che voglio.
+Questo non è particolarmente utile soprattutto se si considera il fatto che non sto lavorando un segnale che sto acquisendo real time ma sto ottimizzando i filtri su un segnale acquisito in precedenza, potenzialmente diverso da quelli che manderò in futuro.
+Inoltre l'effetto dei filtri non è reale, non sto realmente applicando questi filtri ma sto "simulando" il loro effetto su un segnale acquisito in precedenza utilizzando la funzione \tt{lfilter}.
+
+Per questo motivo è più utile utilizzare un numero inferiore di parametri da ottimizzare per cui questa ottimizzazzione più "forte" in cui de facto prendo i singoli campioni del segnale e applico un filtro che me li sposti dove dico io solo per i primi ~5ns che sono quelli che risentono maggiormente dagli effetti di distorsione degli IIR. 
+Oltre questo intervallo di tempo è più utile utilizzare ad esempio un solo parametro che corrisponderà al valore di due o tre coefficienti del filtro FIR, in questo modo è più facile che il valore trovato dal filtro sia più "generale" e quindi adatto a correggere anche un segnale futuro che può quindi subire distorsioni nominali diverse da quelle che abbiamo registrato in questo impulso.
+
+Ad esempio abbiamo ripetuto il postprocessing per la determinazione degli FIR utilizzando 17 parametri da ottimizzare con CMA-ES. I primi 4 parametri corrispondono ai primi 4 coefficienti dell'FIR, i restanti 13 corrispondono ad altri 26 coefficienti in modo tale che ciascun parametro determina il valore di due coefficienti.
+In questo modo, considerato il sampling rate di 1 GSa/s ottimizzo la correzione del segnale su circa 30 ns.
+I risultati di questo secondo tentativo sono riportati in Figure \ref{fig:nice}.
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.495\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/step_nice.png}
+        \caption{Plot of the ideal, reconstructed and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
+        \label{fig:nice:nopad}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.495\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/long_nice.png}
+        \caption{Plot of the ideal, reconstructed and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
+        \label{fig:nice:long}
+    \end{subfigure}
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the discrete IIR corrections (green) and both IIR and FIR corrections (light green) for different flux pulses.}
+    \label{fig:nice}
+\end{figure}
+
 \subsubsection{Output filters in QM}
 
-%Spiegare come applica i filtri quantum machines
 Each analog output port of the OPX system used in this work is equipped with a digital filter that is applied to the signal in the digital domain before conversion to analog. 
-The filters are provided to the OPX via the \tt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
+Using the output filter, we can attend to the unwanted effects of the different electrical components of the setup without altering our waveforms.
+
+Using \Qibolab the filters are provided to the OPX via the \tt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
 \begin{equation}\label{eq:OPX_filter}
     y[n] = \sum_{m=1}^{M} a_m y[n - m] + \sum_{k=0}^{K} b_k x[n - k],
 \end{equation}
@@ -668,10 +716,6 @@ then we apply the inverse-Z-transform and obtain
 where the feedforward (feedback) taps of the final filters, are given by the convolution of the feedforward (feedback) taps of the two filters as shown in Equation \ref{eq:ck} and Equation \ref{eq:dk}.
 
 \subsection{Results}
-
-NB: a qeusto punto possiamo dire che il test sul funzionamento dei filtri e la determinazione dei relativi taps nel caso della \tt{waveform\_1} è più che altro un test interessante da fare per valutare l'efficacia e i limiti dell'approccio perchè la salita esponenziale che i filtri stanno correggendo è in realtà una salita esponenenziale non fisica determinata semplicemente dallo smoothing behaviour del filtro di Savitzky-Golay.
-Per ottenere dei taps che correggono un segnale reale è necessario utilizzare un'acquisizione del tipo della \tt{waveform\_2}. 
-Motivo per cui è anche stata scelta come waveform di default for the flux pulse per il cryoscope.
 
 Nelle figure ... sono è riportato il ruslatato che ci si aspetta dell'applicazione dei filtri FIR ed IIR secondo le modalità descritte sopra.
 
