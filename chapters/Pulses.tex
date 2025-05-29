@@ -446,12 +446,14 @@ In practice, we observed that the step response of our system approximately foll
 \end{equation}
 which we interpret as the system response to an ideal step input $u(t)$. 
 
-A questo punto il nostro ptimo obiettivo è quello di apply a digital IIR filter that inverts this transformation such that the corrected response approximates an ideal step as closely as possible.
+At this stage, our primary goal is to apply a digital IIR filter that effectively inverts the distortion introduced by the system, such that the corrected flux response approximates an ideal step as closely as possible.
 To construct this inverse filter, we fit the measured step response using an inverted exponential model. Specifically, we define the model function as:
 \begin{equation}\label{eq:inverse}
     s_{corr}(t) = \frac{s(t)}{g(1-Ae^{t/\tau})},
 \end{equation}
-where A is the exponential amplitude characterizing the overshoot or undershoot, $\tau$ is the charachteristic time constant, $g$ is a gain factor and $s(t)$ is the measured response.
+where $A$ is the exponential amplitude characterizing the overshoot or undershoot, $\tau$ is the charachteristic time constant, $g$ is a gain factor and $s(t)$ is the measured response.
+
+Figures \ref{fig:inverse_short} and \ref{fig:inverse_long} present the results of applying the exponential filters, obtained through the procedure described above, to different flux pulses.
 
 %inverse step
 \begin{figure}[h!]
@@ -479,11 +481,12 @@ where A is the exponential amplitude characterizing the overshoot or undershoot,
     \label{fig:inverse:long}
 \end{figure}
 
-La prima cosa che si osserva da questi grafici è che l'IIR è effettivamente in grado di correggere la salita esponenziale, tuttavia soprattutto in Figure \ref{fig:inverse:long} sembra che non riesca a correggere l'overshoot.
-Tuttavia è anche possibile che questo apparente exponential overshoot sia in realtà un errore nella normalizzazione del segnale.
+The first observation from these plots is that the IIR filter effectively corrects the exponential rise in the step response. %TODO: aggiungere miglioramento quantitativo
+However, particularly in Figure \ref{fig:inverse:long}, it appears that the filter does not fully eliminate the overshoot. 
+Though it is possible that what looks like an exponential overshoot might actually stem from imperfect signal normalization rather than a true residual distortion.
 
-A questo punto, dato che nel lavoro originale di Rol et al. suggerivano di utilizzare 3-5 esponenziali per correggere il flux pulse su scale temporali tra i $30$ e i $200$ ns abbiamo provato ad applicare più correzioni esponenziali della forma indicata in Equation \ref{eq:inverse}.
-%TODO: quantificare questa 
+After verifying the effectiveness of a single exponential filter, we tryied to use a combination of 3 to 5 exponentials to correct flux distortions occurring over time scales ranging from $30$ to $200$ ns, as was suggested in the original work by Rol et al. 
+Based on this, we tested the application of multiple exponential corrections of the form given in Equation \ref{eq:inverse}.
 
 \begin{figure}[h!]
     \centering
@@ -511,16 +514,25 @@ A questo punto, dato che nel lavoro originale di Rol et al. suggerivano di utili
     \label{fig:5inverse:long}
 \end{figure} 
 
-Soprattutto nel caso mostrato in Figure \ref{fig:5inverse_short}, è evidente che l'applicazione di più filtri esponenziali migliora il segnale, nel caso della seconda acquisizione invece l'applicazione di più filtri esponenziali non produce un miglioramento significativo nel segnale di flusso.
-Questo è molto probabilmente dovuto anche alle diverse condizioni con cui sono state eseguite le due acquisizioni, nel primo caso il segnale acquisito con una \tt{flux\_pulse\_amplitude} di $0.1$ è molto più distorto, nel caso in cui l'ampiezza dell'impulso di flusso e quindi anche l'intensità del segnale è superiore, 
-il segnale stesso - o meglio la sua ricostruzione - risulta molto meno distorta.
+%TODO: quantificare questa 
+As shown in Figure \ref{fig:5inverse_short}, the application of multiple exponential filters slightly improves the corrected signal, at least for the signal acquired with waveform\_1. 
+In contrast, for the second acquisition, the use of additional filters does not lead to a noticeable improvement in the reconstructed flux signal. 
+This difference is likely due to the distinct experimental conditions of the two acquisitions. 
+In the first case, the reconstruction of signal acquired with a \tt{flux\_pulse\_amplitude} of $0.1$ exhibits a more pronounced distortion, which the filters compensate for. 
+On the other hand, in the second case, where the flux pulse amplitude, and therefore the signal strength, is higher, the reconstructed signal already appears much less distorted, reducing the benefit of using more than one exponential correction.
 
-L'ultima considerazione che prima di procedere dicenta particolarmente rilevante è il fatto che a qeusto punto possiamo dire che il test sul funzionamento dei filtri e la determinazione dei relativi taps nel caso della \tt{waveform\_1} è più che altro un test interessante da fare per valutare l'efficacia e i limiti dell'approccio perchè la salita esponenziale che i filtri stanno correggendo è in realtà una salita esponenenziale non fisica determinata semplicemente dallo smoothing behaviour del filtro di Savitzky-Golay.
-Per ottenere dei taps che correggono un segnale reale è necessario utilizzare un'acquisizione del tipo della \tt{waveform\_2}. 
-Motivo per cui è anche stata scelta come waveform di default for the flux pulse per il cryoscope.
+Before presenting the remaining results and continuing with the description of the procedure, è utile fare la seguente considerazione.
+The tests on filter performance and the determination of corresponding taps using \tt{waveform\_1} primarily serve as a means to evaluate the effectiveness and limitations of the correction method. 
+In this case, the exponential rise corrected by the filters does not reflect a physical property of the system, but rather an artifact introduced by the smoothing behavior of the Savitzky-Golay filter.
 
-A questo punto abbiamo trovato i parameti per le correzioni esponenziali; queste correzioni esponenziali funzionano però per poter essere applicate real time devono essere discretizzate e passate come filtri digitali all'elettronica di controloo del qubit.
-Quindi, the fitted parameters are then used to compute the coefficients of a first-order IIR filter according to procedure described in \cite{rol_time-domain_2020}:
+To obtain correction taps that address real physical distortions in the flux line, it is necessary to use acquisitions based on \tt{waveform\_2}, which has therefore been selected as the default waveform for the cryoscope protocol. 
+This choice ensures a more accurate reconstruction of the system response by avoiding non-physical effects due to pre-pulse padding.
+
+Consequently, in the analyses that follow, I focus exclusively on the non-zero portion of the flux signal. 
+Even for the initial acquisitions that include a flat pre-pulse region, this segment has been excluded to ensure that the tests performed with the filters are more meaningful.
+
+At this stage, the parameters for the exponential corrections have been determined. However, to apply these corrections in real time, they must be discretized and implemented as digital filters within the qubit control electronics. 
+Accordingly, the fitted parameters are used to calculate the coefficients of a first-order IIR filter following the procedure described in \cite{rol_time-domain_2020}:
 \begin{align}
     a_0 &= 1, \\
     a_1 &= -(1 - \alpha), \\
@@ -540,12 +552,11 @@ and
     \end{cases}
 \end{equation}
 with $f_S$ being the sampling frequency of the digital hardware.
+Since this is an approximation of the exponential response, we expect the quality of the correction to be somewhat reduced compared to what is achieved by applying the continuous exponential filter.
 
-Ovviamente dato che questa è una approssimazione della risposta esponenziale ci aspettiamo che la qualità della correzione possa diminuire rispetto a quella che si ottiene dall'applicazione del filtro esponenziale continuo.
-%TOD0: quantificare la correzione
-
-Per predirre l'effetto di applying the real-time predistortion filters we use \tt{lfilter} function of the \tt{SciPy}library, which applies the filter defined by the coefficient vectors \tt{b} and \tt{a} to the signal defined by the vector \tt{sig}. 
-I risultati dell'applicazione degli IIR come filtri digitali discreti sono riportati in Figure \ref{fig:IIR}.
+To predict the effect of applying the real-time predistortion filters, we use the \texttt{lfilter} function from the \texttt{SciPy} library. 
+The functions takes three vectors as input: \tt{lfilter(a,b,sig)} and applies the filter defined by the coefficient vectors \texttt{b} and \texttt{a} to the signal represented by the vector \texttt{sig}. 
+The results of applying these IIR filters as discrete digital filters are shown in Figure \ref{fig:IIR}.
 
 \begin{figure}[h!]
     \centering
@@ -564,9 +575,9 @@ I risultati dell'applicazione degli IIR come filtri digitali discreti sono ripor
     \label{fig:IIR}
 \end{figure}
 
+%TOD0: quantificare la correzione e commentare risultato.
 
 \subsubsection{FIR corrections}
-%TODO: scrivere meglio e con più dettagli questa parte 
 Once the feedback and feedforward taps for the IIR filters have been determined, it is necessary to implement a finite impulse response (FIR) filter to correct for residual distortions on shorter timescales, less than 30 ns, which are not fully addressed by the IIR.
 A FIR filter performs a convolution of the input signal with a discrete impulse response $h_{FIR}[n] = b_n$ defined by the coefficients $b_i$ and is mathematically defined by
 \begin{equation}
@@ -574,17 +585,16 @@ A FIR filter performs a convolution of the input signal with a discrete impulse 
 \end{equation}
 where $x[n]$ is the input signal and $y[n]$ is the output signal of the filter.
 
-The filter coefficients are obtained by minimizing the average relative deviation between the filtered output, ovvero the result of applying the FIR filter to the IIR-corrected signal, and the ideal step response.
-This optimization is performed using the \tt{CMA-ES} algorithm (for details on the \tt{CMA-ES} algorithm see Section \ref{sec:CMA}).
+The filter coefficients are obtained by minimizing the average relative deviation between the filtered output (the result of applying the FIR filter to the signal already corrected by the IIR filter) and the ideal step response. 
+This optimization is carried out using the \tt{CMA-ES} algorithm (for further details on the \tt{CMA-ES} algorithm, see Section \ref{sec:CMA}).
 
-%TODO: tradurre in inglese ed estendere un po' questa parte
-Nella routine implementata per \Qibocal il numero di FIR taps può essere scelto dall'utente tramite l'entry \tt{fir}. 
-Nel nostro caso, per i primi test che abbiamo fatto abbiamo deciso di utilizzare 20 taps che, dato il sampling rate per l'OPX1000 che controlla il qw11q ha un sampling rate di 1GSa/s equivale ad un taps per ns.
-Nei primi tests che abbiamo fatto abbiamo utilizzato 20 parametri per determinare i 20 taps.
+In the implementation for \Qibocal, the number of FIR filter taps can be selected by the user via the \tt{fir} parameter. 
+For our initial tests, we chose to use 20 taps. Given that the OPX1000 controller for the qw11q operates at a sampling rate of $1$ GSa/s, this corresponds to one tap per nanosecond. 
+Accordingly, in these initial tests, we optimized 20 parameters to determine the 20 filter taps.
 
-I risultati ottenuti dall'applicazione degli FIR sono riportati in Figure \ref{fig:FIR}, in particolare in Figure \ref{fig:FIR:nopad} mostro i risultati dell'applicazione degli FIR sull output dell'impulso di flusso realizzato con la waveform\_1.
-Mentre in Figure \Ref{fig:FIR:long} mostro i risultati dell'applicazione del filtro all'impulso di flusso realizzato con waveform\_2.
-Entrambi sono stati realizzati utilizzando la funzione \tt{lfilter} di \tt{SciPy}.
+The results of applying the FIR filters are shown in Figure \ref{fig:FIR}. 
+Specifically, Figure \ref{fig:FIR:nopad} displays the results of applying the FIR filter to the flux pulse generated using waveform\_1, while Figure \ref{fig:FIR:long} shows the corresponding results for the flux pulse generated with waveform\_2. 
+Both sets of filtered signals were obtained using the \tt{lfilter} function from the \tt{SciPy} library.
 
 \begin{figure}[h!]
     \centering
@@ -603,19 +613,25 @@ Entrambi sono stati realizzati utilizzando la funzione \tt{lfilter} di \tt{SciPy
     \label{fig:FIR}
 \end{figure}
 
-La prima cosa che si osserva è che come ipotizzato osservando il risultato dell'applicazione dei filtri esponenziali in Figure \ref{fig:inverse_short}, \ref{fig:inverse:long} and Figure \ref{fig:IIR} è che è probabile ci sia un problema con la normalizzazione del segnale.
-Questo si capisce perchè in teoria io sto ottimizzando i coefficienti dei filtri FIR perchè, dopo la loro applicazione, il segnale si avvicini il più possibile al valore unitario, invece quello che si osserva è che anche dove l'applicazione degli FIR dovrebbe spostare il segnale di flusso a 1 questo rimane di poco sopra 1.
+The first observation, consistent with the results shown in Figures \ref{fig:inverse_short}, \ref{fig:inverse_long}, and \ref{fig:IIR}, is that there is likely an issue with signal normalization. 
+This is evident because, in theory, the FIR filter coefficients are optimized to bring the filtered flux signal as close as possible to unity. 
+However, the results show that even where the FIR filters should adjust the signal to exactly one, the value remains slightly above unity.
 
-Inoltre la seconda considerazione da fare è che utilizzando per l'ottimizzazione con CMA un numero di parametri coincidente con il numero di coefficienti che coincide a sua volta con il numero di campioni (ho una corrispondenza 1:1 parametro da ottimizzare, coefficiente del filtro FIR, sample del segnale) quello che succede nella pratica è che sto punto per punto spostando il segnale perchè assuma il valore che voglio.
-Questo non è particolarmente utile soprattutto se si considera il fatto che non sto lavorando un segnale che sto acquisendo real time ma sto ottimizzando i filtri su un segnale acquisito in precedenza, potenzialmente diverso da quelli che manderò in futuro.
-Inoltre l'effetto dei filtri non è reale, non sto realmente applicando questi filtri ma sto "simulando" il loro effetto su un segnale acquisito in precedenza utilizzando la funzione \tt{lfilter}.
+A second important consideration concerns the optimization strategy using the \tt{CMA-ES} algorithm. 
+When the number of parameters optimized equals the number of FIR filter coefficients—and this coincides with the number of signal samples—there is effectively a one-to-one mapping between optimized parameters, filter coefficients, and signal points. 
+This means that the optimization is essentially adjusting the signal point-by-point to match the desired target values. 
+While this yields a very close fit to the reference signal, it is not particularly practical, especially considering that the signal used is pre-recorded and not a real-time acquisition. 
+Future signals may differ from the one used for optimization, limiting the generalizability of this approach.
 
-Per questo motivo è più utile utilizzare un numero inferiore di parametri da ottimizzare per cui questa ottimizzazzione più "forte" in cui de facto prendo i singoli campioni del segnale e applico un filtro che me li sposti dove dico io solo per i primi ~5ns che sono quelli che risentono maggiormente dagli effetti di distorsione degli IIR. 
-Oltre questo intervallo di tempo è più utile utilizzare ad esempio un solo parametro che corrisponderà al valore di due o tre coefficienti del filtro FIR, in questo modo è più facile che il valore trovato dal filtro sia più "generale" e quindi adatto a correggere anche un segnale futuro che può quindi subire distorsioni nominali diverse da quelle che abbiamo registrato in questo impulso.
+For this reason, it is more effective to reduce the number of parameters optimized. 
+A "strong optimization", where each parameter corresponds to a single coefficient and sample, can be limited to the first few nanoseconds (approximately 5 ns), where the distortions due to the IIR filters are most pronounced. 
+Beyond this interval, it is preferable to group coefficients, for example by having one parameter control two or three FIR coefficients. 
+This reduces the parameter space and encourages the optimization to find a more general filter response, which is better suited to correcting distortions in future signals that may differ from the current dataset.
 
-Ad esempio abbiamo ripetuto il postprocessing per la determinazione degli FIR utilizzando 17 parametri da ottimizzare con CMA-ES. I primi 4 parametri corrispondono ai primi 4 coefficienti dell'FIR, i restanti 13 corrispondono ad altri 26 coefficienti in modo tale che ciascun parametro determina il valore di due coefficienti.
-In questo modo, considerato il sampling rate di 1 GSa/s ottimizzo la correzione del segnale su circa 30 ns.
-I risultati di questo secondo tentativo sono riportati in Figure \ref{fig:nice}.
+As a practical example, we repeated the FIR coefficient optimization using 17 parameters with the \tt{CMA-ES} algorithm. 
+The first 4 parameters correspond directly to the first 4 FIR coefficients, while the remaining 13 parameters each control two coefficients, effectively determining 26 coefficients. 
+Given the 1 GSa/s sampling rate, this approach optimizes the correction over a time window of approximately 30 ns. 
+The results of this improved optimization are shown in Figure \ref{fig:nice}.
 
 \begin{figure}[h!]
     \centering
@@ -648,12 +664,12 @@ where $y[n]$ is the output signal, $x[n]$ is the input waveform, $a_m$ are the f
 In our case, we have a set of feedback coefficients determined through IIR correction and two sets of feedforward coefficients: the first obtained from the IIR-based correction, and the second from FIR-based correction on short timescales. 
 To uniquely determine the coefficients to be passed to the electronics, it is necessary to derive a single set of feedforward coefficients and a single set of feedback coefficients by combining the two sets of feedforward filters through convolution.
 
-Infatti posso considerare il segnale di input $x$ a cui applico un primo filtro IIR ottenendo così un segnale in output $y$ tale che
+Indeed, we can consider the input signal $x$ to which we apply a first IIR filter, thus obtaining an output signal $y$ such that 
 \begin{equation}\label{eq:y_signal}
     y[n] = \sum_{m=1}^{M} a[m]y[n-m] + \sum_{k=0}^{N} b[k] x[n-k].
 \end{equation}
 
-al segnale $y$ applico un secondo filtro IIR ottonendo quindi un segnale $z$ in output con la sgeuente forma 
+If I apply a second IIR filter to the $y$ signal I obtain a $z$ signal as output, that can be written as 
 \begin{equation}\label{eq:z_signal}
     z[n] = \sum_{m=1}^{M} a'[m]z[n-m] + \sum_{k=0}^{N} b'[k] y[n-k].
 \end{equation}
@@ -669,7 +685,7 @@ then by applying a Z-transform we obtain
 so that 
 \begin{align}
     H_1(z) &= \frac{Y(z)}{X(z)} = \frac{\sum_{k=0}^{N} b[k] z^{-k}}{1 - \sum_{m=1}^{M} a[m] z^{-m}} = \frac{B(z)}{A(z)} \\
-    & \rightarrow Y(z) = H_1(z)X(z) = \frac{B(z)}{A(z)}X(z) \\ \label{eq:transfer1}
+    & \rightarrow Y(z) = H_1(z)X(z) = \frac{B(z)}{A(z)}X(z) \label{eq:transfer1}
 \end{align}
 
 We can do the same also for Equation \ref{eq:z_signal} and rewrite it as 
@@ -684,17 +700,17 @@ Again we can write the the transfer function
 \begin{align}
     &H_2(z) = \frac{Z(z)}{Y(z)} = \frac{\sum_{k=0}^{N} b'[k] z^{-k}}{1 - \sum_{m=1}^{M} a'[m] z^{-m}} = \frac{B'(z)}{A'(z)} \\
     \rightarrow Z(z) &= H_2(z)Y(z) = \frac{B'(z)}{A'(z)}Y(z) = \frac{B'(z)}{A'(z)} \frac{B(z)}{A(z)} X(z)\\ \label{eq:transfer2}
-    &= \left( \frac{\sum_{k=0}^{N} b'[k] z^{-k}}{1 - \sum_{m=1}^{M'} a'[m] z^{-m}} \right) \left( \frac{\sum_{k=0}^{N} b[k] z^{-k}}{1 - \sum_{m=1}^{M} a[m] z^{-m}} \right) X(z)\\
+    &= \left( \frac{\sum_{k=0}^{N} b'[k] z^{-k}}{1 - \sum_{m=1}^{M'} a'[m] z^{-m}} \right) \left( \frac{\sum_{k=0}^{N} b[k] z^{-k}}{1 - \sum_{m=1}^{M} a[m] z^{-m}} \right) X(z)
 \end{align}
 From the transfer function we can obtain the expression for $Z(z)$ in terms of $X(z)$ 
 \begin{align}
     & \rightarrow Z(z) \left(1 - \sum_{m=1}^{M} a'[m] z^{-m} \right) \left(1 - \sum_{m=1}^{M} a[m] z^{-m} \right) = \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) X(z) \\
-    & \rightarrow Z(z) \left( \sum_{m=0}^{M} a'[m] z^{-m} \right) \left( \sum_{m=0}^{M} a[m] z^{-m} \right) = \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) X(z)\\ \label{eq:Zz}
+    & \rightarrow Z(z) \left( \sum_{m=0}^{M} a'[m] z^{-m} \right) \left( \sum_{m=0}^{M} a[m] z^{-m} \right) = \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) X(z) \label{eq:Zz}
 \end{align}
 where in the last step  ho assorbito l'1 in the sum come coeffiente $a_0$. By expanding the products we obtain
 \begin{align}
-    & \left( \sum_{m=0}^{M} a'[m] \right) \left( \sum_{m=0}^{M} a[m] \right) = \sum_{m=0}^{2M}\sum_{i=0}^{m} a'[i] a[m - i] = c[k], \quad\quad \text{with}\quad m = 0, \dots, 2M,\\ \label{eq:ck}
-    & \left( \sum_{k=0}^{N} b'[k] \right) \left( \sum_{k=0}^{N} b[k] \right) = \sum_{k=0}^{2N} \sum_{i=0}^{k} b[i] b[k-i] = d[k], \quad\quad \text{with}\quad k = 0, \dots, 2N.\\ \label{eq:dk}
+    & \left( \sum_{m=0}^{M} a'[m] \right) \left( \sum_{m=0}^{M} a[m] \right) = \sum_{m=0}^{2M}\sum_{i=0}^{m} a'[i] a[m - i] = c[k], \quad\quad \text{with}\quad m = 0, \dots, 2M, \label{eq:ck} \\
+    & \left( \sum_{k=0}^{N} b'[k] \right) \left( \sum_{k=0}^{N} b[k] \right) = \sum_{k=0}^{2N} \sum_{i=0}^{k} b[i] b[k-i] = d[k], \quad\quad \text{with}\quad k = 0, \dots, 2N. \label{eq:dk}
 \end{align}
 %so that
 %\begin{align}
@@ -705,19 +721,19 @@ where in the last step  ho assorbito l'1 in the sum come coeffiente $a_0$. By ex
 It is then possible to re-write equation \ref{eq:Zz} using the new expression for the filters
 \begin{align}
     & Z(z)\left( \sum_{m=0}^{2M} c[m]z^{-m} \right) = \left( \sum_{k}^{2N} d[k]z^{-k} \right)X(z)\\
-    & \rightarrow Z(z)\left(1 - \sum_{m=1}^{2M} c[m]z^{-m} \right) = \left( \sum_{k}^{2N} d[k]z^{-k} \right)X(z)\\ \label{eq:z_final}
+    & \rightarrow Z(z)\left(1 - \sum_{m=1}^{2M} c[m]z^{-m} \right) = \left( \sum_{k}^{2N} d[k]z^{-k} \right)X(z) \label{eq:z_final}
 \end{align} 
 
 then we apply the inverse-Z-transform and obtain
 \begin{align}
     & z[n] - \sum_{m=1}^{2M} c[m]z[n-m] = \sum_{k=0}^{2N} d[k] x[n-k]\\
-    & z[n] = \sum_{m=1}^{2M} c[m]z[n-m] + \sum_{k=0}^{2N} d[k] x[n-k]\\
+    & z[n] = \sum_{m=1}^{2M} c[m]z[n-m] + \sum_{k=0}^{2N} d[k] x[n-k]
 \end{align}
 where the feedforward (feedback) taps of the final filters, are given by the convolution of the feedforward (feedback) taps of the two filters as shown in Equation \ref{eq:ck} and Equation \ref{eq:dk}.
 
 \subsection{Results}
 
-Nelle figure ... sono è riportato il ruslatato che ci si aspetta dell'applicazione dei filtri FIR ed IIR secondo le modalità descritte sopra.
+Nelle figure  sono è riportato il ruslatato che ci si aspetta dell'applicazione dei filtri FIR ed IIR secondo le modalità descritte sopra.
 
 Dato che la nostra è una ampiezza rellativa la prima cosa di cui ci rendiamo conto è che, a differenza di quanto ci aspettiamo non è pari a uno, questo è possibile sia un errore di normalizzazione che però indagheremo più in dettaglio.
 È evidente che già l'applicazione di un singolo filtro esponenziale corregge la salita a regime del segnale.
@@ -726,6 +742,8 @@ Tuttavia su scale temporali dell'ordine delle decine di nanosecondi e in general
 È evidente però che su scale temporali lunghe rimangano oscillazioni che non vengono corrette da nessuno dei due filtri.
 È possibile provare a combinare più filtri esponenziali, come fatto nelle analisi precedenti, il punto è che le oscillazioni e deviazioni dal segnale ideale che si osservano non sono deviazioni che possono essere dovute ad una salita esponenziale.
 %TODO: aggiungere commento sulla durata tipica degli effetti di ringing
+
+
 
 The experiments in which the impact of flux signal distortions are ones where we expect to see a clear chevron pattern, deviation from the ideal chevron pattern often indicano presenza di distorsioni nel segnale di flusso \cite{Langford2017}.
 
