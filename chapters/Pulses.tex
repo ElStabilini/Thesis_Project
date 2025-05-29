@@ -310,13 +310,13 @@ The effect of different \texttt{window\_length} values on the reconstructed detu
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/no_demod/detuning_windows.png}
         \caption{Reconstruction of the detuning of the qubit under a flux pulse of shape waveform\_1 without demodulation applied on the acquired data.}
         \label{fig:detuning:step_dem}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/demodulation/detuning_windows.png}
         \caption{Reconstruction of the detuning of the qubit under a flux pulse of shape waveform\_1 with demodulation applied on the acquired data.}
         \label{fig:detuning:step_no_dem}
@@ -324,13 +324,13 @@ The effect of different \texttt{window\_length} values on the reconstructed detu
 
     \vspace{0.5cm}
 
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/no_demod/long/detuning_windows.png}
         \caption{Reconstruction of the detuning of the qubit under a flux pulse of shape waveform\_2 without demodulation applied on the acquired data.}
         \label{fig:detuning:long_no_dem}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/demodulation/long/detuning_windows.png}
         \caption{Reconstruction of the detuning of the qubit under a flux pulse of shape waveform\_2 with demodulation applied on the acquired data.}
         \label{fig:detuning:long_dem}
@@ -373,14 +373,15 @@ Per completezza ho deciso di riportare i plot relativi alla ricostruzione dell'a
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/no_demod/amplitude_windows.png}
         \caption{Flux pulse reconstruction using the cryoscope technique.\\
         The intended pulse has the shape of waveform\_1 and no demodulation was originally applied.}
         \label{fig:amplitude:step_dem}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/demodulation/amplitude_windows.png}
         \caption{Flux pulse reconstruction using the cryoscope technique.\\
         The intended pulse has the shape of waveform\_1, demodulation was originally applied.}
         \label{fig:amplitude:step_no_dem}
@@ -388,14 +389,14 @@ Per completezza ho deciso di riportare i plot relativi alla ricostruzione dell'a
 
     \vspace{0.5cm}
 
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/no_demod/long/amplitude_windows.png}
         \caption{Flux pulse reconstruction using the cryoscope technique.\\
         The intended pulse has the shape of waveform\_2 and no demodulation was originally applied.}
         \label{fig:amplitude:long_no_dem}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/demodulation/long/amplitude_windows.png}
         \caption{Flux pulse reconstruction using the cryoscope technique.\\
         The intended pulse has the shape of waveform\_2, demodulation was originally applied.}
@@ -455,30 +456,27 @@ where A is the exponential amplitude characterizing the overshoot or undershoot,
 %inverse step
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.65\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/step_inverse.png}
-        \caption{Comparison between the ideal, actual and corrected flux pulse for a step signal.}
+        \caption{Comparison between the ideal, reconstructed response and corrected flux pulse for a step signal.}
         \label{fig:inverse:step}
     \end{subfigure}
-
-    \vspace{0.5cm}
-
-    \begin{subfigure}[t]{0.65\textwidth}
+    \hfill
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/inverse_no_pad.png}
-        \caption{Comparison between the ideal, actual and corrected flux pulse for the step signal without the padding.}
+        \caption{Comparison between the ideal, reconstructed response and corrected flux pulse for the step signal without the padding.}
         \label{fig:inverse:no_pad}
     \end{subfigure}
-
-    \vspace{0.5cm}
-    \begin{subfigure}[t]{0.65\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/inverse.png}
-        \caption{Comparison between the ideal, actual and corrected flux pulse for a rectangular pulse with no padding.}
-        \label{fig:inverse:long}    
-    \end{subfigure}
-
-    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the correction (light green) for different pulse shapes.
+    \caption{Comparisons between the ideal flux pulse (blue), the reconstructed flux pulse (dark green), flux pulse after the application of the correction (light green) for different pulse shapes.
     The exponential correction is applied as described in Equation \label{eq:inverse}.}
     \label{fig:inverse_short}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/png/Cryoscope/filters_long/inverse.png}
+    \caption{Comparison between the ideal flux pulse (blue), and corrected flux pulse for a rectangular pulse with no padding.}
+    \label{fig:inverse:long}
 \end{figure}
 
 Dato che nel lavoro originale di Rol et al. suggerivano di utilizzare 3-5 esponenziali per correggere il flux pulse su scale temporali tra i $30$ e i $200$ ns abbiamo provato ad applicare più correzioni esponenziali della forma indicata in Equation \ref{eq:inverse}.
@@ -486,27 +484,28 @@ Dato che nel lavoro originale di Rol et al. suggerivano di utilizzare 3-5 espone
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.65\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/step_5_inverse.png}
         \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a step signal.}
         \label{fig:5inverse:step}
     \end{subfigure}
-    \vspace{0.5cm}
-    \begin{subfigure}[t]{0.65\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/step_5_inverse.png}
+    \hfill
+    \begin{subfigure}[t]{0.495\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/inverse_5_no_pad.png}
         \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a step signal without the initial padding.}
-        \label{fig:5inverse:no_pad}
-    \end{subfigure}
-    \vspace{0.5cm}
-    \begin{subfigure}[t]{0.65\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/5_inverse.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a rectangular pulse with no padding.}
         \label{fig:5inverse:no_pad}
     \end{subfigure}
     
     \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of a different number of exponential filters for different pulse shapes.
     The exponential corrections are iteratively applied as described in Equation \label{eq:inverse}.}
     \label{fig:5inverse_short}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/png/Cryoscope/filters_long/5_inverse.png}
+    \caption{Plot of the ideal flux pulse (blue), reconstructed response (dark green) and corrected pulse with different number of exponential corrections for a rectangular pulse with no padding.}
+    \label{fig:5inverse:long}
 \end{figure} 
 
 Ovviamente queste correzioni esponenziali funzionano però per poter essere applicate real time devono essere discretizzate e passate come filtri digitali all'elettronica di controloo del qubit.
@@ -533,53 +532,66 @@ with $f_S$ being the sampling frequency of the digital hardware.
 
 Ovviamente dato che questa è una approssimazione della risposta esponenziale ci aspettiamo che la qualità della correzione possa diminuire rispetto a quella che si ottiene dall'applicazione del filtro esponenziale continuo.
 %TOD0: quantificare la correzione
-I risultati dell'applicazione degli IIR sono riportati in Figure \ref{fig:IIR}.
+
+Per predirre l'effetto di applying the real-time predistortion filters we use \tt{lfilter} function of the \tt{SciPy}library, which applies the filter defined by the coefficient vectors \tt{b} and \tt{a} to the signal defined by the vector \tt{sig}. 
+I risultati dell'applicazione degli IIR come filtri digitali discreti sono riportati in Figure \ref{fig:IIR}.
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.65\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/IIR_nopad.png}
-        \caption{}
+        \caption{Plot of the ideal, reconstructed and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
         \label{fig:IIR:nopad}
     \end{subfigure}
-    \vspace{0.5cm}
-    \begin{subfigure}[t]{0.65\textwidth}
+    \hfill
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/IIR.png}
-        \caption{}
-        \label{fig:IIR:long}        
+        \caption{Plot of the ideal, reconstructed and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
+        \label{fig:IIR:long}
     \end{subfigure}
-    \caption{.}
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the discrete IIR corrections (light green) for different flux pulses.}
     \label{fig:IIR}
 \end{figure}
 
 
 \subsubsection{FIR corrections}
 %TODO: scrivere meglio e con più dettagli questa parte 
-Una volta trovati i feedback e feedforward taps per gli IIR filters, è necessario trovare gli FIR per correggere il segnale su scale di tempo più brevi. 
-for description and notes on \tt{CMA-ES} see section \ref{Sec:OptimizationMethods}
+Once the feedback and feedforward taps for the IIR filters have been determined, it is necessary to implement a finite impulse response (FIR) filter to correct for residual distortions on shorter timescales, less than 30 ns, which are not fully addressed by the IIR.
+A FIR filter performs a convolution of the input signal with a discrete impulse response $h_{FIR}[n] = b_n$ defined by the coefficients $b_i$ and is mathematically defined by
+\begin{equation}
+        y[n] = \sum_{i=0}^{N} b_i x[n - i],
+\end{equation}
+where $x[n]$ is the input signal and $y[n]$ is the output signal of the filter.
+
+The filter coefficients are obtained by minimizing the average relative deviation between the filtered output, ovvero the result of applying the FIR filter to the IIR-corrected signal, and the ideal step response.
+This optimization is performed using the \tt{CMA-ES} algorithm (for details on the \tt{CMA-ES} algorithm see Section \ref{sec:CMA}).
+
+I risultati ottenuti dall'applicazione degli FIR sono riportati in Figure \ref{fig:FIR}, in particolare in Figure \ref{fig:FIR:nopad} mostro i risultati dell'applicazione degli FIR sull output dell'impulso di flusso realizzato con la waveform\_1.
+Mentre in Figure \Ref{fig:FIR:long} mostro i risultati dell'applicazione del filtro all'impulso di flusso realizzato con waveform\_2.
+Entrambi sono stati realizzati utilizzando la funzione \tt{lfilter} di \tt{SciPy}.
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.65\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/all_filters_no_pad.png}
-        \caption{}
-        \label{fig:IIR:nopad}
+        \caption{Plot of the ideal, reconstructed and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
+        \label{fig:FIR:nopad}
     \end{subfigure}
-    \vspace{0.5cm}
-    \begin{subfigure}[t]{0.65\textwidth}
+    \hfill
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/IIR_FIR.png}
-        \caption{}
-        \label{fig:IIR:long}        
+        \caption{Plot of the ideal, reconstructed and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
+        \label{fig:FIR:long}
     \end{subfigure}
-    \caption{.}
-    \label{fig:IIR}
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the discrete IIR corrections (green) and both IIR and FIR corrections (light green) for different flux pulses.}
+    \label{fig:FIR}
 \end{figure}
 
 \subsubsection{Output filters in QM}
 
 %Spiegare come applica i filtri quantum machines
 Each analog output port of the OPX system used in this work is equipped with a digital filter that is applied to the signal in the digital domain before conversion to analog. 
-The filters are provided to the OPX via the \texttt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
+The filters are provided to the OPX via the \tt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
 \begin{equation}\label{eq:OPX_filter}
     y[n] = \sum_{m=1}^{M} a_m y[n - m] + \sum_{k=0}^{K} b_k x[n - k],
 \end{equation}
@@ -695,7 +707,7 @@ The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}, the figure
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/png/IdealChevron.png}
+    \includegraphics[width=0.5\textwidth]{figures/png/IdealChevron.png}
     \caption{Ideal chevron pattern.}
     \label{fig:expected_chevron}
 \end{figure}
