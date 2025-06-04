@@ -59,50 +59,101 @@ In particular, I adapted the code used for the various implementations of the Ra
 
 \subsection{Results}
 In this Section I present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.
+For each of the calibration experiments concerning the rotation pulses, I provide plots illustrating how the relevant physical quantities vary depending on whether I am calibrating the $R_X(\pi)$ or the $R_X(\pi/2)$ gate.
+In addition to the graphical data, a summary table is provided reporting the measured amplitude (or duration) of the rotation pulse along with the associated measurement uncertainty derived from the calibration procedure.
+In the table I included also the standardized difference metric, defined as:
+\begin{equation}\label{eq:std_difference}
+    Z = \frac{v_{RX/2}-v_{RX90}}{\sqrt{\sigma^2_{RX90} + \sigma^2_{RX/2}}}
+\end{equation}
+where $v_{RX/2}$ is the physical quantity measured by halving the value corresponding to the $R_X(\pi)$ pulse, $v_{RX90}$ is the physical quantity obtained from a direct calibration of the $R_X(\pi/2)$ gate, $\sigma^2_{RX/2}$ and $\sigma^2_{RX90}$ are the respective measurement variances.
+The standardized difference provides a normalized measure of the discrepancy between the two values by incorporating their respective uncertainties. 
+A small standardized difference indicates strong agreement within experimental error, while larger values suggest meaningful deviations that may point to systematic effects or non-linearities in the system response.
 
 \subsubsection{Rabi amplitude}
+Table \ref{tab:amplitude} reports the results from Rabi experiments performed to calibrate the amplitude of the pulses associated with the $R_X(\pi)$ and $R_X(\pi/2)$ gates.
+For the $R_X(\pi/2)$ gate, both the amplitude derived by halving the result of the $R_X(\pi)$ calibration and that obtained from a direct calibration are presented for comparison.
+The measurements were conducted sequentially: first all the $R_X(\pi)$ gate were calibrated, followed immediately by the $R_X(\pi/2)$ gates. 
+Apart from the \tt{rx90} boolean parameter, which allows the user to select which gate to calibrate, all other user-configurable parameters in the runcard were kept constant between experiments
 
-\begin{table}[h!]
+
+An initial observation from Table \ref{tab:amplitude} is that the standardized difference is always positive. 
+This follows directly from its definition in Equation \ref{eq:std_difference}: the amplitude derived by halving the calibrated $R_X(\pi)$ amplitude is, in all cases, larger than the value obtained through direct calibration of the $R_X(\pi/2)$ gate.
+Moreover, the magnitude of the standardized difference is between $10-10^2$, indicating a significant deviation between the two calibration approaches indicating significant differences between the resuls obtained with the two methods. 
+This suggests that, despite the theoretical expectation of linear scaling between the pulse amplitudes of the $R_X(\pi)$ and $R_X(\pi/2)$ gates, in practice the system exhibits non-ideal behavior likely stemming from hardware nonlinearities or limitations in the pulse shaping mechanism.
+
+\begin{figure}[h!]
     \centering
-    \begin{tabular}{c|cc|cc|cc}
-        \toprule
-         & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} \\
-        \textbf{Qubit} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} \\
-         & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]}  & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]}\\
-        \midrule
-        \textbf{B1} & $8.72 \cdot 10^{-2}$ & $0.001 \cdot 10^{-2}$ & $4.36 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ & $3.711 \cdot 10^{-2}$ & $0.006 \cdot 10^{-2}$ \\
-        \textbf{B2} & $9.433 \cdot 10^{-2}$ & $0.008 \cdot 10^{-2}$ & $4.765 \cdot 10^{-2}$ & $0.004 \cdot 10^{-2}$ & $4.047 \cdot 10^{-2}$ & $0.004 \cdot 10^{-2}$ \\
-        \textbf{B3} & $1.292 \cdot 10^{-1}$ & $0.001 \cdot 10^{-1}$ & $0.646 \cdot 10^{-1}$ & $0.003 \cdot 10^{-2}$ & $6.058 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ \\
-        \textbf{B4} & $1.517 \cdot 10^{-1}$ & $0.001 \cdot 10^{-1}$ & $0.7585 \cdot 10^{-1}$ & $0.005 \cdot 10^{-2}$ & $7.216 \cdot 10^{-2}$ & $0.005 \cdot 10^{-2}$ \\
-        \bottomrule
-    \end{tabular}
-    \caption{Amplitude values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_amplitude} protocol with a fixed duration of 40 ns.}
-\end{table}
+    \begin{subfigure}[t]{\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiAmplitude/B4.png}
+        \caption{Output of the \tt{rabi\_amplitude} protocol to calibrate the $R_X(\pi)$ gate for qubit \tt{B4}.}
+        \label{fig:B4}
+    \end{subfigure}
+    \vspace{0.3cm}
+    \begin{subfigure}[t]{\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiAmplitude/B4_90.png}
+        \caption{Output of the \tt{rabi\_amplitude} protocol to calibrate the $R_X(\pi/2)$ gate for qubit \tt{B4}.}
+        \label{fig:B4_90}
+    \end{subfigure}
+    \caption{Comparison between the results of the amplitude calibration for the $R_X(\pi)$ and $R_X(\pi/2)$ gates.}
+    \label{fig:amplitude_comparison}
+\end{figure}
 
 \subsubsection{Rabi length}
+Due to motivi pratici e di tempo the pulse duration measurements for the $R_X(\pi)$ and $R_X(\pi/2)$ gates were carried out on the Soprano-D chip by QuantWare \cite{qw5q}. From here on, this device will be referred to as qw5q when necessary.
+As with the amplitude measurements, Table \ref{tab:amplitude} summarizes the results from Rabi experiments conducted to calibrate the duration of the pulses associated with the $R_X(\pi)$ and $R_X(\pi/2)$ gates.\\
+Again, both the inferred value (obtained by halving the $R_X(\pi)$ duration) and the directly calibrated value for the $R_X(\pi/2)$ gate are shown. The sequence of measurements mirrored that used for the amplitude calibration: 
+$R_X(\pi)$ was calibrated first, followed by $R_X(\pi/2)$, with all experimental settings kept fixed except for the \tt{rx90} flag.
 
-\begin{table}[h!]
+An example of the output of the calibration protocol for pulse duration, for both the $R_X(\pi)$ and $R_X(\pi/2)$ gates, is shown in Figures \ref{fig:3} and \ref{fig:3_90}. 
+A summary of the quantitative results obtained from these calibrations is presented in Table \ref{tab:length}.
+As in the case of the amplitude calibrations, the standardized difference values are generally positive, indicating that the duration obtained by halving the calibrated $R_X(\pi)$ value tends to be higher then the value obtained from the direct $R_X(\pi/2)$ calibration. 
+The only exception to this trend occurs for qubit \texttt{5}, for which the standardized difference is negative.
+However, unlike the amplitude results discussed previously, the absolute values of the standardized difference are closer to unity or below, suggesting that the discrepancy between the two methods is less pronounced.
+This reduction in $|Z|$ can be attributed to two factors: the smaller absolute difference between the duration values obtained via direct and indirect calibration, and the larger relative uncertainties associated with the duration estimates compared to those for amplitude.
+
+These observations indicate a more consistent agreement between direct and indirect duration calibrations, although non-negligible deviations still exist and may need further investigation, particularly in the context of high-fidelity gate execution.
+
+\begin{figure}[h!]
     \centering
-    \begin{tabular}{c|cc|cc|cc}
-        \toprule
-         & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} \\
-        \textbf{Qubit} & \textbf{Duration} & \textbf{Errors} & \textbf{Duration} & \textbf{Errors} & \textbf{Duration} & \textbf{Duration} \\
-         & \textbf{[ns]}  & \textbf{[ns]}  & \textbf{[ns]}  & \textbf{[ns]} & \textbf{[ns]} & \textbf{[ns]}\\
-        \midrule
-        \textbf{B1} & & & & & & \\
-        \textbf{B2} & & & & & & \\
-        \textbf{B3} & & & & & & \\
-        \textbf{B4} & & & & & & \\
-    \end{tabular}
-    \caption{Duration values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_length} protocol with a fixed amplitude of 40 ns.}
-\end{table}
+    \begin{subfigure}[t]{\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiLength/3.png}
+        \caption{Output of the \tt{rabi\_length} protocol to calibrate the $R_X(\pi)$ gate for qubit \tt{3}.}
+        \label{fig:3}
+    \end{subfigure}
+    \vspace{0.3cm}
+    \begin{subfigure}[t]{\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiLength/3_90.png}
+        \caption{Output of the \tt{rabi\_length} protocol to calibrate the $R_X(\pi/2)$ gate for qubit \tt{3}.}
+        \label{fig:3_90}
+    \end{subfigure}
+    \caption{Comparison between the results of the duration calibration for the $R_X(\pi)$ and $R_X(\pi/2)$ gates.}
+    \label{fig:duration_comparison}
+\end{figure}
 
 \subsubsection{Rabi amplitude frequency}
-Nelle Figure successive sono riportati i risultati per gli esperimenti di calibrazione di rabi amplitude frequency per stabilire ampiezza e frequenza corretta per una gate $R_X$ o $R_X(\pi/2)$ della durata di 40 ns.
-Come nei casi precedenti, tra il primo e il secondo esperimento i range per lo scan dell'ampiezza e della frequenza sono rimasti invariati, cambia soltanto la gate da calibrare.
+In Figure \ref{fig:af_comparison} the results of the Rabi amplitude-frequency calibration experiments, which aim to determine the correct amplitude and frequency for either the $R_X(\pi)$ or $R_X(\pi/2)$ gate, with a fixed pulse duration of 40 ns.
+As in previous cases, the scan ranges for amplitude and frequency were held constant between the two experiments; the only difference was the target gate for calibration.
 
-Mentre generalmente in un esperimento di questo tipo osserviamo solo un blob corrispondente al picco di probabilità che il qubit si trovi nello stato $\ket{1}$, 
-se si estendono i range di ricerca o, come nel nostro caso, si utilizzano gli stessi intervalli per calibrare una gate i cui parametri dovrebbero essere grosso modo la metà di quelli che consideriamo di solito, quello che osserviamo è un pattern according to Equation \ref{eq:P1_rabi} where both amplitude and frequency are varying.
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiAmplitudeFrequency/B2.png}
+        \caption{Output of the \tt{rabi\_amplitude\_frequency\_signal} protocol to calibrate the $R_X(\pi)$ gate for qubit \tt{B2}.}
+        \label{fig:B2}
+    \end{subfigure}
+    \vspace{0.3cm}
+    \begin{subfigure}[t]{\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiAmplitudeFrequency/B2_90.png}
+        \caption{Output of the \tt{rabi\_amplitude\_frequency\_signal} protocol to calibrate the $R_X(\pi/2)$ gate for qubit \tt{B2}.}
+        \label{fig:B2_90}
+    \end{subfigure}
+    \caption{Comparison between the results of the amplitude and frequency calibration for the $R_X(\pi)$ and $R_X(\pi/2)$ gates.}
+    \label{fig:af_comparison}
+\end{figure}
+
+Typically, in such experiments, one observes a single peak corresponding to the maximum probability of the qubit being in the excited state $\ket{1}$. 
+However, when extending the scan ranges or, as in our case, using the same scan intervals for a gate that ideally requires roughly half the amplitude and frequency, the resulting pattern deviates from the usual single-peak expectation. 
+Instead, we observe a more complex structure, consistent with the model described by Equation \ref{eq:P1_rabi}, in which both amplitude and frequency are varied simultaneously.
 The ideal result is shown in Figure \ref{fig:expected_RX90}, the amplitude and frequency are not in scale with the real system.
 
 \begin{figure}[h!]
@@ -112,10 +163,136 @@ The ideal result is shown in Figure \ref{fig:expected_RX90}, the amplitude and f
     \label{fig:expected_RX90}
 \end{figure}
 
+The figures discussed here are primarily useful from a qualitative standpoint. 
+They illustrate how, within the previously effective amplitude and frequency ranges, where a single interference peak was typically observed, we now observe a more complex interference pattern.
+However, with such an interference pattern, the standard peak detection algorithm fails to correctly identify the first peak, as evidenced by the misalignment of the dashed line in Figure \ref{fig:B2_90}. 
 
-%inserire il fatto che l'idea iniziale era quella di sostituire un \pi con due impulsi \pi/2 però per mantenera la compatibilità 
+To enable a quantitative comparison between the $R_X(\pi/2)$ amplitude obtained through direct calibration and the value inferred from the $R_X(\pi)$ calibration, additional measurements were carried out using modified scan ranges for amplitude and frequency.
+For the calibration of the $R_X(\pi)$ gate, the frequency was scanned over a 60 MHz range centered around the qubit frequency, with a step size of 1 MHz. 
+The amplitude was scanned in the interval from $0.15$ to $0.35$ with a step of $0.001$.
 
+For the calibration of the $R_X(\pi)$ gate, the frequency was scanned over a [??] MHz range centered around the qubit frequency, with a step size of 1 MHz. 
+The amplitude was scanned in the interval [??] using a resolution of [??].
+The results of these measurements are summarized in Table \ref{tab:af}, and an example of the corresponding interference patterns is shown in Figure \ref{fig:qw5q}.
 
+As in the previous cases, the standardized difference values are consistently positive, reflecting that the amplitude obtained by halving the value calibrated for the $R_X(\pi)$ gate is always, even though slightly, greater than the one obtained through a direct calibration of the $R_X(\pi/2)$ gate.
+However, n Table \ref{tab:af} it is worth noting that, unlike the results from the other calibration protocols, the magnitude of the standardized difference in this case is consistently less than one. 
+This indicates a reasonable agreement between the two estimation methods when experimental uncertainty is taken into account.
+
+It is important to emphasize, however, that this apparent agreement is largely a consequence of the relatively large measurement uncertainty associated with the amplitude values obtained via the \tt{rabi\_amplitude\_frequency} routine.
+The typical relative error in these estimates is on the order of [??]
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiAmplitudeFrequency/RX.png}
+        \caption{Output of the \tt{rabi\_amplitude\_frequency} protocol to calibrate the $R_X(\pi)$ gate for qubit \tt{3}.}
+        \label{fig:RX_3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/RabiAmplitudeFrequency/RX90.png}
+        \caption{Output of the \tt{rabi\_amplitude\_frequency} protocol to calibrate the $R_X(\pi/2)$ gate for qubit \tt{3}.}
+        \label{fig:RX90_30}
+    \end{subfigure}
+    \caption{Comparison between the results of the amplitude and frequency calibration for the $R_X(\pi)$ and $R_X(\pi/2)$ gates.}
+    \label{fig:af_qw5q}
+\end{figure}
+
+%TODO: discutere la possibilità di sostituire i \pi pulses con due pi/2 
+\newpage
+\newgeometry{a4paper, top=2.5cm, bottom=2.5cm, inner=2.5cm, outer=1.5cm, heightrounded}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|cc|cc|cc|c}
+        \toprule
+         & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} & \textbf{} \\
+        \textbf{Qubit} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Standardized} \\
+         & \textbf{$10^{-2}$[a.u.]} & \textbf{$10^{-2}$[a.u.]} & \textbf{$10^{-2}$[a.u.]} & \textbf{$10^{-2}$[a.u.]} & \textbf{$10^{-2}$[a.u.]} & \textbf{$10^{-2}$[a.u.]} & \textbf{Difference}\\
+        \midrule
+        \textbf{B1} & 8.72   & 0.001 & 4.36   & 0.005 & 3.711  & 0.006 & 83.095\\
+        \textbf{B2} & 9.433  & 0.008 & 4.765  & 0.004 & 4.047  & 0.004 & 126.926\\
+        \textbf{B3} & 12.92  & 0.1   & 6.46   & 0.003 & 6.058  & 0.005 & 68.942\\
+        \textbf{B4} & 15.17  & 0.1   & 7.585  & 0.005 & 7.216  & 0.005 & 52.184\\
+        \bottomrule
+    \end{tabular}
+    \caption{Amplitude values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_amplitude} protocol with a fixed duration of 40 ns.}
+    \label{tab:amplitude}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|cc|cc|cc|c}
+        \toprule
+         & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} & \textbf{} \\
+        \textbf{Qubit} & \textbf{Duration} & \textbf{Errors} & \textbf{Duration} & \textbf{Errors} & \textbf{Duration} & \textbf{Duration} & \textbf{Standardized} \\
+         & \textbf{[ns]}  & \textbf{[ns]}  & \textbf{[ns]}  & \textbf{[ns]} & \textbf{[ns]} & \textbf{[ns]} & \textbf{Difference} \\
+        \midrule
+        \textbf{0} & 65.8 & 0.5 & 32.9 & 0.25 & 32.2 & 0.1 & 2.599 \\
+        \textbf{1} & 31.26 & 0.09 & 15.63 & 0.045 & 15.28 & 0.02 & 7.107\\
+        \textbf{2} & 32.1 & 0.07 & 17.05 & 0.035 & 16.78 & 0.02 & 6.698\\
+        \textbf{3} & 48.3 & 0.2 & 24.15 & 0.1 & 23.82 & 0.05 & 2.952 \\
+        \textbf{4} & 52.5 & 0.3 & 26.25 & 0.1 & 26.41 & 0.06 & -1.372\\
+    \end{tabular}
+    \caption{Duration values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_length} protocol with a fixed amplitude of 0.2.}
+    \label{tab:length}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|cc|cc|cc|c}
+        \toprule
+         & \multicolumn{2}{c|}{\textbf{RX}} & \multicolumn{2}{c|}{\textbf{RX / 2}} & \multicolumn{2}{c|}{\textbf{RX90}} & \textbf{} \\
+        \textbf{Qubit} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Amplitude} & \textbf{Errors} & \textbf{Standardized} \\
+         & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{[a.u.]} & \textbf{Difference}\\
+        \midrule
+        \textbf{0} & 0.3202 & 0.3028 & 0.1601 & 0.1514 & 0.1585 & 0.1763 & 0.007\\
+        \textbf{1} & 0.1683 & 0.1725 & 0.08445 & 0.08625 & 0.0777 & 0.0737 & 0.059\\
+        \textbf{2} & 0.1752 & 0.1438 & 0.0876 & 0.0749 & 0.0865 & 0.0671 & 0.011\\
+        \textbf{3} & 0.2457 & 0.1536 & 0.12285 & 0.0768 & 0.1197 & 0.0998 & 0.025\\
+        \textbf{4} & 0.2662 & 0.1305 & 0.1331 & 0.06525 & 0.1305 & 0.1321 & 0.017\\
+        \bottomrule
+    \end{tabular}
+    \caption{Amplitude values for the $R_X(\pi)$, half $R_X(\pi)$ and $R_X(\pi/2)$ pulses as measured with the \tt{rabi\_amplitude\_frequency} protocol with a fixed duration of 40 ns.}
+    \label{tab:af}
+\end{table}
+
+\newpage
+\restoregeometry
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/rabi_amplitude.png}
+        \caption{Amplitude of the pulse for the $R_X(\pi/2)$ for different qubits obtained by halving the $R_X(\pi)$ amplitude (circle) or by calibrating the $R_X(\pi/2)$ gate with the \tt{rabi\_amplitude} protocol.}
+        \label{fig:RX90_amplitude}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/rabi_length.png}
+        \caption{Duration of the pulse for the $R_X(\pi/2)$ for different qubits obtained by halving the $R_X(\pi)$ amplitude (circle) or by calibrating the $R_X(\pi/2)$ gate with the \tt{rabi\_length} protocol.}
+        \label{fig:RX90_duration}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{figures/png/RX90/rabi_af.png}
+        \caption{Amplitude of the pulse for the $R_X(\pi/2)$ for different qubits obtained by halving the $R_X(\pi)$ amplitude (circle) or by calibrating the $R_X(\pi/2)$ gate with the \tt{rabi\_amplitude\_frequency} protocol.}
+        \label{fig:RX90_af}
+    \end{subfigure}
+    \caption{The plots show the amplitude (duration) values of the $R_X{\pi/2}$ gate for different qubits obtained from direct calibration or from the calibration of the $R_X(\pi)$ gate.} 
+    \label{fig:RXvsRX90}
+\end{figure}
+
+In Figure \ref{fig:RXvsRX90} I show three plots, each comparing the pulse parameters obtained for implementing an $R_X(\pi/2)$ gate using different calibration strategies, across the various qubits for which the \tt{rx90} calibration was performed.
+
+Un'osservazione interessante, già menzionata prima ma che diventa evidente guardando i plots is that both the amplitude and duration estimates for the $R_X(\pi/2)$ gate, when obtained by halving the corresponding values calibrated for the $R_X(\pi)$ gate, tend to be slightly overestimated compared to those obtained via direct calibration of the $R_X(\pi/2)$ gate.
+This discrepancy is particularly evident for measurements conducted on the \tt{qw11q} chip, as also confirmed by the values of the standardized difference reported in Table \ref{tab:amplitude}.
+In contrast, for the \tt{qw5q} chip, the disagreement is noticeably smaller; in particular he standardized difference for amplitude values obtained via the \tt{rabi\_amplitude\_frequency} routine remains below unity in absolute value.
+Nevertheless, it is important to emphasize that these last amplitude values are also associated with larger relative uncertainties. 
+
+Overall, these results suggest that when circuit execution involves native $R_X(\pi/2)$ gates it may be advantageous to perform a dedicated calibration of the $R_X(\pi/2)$ gate, rather than relying solely on indirect estimates derived from $R_X(\pi)$ gate calibrations. 
+This is especially true in scenarios where high gate fidelity is critical or when hardware-specific nonlinearities cannot be neglected.
 
 \section{Flux pulse correction}
 
@@ -453,7 +630,7 @@ To construct this inverse filter, we fit the measured step response using an inv
 \end{equation}
 where $A$ is the exponential amplitude characterizing the overshoot or undershoot, $\tau$ is the charachteristic time constant, $g$ is a gain factor and $s(t)$ is the measured response.
 
-Figures \ref{fig:inverse_short} and \ref{fig:inverse_long} present the results of applying the exponential filters, obtained through the procedure described above, to different flux pulses.
+Figures \ref{fig:inverse_short} and \ref{fig:inverse:long} show the results of applying the exponential filters, obtained through the procedure described above, to different flux pulses.
 
 %inverse step
 \begin{figure}[h!]
@@ -613,7 +790,7 @@ Both sets of filtered signals were obtained using the \tt{lfilter} function from
     \label{fig:FIR}
 \end{figure}
 
-The first observation, consistent with the results shown in Figures \ref{fig:inverse_short}, \ref{fig:inverse_long}, and \ref{fig:IIR}, is that there is likely an issue with signal normalization. 
+The first observation, consistent with the results shown in Figures \ref{fig:inverse_short}, \ref{fig:inverse:long}, and \ref{fig:IIR}, is that there is likely an issue with signal normalization. 
 This is evident because, in theory, the FIR filter coefficients are optimized to bring the filtered flux signal as close as possible to unity. 
 However, the results show that even where the FIR filters should adjust the signal to exactly one, the value remains slightly above unity.
 
