@@ -16,7 +16,7 @@ The final part of the chapter focuses on the mechanisms for qubit state readout 
 Chapter 2 provides a description of the experimental setup used for all measurements and protocols carried out during this thesis work. 
 Specifically, the experiments were performed on the Contralto-D chip developed by QuantWare \cite{qw11q}, hosted at the Technology Innovation Institute (TII) in Abu Dhabi. 
 The control and data acquisition electronics were supplied by Quantum Machines, in particular the OPX100 platform \cite{opx1000}.
-Moreover, the chapter includes a detailed description of the single gate calibration procedure using the \texttt{Qibocal}. 
+Moreover, the chapter includes a detailed description of the single gate calibration procedure using the \tt{Qibocal}. 
 Learning how to calibrate single qubits and single qubit gates is a prerequisite for implementing optimal control techniques in subsequent stages of the work.
 
 The procedure began with the calibration of the readout resonator, aimed at determining the decoupled resonator frequency and optimizing the amplitude and frequency of the readout pulse. 
@@ -34,12 +34,18 @@ The chapter concludes with the implementation of randomized benchmarking, a prot
 \paragraph{}
 The first part of the project addressed the optimization of avarge Clifford gates fidelity, drawing inspiration from the ORBIT technique (Optimized Randomized Benchmarking for Immediate Tune-up) introduced by Kelly et al. in 2014 \cite{kelly_optimal_2014}. 
 We explored extensions of this method by testing modern optimization libraries to evaluate whether it is possible to efficiently reach gate fidelities approaching 99.9\%, starting from coarse calibrations, and to assess system stability under realistic drift conditions.
+Nello specifico siamo partiti da una buona calibrazione del device (superiore al 90\%) e poi abbiamo cercato di massimizzare la avarage gate fidelity variando ampiezza e frequenza of the microwave pulse associated with the $R_X(\pi)$ gate e il parametro $\beta$ un parametro moltiplicativo che agisce sulla seconda quadratura dell'impulso di DRAG \cite{Motzoi_2009}.
+Indubbiamente questa strategia consente di automatizzare    
 
 %chapter 4 - pulse correction and control
 \paragraph{}
-The second part of the work focused on practical needs identified by the experimental teams, specifically the correction of distortions in flux pulses caused by imperfections in the control lines. 
-To address this, we implemented the Cryoscope protocol, originally introduced by M. A. Rol in 2019 \cite{rol_time-domain_2020}, which enables the characterization of these distortions and the application of corresponding pre-distortions. This allows for improved accuracy in flux-based gate operations and is now available in Qibocal.
+The second part of the work focused on practical needs identified by the experimental teams, nello specifico come prima cosa ho aggiunto la $R_X(\pi/2)$ come native gate in \Qibolab e adattato le routine di \Qibocal per la calibrazione della rotazione $R_X(\pi)$ perchè supportassero anche la calibrazione di questa nuova gate.
+Prima dell'inserimento di questa nuova gate nel set di native gate assumevamo di poter realizzare una $R_X(\pi/2)$ a partire da una $R_X(\pi)$ semplicemeente by halving the amplitude of the calibrated pi-pulse.
+Tuttavia, come mostro nella prima parte di questo capitolo, sono presenti nonlinearities with respect to amplitude in the electronics or any other part of the system. che causano un errore sistematico nella stima dei parametri per l'impulso associato all'$R_X(\pi/2)$.
+Il secondo risultato presentato in questo capitolo è l'implementazione di una routine per fare delle correction of distortions in flux pulses caused by imperfections in the control lines. 
+To address this, we implemented the Cryoscope protocol, originally introduced by M. A. Rol in 2019 \cite{rol_time-domain_2020}, which enables the characterization of these distortions and the application of corresponding pre-distortions. 
+This allows for improved accuracy in flux-based gate operations come mostro ad esempio nelle chevron routine di Qibocal
 
 %chapter 5 - conclusions
 \paragraph{}
-The conclusion chapter summarizes the main results of the work
+The conclusion chapter summarizes the main results of the work e possibili outlook / estensioni di questo lavoro.

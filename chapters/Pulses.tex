@@ -17,7 +17,6 @@ The choice and quality of these native gates are extremly important as all highe
 \subsection{\Qibolab native gates}\label{subsec:native_gates}
 Native gates are those gates which can be directly implemented at the hardware level, in contrast to abstract logical gates, which must be transpiled into sequences of hardware supported primitives. 
 In the case of \Qibolab \footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X(\pi)$ gate, calibrated by performing the Rabi experiments described in Section \ref{sec:Rabi}, the measurement gate and the virtual-Z (VZ) gate which is not implemented via a physical pulse but rather through a dynamic adjustment of the phase of subsequent control pulses. 
-In this context, the RX90 gate, corresponding to a $\frac{\pi}{2}$ rotation, is implemented by halving the amplitude of the calibrated $\pi$-pulse.
 This native gate set, is sufficient for universal single-qubit control.
 
 %TODO: fix euler's decomposition
@@ -26,8 +25,8 @@ Indeed, it can be shown that any arbitrary single-qubit unitary operation $ U(\g
 U(\gamma, \theta, \phi) = R_Z(\gamma) R_X(\theta) R_Z(\phi).
 \end{equation}
 This result, known as Euler's decomposition, ensures that all single-qubit operations can be realized using a combination of $ R_X $ and $ R_Z $ rotations. 
-
-When a qubit is driven by a resonant microwave pulse (with detuning $ \delta = 0 $), the resulting evolution is a rotation around an axis $\hat{n} = (\cos\phi, -\sin\phi, 0)$ lying in the equatorial plane of the Bloch sphere. 
+\begin{comment}
+    When a qubit is driven by a resonant microwave pulse (with detuning $ \delta = 0 $), the resulting evolution is a rotation around an axis $\hat{n} = (\cos\phi, -\sin\phi, 0)$ lying in the equatorial plane of the Bloch sphere. 
 The associated unitary can be written as:
 \begin{equation}
 R_{\hat{n}(\phi)}(\theta) = \exp\left( -i \frac{\theta}{2} \left[ \cos(\phi)\sigma_x - \sin(\phi)\sigma_y \right] \right).
@@ -41,10 +40,9 @@ From this, it follows that any arbitrary unitary $ U(\gamma, \theta, \phi) $ can
 \begin{equation}
 U(\gamma, \theta, \phi) = R_Z(\gamma + \phi) \cdot R_Z(-\phi) R_X(\theta) R_Z(\phi) = R_Z(\gamma + \phi) \cdot U(-\phi, \theta, \phi).
 \end{equation}
-
+\end{comment}
 Note that, in practice, this final $R_Z$ rotation does not need to be realized as a physical pulse. 
 Instead, it can be implemented virtually by adjusting the phase reference of subsequent pulses, a technique known as the virtual-Z gate\cite{McKay_2017}. \\
-The ability to compose any single-qubit gate using only $R_X$ and virtual-Z operations \cite{boykin1999universalfaulttolerantquantumcomputing} confirms the sufficiency of this native gate set for universal single-qubit control. 
 
 \subsection{RX90 as native gate}
 Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, we decided to explore the possibility to include the $R_X(\pi/2)$ gate in the native set of Qibolab.
@@ -232,7 +230,6 @@ This is especially true in scenarios where high gate fidelity is critical or whe
 \end{figure}
 
 Considering both these results and the fact that we wanted to avoid introducing breaking changes to the library, we decided not to replace the $R_X(\pi)$ gate with the $R_X(\pi/2)$ gate as the native gate. Instead, we opted to simply add the $R_X(\pi/2)$ gate to the set of native gates in \Qibolab.
-%TODO: discutere la possibilità di sostituire i \pi pulses con due pi/2 
 
 \newpage
 \newgeometry{a4paper, top=2.5cm, bottom=2.5cm, inner=1.5cm, outer=1.5cm, heightrounded, bindingoffset=1 cm}
