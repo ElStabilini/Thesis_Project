@@ -17,11 +17,11 @@ In such protocols, Clifford gates enable the depolarization of coherent errors a
 Standard randomized benchmarking (RB) protocols, as used in this chapter, measure the average fidelity of a single-qubit Clifford gate. 
 While this quantity does not directly reflect the fidelity of individual native gates, it remains a meaningful and widely used figure of merit.
 
-In this chapter, i present an initial attempt to address both the challenges of calibration complexity and residual gate errors. 
+In this chapter, I present an initial attempt to address both the challenges of calibration complexity and residual gate errors. 
 The goal is to test calibration procedures that are not only effective but also repeatable and accessible to non-expert users.  
 Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of randomized benchmarking (RB) can improve gate performance, we explored an automatic calibration improvement procedure based on average Clifford gate fidelity obtained from standard RB evaluation as an optimization target.
 In our implementation, the optimization is performed with respect to the $R_X(\pi)$ pulse which is a native gate in \Qibolab (see Section \ref{subsec:native_gates}).
-The optimization is performed by adjusting its amplitude, frequency and possibly, the multiplicative factor of the quadrature component of the DRAG, pulse parameters.
+The optimization is performed by adjusting its amplitude, frequency, and possibly, the multiplicative factor of the quadrature component of the DRAG, pulse parameters.
 
 The focus of this first study is on improving the average Clifford gate fidelity for single qubits. 
 This choice was made considering the important role of these operations in quantum circuits and the relative simplicity of their control compared to multi-qubit gates.
@@ -59,7 +59,7 @@ The observed survival probability as a function of sequence length $m$ follows t
 \begin{equation}\label{eq:RB_decay}
     F(m) = Ap^m +B,
 \end{equation}
-where $1-p$ quantifies the depolarization rate, and $A$, $B$ capture SPAM contributions but not the initial state preparation error.\\
+where $1-p$ quantifies the depolarization rate, and $A$, $B$ captures SPAM contributions but not the initial state preparation error.\\
 The depolarization probability $d$ is related to the average Clifford gate fidelity $F$ for a system with $n$ qubits through
 \begin{equation}
     F = 1 - \frac{d}{2^n - 1}\label{eq:average_gate_fidelity},
@@ -78,10 +78,10 @@ This shows how the average error per Clifford gate is directly determined by the
 \section{RB evaluation and optimization}
 
 \subsection{RB evaluation parameters}\label{sec:RB_parameters}
-In the results presented in the following, I employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
-This routine was used consistently across all tests, with the following set of parameters: I used $1000$ unique random Clifford sequences (\texttt{num\_of\_sequences = 1000}), ensuring robust statistical reliability across different realizations of gate noise. 
+In the results presented in the following, we employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
+This routine was used consistently across all tests, with the following set of parameters: we used $1000$ unique random Clifford sequences (\texttt{num\_of\_sequences = 1000}), ensuring robust statistical reliability across different realizations of gate noise. 
 Each sequence was evaluated at increasing circuit depths up to a maximum of $1000$ Clifford gates (\texttt{max\_circuit\_depth = 1000}), with the depths spaced by increments of $10$ (\texttt{delta\_clifford = 10}), resulting in benchmarking points at depths of $1, 10, 20, \ldots, 1000$. 
-For each depth and random sequence, I generated only one instance (\texttt{n\_avg = 1}), meaning that each sequence was distinct and not repeated with the same gate pattern. 
+For each depth and random sequence, we generated only one instance (\texttt{n\_avg = 1}), meaning that each sequence was distinct and not repeated with the same gate pattern. 
 Consequently, statistical averaging was achieved across the ensemble of random sequences at each depth rather than by repeating individual circuits. 
 \footnote{All experiments and results presented in this chapter were performed using version 0.1 of \Qibocal. This means that the parameters used to execute the \texttt{rb\_ondevice} routine, as described above, refer specifically to version 0.1. At the time of writing, version 0.2 of \Qibocal has been released and is actively maintained. As a result, the available parameters for running the RB routine may have changed and might no longer correspond exactly to those described in this text.}
 All the results presented in the following were obtained running the protocols on qubit \tt{D1}.
@@ -96,7 +96,7 @@ This preliminary step involves a sequence of calibration routines implemented wi
 The qubit frequency is first refined using a Ramsey experiment (see Section \ref{subsec:Ramsey}), subsequently a flipping sequence (see Section \ref{subsec:Flipping}) is used to adjust the microwave pulse amplitude to ensure that the applied drive results in a precise $\pi$-rotation.
 Finally, the optimal value of the DRAG parameter $\beta$ is estimated through a dedicated DRAG calibration routine (see Section \ref{sec:DRAG}).
 After each of these routines, the platform configuration is updated accordingly in the \tt{platform.json} file, which stores the relevant parameters for the experimental setup 
-\footnote{In \Qibolab the \tt{qibolab.Platform} object holds all the information required to execute programs in a real QPU. It is comprised by different objects that contain information about the native gates and the lab's instrumentation. The QPU parameters can be saved in (and loaded from) the \tt{parameters.json} file.}.
+\footnote{In \Qibolab the \tt{qibolab. Platform} object holds all the information required to execute programs in a real QPU. It is comprised of different objects that contain information about the native gates and the lab's instrumentation. The QPU parameters can be saved in (and loaded from) the \tt{parameters.json} file.}.
 
 These calibrated values are then used to initialize the optimization algorithm, as illustrated in the code reported in Listing \ref{snippet:params_init}.
 
@@ -165,7 +165,7 @@ The Nelder-Mead optimization method, originally introduced by Nelder and Mead in
 This derivative-free method is operates using simplex, which is a polytope of $n+1$ vertices in a $n$-dimensional space.
 The algorithm iteratively updates the simplex by replacing its worst-performing vertex with a new candidate point, thereby guiding the search towards an optimal solution. 
 If the goal is to minimize a given function $f(\mathbf{x})$ where $\mathbf{x} \in \mathbb{R}^n$ the algorithms proceeds with the following steps:\begin{enumerate}
-    \item If not otherwise initialized, $n+1$ points are sampled for building the initial symplex
+    \item If not otherwise initialized, $n+1$ points are sampled for building the initial simplex
     \item Order the test points according to their values at vertices: $f(\mathbf{x}_1) \leq f(\mathbf{x}_2) \leq \dots \leq f(\mathbf{x}_{n+1})$ and check whether the algorithm should terminate.
     \item Calculate $\mathbf{x}_0$, the centroid of all points except $\mathbf{x}_{n+1}$.
     \item Reflection: Compute the reflected point $\mathbf{x}_r = \mathbf{x}_0 + \alpha(\mathbf{x}_0 - \mathbf{x}_{n+1})$ with $\alpha > 0$. 
@@ -176,15 +176,15 @@ If the goal is to minimize a given function $f(\mathbf{x})$ where $\mathbf{x} \i
     \item Contraction: In this case is certain that $f(\mathbf{x}_r) \geq f(\mathbf{x}_n)$ then:\begin{itemize}
         \item If $f(\mathbf{x}_r) < f(\mathbf{x}_{n+1})$: compute the contracted point $\mathbf{x}_c=\mathbf{x}_0 +\rho(\mathbf{x}_{r}-\mathbf{x}_0)$ with $0<\rho \leq 0.5$.
                 If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{r})$, then a new simplex is obtained by replacing $\mathbf{x}_{n+1}$ with  $\mathbf{x}_c$ and go to step 1.\\
-                Else go to step 6.
+                Otherwise, go to step 6.
         \item  If $f(\mathbf{x}_r) \geq f(\mathbf{x}_{n+1})$: compute the contracted point $\mathbf{x}_c=\mathbf{x}_0 +\rho(\mathbf{x}_{n+1}-\mathbf{x}_0)$ with $0<\rho \leq 0.5$.
-                If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{n+1})$, the a new simplex is constructed with $\mathbf{x}_c$ and go to step 1.\\
-                Else go to step 6.
+                If $\mathbf{x}_c$ satisfies $f(\mathbf{x}_c) < f(\mathbf{x}_{n+1})$, then a new simplex is constructed with $\mathbf{x}_c$ and go to step 1.\\
+                Otherwise, go to step 6.
     \end{itemize}
     \item Shrinkage: Replace all points except the best, $\mathbf{x}_1$, with $\mathbf{x}_i = \sigma(\mathbf{x}_i - \mathbf{x}_1), 0<\sigma \leq 0.5$  
 \end{enumerate}
-The algorithm terminates when the standard deviation of the function values of the current simplex fall below a user-initialized tolerance. 
-When the cycle stops the point of the simplex associated to the lower function value is returned as proposed optimum
+The algorithm terminates when the standard deviation of the function values of the current simplex falls below a user-initialized tolerance. 
+When the cycle stops the point of the simplex associated with the lower function value is returned as the proposed optimum
 
 The values of the parameters $\alpha, \gamma, \rho$ and $\sigma$ were left to default of \tt{SciPy}: $\alpha=1, \gamma=2, \rho=0.5, \sigma=0.5$. 
 
@@ -196,7 +196,7 @@ To mitigate these constraints, both a cap on the total number of cost function e
 It is important to note that each iteration of the NM algorithm typically involves the evaluation of multiple points in parameter space: at least four in the case of optimization over three parameters, and at least three when optimizing over two parameters.
 
 In the first run of the algorithm, the maximum number of iterations was limited at 40 such that no more than 160 cost function evaluations were performed.
-dditionally, a convergence tolerance of $1\cdot10^{-4}$ was set (\texttt{tol=1e-4} \footnote{In \texttt{scipy.optimize.minimize}, this parameter sets both the tolerance on the optimization variables, referred to as \texttt{xtol}, and the tolerance on the cost function value (\texttt{ftol}).}), applying stopping criteria to both parameter updates and cost function changes.
+Additionally, a convergence tolerance of $1\cdot10^{-4}$ was set (\texttt{tol=1e-4} \footnote{In \texttt{scipy.optimize.minimize}, this parameter sets both the tolerance on the optimization variables, referred to as \texttt{xtol}, and the tolerance on the cost function value (\texttt{ftol}).}), applying stopping criteria to both parameter updates and cost function changes.
 
 The results of this initial optimization attempt are shown in Figure \ref{fig:NM_plots}. As illustrated in Figure \ref{NM_true_fig:fidelity}, a clear improvement in gate fidelity was achieved, increasing from an initial value of $99.02\%$ to a final value of $99.71\%$.
 Despite this apparent improvement, the optimizer did not converge within the specified tolerance. After forty steps, the stopping criterion was not satisfied, and the optimization was formally marked as unsuccessful. 
@@ -241,16 +241,16 @@ However, a possible limitation to the performance of this optimization approach 
 Setting only the initial parameter values, without specifying the full simplex, can lead the algorithm to explore the parameter space inefficiently. 
 For this reason, further runs of the same method were carried out, this time also initializing the simplex explicitly.
 
-Furthermore, considering that the allowed variation range for the $\beta$ parameter was restricted to only $\pm0.25$ around the value determined by the \tt{drag\_tuning} routine, quite a small interval, I explored the possibility of improving the efficiency of the optimization by reducing the number of free parameters. 
+Furthermore, considering that the allowed variation range for the $\beta$ parameter was restricted to only $\pm0.25$ around the value determined by the \tt{drag\_tuning} routine, quite a small interval, we explored the possibility of improving the efficiency of the optimization by reducing the number of free parameters. 
 Specifically, additional optimization runs were performed in which only the amplitude and frequency of the $R_X(\pi)$ pulse were optimized, while $\beta$ was kept fixed at $0$.
 
 This choice was motivated by the working assumption that, at least in this initial phase, leakage errors were not the dominant source of infidelity. 
 Since the DRAG correction primarily addresses leakage to higher energy levels, we thought that $\beta$ would have a limited effect on the overall gate fidelity compared to the more significant impact of accurately calibrating the native gate's amplitude and frequency. 
 As such, the focus was placed on parameters expected to yield the greatest improvements in fidelity while maintaining a limited run time.
 
-Some optimization runs were performed with this revised configuration, in this case the initial symplex was constructed based on preliminary fine tuning routines. 
-Specifically, I considered the uncertainties on amplitude and frequency obtained respectively from the flipping and Ramsey procedures.
-These values were scaled by a factor of 1.5 to define the characteristic step sizes; using these values, a triangular simplex was generated in the amplitude-frequency parameter space, centered around the initial guess and offset along each axis to ensure sufficient coverage of the local landscape.
+Some optimization runs were performed with this revised configuration, in this case, the initial simplex was constructed based on preliminary fine-tuning routines. 
+Specifically, we considered the uncertainties on amplitude and frequency obtained respectively from the flipping and Ramsey procedures.
+These values were scaled by a factor of 1.5 to define the characteristic step sizes; using these values, a triangular simplex was generated in the amplitude-frequency parameter space, centered around the initial guess, and offset along each axis to ensure sufficient coverage of the local landscape.
 
 The results of these runs are reported in the following sections and are labeled as \tt{init\_symp\_1}, \tt{init\_symp\_2}, and \tt{init\_symp\_3}.
 
@@ -274,13 +274,13 @@ The results of these runs are reported in the following sections and are labeled
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241110_211211:frequency}
     \end{subfigure}
-    \caption{Plots of the optimization parameters as a function of the number of optimization step for the first round optimization - \tt{init\_symp\_2}.}
+    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_symp\_2}.}
     \label{fig:20241110_211211:parameters}
 \end{figure}
 
 From the plots showing the outcome of the first optimization run, it can be observed that the fidelity increases over the initial iterations and then stabilizes around a value of approximately 99.45\% after about fifteen steps.
 Two aspects are particularly noteworthy. The first concerns the noticeable drop in fidelity observed at the sixteenth iteration, where the fidelity falls below the 97\% threshold (Figure \ref{fig:20241110_211211:fidelity}), despite the amplitude and frequency of the $R_X(\pi)$ pulse showing no significant changes compared to the previous optimization steps (see Figure \ref{fig:20241110_211211:parameters}).
-A similar behavior is observed in other plots illustrating the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), which may point to possible issues in measurement or data acquisition, or to imperfect control over the qubit state.
+Similar behavior is observed in other plots illustrating the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), which may point to possible issues in measurement or data acquisition, or to imperfect control over the qubit state.
 
 \begin{figure}[h!]
     \centering
@@ -332,7 +332,7 @@ It should be noted, as will be discussed in more detail in the conclusions, that
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_200745:frequency}
     \end{subfigure}
-    \caption{Plots of the optimization parameters as a function of the number of optimization step for the first round optimization - \tt{init\_symp\_3}.}
+    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_symp\_3}.}
     \label{fig:20241113_200745:parameters}
 \end{figure}
 
@@ -346,11 +346,11 @@ These findings lead us to conclude that in this case, the Nelder Mead algorithm 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Ramsey.png}
-    \caption{Ramsey experiment performed to fine tune the $R_X(\pi)$ gate frequency before the optimization process.}
+    \caption{Ramsey experiment performed to fine-tune the $R_X(\pi)$ gate frequency before the optimization process.}
     \label{fig:Ramsey_NM}
 \end{figure}
 
-A summary of the results obtained using the Nelder Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt} while a more detailed summury is reported in Table \ref{tab:best_values} and Table \ref{tab:final_values}, at the end of the present chapter.
+A summary of the results obtained using the Nelder Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt} while a more detailed summary is reported in Table \ref{tab:best_values} and Table \ref{tab:final_values}, at the end of the present chapter.
 
 Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization process enabled the achievement of higher average Clifford gate fidelities. 
 For this reason, the optimization of $\beta$ was reintroduced in the subsequent optimization attempts.
@@ -377,10 +377,10 @@ It belongs to the class of Sequential Quadratic Programming (SQP) methods, which
         \mathcal{L}(\mathbf{x}, \lambda, \mu) = f(\mathbf{x}) - \sum_{i=1}^{m} \lambda_i c_i(\mathbf{x}) - \sum_{j=1}^{p} \mu_j d_j(\mathbf{x}),
     \end{equation}
     where $\lambda_i$ and $\mu_j$ are Lagrange multipliers. 
-    The Hessian of the Lagrangian is not computed explicitly, but approximated using a BFGS-like quasi-Newton update.
+    The Hessian of the Lagrangian is not computed explicitly but approximated using a BFGS-like quasi-Newton update.
     \item QP Subproblem solution: A quadratic program is solved to determine a search direction $\mathbf{p}_k$, subject to the linearized constraints and bounds. 
     The subproblem minimizes the quadratic model subject to these constraints.
-    \item Constrained line search: A line search is performed along $\mathbf{p}_k$ using a merit function that balances reduction in the objective with feasibility of constraints. 
+    \item Constrained line search: A line search is performed along $\mathbf{p}_k$ using a merit function that balances reduction in the objective with the feasibility of constraints. 
     This helps ensure global convergence.
     \item Update: The iterate is updated via $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k$, where $\alpha_k$ is the step size determined by the line search. 
     The quasi-Newton approximation of the Hessian is also updated.
@@ -396,7 +396,7 @@ As shown in Figure \ref{fig:SLSQP:fidelity}, the optimization procedure appears 
 This indicates that the algorithm successfully reached a local minimum within the specified tolerance of $1\cdot10^{-4}$ in less the 15 optimization steps. On the other hand, it is important to consider that SLSQP is a gradient-based method and, as such, may lack robustness in the presence of a noisy or irregular cost landscape.
 This makes it susceptible to becoming trapped in local minima, especially if the optimization is not ideal.
 
-For this run, the same constraints and parameter bounds used in the Nelder-Mead optimization were applied: a maximum of 40 optimization steps and parameter ranges setted by the initial fine-tuning routine carried out before to the fidelity optimization.
+For this run, the same constraints and parameter bounds used in the Nelder-Mead optimization were applied: a maximum of 40 optimization steps and parameter ranges set by the initial fine-tuning routine carried out before the fidelity optimization.
 
 \begin{figure}[h]
     \centering
@@ -426,12 +426,12 @@ For this run, the same constraints and parameter bounds used in the Nelder-Mead 
         \label{fig:SLSQP:beta}
     \end{subfigure}
 
-    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step for the SLSQP optimization method.}
+    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization steps for the SLSQP optimization method.}
     \label{fig:SLSQP_plots}
 \end{figure}
 
 In this case, an interesting observation is that, as expected, a sharp drop in fidelity corresponds to a frequency value that deviates significantly from the optimal one for the $R_X(\pi)$ gate.
-This behavior is consistent with the assumption that frequency and amplitude are the two dominant parameters in determining the quality of the $R_X(\pi)$ gate and as a consequence  the average fidelity of Clifford gates.
+This behavior is consistent with the assumption that frequency and amplitude are the two dominant parameters in determining the quality of the $R_X(\pi)$ gate and as a consequence the average fidelity of Clifford gates.
 
 However, as can be seen in Figure \ref{fig:SLSQP:fidelity}, the convergence behavior is not particularly stable: the fidelity exhibits large step-to-step fluctuations. 
 As mentioned previously, this indicates that the SLSQP method is not robust enough to be reliably used as a systematic approach for optimizing average Clifford gate fidelity.
@@ -469,7 +469,7 @@ Covariance Matrix Adaptation Evolution Strategy (\tt{CMA-ES} \cite{cmaessimplepr
 It belongs to the broader class of Evolution Strategies (ES), a subset of Evolutionary Algorithms (EAs)(see \cite{sloss20192019evolutionaryalgorithmsreview}), and is particularly effective for black-box optimization where gradient information is unavailable.
 
 Evolution Strategies (ES) are a class of optimization methods that employ self-adaptive mechanisms to explore the search space efficiently. 
-Unlike classical optimization techniques that rely on gradient descent, ES leverage stochastic sampling to navigate rugged and multimodal landscapes.
+Unlike classical optimization techniques that rely on gradient descent, ES leverages stochastic sampling to navigate rugged and multimodal landscapes.
 In this context, \tt{CMA-ES} is an adaptive stochastic search method that iteratively refines a probability distribution over the search space. 
 Unlike traditional Genetic Algorithms (GAs), which rely on crossover and mutation operators, \tt{CMA-ES} employs a multivariate normal distribution to generate candidate solutions. 
 The method adaptively updates the distribution's mean and covariance matrix based on the fitness of sampled points.
@@ -489,17 +489,17 @@ The \tt{CMA-ES} algorithm follows the following steps:\begin{enumerate}
     \item Update the isotropic and anisotropic evolution path $\mathbf{p}_{\sigma}$, $\mathbf{p}_c$ \footnote{For details on the update process of the evolution paths see \cite{cmaessimplepractical}.}.
     \item Update the covariance matrix: \begin{equation}
         C \leftarrow (1 - c_1 - c_{\mu}) C + c_1 \mathbf{p}_c \mathbf{p}_c^T + c_{\mu} \sum_{i=1}^{\mu} w_i \mathbf{y}_i \mathbf{y}_i^T,
-    \end{equation} where $c_1$ and $c_\mu$ are learning rates and $\mathbf{y}_i$ represents the deviation of the $i$-th cnadidate solution from the mean $\mathbf{mu}$.
+    \end{equation} where $c_1$ and $c_\mu$ are learning rates and $\mathbf{y}_i$ represents the deviation of the $i$-th candidate solution from the mean $\mathbf{mu}$.
     \item Update the step size using a cumulative path evolution mechanism \begin{equation}
         \sigma \leftarrow \sigma \cdot \exp \left( \frac{c_{\sigma}}{d_{\sigma}} \left( \| \mathbf{p}_{\sigma} \| - E \| \mathcal{N}(0, I) \| \right) \right),
     \end{equation} where $c_\sigma$ is the learning rate for step-size adaptation, $d_\sigma$ is a damping factor $\| \mathbf{p}_{\sigma} \|$ is the length of the evolution path and $E \| \mathcal{N}(0, I) \|$ is the expected length of a standard normally distributed random vector.
 \end{enumerate}
 
 We decided to test \tt{CMA-ES} for the RB optimization as it is particularly well-suited for noisy or non-smooth objective functions. 
-The stochastic nature of \tt{CMA-ES} allows it to remain robust against such perturbations, as it does not rely on local gradient information and instead samples across a distribution to infer promising search directions.
+The stochastic nature of \tt{CMA-ES} allows it to remain robust against such perturbations, as it does not rely on local gradient information and instead, samples across a distribution to infer promising search directions.
 
 Unless manually specified, \tt{CMA-ES} employs internal heuristics to determine several of its hyperparameters. 
-For instance, the population size $\lambda$ is typucally set according to the dimensionality of the problem:
+For instance, the population size $\lambda$ is typically set according to the dimensionality of the problem:
 \begin{equation}\label{eq:pop_size}
     \lambda = 4+3\lfloor \log{n}\rfloor
 \end{equation}
@@ -511,9 +511,9 @@ For full details on default parameter settings and adaptation rules, see \cite{c
 In the \tt{CMA-ES} optimization run, parameter settings were chosen to be as consistent as possible with those used in previous optimization algorithms.
 Specifically, the initial values and the parameter bounds were defined as shown in Listing \ref{snippet:params_init}, based on the results of the preliminary fine-tuning procedure. 
 The maximum number of generations was set to 30, slightly lower than the iteration limits used in the \texttt{SciPy}-based methods.
-This choice was motivated by two main considerations. First, we expected a performance comparable to that of the previously tested algorithms, and that consequently 30 optimization steps (or generations) would be enough to reach an improved fidelity value.
-Second we expected the algorithm to require longer execution times due to the larger number of cost functions evaluation: the population size was not manually setted but allowed to default to the internal rule od the \tt{CMA-ES} implementation, as in Equation \ref{eq:pop_size}.
-In this case, with three parameters, pulse amplitude, frequency and DRAG correction parameter $\beta$, the population consisted of 7 candidate solutions per generation.
+This choice was motivated by two main considerations. First, we expected a performance comparable to that of the previously tested algorithms, and that consequently, 30 optimization steps (or generations) would be enough to reach an improved fidelity value.
+Second, we expected the algorithm to require longer execution times due to the larger number of cost functions evaluation: the population size was not manually set but allowed to default to the internal rule of the \tt{CMA-ES} implementation, as in Equation \ref{eq:pop_size}.
+In this case, with three parameters, pulse amplitude, frequency, and DRAG correction parameter $\beta$, the population consisted of 7 candidate solutions per generation.
 Given a population of 7 individuals and a total of 30 generations, the optimization required 210 evaluations of the objective function to complete. 
 
 \begin{figure}[h]
@@ -544,7 +544,7 @@ Given a population of 7 individuals and a total of 30 generations, the optimizat
         \label{fig:CMA:beta}
     \end{subfigure}
 
-    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step for the CMA optimization method.}
+    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization steps for the CMA optimization method.}
     \label{fig:CMA_plots}
 \end{figure}
 
@@ -560,7 +560,7 @@ Increasing either of these parameters would have led to a substantial rise in co
 Another factor that negatively influenced the algorithm convergence is the choice of the initial step size parameter, $\sigma = 0.25$. 
 In \tt{CMA-ES} $\sigma$ controls the standard deviation of the multivariate normal distribution used to generate the first population, thereby determining how broadly the algorithm explores the parameter space around the initial guess. 
 A smaller $\sigma$ would have concentrated the search in a narrower region, possibly leading to faster convergence to a local optimum. 
-However, this value of $\sigma = 0.25$ was chosen with the goal to explore a wider portion of the parameter space than in previous \texttt{SciPy}-based optimizations, in order to investigate the possible presence of higher-fidelity regions that had not yet been sampled.
+However, this value of $\sigma = 0.25$ was chosen with the goal of exploring a wider portion of the parameter space than in previous \texttt{SciPy}-based optimizations, in order to investigate the possible presence of higher-fidelity regions that had not yet been sampled.
 An evaluation of the computational cost of running the \tt{CMA-ES} algorithm is reported in Table \ref{tab:optuna_opt}.
 
 \section{Optuna}
@@ -594,17 +594,17 @@ Given a set of past observations $\{ (\mathbf{x}_i, y_i) \}_{i=1}^N$, where $ y_
     which serves as an acquisition function analogous to expected improvement. The candidate with the highest ratio is selected for evaluation.
     \item Evaluate and update: Evaluate the objective function $ y = f(\mathbf{x}) $ at the selected configuration and append the result to the history. Return to step 1.
 \end{enumerate}
-This process continues until a stopping criterion is met, such as a maximum number of trials or convergence of the best observed value.
+This process continues until a stopping criterion is met, such as a maximum number of trials or convergence of the best-observed value.
 
-Differently from other TPE implementations, \tt{Optuna} supports automatic pruning designed to terminate unpromising trials early, thus reducing computational cost. 
+Differently from other TPE implementations, \tt{Optuna} supports automatic pruning designed to terminate unpromising trials early, thus reducing the computational cost. 
 In common applications such as neural network training, pruning is enabled by reporting intermediate objective values via \texttt{trial.report(...)} and comparing them to statistics of previously completed trials. 
 By default, \texttt{Optuna} employs the \texttt{MedianPruner}, which terminates a trial if its intermediate value is worse than the median of completed trials at the same step.
 
-In the present work, the cost function is defined as the infidelity extracted from a complete randomized benchmarking (RB) routine and the optimization problem involves a low-dimensional parameter space, comprising only three continuous parameters; given these characteristics pruning was not applied.
+In the present work, the cost function is defined as the infidelity extracted from a complete randomized benchmarking (RB) routine and the optimization problem involves a low-dimensional parameter space, comprising only three continuous parameters; given these characteristics, pruning was not applied.
 
 \subsection{Results}
 
-As a first attempt at applying the optimization algorithm implemented in the \texttt{Optuna} library, a total of 30 optimization steps, or trials as referred in the library itself, were performed. 
+As a first attempt at applying the optimization algorithm implemented in the \texttt{Optuna} library, a total of 30 optimization steps, or trials as referred to in the library itself, were performed. 
 This choice was made to maintain consistency with the number of steps used in previous optimization methods. 
 As in the earlier cases, initial parameter values and search boundaries were provided to the algorithm and derived from the fine-tuning routines executed prior to the optimization.
 
@@ -622,7 +622,7 @@ The results obtained with this first optimization attempt are reported in Figure
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials.
-    The colormap indicates the Clifford gate average fidelity.
+    The color map indicates the Clifford gate average fidelity.
     The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna30:amplitude}
 \end{figure}
@@ -631,7 +631,7 @@ The results obtained with this first optimization attempt are reported in Figure
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/frequency.png}
     \caption{Plot of the $R_X(\pi)$ frequency as a function of the number of trials. 
-    The colormap indicates the Clifford gate average fidelity.  
+    The color map indicates the Clifford gate average fidelity.  
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity}
     \label{fig:optuna30:frequency}
 \end{figure}
@@ -640,7 +640,7 @@ The results obtained with this first optimization attempt are reported in Figure
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/30/beta.png}
     \caption{Plot of the value of the $\beta$ coefficient for the second quadrature of the $R_X(\pi)$ pulse as a function of the number of trials. 
-    The colormap indicates the Clifford gate average fidelity.  
+    The color map indicates the Clifford gate average fidelity.  
     The red cross denotes the $\beta$ value corresponding to the highest observed fidelity}
     \label{fig:optuna30:beta}
 \end{figure}
@@ -675,7 +675,7 @@ In particular, the best average Clifford gate fidelity of 99.64\% was obtained a
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/amplitude.png}
     \caption{Plot of the $R_X(\pi)$ amplitude as a function of the number of trials.
-    The colormap indicates the Clifford gate average fidelity.
+    The color map indicates the Clifford gate average fidelity.
     The red cross denotes the $R_X(\pi)$ amplitude corresponding to the highest observed fidelity.}
     \label{fig:optuna100:amplitude}
 \end{figure}
@@ -684,7 +684,7 @@ In particular, the best average Clifford gate fidelity of 99.64\% was obtained a
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/frequency.png}
     \caption{Plot of the $R_X(\pi)$ frequency as a function of the number of trials. 
-    The colormap indicates the Clifford gate average fidelity.  
+    The color map indicates the Clifford gate average fidelity.  
     The red cross denotes the $R_X(\pi)$ frequency corresponding to the highest observed fidelity.}
     \label{fig:optuna100:frequency}
 \end{figure}
@@ -693,7 +693,7 @@ In particular, the best average Clifford gate fidelity of 99.64\% was obtained a
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/100/beta.png}
     \caption{Plot of the value of the $\beta$ coefficient for the second quadrature of the $R_X(\pi)$ pulse as a function of the number of trials. 
-    The colormap indicates the Clifford gate average fidelity.  
+    The color map indicates the Clifford gate average fidelity.  
     The red cross denotes the $\beta$ value corresponding to the highest observed fidelity}
     \label{fig:optuna100:beta}
 \end{figure}
@@ -704,7 +704,7 @@ This effect is particularly evident for the amplitude and $\beta$ parameters.
 While the amplitude range remains fixed, being constrained by hardware limitations, the range used to search for the optimal $\beta$ varies significantly across the two optimization runs.
 
 Although $\beta$ is not the most critical parameter in determining the fidelity outcome, as highlighted also by the Optuna analysis, which indicates that $\beta$ accounts on average for approximately 9\% of the fidelity improvement, 
-its proper calibration does have a measurable impact on the shape of the control pulse and, therefore, on the overall gates performance.
+its proper calibration does have a measurable impact on the shape of the control pulse and, therefore, on the overall gate performance.
 
 The reason for the significant variation in the allowed search ranges for $\beta$ was then traced back to a failure in the fine-tuning routine responsible for calibrating the DRAG parameter.
 The failed fitting routines are shown in Figure \ref{fig:failed_beta}. 
@@ -724,7 +724,7 @@ As a result of this issue, the optimization workflow was modified to include con
         \label{fig:failed_beta:100}
     \end{subfigure}
 
-    \caption{Plots failed fine tuning routines for estimating the $\beta$ parameter for the DRAG pulse shape. 
+    \caption{Plots failed fine-tuning routines for estimating the $\beta$ parameter for the DRAG pulse shape. 
     From the plot is clear that the fitting procedure failed, a possible improvement to allow for a better fit could have been the choice of a smaller step size to scan the possible $\beta$ values.}
     \label{fig:failed_beta}
 \end{figure}
@@ -732,10 +732,10 @@ As a result of this issue, the optimization workflow was modified to include con
 %1000 steps
 Given the results obtained in the two previous optimization runs using \tt{Optuna}, we proceeded with a third round of optimization, this time ensuring control over the execution of the fine-tuning routines that precede the optimization itself. 
 In consideration of the relatively short time required by \tt{Optuna} in the previous attempt, approximately 40 minutes for 100 trials, we decided to significantly increase the number of optimization trials. 
-Specifically, we set an upper limit of 1000 trials, with the goal of improving parameter space exploration and again potentially achieving better convergence.
+Specifically, we set an upper limit of 1000 trials, to improve parameter space exploration and again potentially achieve better convergence.
 
 The optimization history is shown in Figure \ref{fig:optuna1000beta:optimization}. 
-At first the results appear promising: the algorithm seems to achieve an average Clifford gate fidelity of 99.99\%. 
+At first, the results appear promising: the algorithm seems to achieve an average Clifford gate fidelity of 99.99\%. 
 However a closer examination of the outputs corresponding to all RB routines with reported average Clifford gate infidelities below $1.5 \cdot 10^{-3}$, it becomes evident that these results are actually the consequence of failed exponential fits on the RB output.
 
 Figure \ref{fig:RBfailed} presents a few representative examples of such cases, specifically showing the RB plots corresponding to the four lowest infidelities obtained during the optimization.
@@ -782,12 +782,12 @@ Figure \ref{fig:RBfailed} presents a few representative examples of such cases, 
 At this point, the analysis was repeated after discarding all data points associated with a cost function value lower than $1.5 \cdot 10^{-3}$. 
 The revised optimization history is shown in Figure \ref{fig:optuna1000beta:optimization_true}. 
 In this analysis, the best fidelity achieved was 99.85\% much lower than the previously reported 99.98\%, but still a satisfactory result. 
-This outcome corresponds to an improvement in fidielity of approximately 0.37\% compared to the initial configuration.
+This outcome corresponds to an improvement in fidelity of approximately 0.37\% compared to the initial configuration.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/optimization_true.png}
-    \caption{Plot of the optimization history using \tt{Optuna} for 1000 trials and exluding the data-points associate to RB routines where the fititng procedure failed. 
+    \caption{Plot of the optimization history using \tt{Optuna} for 1000 trials and excluding the data points associated to RB routines where the fitting procedure failed. 
     Infidelity as a function of trials.}
     \label{fig:optuna1000beta:optimization_true}
 \end{figure}
@@ -828,9 +828,9 @@ Notably, the optimal value found for $\beta$ is approximately $-510 \cdot 10^{-6
 As for the amplitude and frequency parameters, it is reassuring to observe that the best-performing values lie within the most densely sampled regions of the parameter space. 
 This supports the conclusion that the optimization process executed by \texttt{Optuna} behaved as expected, effectively concentrating the search around the most promising areas.
 Despite these observations, the system does not appear to be particularly stable, as small variations in the parameter values lead to significant fluctuations in the resulting fidelity. 
-Overall, i risultati mostrati fino a qui suggests that the optimization process carried out by \tt{Optuna} does not exhibit clear convergence.
+Overall, the results presented so far suggest that the optimization process carried out using \texttt{Optuna} does not exhibit clear convergence.
 
-Based on the results obtained from the previous optimization run, particularly with respect to the parameter $\beta$, a second optimization and measurement sequence was performed using the same configuration but varying only the amplitude and frequency of the $R_X(\pi)$ gate. 
+Based on the results obtained from the previous optimization run, particularly concerning the parameter $\beta$, a second optimization and measurement sequence was performed using the same configuration but varying only the amplitude and frequency of the $R_X(\pi)$ gate. 
 The results of this new optimization run are presented in Figure \ref{fig:optuna1000:optimization}. 
 In this case, the minimum of the cost function was reached at the 865\textsuperscript{th} step, corresponding to an average Clifford gate fidelity of 99.85\%.
 
@@ -881,7 +881,7 @@ It also reports the number of optimization steps and function evaluations perfor
         \bottomrule
     \end{tabular}
     \caption{This table provides a short summary of the results obtained using the \tt{CMA-ES} and \tt{Optuna} algorithm.\\ 
-    In particular, regarding the \tt{Optuna} optimization algorithm the number of optimization iterations and of Randomized Benchmarking optimization is the same as the number of function evaluations coincides with the numer of trials and no pruning was performed.
+    In particular, regarding the \tt{Optuna} optimization algorithm the number of optimization iterations and of Randomized Benchmarking optimization is the same as the number of function evaluations coincides with the number of trials and no pruning was performed.
     The reported value of the objective function corresponds to the average Clifford gate infidelity obtained at the end of optimization via Randomized Benchmarking (1-fidelity), which serves as the cost function minimized by the algorithm.
     The \textit{Duration} column refers to the total runtime of the script, including the initial fine-tuning stage preceding the optimization.\\}
     \label{tab:optuna_opt}
@@ -899,7 +899,7 @@ Because each optimization requires multiple evaluations of this cost function, t
 Additionally, we found that convergence is not guaranteed. 
 In several cases, especially those involving \tt{Optuna} or \tt{CMA-ES} with a broader parameter search, the optimization did not yield stable or reproducible results.
 Even when high fidelities were reached (up to 99.85\%), the fidelity showed large sensitivity to small changes in parameter values, casting doubt on the practical stability of the identified configurations.
-Questo è particolarmente evidente se si guarda quanto riportato in Table \ref{tab:best_param} o rappresentato in Figure \ref{fig:params_best}.
+This is particularly evident from the results shown in Table \ref{tab:best_param} and illustrated in Figure \ref{fig:params_best}.
 
 \begin{figure}[h!]
     \centering
@@ -921,7 +921,7 @@ Questo è particolarmente evidente se si guarda quanto riportato in Table \ref{t
         The cases in which the $\beta$ parameter was not updated during the optimization are not reported.}
         \label{fig:beta_best}
     \end{subfigure}
-    \caption{The plots show the best parameters value for the different optimization methods tested.} 
+    \caption{The plots show the best parameter values for the different optimization methods tested.} 
     \label{fig:params_best}
 \end{figure}
 
@@ -944,11 +944,11 @@ Questo è particolarmente evidente se si guarda quanto riportato in Table \ref{t
         \textbf{optuna no $\beta$} & 0.99846 & 0.04104 & 4.957374 & - \\
         \bottomrule
     \end{tabular}
-    \caption{The table report the best fidelity, amplitude, frequency and $\beta$ from each optimization method allowing for an easy comparison.}
+    \caption{The table reports the best fidelity, amplitude, frequency, and $\beta$ from each optimization method allowing for an easy comparison.}
     \label{tab:best_param}
 \end{table}
 
-Two directions for future improvement emerges from this work. 
+Two directions for future improvement emerge from this work. 
 First, the RB evaluation process itself could be optimized. 
 In the present study, sequences of depth 1000 were used, and for each depth, 1000 Clifford circuits were sampled. 
 This approach, while reliable, is computationally expensive. 

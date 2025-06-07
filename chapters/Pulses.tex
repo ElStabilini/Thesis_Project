@@ -1,6 +1,6 @@
 \chapter{Pulses analysis and tuning}
 
-Having concluded that the closed-loop optimization protocol we tested would not significantly improve our circuits performance, we shifted our focus towards improvement and implementation of individual protocols to improve the accuracy of qubit operations.\\
+Having concluded that the closed-loop optimization protocol we tested would not significantly improve our circuit performance, we shifted our focus towards the improvement and implementation of individual protocols to improve the accuracy of qubit operations.\\
 In this chapter, I present the results of two additions to the \Qibocal software. 
 The first is the inclusion of an $RX90$ gate as a native gate, which can enhance the performance of protocols requiring qubit rotations of $\frac{\pi}{2}$.
 The second is the implementation of the cryoscope, a routine first described in \cite{rol_time-domain_2020}, which is useful for correcting distortions in the magnetic flux pulse applied to the SQUID.
@@ -10,16 +10,15 @@ As discussed in Section \ref{sec:calibration}, it is possible to calibrate syste
 
 However, executing more complex quantum circuits and algorithms requires the ability to perform a broader set of quantum operations. 
 In gate-based quantum computing, and in particular for superconducting hardware platforms, this is achieved by composing more general unitary operations from a limited set of pre-defined, hardware-native quantum gates. 
-These native gates, or simply natives, are the elementary operations that are directly implementable and physically calibrated on the quantum processor.
+These native gates, or simply natives, are elementary operations that are directly implementable and physically calibrated on the quantum processor.
 
-The choice and quality of these native gates are extremly important as all higher-level gates will be decomposed into sequences of natives, and any calibration errors in the latter can accumulate and propagate through a circuit, degrading the overall fidelity. 
+The choice and quality of these native gates are extremely important as all higher-level gates will be decomposed into sequences of natives, and any calibration errors in the latter can accumulate and propagate through a circuit, degrading the overall fidelity. 
 
 \subsection{\Qibolab native gates}\label{subsec:native_gates}
-Native gates are those gates which can be directly implemented at the hardware level, in contrast to abstract logical gates, which must be transpiled into sequences of hardware supported primitives. 
+Native gates are those gates that can be directly implemented at the hardware level, in contrast to abstract logical gates, which must be transpiled into sequences of hardware-supported primitives. 
 In the case of \Qibolab \footnote{At least for version 0.1 of \Qibolab}, the native gate set consists of $R_X(\pi)$ gate, calibrated by performing the Rabi experiments described in Section \ref{sec:Rabi}, the measurement gate and the virtual-Z (VZ) gate which is not implemented via a physical pulse but rather through a dynamic adjustment of the phase of subsequent control pulses. 
-This native gate set, is sufficient for universal single-qubit control.
+This native gate set is sufficient for universal single-qubit control.
 
-%TODO: fix euler's decomposition
 Indeed, it can be shown that any arbitrary single-qubit unitary operation $ U(\gamma, \theta, \phi) \in SU(2) $ can be expressed, up to a global phase, as a sequence of rotations around the $z$ and $x$ axes of the Bloch sphere:
 \begin{equation}
 U(\gamma, \theta, \phi) = R_Z(\gamma) R_X(\theta) R_Z(\phi).
@@ -45,19 +44,19 @@ Note that, in practice, this final $R_Z$ rotation does not need to be realized a
 Instead, it can be implemented virtually by adjusting the phase reference of subsequent pulses, a technique known as the virtual-Z gate\cite{McKay_2017}. \\
 
 \subsection{RX90 as native gate}
-Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, we decided to explore the possibility to include the $R_X(\pi/2)$ gate in the native set of Qibolab.
-The main motivation for this addition is that, until now, we had assumed the amplitude or duration of the $R_X(\pi/2)$ gate were exactly half that of the $R_X(\pi)$ pulse.
-This assumption implies a perfectly linear response of the qubit to the drive pulse; an idealization which may not be satisfied in practice due to nonlinearities in the system or imperfections in the pulse generation and transmission.
+Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, we decided to explore the possibility of including the $R_X(\pi/2)$ gate in the native set of Qibolab.
+The main motivation for this addition is that, until now, we had assumed the amplitude or duration of the $R_X(\pi/2)$ gate was exactly half that of the $R_X(\pi)$ pulse.
+This assumption implies a perfectly linear response of the qubit to the drive pulse; an idealization that may not be satisfied in practice due to nonlinearities in the system or imperfections in the pulse generation and transmission.
 
-To support this change I updated the \tt{native.py} module, which provides the data containers for holding the pulse parameters required for implementing every native gate.
-Additionally, I modified some of the calibration experiments presented in Section \ref{sec:calibration} to support the calibration of this new gate.
-In particular, I adapted the code used for the various implementations of the Rabi oscillation measurement protocol to include the $R_X(\pi/2)$ gate.
+To support this change we updated the \tt{native.py} module, which provides the data containers for holding the pulse parameters required for implementing every native gate.
+Additionally, we modified some of the calibration experiments presented in Section \ref{sec:calibration} to support the calibration of this new gate.
+In particular, we adapted the code used for the various implementations of the Rabi oscillation measurement protocol to include the $R_X(\pi/2)$ gate.
 
 \subsection{Results}
-In this Section I present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.\\
-For each of the calibration experiments concerning the rotation pulses, I provide examples of plots to show how the relevant physical quantities vary depending on whether I am calibrating the $R_X(\pi)$ or the $R_X(\pi/2)$ gate.\\
+In this Section, we present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.\\
+For each of the calibration experiments concerning the rotation pulses, I provide examples of plots to show how the relevant physical quantities vary depending on whether we are calibrating the $R_X(\pi)$ or the $R_X(\pi/2)$ gate.\\
 In addition to the plots, I provide a summary table where I report the measured amplitude (or duration) of the microwave pulse, along with the associated uncertainty.
-In each table I include also the standardized difference between the amplitude (or duration) values of the $RX90$ pulse obtained with different methods.
+In each table, we include also the standardized difference between the amplitude (or duration) values of the $RX90$ pulse obtained with different methods.
 The standardized difference is defined as
 \begin{equation}\label{eq:std_difference}
     Z = \frac{v_{RX/2}-v_{RX90}}{\sqrt{\sigma^2_{RX90} + \sigma^2_{RX/2}}},
@@ -70,13 +69,13 @@ A small standardized difference indicates strong agreement within experimental e
 \subsubsection{Rabi amplitude}
 Table \ref{tab:amplitude} reports the results of the Rabi experiments performed to calibrate the amplitude of the pulses associated with the $R_X(\pi)$ and $R_X(\pi/2)$ gates.
 For the $R_X(\pi/2)$ gate, both the amplitude derived by halving the result of the $R_X(\pi)$ calibration and that obtained from a direct calibration are presented for comparison.\\
-The measurements were conducted sequentially: first all the $R_X(\pi)$ gate were calibrated, followed immediately by the $R_X(\pi/2)$ gates. 
+The measurements were conducted sequentially: first all the $R_X(\pi)$ gates were calibrated, followed immediately by the $R_X(\pi/2)$ gates. 
 Apart from the \tt{rx90} boolean parameter, which allows the user to select which gate to calibrate, all other user-configurable parameters in the runcard were kept constant between experiments
 \paragraph{}
 An initial observation from Table \ref{tab:amplitude} is that the standardized difference is always positive. 
 This follows directly from its definition in Equation \ref{eq:std_difference}: the amplitude derived by halving the calibrated $R_X(\pi)$ amplitude is, in all cases, larger than the value obtained through direct calibration of the $R_X(\pi/2)$ gate.
-Moreover, the magnitude of the standardized difference is between $10-10^2$, indicating a significant deviation between the two calibration approaches indicating significant differences between the resuls obtained with the two methods. 
-This suggests that, despite the theoretical expectation of linear scaling between the pulse amplitudes of the $R_X(\pi)$ and $R_X(\pi/2)$ gates, in practice the system exhibits non-ideal behavior likely stemming from hardware nonlinearities or limitations in the pulse shaping mechanism.
+Moreover, the magnitude of the standardized difference is between $10-10^2$, indicating a significant deviation between the two calibration approaches indicating significant differences between the results obtained with the two methods. 
+This suggests that, despite the theoretical expectation of linear scaling between the pulse amplitudes of the $R_X(\pi)$ and $R_X(\pi/2)$ gates, in practice, the system exhibits non-ideal behavior likely stemming from hardware nonlinearities or limitations in the pulse shaping mechanism.
 
 \begin{figure}[h!]
     \centering
@@ -102,9 +101,9 @@ The reason for this is that these measurements were performed after the schedule
 The sequence of measurements mirrored that used for the amplitude calibration: $R_X(\pi)$ was calibrated first, followed by $R_X(\pi/2)$, with all experimental settings kept fixed except for the \tt{rx90} flag.
 An example of the output of the calibration protocol for pulse duration, for both the $R_X(\pi)$ and $R_X(\pi/2)$ gates, is shown in Figures \ref{fig:3} and \ref{fig:3_90}. 
 
-A summary of the quantitative results obtained from these calibration is presented in Table \ref{tab:length}.
+A summary of the quantitative results obtained from these calibrations is presented in Table \ref{tab:length}.
 Again, both the inferred value (obtained by halving the $R_X(\pi)$ duration) and the directly calibrated value for the $R_X(\pi/2)$ gate are shown.\\
-As in the case of the amplitude calibrations, the standardized difference values are generally positive, indicating that the duration obtained by halving the calibrated $R_X(\pi)$ value tends to be higher then the value obtained from the direct $R_X(\pi/2)$ calibration. 
+As in the case of the amplitude calibrations, the standardized difference values are generally positive, indicating that the duration obtained by halving the calibrated $R_X(\pi)$ value tends to be higher than the value obtained from the direct $R_X(\pi/2)$ calibration. 
 The only exception to this trend occurs for qubit \tt{5}, for which the standardized difference is negative.
 However, unlike the amplitude results discussed previously, the absolute values of the standardized difference are closer to unity or below, suggesting that the discrepancy between the two methods is less pronounced.
 This reduction in $|Z|$ can be attributed to two factors: first the smaller absolute difference between the duration values obtained via direct and indirect calibration, and second the larger relative uncertainties associated with the duration estimates compared to those for amplitude.
@@ -129,7 +128,7 @@ These observations indicate a more consistent agreement between direct and indir
 \end{figure}
 
 \subsubsection{Rabi amplitude frequency}
-In Figure \ref{fig:af_comparison} I showthe results of the Rabi amplitude-frequency calibration experiments, which aim to determine the correct amplitude and frequency for either the $R_X(\pi)$ or $R_X(\pi/2)$ gate, with a fixed pulse duration of 40 ns.
+In Figure \ref{fig:af_comparison} I show the results of the Rabi amplitude-frequency calibration experiments, which aim to determine the correct amplitude and frequency for either the $R_X(\pi)$ or $R_X(\pi/2)$ gate, with a fixed pulse duration of 40 ns.
 As in previous cases, the scan ranges for amplitude and frequency were held constant between the two experiments; the only difference was the target gate for calibration.
 
 \begin{figure}[h!]
@@ -171,7 +170,7 @@ For the calibration of the $R_X(\pi)$ gate, the frequency was scanned over a 60 
 The amplitude was scanned in the interval from $0.15$ to $0.35$ with a step of $0.001$.\\
 For the calibration of the $R_X(\pi/)$ gate, the frequency was scanned over a 30 MHz range centered around the qubit frequency, with a step size of 1 MHz. 
 The amplitude was scanned in the interval from $0.04$ to $0.16$ using a step of $0.01$.\\
-The results of these measurements are summarized in Table \ref{tab:af}, and an example of the corresponding interference patterns are shown in Figure \ref{fig:af_qw5q}.
+The results of these measurements are summarized in Table \ref{tab:af}, and an example of the corresponding interference patterns is shown in Figure \ref{fig:af_qw5q}.
 
 As in the previous cases, the standardized difference values are consistently positive, reflecting that the amplitude obtained by halving the value calibrated for the $R_X(\pi)$ gate is always, even though slightly, greater than the one obtained through a direct calibration of the $R_X(\pi/2)$ gate.
 However, n Table \ref{tab:af} it is worth noting that, unlike the results from the other calibration protocols, the magnitude of the standardized difference in this case is consistently less than one. 
@@ -198,7 +197,7 @@ It is important to emphasize, however, that this apparent agreement is largely a
 
 In Figure \ref{fig:RXvsRX90} I show three plots, each comparing the pulse parameters obtained for implementing an $R_X(\pi/2)$ gate using different calibration strategies, across the various qubits for which the $RX90$ calibration was performed.
 
-An interesting observation, previously mentioned but made more evident when examining the plots, is that both the amplitude and duration estimates for the $R_X(\pi/2)$ gate, when obtained by halving the corresponding values calibrated for the $R_X(\pi)$ gate, tend to be slightly overestimated compared to those obtained via direct calibration of the $R_X(\pi/2)$ gate.
+An interesting observation, previously mentioned but made more evident when examining the plots, is that both the amplitude and duration estimates for the $R_X(\pi/2)$ gate when obtained by halving the corresponding values calibrated for the $R_X(\pi)$ gate, tend to be slightly overestimated compared to those obtained via direct calibration of the $R_X(\pi/2)$ gate.
 This discrepancy is particularly evident for measurements conducted on the \tt{qw11q} chip, as also confirmed by the values of the standardized difference reported in Table \ref{tab:amplitude}.
 In contrast, for the \tt{qw5q} chip, the disagreement is noticeably smaller; in particular he standardized difference for amplitude values obtained via the \tt{rabi\_amplitude\_frequency} routine remains below unity in absolute value.
 Nevertheless, it is important to emphasize that these latter amplitude values are also associated with larger relative uncertainties and were obtained using a routine that is not the standard one for precise amplitude calibration, but rather intended to provide a rough estimate of the parameter region to explore.
@@ -294,26 +293,26 @@ Considering both these results and the fact that we wanted to avoid introducing 
 \section{Flux pulse correction}
 
 \subsection{Cryoscope}
-The protocol that I describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to reconstruct the magnetic flux signal that bias the SQUID and then determine predistortions that needs to be applied so that the qubit receives the flux pulse as intended by the experimenter.
+The protocol that I describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to reconstruct the magnetic flux signal that biases the SQUID and then determine predistortions that need to be applied so that the qubit receives the flux pulse as intended by the experimenter.
 
 As explained in section \ref{sec:cQED}, accurate dynamical control of qubit frequency is of key importance to realize single- and two-qubit gates.
-One of the on-chip control variable that is used on QunatumWare chip is the magnteic flux through a SQUID loop, the signal for magnetic flux control originates from an arbitrary waveform genarator (AWG) which operates at room temperature.\\
+One of the on-chip control variables that is used on the QunatumWare chip is the magnetic flux through a SQUID loop, the signal for magnetic flux control originates from an arbitrary waveform generator (AWG) which operates at room temperature.\\
 As the signal propagates through various electrical components along the control line leading to the chip it undergoes linear dynamical distortions. 
-If not properly compensated, these distortions can degrade gate performance, impacting experiments fidelity and repeatability.\\
+If not properly compensated, these distortions can degrade gate performance, impacting experiment fidelity and repeatability.\\
 
 In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by directly measuring the qubit state.
-In this routine we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
+In this routine, we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
 The first $\frac{\pi}{2}$ pulse rotates the qubit of $\frac{\pi}{2}$ around the $y$ axis of the Bloch sphere changing its state from $\ket{0}$ to $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$.
 
 When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\footnote{To send a $\Phi_{Q,\tau}(t)$ flux pulse we are actually sending a $V_{\text{in},\tau}(t)$ DAC pulse} after the first $\frac{\pi}{2}$ pulse, the qubits evolve to the state $\frac{\ket{0}+e^{i\varphi_\tau}\ket{1}}{\sqrt{2}}$ with relative quantum phase 
 \begin{equation}\label{eq:phi}
     \frac{\varphi_{\tau}}{2\pi} = \int_{0}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t = \int_{0}^{\tau} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t + \int_{\tau}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t
 \end{equation}
-where in the second step I separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In \hyperref[app:AppendixB]{Appendix B} I calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
+where in the second step I separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In \hyperref[app:AppendixB]{Appendix B} we calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
 
-The experiment is then completed with a $\frac{\pi}{2}$ rotation aroud the $y$- or $x$-axis of the Bloch sphere to measure respectively the $\langle X \rangle$ or $\langle Y \rangle$ components of the Bloch vector when applying the measurement gate $MZ$. 
+The experiment is then completed with a $\frac{\pi}{2}$ rotation around the $y$- or $x$-axis of the Bloch sphere to measure respectively the $\langle X \rangle$ or $\langle Y \rangle$ components of the Bloch vector when applying the measurement gate $MZ$. 
 From the measurement of $\langle X \rangle$ and $\langle Y \rangle$ we can extract the relative phase $\varphi_{\tau}$.
-For deatiled calculations on how $\langle X \rangle$ and $\langle Y \rangle$ are measured and $\varphi_{\tau}$ extracted see \hyperref[app:AppendixD]{Appendix D}. \\ 
+For detailed calculations on how $\langle X \rangle$ and $\langle Y \rangle$ are measured and $\varphi_{\tau}$ extracted see \hyperref[app:AppendixD]{Appendix D}. \\ 
 
 Then we can estimate $\Phi_Q(t)$ in the interval $[\tau,\tau+\Delta\tau]$ as follows. From the measurement of $\varphi_{\tau + \Delta\tau}$ and $\varphi_\tau$ we can compute $\overline{\Delta f_R}$:
 \begin{align}\label{eq:detuning}
@@ -327,29 +326,29 @@ with \[\varepsilon = \frac{1}{\Delta\tau}\left(\int_{\tau+\Delta\tau}^{T_{sep}}\
 The phase contribution from the turn-off transients is minimal due to the sharp return to the first-order flux-insensitive sweet spot of the nearly quadratic $\Delta f_Q(\Phi_Q)$; 
 numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the range of approximately $10^{-2}$ to $10^{-3}$ for typical dynamical distortions in commonly used electronic components \cite{negligible} \cite{Langford2017}, for this reason it will be neglected.\\
 
-At this point we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting Equation \ref{eq:freqdepndenceonflux}.
+At this point, we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting Equation \ref{eq:freqdepndenceonflux}.
 
-In the following sections I will describe how we used this protocol to reconstruct the voltage to flux step response, and then how to determine and apply pre-distortions corrections to the control waveforms.
+In the following sections I will describe how we used this protocol to reconstruct the voltage-to-flux step response, and then how to determine and apply pre-distortion corrections to the control waveforms.
 
 \subsubsection{Experimental parameters}
 The first step in implementing the cryoscope protocol involves building the appropriate pulse sequence. 
 As described before, the protocol for reconstructing the flux pulse is a Ramsey-like experiment in which a flux pulse of variable duration $\tau$ is embedded between two microwave $\frac{\pi}{2}$ pulses, separated by a fixed delay $T_{sep}$.
 
 In our implementation, we fixed $T_{sep}$ to $100$ ns longer than the maximum duration of the flux pulse; this approach avoids the need for fine timing calibration, as mentioned also in Rol et al \cite{rol_time-domain_2020}.
-The variation in pulse duration $\Delta\tau$ is user-defined and determines the sampling resolution of the time-dependet frequency shift.
+The variation in pulse duration $\Delta\tau$ is user-defined and determines the sampling resolution of the time-dependent frequency shift.
 Specifically, users configure the experiment via a runcard \footnote{In Qibocal, all protocols are deployed through a YAML-based runcard, which allows the user to specify experiment-specific parameters.}
 where they set the minimum (\tt{duration\_min}) and maximum (\tt{duration\_max}) durations of the flux pulse, along with the duration increment (\tt{duration\_step}), which corresponds to the interval $\Delta\tau$ used in Equation \ref{eq:detuning}.
-The lower bound $\Delta\tau$ is constrained by the sempling capabilities of the acquisition hardware.
-For all data and analyses reported in this section, we used the OPX1000 by Quantum Machines \cite{opx1000} as acquisition device. 
+The lower bound $\Delta\tau$ is constrained by the sampling capabilities of the acquisition hardware.
+For all data and analyses reported in this section, we used the OPX1000 by Quantum Machines \cite{opx1000} as an acquisition device. 
 The OPX1000 has a sampling rate of 1 GSample/s, corresponding to a temporal resolution of $1$ ns which sets a lower limit $\Delta\tau \geq 1$ ns for the acquisition.
 
 The amplitude of the flux pulse, specified by the user through the parameter \tt{flux\_pulse\_amplitude}, can also be configured in the runcard. 
 While this parameter is user-defined, it is advisable to select an amplitude that induces a detuning from the qubit's sweet spot comparable to that used in typical flux-pulsed gate operations. 
 This ensures that the measured system response is representative of practical use cases.
-For example it is useful to study the qubit response to a flux pulse which induce a frequency detuning of approximately 1 GHz. 
+For example, it is useful to study the qubit response to a flux pulse which induces a frequency detuning of approximately 1 GHz. 
 This detuning value is commonly employed in high-fidelity entangling gate implementations \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
 
-In the initial analysis conducted to develop the cryoscope routine for the flux pulse, we used a waveform defined as a combination of two step functions. 
+In the initial analysis conducted to develop the cryoscope routine for the flux pulse, we used a waveform defined as a combination of two-step functions. 
 Specifically, the waveform remains at zero for the first $10$ ns, rises to a nominal unit amplitude for the subsequent $50$ ns, and returns to zero for the final $10$ ns.
 The flux pulse amplitude used for this first acquisition and the corresponding preliminary analyses was $0.1$, which, as observed using the \tt{flux\_amplitude\_frequency} routine, induces a detuning of approximately $0.01$ GHz in qubit \tt{D1}. 
 
@@ -357,8 +356,8 @@ Given the relatively small detuning, we decided to perform an additional acquisi
 For this second acquisition, a \tt{flux\_pulse\_amplitude} of $0.5$ was used, corresponding to a detuning of approximately $0.5$ GHz. 
 In this case, the waveform was also modified: a single step pulse of unit amplitude and $90$ ns duration was applied, with no initial or final padding.
 
-In the following I will refer to the two waveforms as waveform\_1 and waveform\_2. 
-The shapes of both waveforms are showin in Figure \ref{fig:ideal_waveform}
+In the following, I will refer to the two waveforms as waveform\_1 and waveform\_2. 
+The shapes of both waveforms are shown in Figure \ref{fig:ideal_waveform}
 
 \begin{figure}[h!]
     \centering    
@@ -379,8 +378,8 @@ The shapes of both waveforms are showin in Figure \ref{fig:ideal_waveform}
 \end{figure}
 
 The decision to perform tests with the second, longer waveform, omitting initial padding, was motivated by practical considerations related to the pulse reconstruction process. 
-In particular, since the qubit's response is only affected during periods when a non-zero flux is applied, the system behavior prior to the pulse onset is less relevant for reconstruction purposes.
-Our primary focus is on characterizing the qubit's dynamics during the flux pulse and, potentially, in the transient period following its termination, in order to assess how long it takes for the qubit to return to its idle frequency after the pulse is switched off
+In particular, since the qubit's response is only affected during periods when a non-zero flux is applied, the system behavior before the pulse onset is less relevant for reconstruction purposes.
+Our primary focus is on characterizing the qubit's dynamics during the flux pulse and, potentially, in the transient period following its termination, to assess how long it takes for the qubit to return to its idle frequency after the pulse is switched off
 \footnote{Although we did not focus on this aspect, this is relevant in practical applications, as it allows for shorter idle times between pulses and thus enables a higher number of gate operations within a given time window.}.
 All experimental results and analyses presented herein are based on data acquired from qubit \tt{D1} of chip \tt{qw11q} unless differently specified.
 
@@ -405,7 +404,7 @@ To do this, we use the following relations:
 where $p^X_1(t)$ and $p^Y_1(t)$ denote the measured probabilities of finding the qubit in state $\ket{1}$ from the $\langle X \rangle$ and $\langle Y \rangle$ measurements, respectively.
 The derivations of these relations is reported in \hyperref[app:AppendixD]{Appendix D}.
 
-Once the charachteristic oscillation frequency has been estimated, we demodulate the signal by this frequency: $s_{\text{demod}}(t) = e^{2\pi i f_{\text{demod}} t} \cdot s(t)$
+Once the characteristic oscillation frequency has been estimated, we demodulate the signal by this frequency: $s_{\text{demod}}(t) = e^{2\pi i f_{\text{demod}} t} \cdot s(t)$
 This operation shifts the signal's frequency content to near-zero removing the fast oscillations and leaving only the slower variations in phase.
 
 This step is important because the raw signal may oscillate rapidly, making it difficult to directly extract the underlying phase dynamics. 
@@ -445,9 +444,9 @@ Without this preprocessing, the dominant carrier frequency could overshadow the 
     \label{fig:demodulation}
 \end{figure}
 
-By comparing Figure \ref{fig:no_demodulation:step} and Figure \ref{fig:demodulation:step}, the first observation we can do is that the reconstructed qubit phase begins to vary immediately after $t=10$ ns, while remaining essentially constant up to $t=9$ ns. 
-This seems to suggests that, at least within this time window, the flux pulse onset and the resulting qubit frequency shift happens quickly, with no evident latency.
-One possible explanation for the fast response observed at low flux amplitude $A = 0.1$, is that the flux pulse reach its nominal value rapidly, making the expected exponential rise in frequency shift too fast to be resolved. 
+By comparing Figure \ref{fig:no_demodulation:step} and Figure \ref{fig:demodulation:step}, the first observation we can make is that the reconstructed qubit phase begins to vary immediately after $t=10$ ns, while remaining essentially constant up to $t=9$ ns. 
+This seems to suggest that, at least within this time window, the flux pulse onset and the resulting qubit frequency shift happen quickly, with no evident latency.
+One possible explanation for the fast response observed at low flux amplitude $A = 0.1$, is that the flux pulse reaches its nominal value rapidly, making the expected exponential rise in frequency shift too fast to be resolved. 
 Additionally, the small amplitude induces a weak detuning, leading to slow phase accumulation that may be more susceptible to background noise, potentially obscuring the signal.
 
 A second observation is that the demodulated signal in Figure \ref{fig:demodulation:step} appears to exhibit increased phase oscillations compared to the non-demodulated case, potentially giving the impression that demodulation degrades the phase signal quality. 
@@ -464,14 +463,13 @@ After reconstructing the phase signal from the demodulated complex data, we can 
 As explained at the beginning of this Section, the rate at which the phase accumulates corresponds to the detuning (see Equation \ref{eq:detuning}). 
 
 \paragraph{Savitzky-Golay filter}
-To perform this differentiation in a way that reduces the impact of noise, we used a Savitzky-Golay filter che funziona by fitting a polynomial to small chunks of data along the time axis.
-In this work we used the \tt{scipy.signal} implementation of the signal with the default settings where possible. 
+To perform this differentiation in a way that reduces the impact of noise, we used a Savitzky-Golay filter, which operates by fitting a polynomial to small segments of the data along the time axis. In this work, we used the \tt{scipy.signal} implementation of the signal with the default settings where possible. 
 In particular, the filter runs in \tt{'interp'} mode, which doesn't pad or extend the signal at the edges; instead, it fits a polynomial to the last few data points and uses that to estimate the values near the boundaries.
 
 For our analysis, we use a polynomial order of 2 and explore how different values of \tt{window\_length} affect the final detuning signal. 
 The choice of \tt{window\_length} is particularly important because the Savitzky-Golay filter effectively acts similarly to a moving average. 
 This has some relevant consequences. First, if the window is too small, the filter does not average over enough points to effectively suppress high-frequency noise, making the derivative signal noisier. 
-On the other hand, if the window is too large, it can oversmooth the signal and distort fast transitions. 
+On the other hand, if the window is too large, it can over-smooth the signal and distort fast transitions. 
 If the window is too large, the filter may incorporate data from the initial flat region into the fit, which can artificially stretch the signal's rising edge or introduce distortions at the boundaries. 
 This can give the impression of a slower onset of the phase response than what is physically accurate, and such edge effects are particularly noticeable when the signal includes an initial segment of zero flux.
 
@@ -511,7 +509,7 @@ The effect of different \tt{window\_length} values on the reconstructed detuning
 
 This tuning is especially important because the detuning is obtained by differentiating the phase signal, which amplifies any residual oscillations or imperfections. 
 This issue becomes evident in the acquisition performed with \tt{waveform\_1} at an amplitude of $0.1$, where the flux pulse is preceded by $10$ ns of zero signal. 
-In this case, two non-physical responses appears in the signal: first, the detuning appears to evolve even before the flux pulse is applied, giving the impression of a non-causal response; second, an exponential rise is observed in the reconstructed detuning that is not actually present in the qubit phase signal. 
+In this case, two non-physical responses appear in the signal: first, the detuning appears to evolve even before the flux pulse is applied, giving the impression of a non-causal response; second, an exponential rise is observed in the reconstructed detuning that is not actually present in the qubit phase signal. 
 These spurious effects are largely absent when the acquisition window is extended and the signal starts immediately with the pulse, but we nonetheless explored how different values of \tt{window\_length} affect the final result.
 
 In particular, we tested values of \tt{window\_length} corresponding to a range between $3$ and $10$. 
@@ -581,7 +579,7 @@ The goal of these filters is to compensate for the linear-dynamical distortions 
 
 In practice, the Cryoscope protocol allows us to extract the appropriate feedforward and feedback coefficients that define these filters. 
 In the \Qibo setup these coefficients are stored in the platform configuration file (parameters.json) and, once the setup is updated using the \tt{qq update} command, the filters are automatically applied to every flux pulse. 
-Since this correction is handled directly by the control hardware, it effectively acts in real time.
+Since this correction is handled directly by the control hardware, it effectively acts in real-time.
 
 \subsubsection{IIR corrections}
 
@@ -595,7 +593,7 @@ where $x[n]$ is the input signal, $y[n]$ is the output signal, $b_i$ are the fee
 This recursive structure allows IIR filters to approximate systems with exponential or resonant dynamics, which makes them especially suitable for correcting physical distortions like exponential overshoot or undershoot.
 
 Indeed, the first step in our signal correction procedure is to characterize and compensate for the exponential overshoot or undershoot observed in the system's step response. 
-These distortions can be interpreted as resulting from the system's impulse response $h(t)$ which, when convolved with an ideal step input $V_{in}(t) = V_0\cdot u(t)$, produces the measured output:
+These distortions can be interpreted as resulting from the system's impulse response $h(t)$ which when convolved with an ideal step input $V_{in}(t) = V_0\cdot u(t)$, produces the measured output:
 \begin{equation}
     s(t) = (h \ast V_{in})(t),
 \end{equation}
@@ -613,7 +611,7 @@ This is done by modeling the observed step response with an inverted exponential
 s_{\text{corr}}(t) = \frac{s(t)}{g(1 - Ae^{-t/\tau})},
 \end{equation}
 where $s(t)$ is the measured response. 
-The parameters $g, A$ and $\tau$  are estimated by performing a least-squares minimization. 
+The parameters $g, A$, and $\tau$  are estimated by performing a least-squares minimization. 
 Specifically, we minimize the squared difference between the corrected signal $s_{\text{corr}}(t)$ and the ideal target signal using \tt{least\_squares} method of the \tt{scipy.optimize} library.
 
 Figures \ref{fig:inverse_short} and \ref{fig:inverse:long} show the results of applying the exponential filters, obtained through the procedure described above, to different flux pulses.
@@ -629,7 +627,7 @@ Figures \ref{fig:inverse_short} and \ref{fig:inverse:long} show the results of a
     \hfill
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/inverse_no_pad.png}
-        \caption{Comparison between the ideal, reconstructed response and corrected flux pulse for the step signal without the padding.}
+        \caption{Comparison between the ideal, reconstructed response, and corrected flux pulse for the step signal without the padding.}
         \label{fig:inverse:no_pad}
     \end{subfigure}
     \caption{Comparisons between the ideal flux pulse (blue), the reconstructed flux pulse (dark green), flux pulse after the application of the correction (light green) for different pulse shapes.
@@ -656,24 +654,24 @@ This results in an SNR of 794 for the uncorrected signal, which increases to 191
 However, particularly in Figure \ref{fig:inverse:long}, it seems that the filter does not fully eliminate the overshoot. 
 A possible explanation for this behavior is that the apparent exponential overshoot may originate from imperfect signal normalization, rather than from an actual residual distortion.
 \paragraph{}
-After verifying the effectiveness of a single exponential filter, we tryied to use a combination of more exponentials to correct flux distortions occurring over time scales ranging from $30$ to $200$ ns, as was suggested in the original work by Rol et al. 
+After verifying the effectiveness of a single exponential filter, we tried to use a combination of more exponentials to correct flux distortions occurring over time scales ranging from $30$ to $200$ ns, as was suggested in the original work by Rol et al. 
 Based on this, we tested the application of multiple exponential corrections of the form given in Equation \ref{eq:inverse}.
 
 \begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/step_5_inverse.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a step signal.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse with different numbers of exponential corrections for a step signal.}
         \label{fig:5inverse:step}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/inverse_5_no_pad.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse with different number of exponential corrections for a step signal without the initial padding.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse with different numbers of exponential corrections for a step signal without the initial padding.}
         \label{fig:5inverse:no_pad}
     \end{subfigure}
     
-    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green) and the flux pulse after the application of a different number of exponential filters for different pulse shapes.
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), and the flux pulse after the application of a different number of exponential filters for different pulse shapes.
     The correction was applied iteratively, with each step using an exponential function of the form given in Equation \eqref{eq:inverse}.}
     \label{fig:5inverse_short}
 \end{figure}
@@ -681,30 +679,30 @@ Based on this, we tested the application of multiple exponential corrections of 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{figures/png/Cryoscope/filters_long/5_inverse.png}
-    \caption{Plot of the ideal flux pulse (blue), reconstructed response (dark green) and corrected pulse with different number of exponential corrections for a rectangular pulse with no padding.}
+    \caption{Plot of the ideal flux pulse (blue), reconstructed response (dark green), and corrected pulse with different numbers of exponential corrections for a rectangular pulse with no padding.}
     \label{fig:5inverse:long}
 \end{figure} 
 
 As shown in Figure \ref{fig:5inverse_short}, the application of successive exponential corrections yields a modest improvement in the reconstructed signal, particularly for the acquisition performed with waveform\_1.
-In questo caso infatti la SNR che si ottiene ad ogni iterazione per il segnale mostrato in Figure \ref{fig:5inverse:no_pad} è rispettivamente 1108, 1108, 1109, 1506, 1676.
+In this case, the SNR obtained at each iteration for the signal shown in Figure \ref{fig:5inverse:no_pad} is, respectively, 1108, 1108, 1109, 1506, and 1676.
 In contrast, for the second acquisition, the application of additional exponential filters does not produce a significant enhancement.
 After the first correction, the SNR increases from 794 to 19176, as previously noted, but remains essentially unchanged with further iterations.
 This difference is likely due to the distinct experimental conditions of the two acquisitions. 
-In the first case, the reconstruction of signal acquired with a \tt{flux\_pulse\_amplitude} of $0.1$ exhibits a more pronounced distortion, which the filters compensate for. 
+In the first case, the reconstruction of the signal acquired with a \tt{flux\_pulse\_amplitude} of $0.1$ exhibits a more pronounced distortion, which the filters compensate for. 
 On the other hand, in the second case, the reconstructed signal already appears much less distorted, reducing the benefit of using more than one exponential correction.
 
-Before presenting the remaining results and continuing with the description of the procedure, è utile fare la seguente considerazione.
+Before presenting the remaining results and continuing with the description of the procedure, it is useful to make the following observation.
 The tests on filter performance and the determination of corresponding taps using \tt{waveform\_1} primarily serve as a means to evaluate the effectiveness and limitations of the correction method. 
 In this case, the exponential rise corrected by the filters does not reflect a physical property of the system, but rather an artifact introduced by the smoothing behavior of the Savitzky-Golay filter.
 
 To obtain correction taps that address real physical distortions in the flux line, it is necessary to use acquisitions based on \tt{waveform\_2}, which has therefore been selected as the default waveform for the cryoscope protocol. 
 This choice ensures a more accurate reconstruction of the system response by avoiding non-physical effects due to pre-pulse padding.
 
-Consequently, in the analyses that follow, I focus exclusively on the non-zero portion of the flux signal. 
+Consequently, in the analyses that follow, we decided to focus exclusively on the non-zero portion of the flux signal. 
 Even for the initial acquisitions that include a flat pre-pulse region, this segment has been excluded to ensure that the tests performed with the filters are more meaningful.
 
-At this stage, the parameters for the exponential corrections have been determined. However, to apply these corrections in real time, they must be discretized and implemented as digital filters within the qubit control electronics. 
-Accordingly, the fitted parameters are used to calculate the coefficients of a first-order IIR filter as follow:
+At this stage, the parameters for the exponential corrections have been determined. However, to apply these corrections in real-time, they must be discretized and implemented as digital filters within the qubit control electronics. 
+Accordingly, the fitted parameters are used to calculate the coefficients of a first-order IIR filter as follows:
 \begin{align}
     a_0 &= 1, \\
     a_1 &= -(1 - \alpha), \\
@@ -727,20 +725,20 @@ with $f_S$ being the sampling frequency of the digital hardware.
 Since this is an approximation of the exponential response, we expect the quality of the correction to be somewhat reduced compared to what is achieved by applying the continuous exponential filter.
 
 To predict the effect of applying the real-time predistortion filters, we use the \tt{lfilter} function from the \tt{SciPy} library. 
-The functions takes three vectors as input: \tt{lfilter(a,b,sig)} and applies the filter defined by the coefficient vectors \tt{b} and \tt{a} to the signal represented by the vector \tt{sig}. 
+The function takes three vectors as input: \tt{lfilter(a,b,sig)} and applies the filter defined by the coefficient vectors \tt{b} and \tt{a} to the signal represented by the vector \tt{sig}. 
 The results of applying these IIR filters as discrete digital filters are shown in Figure \ref{fig:IIR}.
 
 \begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/IIR_nopad.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
         \label{fig:IIR:nopad}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/IIR.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
         \label{fig:IIR:long}
     \end{subfigure}
     \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the discrete IIR corrections (light green) for different flux pulses.}
@@ -776,16 +774,16 @@ Both sets of filtered signals were obtained using the \tt{lfilter} function from
     \centering
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters/all_filters_no_pad.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
         \label{fig:FIR:nopad}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/filters_long/IIR_FIR.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
         \label{fig:FIR:long}
     \end{subfigure}
-    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the discrete IIR corrections (green) and both IIR and FIR corrections (light green) for different flux pulses.}
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), the flux pulse after the application of the discrete IIR corrections (green), and both IIR and FIR corrections (light green) for different flux pulses.}
     \label{fig:FIR}
 \end{figure}
 
@@ -796,7 +794,7 @@ However, the results show that even where the FIR filters should adjust the sign
 A second important consideration concerns the correction strategy. 
 When the number of parameters optimized equals the number of FIR filter coefficients, and this coincides with the number of signal samples, there is effectively a one-to-one mapping between optimized parameters, filter coefficients, and signal points. 
 This means that the optimization is essentially adjusting the signal point-by-point to match the desired target values. 
-Although this procedure yields a close fit to the reference signal, its practical utility is limited, particularly because the signal used for optimization is pre-recorded rather than acquired in real time. 
+Although this procedure yields a close fit to the reference signal, its practical utility is limited, particularly because the signal used for optimization is pre-recorded rather than acquired in real-time. 
 As a result, future signals may exhibit different features, reducing the generalizability of the resulting filter.
 
 To improve robustness, it is preferable to reduce the number of free parameters in the optimization.
@@ -813,16 +811,16 @@ The results of this improved optimization are shown in Figure \ref{fig:nice}.
     \centering
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/step_nice.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse for a step signal without the initial padding and a $0.1$ flux pulse amplitude.}
         \label{fig:nice:nopad}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/Cryoscope/long_nice.png}
-        \caption{Plot of the ideal, reconstructed and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
+        \caption{Plot of the ideal, reconstructed, and corrected pulse for a rectangular pulse with no padding and a $0.5$ flux pulse amplitude.}
         \label{fig:nice:long}
     \end{subfigure}
-    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), flux pulse after the application of the discrete IIR corrections (green) and both IIR and FIR corrections (light green) for different flux pulses.}
+    \caption{Comparisons between the ideal flux pulse (blue), the actual flux pulse (dark green), the flux pulse after the application of the discrete IIR corrections (green), and both IIR and FIR corrections (light green) for different flux pulses.}
     \label{fig:nice}
 \end{figure}
 
@@ -848,16 +846,16 @@ Indeed, we can consider the input signal $x$ to which we apply a first IIR filte
     y[n] = \sum_{m=1}^{M} a[m]y[n-m] + \sum_{k=0}^{N} b[k] x[n-k].
 \end{equation}
 
-If I apply a second IIR filter to the $y$ signal I obtain a $z$ signal as output, that can be written as 
+If we apply a second IIR filter to the $y$ signal we obtain a $z$ signal as output, that can be written as 
 \begin{equation}\label{eq:z_signal}
     z[n] = \sum_{m=1}^{M} a'[m]z[n-m] + \sum_{k=0}^{N} b'[k] y[n-k].
 \end{equation}
 
-Now I consider Equation \ref{eq:y_signal} and rewrite it as
+Now we consider Equation \ref{eq:y_signal} and rewrite it as
 \begin{equation}\label{eq:y_signal1}
     y[n] - \sum_{m=1}^{M} a[m]y[n-m] = \sum_{k=0}^{N} b[k] x[n-k],
 \end{equation} 
-then by applying a Z-transform we obtain
+then by applying a Z-transform, we obtain
 \begin{equation}\label{eq:y_signal_transform}
     Y(z)\left(1 - \sum_{m=1}^{M} a[m] z^{-m} \right) = X(z) \left( \sum_{k=0}^{N} b[k] z^{-k} \right)
 \end{equation}
@@ -886,7 +884,7 @@ From the transfer function we can obtain the expression for $Z(z)$ in terms of $
     & \rightarrow Z(z) \left(1 - \sum_{m=1}^{M} a'[m] z^{-m} \right) \left(1 - \sum_{m=1}^{M} a[m] z^{-m} \right) = \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) X(z) \\
     & \rightarrow Z(z) \left( \sum_{m=0}^{M} a'[m] z^{-m} \right) \left( \sum_{m=0}^{M} a[m] z^{-m} \right) = \left( \sum_{k=0}^{N} b'[k] z^{-k} \right) \left( \sum_{k=0}^{N} b[k] z^{-k} \right) X(z) \label{eq:Zz}
 \end{align}
-where in the last step  ho assorbito l'1 in the sum come coeffiente $a_0$. By expanding the products we obtain
+where in the last step, the term 1 has been absorbed into the summation as the coefficient $a_0$. By expanding the products, we obtain:
 \begin{align}
     & \left( \sum_{m=0}^{M} a'[m] \right) \left( \sum_{m=0}^{M} a[m] \right) = \sum_{m=0}^{2M}\sum_{i=0}^{m} a'[i] a[m - i] = c[k], \quad\quad \text{with}\quad m = 0, \dots, 2M, \label{eq:ck} \\
     & \left( \sum_{k=0}^{N} b'[k] \right) \left( \sum_{k=0}^{N} b[k] \right) = \sum_{k=0}^{2N} \sum_{i=0}^{k} b[i] b[k-i] = d[k], \quad\quad \text{with}\quad k = 0, \dots, 2N. \label{eq:dk}
@@ -923,7 +921,7 @@ Figure \ref{fig:cryoscope:B3} shows the result of the cryoscope routine executed
 As previously discussed, the application of a single IIR filter is sufficient to correct the exponential rise in the step response. 
 However, on longer timescales, residual oscillations remain that are not addressed by either the IIR or FIR filters.
 
-While we could attempt to mitigate these effects by combining multiple IIR and FIR filters, the remaining signal distortions appear to be oscillatory in nature and are likely due to ringing phenomena, transient oscillations that typically arise from impedance mismatches or resonant components in the control line.
+While we could attempt to mitigate these effects by combining multiple IIR and FIR filters, the remaining signal distortions appear to be oscillatory in nature and are likely due to ringing phenomena, transient oscillations that typically arise from impedance mismatches, or resonant components in the control line.
 These ringing effects are particularly evident in the acquisitions shown in Figure \ref{fig:cryoscope:B2} and \ref{fig:cryoscope:B4}, and persist even after the application of corrective filtering, as confirmed by the reconstructed flux pulses displayed in Figures \ref{fig:flux:B2} and \ref{fig:flux:B4}.
 These plots show the reconstructed flux pulse when the digital filters determined with the cryoscope routine are applied, we can see that the oscillations decay in amplitude over time and appear to vanish after approximately 75ns. 
 
@@ -966,16 +964,17 @@ For example, we can consider the pulse sequence used to calibrate the iSWAP gate
 The initial $\pi$ pulse brings the qubit into the state $\ket{1}$, while the flux pulse detunes its frequency near resonance with the second qubit. 
 
 The iSWAP gate exploits the coherent exchange of excitations between two capacitively coupled qubits by tuning them into resonance via a flux pulse. 
-When brought into resonance, the computational basis states $\ket{10}$ and $\ket{01}$ become energetically near-degenerate and interact via the coupling, resulting in a level repulsion charachteristic of an avoided crossing.
+When brought into resonance, the computational basis states $\ket{10}$ and $\ket{01}$ become energetically near-degenerate and interact via the coupling, resulting in a level repulsion characteristic of an avoided crossing.
 In this regime the population oscillates between the two states with a frequency determined by the coupling strength $g$; the expected population oscillation pattern follows:
 \begin{equation}
     p_e(t, \Delta) = \frac{\Delta^2}{\Delta^2 + 4g^2} + \frac{4g^2}{\Delta^2 + 4g^2} \cos^2\left(\frac{\sqrt{\Delta^2 + 4g^2}}{2}t\right)
 \end{equation}
-where $\Delta = \omega_1 - \omega_2$, and $g$ is the coupling constant for the two qubits. This probability distribution descrive esattamente quello che in letteratura è noto come chevron pattern.
-In \Qibocal la routine è utilizzata per calibrare two qubits gate perchè per esempio, By adjusting the duration $t$ of the flux pulse such that $t=\pi/2g$, the system performs a full excitation exchange, implementing an iSWAP gate up to local phase corrections.
-Se anzichè calibrare l'iSWAP volessimo calibrare una CZ the pulse sequence will be the same except for the addition of an initial $\pi$ pulse applied to the qubit with the lower frequency so that both qubits are initially prepared in the $\ket{1}$ state.
+where $\Delta = \omega_1 - \omega_2$ is the detuning between the two qubits, and $g$ is the coupling constant. This probability distribution precisely describes what is commonly referred to in the literature as the chevron pattern.
 
-The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}, the figure is meant to give a qualitative idea of how the chevron plot should look like, the scale is different from the real system.
+In \texttt{Qibocal}, this routine is used to calibrate native two-qubit gates. For instance, by adjusting the duration $t$ of the flux pulse such that $t = \pi/2g$ the system undergoes a complete excitation exchange, effectively implementing an iSWAP gate up to local phase corrections.  
+If, instead, the goal is to calibrate a CZ gate, the pulse sequence remains the same, with the only difference being the inclusion of an initial $\pi$-pulse applied to the lower-frequency qubit. This ensures that both qubits are initially prepared in the $\ket{1}$ state.
+
+The ideal chevron pattern is shown in Figure \ref{fig:expected_chevron}, the figure is meant to give a qualitative idea of how the chevron plot should look like, the scale is different from the real system.
 
 \begin{figure}[h!]
     \centering
@@ -986,7 +985,7 @@ The ideal chevron pattern is shown Figure \ref{fig:expected_chevron}, the figure
 
 \newpage
 \newgeometry{a4paper, top=2.5cm, bottom=2.5cm, inner=2cm, outer=2cm, heightrounded}
-In Figure \ref{fig:B1B3_nofilter} and Figure \ref{fig:B2B4_nofilter} I show the actual chevron pattern obtained from the calibration of a CZ gate on our hardware without applying any digital filter.
+Figure \ref{fig:B1B3_nofilter} and Figure \ref{fig:B2B4_nofilter} show the actual chevron pattern obtained from the calibration of a CZ gate on our hardware without applying any digital filter.
 
 \begin{figure}[h!]
     \centering

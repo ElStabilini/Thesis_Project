@@ -12,7 +12,7 @@ The physical realization of quantum computing necessitates the development of a 
 Similarly to classical logic, where the bits 0 and 1 are associated with two physical levels, typically represented by high and low voltage states, a qubit can, to a first approximation, be considered as a two-level physical system.
 
 Mathematically, this system is described with a two-dimensional complex Hilbert space, where the basis states $\ket{0}$ and $\ket{1}$ correspond to two orthonormal vectors.
-Any general state of the qubit can be expressed as a superporition of these basis states:
+Any general state of the qubit can be expressed as a superposition of these basis states:
 \begin{equation}\label{eq:qubit}
     \ket{\psi} = \alpha\ket{0} + \beta\ket{1} \rightarrow \begin{pmatrix} 
         \alpha \\ 
@@ -23,7 +23,7 @@ where $\alpha,\beta\in \mathbb{C}$. If the normalization condition $|\alpha|^2 +
 The basis $\{\ket{0},\ket{1}\}$ is called computational basis and the information is stored in the complex numbers $\alpha$ and $\beta$.
 
 \paragraph{}
-A possible geometric representation of qubit states is given by the Bloch sphere, which offers a visualization of two level quantum systems as vectors on a unit sphere.  
+A possible geometric representation of qubit states is given by the Bloch sphere, which offers a visualization of two-level quantum systems as vectors on a unit sphere.  
 A qubit state is depicted as a vector originating from the center of the sphere, with the computational basis states $\ket{0}$ and $\ket{1}$ positioned at the north and south poles, respectively.
 The axis connecting these states defines the $z$-axis. The transverse $x$- and $y$- axes correspond to the equal superposition states $\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$ and $\ket{\pm i} = \frac{1}{\sqrt{2}}(\ket{0}\pm i\ket{1})$, respectively.\\
 A vector of unit length on the Blooch sphere is characterized by the polar angle $\theta$, with $0\leq\theta\leq\pi$ and the azimuthal angle $\varphi$, with $0\leq\varphi\leq 2\pi$, each unit vector represent a possible pure state of the qubit.\\
@@ -70,10 +70,10 @@ Qubits can be implemented through various physical mechanisms; however, their pr
 Despite the diversity of possible physical implementations, any functional quantum computing system must satisfy a set of fundamental criteria. 
 These requirements, known as the DiVincenzo criteria, establish the essential conditions for the construction and operation of a viable quantum computer \cite{DiVincenzo_2000}, \cite{manenti_quantum_2023}:
 \begin{enumerate}
-    \item The physical system used as quantum computer must comprise a set of qubits, meaning that the quantum system must be well-characterized, and scalable such that quantum
+    \item The physical system used as a quantum computer must comprise a set of qubits, meaning that the quantum system must be well-characterized, and scalable such that quantum
     computing can be realized.
     \item It must be possible to initialize the qubits in a reliable state, such as the ground state.
-    \item The coherence time of the qubits must be longer than the typical gate time, ideally should be possible to perform $>10^4$ operations, that is the number which allows for realizing effective error corrections.
+    \item The coherence time of the qubits must be longer than the typical gate time, ideally should be possible to perform $>10^4$ operations, which is the number that allows for realizing effective error corrections.
     \item It must be possible to implement a universal set of quantum gates.
     \item It must be possible to measure the qubits in the computational basis.
 \end{enumerate}
@@ -86,8 +86,8 @@ In this section, I provide a review of the structure and operation of supercondu
 The content of this section is based on the \textit{Quantum Information Science} manual \cite{manenti_quantum_2023}, \textit{The Metrology of Quantum Control and Measurement in Superconducting Qubits} \cite{Chen2018}, the notes from quantum computing lectures held by Professor Olivares \cite{Olivares2021}, and the original transmon paper \cite{TransmonPaper}.
 
 \subsection{Josephson Junctions}
-The Josephson junction (JJ) is formed by a thin oxide layer positioned between the two superconductors which acts as an insulating barriers. 
-An example of Josephson junction is show in figure \ref{fig:JJ}, a side view in image \ref{fig:JJ_side} and a top view in image \ref{fig:JJ_top}.
+The Josephson junction (JJ) is formed by a thin oxide layer positioned between the two superconductors which acts as an insulating barrier. 
+An example of Josephson junction is shown in figure \ref{fig:JJ}, a side view in image \ref{fig:JJ_side} and a top view in image \ref{fig:JJ_top}.
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}{0.45\textwidth}
@@ -103,7 +103,7 @@ An example of Josephson junction is show in figure \ref{fig:JJ}, a side view in 
         \subcaption{}
         \label{fig:JJ_top}
     \end{subfigure}
-    \caption{Figure \ref{fig:JJ_side}: Side viwe of a Josephson junction, the two superconducting pads are coloured in red and blue and indicating by the letter S. In grey, indicated by letter I is represented the insulating barrier of oxide. 
+    \caption{Figure \ref{fig:JJ_side}: Side view of a Josephson junction, the two superconducting pads are colored in red and blue and indicated by the letter S. In grey, indicated with the letter I, is the insulating barrier of oxide. 
     The superconductors and the oxide are layered over a substrate.\\
     Figure \ref{fig:JJ_top}: Electron microscope image of a $2 \mu\text{m} \cross 2 \mu\text{m}$ cross-type junction: I. Josephson junction. II. Base electrode. III. Contact to the top electrode.\\
     Source:\url{https://www.ims.kit.edu/english/2551.php}}
@@ -112,13 +112,13 @@ An example of Josephson junction is show in figure \ref{fig:JJ}, a side view in 
 
 Superconductivity is a phenomenon observed in certain materials where, when cooled well below a critical temperature $T_c$, which depends on the material, their electrical resistance drops to zero, allowing them to behave as perfect conductors.
 According to the BCS (Bardeen-Cooper-Schrieffer) theory, superconductivity arises, from the formation of Cooper pairs, which are bound states of electrons with opposite momenta and spins.
-These pairs collectively forms a macroscopic quantum states described by a single waveform $\psi(\mathbf{r})$ which can be expressed as 
+These pairs collectively form a macroscopic quantum state described by a single waveform $\psi(\mathbf{r})$ which can be expressed as 
 \begin{equation}\label{eq:BCSequation}
     \psi(\mathbf{r}) = \sqrt{\rho(\mathbf{r})}e^{i\theta(\mathbf{r})},
 \end{equation}
-where $\rho(\mathbf{r})$ is the density of Cooper pairs in the metal, which is typically uniform in the bulk of the superconductor, and $\theta(\mathbf{r})$ is the macroscopic phase of the superconducting wavfunction.
+where $\rho(\mathbf{r})$ is the density of Cooper pairs in the metal, which is typically uniform in the bulk of the superconductor, and $\theta(\mathbf{r})$ is the macroscopic phase of the superconducting wavefunction.
 
-For this reason the wavefunctions on the two sides of the JJ can be denoted as
+For this reason, the wavefunctions on the two sides of the JJ can be denoted as
 \begin{equation}\label{eq:JosephsonWavefunctions}
     \psi_1(\mathbf{r}, t) = \sqrt{\rho_1(\mathbf{r}, t)} e^{i\theta_1(\mathbf{r},t)}, \quad \psi_2(\mathbf{r}, t) = \sqrt{\rho_2(\mathbf{r}, t)} e^{i\theta_2(\mathbf{r},t)}.
 \end{equation}
@@ -137,7 +137,7 @@ By substituting the expression of $\psi_i$ into the Schr\"odinger equation \ref{
     \frac{d\rho_2}{dt} = -\frac{2K}{\hbar} \sqrt{\rho_1 \rho_2} \sin(\theta_2 - \theta_1).
 \end{equation}
 
-Since the derivative of the charge density is the current, from equations \ref{eq:schr-sub1} and \ref{eq:schr-sub2} we obtain the first Josephson equation
+Since the derivative of the charge density is current, from equations \ref{eq:schr-sub1} and \ref{eq:schr-sub2} we obtain the first Josephson equation
 \begin{equation}\label{eq:Josephson1}
     I=I_c\sin{\phi},
 \end{equation} 
@@ -162,7 +162,7 @@ Using the Josephson voltage-phase relation and the fact that $\dot{I}=\frac{V}{L
     L_J = \frac{1}{\cos{\phi}}\frac{\Phi_0}{2\pi I_c}.
 \end{equation} 
 
-In addition to ths inductive behaviour the Josephson junction also exibits capacitive properties due to its inherent capacitance $C_J$ with a corresponing energy of 
+In addition to the inductive behavior the Josephson junction also exhibits capacitive properties due to its inherent capacitance $C_J$ with a corresponding energy of 
 \begin{equation}\label{eq:capacitive_energy}
     E_{C_J} = \frac{Q^2}{2C_J},
 \end{equation}.
@@ -172,12 +172,12 @@ Fom equation \ref{eq:LJ} it is possible to compute the energy stored in the nonl
     E_{L_J} &= \int_{0}^{t}\text{d}\tau I_J(\tau)V(\tau) = \int_{0}^{t}\text{d}\tau I_c\sin{\phi(\tau)}\frac{\partial\phi(\tau)}{\partial\tau}\frac{\Phi_0}{2\pi}\\
     &= \frac{\Phi_0 I_c}{2\pi}(1-\cos{\phi}) = E_J(1-\cos{\phi}),
 \end{align}
-where $E_J$ represents the energy due to the behaviour of the junction as nonlinear inductor .
+where $E_J$ represents the energy due to the behavior of the junction as a nonlinear inductor.
 
 \subsection{CPB qubit}
 
 A first example of superconducting qubit is the Cooper Pair Box (CPB), which consists of a small superconducting island connected to a reservoir of superconducting electrons through a Josephson junction \cite{Vion2002}, with an external gate voltage controlling the charge state.
-The circuit corresponding to CPB is similar to the circuit of a parallel resonator where the linear inductance is subsituted by a Josephson junction which simply acts as a nonlinear inductance.
+The circuit corresponding to CPB is similar to the circuit of a parallel resonator where the linear inductance is substituted by a Josephson junction which simply acts as a nonlinear inductance.
 
 Combining the energy associated to the capacitance $C$ and the energy of the Josephson junction \ref{eq:inductive_energy} it is possible to write the classical Hamiltonian of the circuit
 \begin{equation}\label{eq:CPB_hamiltonian}
@@ -206,7 +206,7 @@ where the constant term was ignored as it acts simply as a constant offset witho
     \label{fig:CPB_general}
 \end{figure}
 
-To control the number of Cooper pairs on the island, it is possible to connecnt a DC voltage source $V_g$ to the system through a gate capacitor $C_g$, as shown in Figure \ref{fig:CPB_circuit}.
+To control the number of Cooper pairs on the island, it is possible to connect a DC voltage source $V_g$ to the system through a gate capacitor $C_g$, as shown in Figure \ref{fig:CPB_circuit}.
 When $V_g = 0$, both the gate and qubit capacitors remain uncharged. 
 As $V_g$ increases, a charge $Q_g = C_g V_g$ accumulates on the gate capacitor, inducing an equal and opposite charge on the island to maintain charge neutrality. 
 When $Q_g \approx 2e$, a Cooper pair tunnels from the reservoir to the island, discharging the qubit capacitor. \\
@@ -228,9 +228,9 @@ This anharmonicity enables the use of the subspace spanned by the ground state $
 The qubit frequency is defined as the frequency associated with the energy difference between these two states: $f_{01}(n_g) = f_q = \frac{(E_1 - E_0)}{h}$.
 This frequency can be tuned by varying the externally applied DC voltage, which modifies the system’s parameters and, consequently, its energy level spacing.
 
-In practice, however, fluctuations in the offset charge caused by random motion of nearby charges or coupling to the electromagnetic environment introduce dephasing in the qubit. 
+In practice, however, fluctuations in the offset charge caused by the random motion of nearby charges or coupling to the electromagnetic environment introduce dephasing in the qubit. 
 To minimize this sensitivity to charge noise, the qubit can be biased at the charge sweetspot, defined by $n_g=\frac{1}{2}$.
-At this point, the qubit transition frequency reaches a local maximum, and the first derivative of the energy levels with respect to $n_g$ vanishes.
+At this point, the qubit transition frequency reaches a local maximum and the first derivative of the energy levels with respect to $n_g$ vanishes.
 As a result, since the charge dispersion has no slope there, linear noise contributions cannot change the qubit transition frequency.
 
 
@@ -254,7 +254,7 @@ The difference is that in this case the transmon satisfies the condition $E_J/E_
 \end{equation}
 where the last term, proportional to $\hat{\phi}^4$, makes the potential of the transmon slightly anharmonic.
 
-As happens in the standard harmonic oscillator case, the operators $\hat{\phi}$ and $\hat{n}$ satisfy the cnaonical commutation relation $[\hat{\phi},\hat{n}]=i\mathbb{I}$, it is possible to introduce the raising and lowering operators $\hat{b},\hat{b}^\dagger$ as
+As happens in the standard harmonic oscillator case, the operators $\hat{\phi}$ and $\hat{n}$ satisfy the canonical commutation relation $[\hat{\phi},\hat{n}]=i\mathbb{I}$, it is possible to introduce the raising and lowering operators $\hat{b},\hat{b}^\dagger$ as
 \begin{equation}\label{eq:raising_lowering_operators}
     \hat{\phi} = \sqrt{\xi}(\hat{b}+\hat{b}^\dagger), \quad\quad \hat{n} = -\frac{i}{2\sqrt{\xi}}(\hat{b}-\hat{b}^\dagger),
 \end{equation}
@@ -288,11 +288,11 @@ The anharmonicity $\eta$ is defined as the difference between the second and fir
 \end{equation}
 For a transmon, the anharmonicity $\eta$ is negative, reflecting the fact that the level spacing decreases with increasing energy. 
 Ideally, the absolute value  $|\eta|$ should be sufficiently large to allow external microwave drives to selectively address the $\ket{0}\leftrightarrow\ket{1}$ transition without inadvertently exciting higher-energy states.
-Typical values per le frequenze of superconducting qubits lies between 4 - 8 GHz with an anharmonicity ranging from 100 to 300 MHz.z
+Typical values for the frequencies of superconducting qubits lie between 4 - 8 GHz with an anharmonicity ranging from 100 to 300 MHz.z
 
 \subsection{Flux-tunable transmon}\label{subsec:flux_tunable_transmon}
 To implement certain two-qubit gate schemes, such as swap interactions, it is essential to tune the qubit frequency. 
-A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting QUantum Interference Device).
+A common approach to achieving this is by adding an extra junction to the transmon, the most common configuration is the SQUID (Superconducting Quantum Interference Device).
 In the SQUID configuration two Josephson junctions are connected in parallel on a superconducting loop, as shown in Figure \ref{fig:FrequencyTunableTransmon}.
 
 Starting from the Hamiltonian of the single Josephson junction it is possible to write the Hamiltonian of a SQUID:
@@ -301,12 +301,12 @@ Starting from the Hamiltonian of the single Josephson junction it is possible to
 \end{equation}
 where $E_{J1}$ and $E_{J2}$ are the Josephson energies of the two junctions, and the operators $\hat{\phi_1}$ and $\hat{\phi_2}$ are the phase differences across the junctions.
 
-Because od the quantization of the magnetic flux through the SQUID, the quantities $\hat{\phi_1}$ and $\hat{\phi_2}$ are not independet. 
+Because of the quantization of the magnetic flux through the SQUID, the quantities $\hat{\phi_1}$ and $\hat{\phi_2}$ are not independent. 
 In particular, as show in \cite{manenti_quantum_2023}, the difference between $\hat{\phi_1}$ and $\hat{\phi_2}$ follows the following relation:
 \begin{equation}\label{eq:phases_relation}
     \hat{\phi_1} - \hat{\phi_2} = \frac{2\pi}{\Phi_0}\Phi_{\text{ext}}\mathbb{I}(\text{mod}2\pi),
 \end{equation}
-where $\Phi_{\text{ext}}$ is the flux of external magnetic field defined as the integral of the magnetic field over the SQUID area.
+where $\Phi_{\text{ext}}$ is the flux of the external magnetic field defined as the integral of the magnetic field over the SQUID area.
 
 Equation \ref{eq:phases_relation} can be simplified and rewritten as 
 \begin{equation}\label{eq:tunable_transmon_hamiltonian}
@@ -318,7 +318,7 @@ where $\hat{\varphi} = \frac{\hat{\phi_1}+\hat{\phi_2}}{2}$, and the Josephson e
 \end{equation}
 where $d = \frac{E_{J1}-E_{J2}}{E_{J1}+E_{J2}}$ is the relative junction asymmetry.
 
-Then, it's easy to see that the frequency $f_q$ of a two-junction transmon dependends on the magnetic flux $\Phi_q(t)$ through the SQUID loop, the relation between the magnetic flux and qubit frequency is given by \cite{PhysRevApplied.20.024070}
+Then, it's easy to see that the frequency $f_q$ of a two-junction transmon depending on the magnetic flux $\Phi_q(t)$ through the SQUID loop, the relation between the magnetic flux and qubit frequency is given by \cite{PhysRevApplied.20.024070}
 \begin{equation}\label{eq:freqdepndenceonflux}
     f_q(\Phi) = \left( f_q^{\text{max}} + \frac{E_C}{h} \right) \sqrt[4]{d^2 + (1 - d^2) \cos^2 \left( \pi \frac{\Phi}{\Phi_0} \right)} - \frac{E_C}{h},
 \end{equation}
@@ -334,12 +334,12 @@ where $f_q^{\text{max}} = (\sqrt{8E_C E_J}-E_C)/h$ is the maximum qubit frequenc
     \label{fig:FrequencyTunableTransmon}
 \end{figure}
 
-The main drawback of having the qubit fequency depending on the magnetic flux is that the qubit frequency becomes also sensitive to spurios magnetic currents.
+The main drawback of having the qubit frequency depending on the magnetic flux is that the qubit frequency becomes also sensitive to spurious magnetic currents.
 To mitigate this issue, the qubit can be biased at a special value of external magnetic flux, known as flux sweetspot where the first derivative of the qubit frequency with respect to flux vanishes.
 As a consequence small fluctuations in flux lead only to second-order changes in frequency, thereby reducing dephasing due to flux noise.
 
 \section{Qubit readout}\label{sec:cQED}
-Up to this point only the physical structure of a transmon qubit was discussed. 
+Up to this point, only the physical structure of a transmon qubit was discussed. 
 However, in order to perform quantum computing, it is essential to be able to control and measure its quantum state.
 One approach to achieve this is to capacitively couple the qubit to both a drive line and a readout line. 
 The drive line is used to manipulate the state of the qubit, while the readout line is employed to measure it.
@@ -364,7 +364,7 @@ An example of such a system is shown in Figure \ref{fig:Transmon_model}, along w
     \label{fig:Transmon_model}
 \end{figure}
 
-As mentioned in the introduction of this section, in circuit quantum electrodynamiccs (cQED), the qubit state is measured via a dispersive interaction between a qubit and a far-detuned microwave resonator.\\
+As mentioned in the introduction of this section, in circuit quantum electrodynamics (cQED), the qubit state is measured via a dispersive interaction between a qubit and a far-detuned microwave resonator.\\
 In Figure \ref{fig:TransmonCircuit}, in blue is represented the resonator circuit capacitively coupled to the (red) qubit that is used for the readout of the qubit state. 
 The resonator circuit is characterized by a an inductance $L_r$ and a capacitance $C_r$, then the characteristic frequency is $\omega_r =  1/\sqrt{L_r C_r}$. 
 
@@ -382,7 +382,7 @@ The quantization of the Hamiltonian involves replacing the classical conjugate v
 \begin{equation}
     \hat{H}_r = \frac{\hat{Q}^2}{2C_r} +  \frac{1}{2}C\omega_r^2\hat{\Phi}^2.
 \end{equation}
-To find the eigenvalues ans eigenvectors of $\hat{H}_r$ it is often convenient to introduce the raising and lowering operators, $\hat{a}$ and $\hat{a}^\dagger$ which satisfy $[\hat{a},\hat{a}^\dagger]=\mathbb{I}$.
+To find the eigenvalues and eigenvectors of $\hat{H}_r$ it is often convenient to introduce the raising and lowering operators, $\hat{a}$ and $\hat{a}^\dagger$ which satisfy $[\hat{a},\hat{a}^\dagger]=\mathbb{I}$.
 These two non-hermitian operators are defined as 
 \begin{equation}\label{eq:Phi_operator}
     \hat{\Phi} =  \Phi_{\text{zpf}}(\hat{a} + \hat{a}^\dagger),
@@ -405,7 +405,7 @@ where $\hat{V} = \hat{Q}/C_r$ is the voltage across the resonator capacitor. Usi
 \begin{equation}
     \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a}  + \sqrt{8 E_J E_C} \, \hat{b}^\dagger \hat{b} - \frac{E_C}{12} (\hat{b} + \hat{b}^\dagger)^4 + \hbar g (\hat{b}^\dagger - \hat{b})(\hat{a} - \hat{a}^\dagger)
 \end{equation}
-where the parameter $g$ was introduced. This parameter, known as coupling strength quantities the strength of the coupling between the qubit and the resonator, it is define as:
+where the parameter $g$ was introduced. This parameter, known as coupling strength quantifies the strength of the coupling between the qubit and the resonator, it is defined as:
 
 \begin{equation}
     g = \frac{2 E_C}{\hbar e} \frac{C_{\text{read}}}{C_r} Q_{\text{zpf}} \sqrt{\xi} = \frac{E_C}{\hbar e} \left( \frac{E_J}{2 E_C} \right)^{1/4} \frac{C_{\text{read}}}{C_r} \sqrt{2 \hbar \omega_r C_r}.
@@ -421,7 +421,7 @@ Focusing on the first two levels of the transmon we obtain the Jaynes-Cummings H
 \begin{equation}\label{eq:Jaynes-Cummings}
     \hat{H} = \hbar \omega_r \hat{a}^\dagger \hat{a} - \frac{\hbar \omega_{01}}{2} \hat{\sigma}_z + \hbar g (\hat{\sigma}_+ \hat{a} + \hat{\sigma}_- \hat{a}^\dagger),
 \end{equation}
-and describes the interaction between an atom, in this case an artificial atom, with an electromagnetic field in the approximation of the two-level system.
+and describes the interaction between an atom, in this case, an artificial atom, with an electromagnetic field in the approximation of the two-level system.
 
 When the coupling strength $g$ is much smaller than the detuning between the qubit and the resonator $\Delta = \omega_q -\omega_r $ the system operates in the dispersive regime.
 The Jaynes-Cummings Hamiltonian in the dispersive regime, which is the condition in which we operate to perform the qubit readout, can be approximated as 
@@ -434,7 +434,7 @@ where $\chi$ is the dispersive shift defined as \begin{equation}\label{eq:disper
 
 Equation \ref{eq:dispersiveshift_hamiltonian} shows that there is a shift in the resonator frequency from $\omega_r$ to $\omega_r - \chi$ if the qubit is in the ground state and a shift from $\omega_r$ to $\omega_r + \chi$ if the qubit is in the excited state.
 
-The dispersive shift equation \ref{eq:dispersiveshift} was derived assuming that the qubit can be approximated as a two level system.
+The dispersive shift equation \ref{eq:dispersiveshift} was derived assuming that the qubit can be approximated as a two-level system.
 Considering also the higher energy levels of the qubit a more accurate expression of the dispersive shift is given by 
 \begin{equation}
     \chi = \frac{g^2}{\Delta(1+\Delta/\eta)},
@@ -454,7 +454,7 @@ where $A$ is the pulse amplitude in volts, $\omega_d$ is the drive frequency in 
 As a first approximation, the envelope of the drive pulse is often chosen to have a Gaussian shape, which is preferred over a square pulse due to its smaller frequency bandwidth, minimizing the excitation of higher energy levels.
 However, the study of pulse shapes that minimize leakage to states outside the computational basis remains an active area of research \cite{chiaro2025activeleakagecancellationsingle}.
 
-In a similar way to what was previously done to study the capacitive coupling between the qubit and the resonator, it is possible to derive th Hamiltonian of the transmon capacitively coupled to the control line starting from the circuit shown in Figure \ref{fig:TransmonCircuit}
+In a similar way to what was previously done to study the capacitive coupling between the qubit and the resonator, it is possible to derive the Hamiltonian of the transmon capacitively coupled to the control line starting from the circuit shown in Figure \ref{fig:TransmonCircuit}
 \begin{equation}
     \hat{H} = 4E_C \left(\hat{n} + \frac{C_d V_d(t)}{2e}\right)^2 - E_J \cos{\hat{\phi}},
 \end{equation} 
@@ -481,7 +481,7 @@ where $\Omega$ is the Rabi frequency,
     \Omega = \frac{e}{\hbar\sqrt{\xi}}\frac{C_d}{C_\Sigma}A.
 \end{equation}
 The Rabi frequency quantifies the coupling between the control line and the qubit.\\
-To study the dynamics of the system it is convenient to use the rotating frame, the Hamiltonian becomes: %%add appendix per ricavare hamiltoniana nel rotating frame
+To study the dynamics of the system it is convenient to use the rotating frame, the Hamiltonian becomes:
 \begin{align}
     \hat{H}' &= -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \hbar \Omega \varepsilon(t) \sin(\omega_d t + \alpha)\left( \hat{\sigma}_x \sin \omega_d t + \hat{\sigma}_y \cos \omega_d t \right)\\
     &= -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \hbar \Omega \varepsilon(t)\left(\frac{\hat{\sigma}_x}{2} \left( -\cos(2\omega_d t + \alpha) + \cos \alpha \right) + \frac{\hat{\sigma}_y}{2} \left( \sin(2\omega_d t + \alpha) + \sin \alpha \right)\right)\\
@@ -513,7 +513,7 @@ However, to ensure their effective implementation, it is crucial to study the qu
     \caption{Transverse and longitudinal noise represented on the Bloch sphere. 
     (a) Bloch sphere representation of the quantum state $\ket{\psi}= \alpha\ket{0} + \beta\ket{1}$, the $z$-axis is longitudinal in the qubit frame, whike the $x-y$ plane is transverse in the qubit frame.
     (b) Longitudinal relaxation results from energy exchange between the qubit and its environment, due to transverse noise.
-    (c) Pure dephasing in the transverse plane arises from longitudinal noise along the z axis that fluctuates the qubit frequency. A Bloch vector along the x-axis will diffuse clockwise or counterclockwise around the equator due to the stochastic frequency fluctuations.
+    (c) Pure dephasing in the transverse plane arises from longitudinal noise along the $z$-axis that fluctuates the qubit frequency. A Bloch vector along the x-axis will diffuse clockwise or counterclockwise around the equator due to the stochastic frequency fluctuations.
     (d)  Transverse relaxation results in a loss of coherence due to a combination of energy relaxation and pure dephasing. \\Credits: \cite{krantz_quantum_2019}}
     \label{fig:noise_model}
 \end{figure}
@@ -521,7 +521,7 @@ However, to ensure their effective implementation, it is crucial to study the qu
 \subsection{Qubit decoherence}\label{subsec:qubit_decoherence}
 By definition, decoherence refers to the loss of coherence in a quantum system, meaning that the relative phase between quantum states becomes randomized due to interactions with the environment. 
 Decoherence is typically characterized by two key time constants: the energy relaxation time $T_1$ and the dephasing time $T_2$. 
-The energy relaxation time  describes the characteristic time over which a qubit in an excited state decays to its ground state due to interactions with the environment. The decay follows an exponential low:
+The energy relaxation time describes the characteristic time over which a qubit in an excited state decays to its ground state due to interactions with the environment. The decay follows an exponential low:
 \begin{equation}\label{eq:gamma1}
     p_e(t) = p_e(0) e^{-\Gamma_1 t},
 \end{equation}
@@ -529,9 +529,9 @@ where $p_e(t)$ is the probability of the qubit being in the excited state at tim
 Energy relaxation is primarily due to transverse noise, namely noise that couples the qubit through $\hat{\sigma}_x$ and/or $\hat{\sigma}_y$, it is caused by coupling to electromagnetic noise and other dissipative processes that induce energy exchange with the environment.
 
 Longitudinal noise instead is due to environmental fluctuations coupling to $\hat{\sigma}_z$ that randomize the phase of the the superposition state without causing energy exchange with the environment.
-The charachteristic dephasing time of a qubit is $T_2^* = 1/\Gamma_\phi$ dove $\Gamma_\phi$ is the pure dephasing rate.
+The characteristic dephasing time of a qubit is $T_2^* = 1/\Gamma_\phi$ dove $\Gamma_\phi$ is the pure dephasing rate.
 
-The transverse relaxation rate $\Gamma_2$ describes the combined effets of pure dephasing and energy relaxation and is defined as 
+The transverse relaxation rate $\Gamma_2$ describes the combined effects of pure dephasing and energy relaxation and is defined as 
 \begin{equation}\label{eq:gamma2}
     \Gamma_2 = \frac{\Gamma_1}{2} + \Gamma_\phi,
 \end{equation}
@@ -540,11 +540,11 @@ or equivalently
     \frac{1}{T_2} = \frac{1}{2T_1} + \frac{1}{T_2^*}.
 \end{equation}
 $T_2$ is known as decoherence time and quantifies how quickly a quantum superposition state loses phase coherence due to environmental fluctuations. 
-For this reason, in an ideal system where pure dephasing is absent $T_2$ is simply limited by energy relaxation via the relaxation\begin{equation}\label{eq:T2max}
+For this reason, in an ideal system where pure dephasing is absent, $T_2$ is simply limited by energy relaxation via the relaxation\begin{equation}\label{eq:T2max}
     T_{2,\text{max}} = 2T_1.
 \end{equation}
 This result follows from the Bloch equations \cite{krantz_quantum_2019}, where both energy relaxation and phase damping contribute to coherence loss. 
-However, in real systems, additional dephasing mechanisms, such as low-frequency noise from charge or flux fluctuations, reduce $T_2$ below this upper bound and limits it to \ref{eq:T2equation}.
+However, in real systems, additional dephasing mechanisms, such as low-frequency noise from charge or flux fluctuations, reduce $T_2$ below this upper bound and limit it to \ref{eq:T2equation}.
 
 \subsection{Noise models}
 Quantum noise mentioned in the previous subsection can be described using quantum operations known as quantum channels. 
@@ -555,7 +555,7 @@ Formally, it is a map $\mathcal{E}$ that transforms a quantum state described by
 \end{equation}
 
 \subsubsection{Amplitude damping channel}
-The amplitude damping channel models energy dissipation due to interaction with a zero-temperature environment. The quantum map which descibes the process is 
+The amplitude-damping channel models energy dissipation due to interaction with a zero-temperature environment. The quantum map which describes the process is 
 \begin{equation}\label{eq:amplitude_damping}
     \mathcal{E}_{\text{ad}}(\hat{\rho}) = \hat{E}_0 \hat{\rho} \hat{E}_0^{\dagger} + \hat{E}_1 \hat{\rho} \hat{E}_1^{\dagger},
 \end{equation}
