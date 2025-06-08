@@ -19,7 +19,7 @@ While this quantity does not directly reflect the fidelity of individual native 
 
 In this chapter, I present an initial attempt to address both the challenges of calibration complexity and residual gate errors. 
 The goal is to test calibration procedures that are not only effective but also repeatable and accessible to non-expert users.  
-Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of randomized benchmarking (RB) can improve gate performance, we explored an automatic calibration improvement procedure based on average Clifford gate fidelity obtained from standard RB evaluation as an optimization target.
+Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of RB can improve gate performance, we explored an automatic calibration improvement procedure based on average Clifford gate fidelity obtained from standard RB evaluation as an optimization target.
 In our implementation, the optimization is performed with respect to the $R_X(\pi)$ pulse which is a native gate in \Qibolab (see Section \ref{subsec:native_gates}).
 The optimization is performed by adjusting its amplitude, frequency, and possibly, the multiplicative factor of the quadrature component of the DRAG, pulse parameters.
 
@@ -33,7 +33,7 @@ A strong limitation to the application of quantum computing technologies in diff
 One approach to characterize gate performance is quantum process tomography, which provides a full description of the quantum process under investigation. 
 However, this method becomes impractical for systems with more than a few qubits, as its time complexity scales exponentially with the system size \cite{QPTomography}, and the results are highly sensitive to state preparation and measurement (SPAM) errors.
 
-To overcome these limitations, randomized benchmarking (RB) was developed and is now widely used to estimate the average error rate for a set of quantum gates. 
+To overcome these limitations, RB was developed and is now widely used to estimate the average error rate for a set of quantum gates. 
 The main idea is that the cumulative error resulting from the combined action of random unitary gate sequences, which are drawn uniformly from a group of unitaries according to the Haar measure \cite{Mele_2024}, behaves like a depolarizing channel \cite{Emerson_2005_RB}. 
 This effectively removes the dependence on the specific structure of the noise and leads to a simple exponential decay model from which the average fidelity can be extracted.
 
@@ -78,7 +78,7 @@ This shows how the average error per Clifford gate is directly determined by the
 \section{RB evaluation and optimization}
 
 \subsection{RB evaluation parameters}\label{sec:RB_parameters}
-In the results presented in the following, we employed the randomized benchmarking (RB) routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
+In the results presented in the following, we employed the RB routine implemented in \Qibocal, an example of which is shown in Section \ref{sec:RB_calibration}. 
 This routine was used consistently across all tests, with the following set of parameters: we used $1000$ unique random Clifford sequences (\texttt{num\_of\_sequences = 1000}), ensuring robust statistical reliability across different realizations of gate noise. 
 Each sequence was evaluated at increasing circuit depths up to a maximum of $1000$ Clifford gates (\texttt{max\_circuit\_depth = 1000}), with the depths spaced by increments of $10$ (\texttt{delta\_clifford = 10}), resulting in benchmarking points at depths of $1, 10, 20, \ldots, 1000$. 
 For each depth and random sequence, we generated only one instance (\texttt{n\_avg = 1}), meaning that each sequence was distinct and not repeated with the same gate pattern. 
@@ -158,7 +158,7 @@ In a subsequent phase of this study, a comparative analysis was performed by rep
 \subsection{Nelder-Mead}
 The initial optimization attempts were carried out using standard algorithms available in the \texttt{SciPy} library~\cite{SciPy-NMeth}. 
 As a first approach, a gradient-free optimization method was selected to reduce sensitivity to measurement noise. 
-Specifically, we employed the Nelder-Mead algorithm, whose application to the optimization of randomized benchmarking (RB) fidelity has already been reported in the literature~\cite{kelly_optimal_2014}.
+Specifically, we employed the Nelder-Mead algorithm, whose application to the RB fidelity has already been reported in the literature~\cite{kelly_optimal_2014}.
 
 \subsubsection{Algorithm information}
 The Nelder-Mead optimization method, originally introduced by Nelder and Mead in 1965 \cite{NelderMeads}, is a widely used numerical optimization technique for unconstrained problems in multidimensional spaces. \\
@@ -600,7 +600,7 @@ Differently from other TPE implementations, \tt{Optuna} supports automatic pruni
 In common applications such as neural network training, pruning is enabled by reporting intermediate objective values via \texttt{trial.report(...)} and comparing them to statistics of previously completed trials. 
 By default, \texttt{Optuna} employs the \texttt{MedianPruner}, which terminates a trial if its intermediate value is worse than the median of completed trials at the same step.
 
-In the present work, the cost function is defined as the infidelity extracted from a complete randomized benchmarking (RB) routine and the optimization problem involves a low-dimensional parameter space, comprising only three continuous parameters; given these characteristics, pruning was not applied.
+In the present work, the cost function is defined as the infidelity extracted from a complete RB routine and the optimization problem involves a low-dimensional parameter space, comprising only three continuous parameters; given these characteristics, pruning was not applied.
 
 \subsection{Results}
 
@@ -710,14 +710,14 @@ The failed fitting routines are shown in Figure \ref{fig:failed_beta}.
 As a result of this issue, the optimization workflow was modified to include control on the $\chi^2$ value obtained from the fitting procedure to monitor potential failures in the pre-optimization stage.
 
 \begin{figure}[h!]
-        \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \begin{subfigure}[t]{\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/beta30.png}
         \caption{Plot of the output of the \tt{drag\_tuning} routine performed before running the 30 steps optimization with \tt{Optuna}.}
         \label{fig:failed_beta:30}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \vspace{0.3cm}
+    \begin{subfigure}[t]{\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/beta100.png}
         \caption{Plot of the output of the \tt{drag\_tuning} routine performed before running the 100 steps optimization with \tt{Optuna}.}
         \label{fig:failed_beta:100}
