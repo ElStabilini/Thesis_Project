@@ -308,11 +308,11 @@ When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\foo
 \begin{equation}\label{eq:phi}
     \frac{\varphi_{\tau}}{2\pi} = \int_{0}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t = \int_{0}^{\tau} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t + \int_{\tau}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t
 \end{equation}
-where in the second step I separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In \hyperref[app:AppendixB]{Appendix B} we calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
+where in the second step I separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In Appendix \ref{app:phase_rec} we calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
 
 The experiment is then completed with a $\frac{\pi}{2}$ rotation around the $y$- or $x$-axis of the Bloch sphere to measure respectively the $\langle X \rangle$ or $\langle Y \rangle$ components of the Bloch vector when applying the measurement gate $MZ$. 
 From the measurement of $\langle X \rangle$ and $\langle Y \rangle$ we can extract the relative phase $\varphi_{\tau}$.
-For detailed calculations on how $\langle X \rangle$ and $\langle Y \rangle$ are measured and $\varphi_{\tau}$ extracted see \hyperref[app:AppendixD]{Appendix D}. \\ 
+For detailed calculations on how $\langle X \rangle$ and $\langle Y \rangle$ are measured and $\varphi_{\tau}$ extracted see Appendix \ref{app:XY_measure}. \\ 
 
 Then we can estimate $\Phi_Q(t)$ in the interval $[\tau,\tau+\Delta\tau]$ as follows. From the measurement of $\varphi_{\tau + \Delta\tau}$ and $\varphi_\tau$ we can compute $\overline{\Delta f_R}$:
 \begin{align}\label{eq:detuning}
@@ -402,7 +402,7 @@ To do this, we use the following relations:
     & \langle Y \rangle = 1 - 2p^Y_1
 \end{align}
 where $p^X_1(t)$ and $p^Y_1(t)$ denote the measured probabilities of finding the qubit in state $\ket{1}$ from the $\langle X \rangle$ and $\langle Y \rangle$ measurements, respectively.
-The derivations of these relations is reported in \hyperref[app:AppendixD]{Appendix D}.
+The derivations of these relations is reported in Appendix \ref{app:XY_measure}.
 
 Once the characteristic oscillation frequency has been estimated, we demodulate the signal by this frequency: $s_{\text{demod}}(t) = e^{2\pi i f_{\text{demod}} t} \cdot s(t)$
 This operation shifts the signal's frequency content to near-zero removing the fast oscillations and leaving only the slower variations in phase.
@@ -529,7 +529,7 @@ Specifically, we assume a quadratic model of the form
 \begin{equation}
     f = c_1 A^2 + c_2 A + c_3,
 \end{equation}
-where $f$ denotes the detuning, $A$ is the applied flux amplitude, and $c_1$, $c_2$, and $c_3$ are coefficients obtained from the \tt{flux\_amplitude\_frequency} routine (see \hyperref[app:AppendixB]{Appendix B} for more details). 
+where $f$ denotes the detuning, $A$ is the applied flux amplitude, and $c_1$, $c_2$, and $c_3$ are coefficients obtained from the \tt{flux\_amplitude\_frequency} routine (see Appendix \ref{app:flux_amplitude_frequency} for more details). 
 By inverting this relation, we reconstruct the time-dependent flux amplitude experienced by the qubit. 
 The results of this reconstruction are shown in Figure \ref{fig:amplitude}.
 For completeness, I have included the plots related to the amplitude reconstruction performed for all previously discussed cases, both with and without demodulation.

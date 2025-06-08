@@ -96,7 +96,7 @@ This preliminary step involves a sequence of calibration routines implemented wi
 The qubit frequency is first refined using a Ramsey experiment (see Section \ref{subsec:Ramsey}), subsequently a flipping sequence (see Section \ref{subsec:Flipping}) is used to adjust the microwave pulse amplitude to ensure that the applied drive results in a precise $\pi$-rotation.
 Finally, the optimal value of the DRAG parameter $\beta$ is estimated through a dedicated DRAG calibration routine (see Section \ref{sec:DRAG}).
 After each of these routines, the platform configuration is updated accordingly in the \tt{platform.json} file, which stores the relevant parameters for the experimental setup 
-\footnote{In \Qibolab the \tt{qibolab. Platform} object holds all the information required to execute programs in a real QPU. It is comprised of different objects that contain information about the native gates and the lab's instrumentation. The QPU parameters can be saved in (and loaded from) the \tt{parameters.json} file.}.
+\footnote{In \Qibolab the \tt{qibolab.Platform} object holds all the information required to execute programs in a real QPU. It is comprised of different objects that contain information about the native gates and the lab's instrumentation. The QPU parameters can be saved in (and loaded from) the \tt{parameters.json} file.}.
 
 These calibrated values are then used to initialize the optimization algorithm, as illustrated in the code reported in Listing \ref{snippet:params_init}.
 
@@ -699,7 +699,6 @@ In particular, the best average Clifford gate fidelity of 99.64\% was obtained a
 \end{figure}
 
 An analysis of the plots and the numerical values obtained for the $R_X(\pi)$ pulse parameters shows that the highest Clifford gate average fidelity corresponds to distinct values of these parameters. 
-%TODO: inserire valori per ampiezza e frequenza per i due esperimenti precedenti
 This effect is particularly evident for the amplitude and $\beta$ parameters. 
 While the amplitude range remains fixed, being constrained by hardware limitations, the range used to search for the optimal $\beta$ varies significantly across the two optimization runs.
 
@@ -1012,3 +1011,5 @@ In conclusion, while the results suggest that automated, hardware-level gate fid
     The table also includes the initial fidelity, the percentage decrease in the cost function, and the percentage improvement in fidelity achieved at the end of the optimization process.}
     \label{tab:final_values}
 \end{sidewaystable}
+
+%TODO: inserire riferimento all'appendice in cui mostro tutte le valutazioni che faccio della fidelity

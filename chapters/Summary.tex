@@ -1,60 +1,23 @@
-\chapter{Summary}
-One of the challenges in gate-based quantum computing is achieving high-fidelity qubits for both single-qubit and two-qubit gate operations.
-In superconducting qubit platforms, maintaining high fidelity is fundamental for accurately executing quantum circuits and enabling scalable, fault-tolerant quantum computing. 
-To achieve this, qubits must have sufficiently long coherence times to support multiple gate operations, while the implemented quantum gates must minimize errors as much as possible.
+\chapter{Abstract}
+Achieving high-fidelity gate operations is a central challenge in gate-based quantum computing. In superconducting qubit platforms, this requires both long coherence times and low-error gate implementations to ensure scalable, fault-tolerant computation.
+This thesis, carried out within the Qibo collaboration, specifically in the Qibocal and Qibolab groups, focuses on the development of calibration routines within the \texttt{Qibocal} library, with the aim of improving both single- and two-qubit gate fidelities.
 
-During my thesis work, conducted within the Qibo collaboration and specifically in the Qibocal and Qibolab groups, I focused on the study and development of calibration routines for the \texttt{Qibocal} library aimed at improving both single-qubit and two-qubit gate fidelities.
+Chapter 1 introduces the theoretical foundation of superconducting qubits, beginning with Josephson junctions and their role in defining the qubit subspace. 
+It then reviews early qubit implementations, from Cooper Pair Boxes to flux-tunable transmons, and discusses how these systems support quantum gate operations. 
+The chapter concludes with a description of qubit readout mechanisms and sources of decoherence.
 
-\paragraph{}
-In chapter one I introduce the theoretical framework underlying this work, beginning with a description of Josephson junctions and their operation \cite{JOSEPHSON1962251}. 
-These nonlinear electronic elements enable the definition of a two-dimensional subspace that constitutes the qubit. 
-The discussion then proceeds to early models of superconducting qubits, from Cooper Pair Boxes (CPBs) \cite{Vion2002} to flux-tunable transmon qubits \cite{TransmonPaper}, and how these systems can be employed to implement single and two qubit gates. 
-The final part of the chapter focuses on the mechanisms for qubit state readout and control, concluding with a discussion on the degradation of the qubit state over time.
+In Chapter 2, I describe the experimental setup on which I worked: a superconducting qubit chip developed by QuantWare and operated at the Technology Innovation Institute (TII), using control electronics provided by Quantum Machines. 
+The chapter also covers the calibration of single-qubit gates using the routines available in \texttt{Qibocal}. 
+These routines were initially used to gain confidence with the calibration process before starting the core of the project. 
+The results obtained are summarized in a table reporting the main performance metrics, including readout fidelity, coherence times ($T_1$, $T_2$), and average gate infidelity measured via Randomized Benchmarking.
 
-\paragraph{}
-Chapter 2 presents the experimental setup used for all measurements and protocols developed during this work. 
-The experiments were conducted on the Contralto-D chip developed by QuantWare and operated at the Technology Innovation Institute (TII) in Abu Dhabi. 
-Control and data acquisition were managed using the OPX100 platform provided by Quantum Machines.
-The chapter also includes a detailed description of the single-qubit calibration procedure performed with \texttt{Qibocal}. 
-This procedure was initially applied to the D line of the chip and is summarized through key performance metrics, including readout and assignment fidelity, coherence times ($T_1$ and $T_2$), and an estimate of the average Clifford gate infidelity obtained via standard randomized benchmarking (RB).
-This benchmarking routine plays a central role, as it forms the basis for the optimization strategies discussed in the following chapter.
+The work described in Chapter 3 concerns an attempt to automate the recalibration of single-qubit gates using modern optimization libraries. 
+In particular, I used tools such as \texttt{Optuna} and \texttt{CMA-ES} to tune key parameters of the $R_X(\pi)$ gate. 
+This effort was inspired by the ORBIT protocol (Optimized Randomized Benchmarking for Immediate Tune-up), which relies on Randomized Benchmarking to evaluate fidelity as a cost function. 
+While improvements were achieved, the work highlighted several challenges — primarily the high cost of fidelity evaluation and the lack of stability in convergence when broader parameter searches were used.
 
-%chapter 3 . gate optimization
-\paragraph{}
-The first part of this project focused on optimizing the average Clifford gate fidelity, drawing inspiration from the ORBIT protocol (Optimized Randomized Benchmarking for Immediate Tune-up) introduced by Kelly et al. in 2014 \cite{kelly_optimal_2014}. 
-The goal was to explore whether modern optimization techniques could be used to efficiently increase gate fidelity, starting from already well-calibrated configurations (above 90\%), to values approaching 99.9\%, while also assessing the robustness of these methods under realistic drift conditions.
+Chapter 4 describes some enhancements and additions to the calibration infrastructure. 
+First, native support for the $R_X(\pi/2)$ gate was introduced in \texttt{Qibolab} and its calibration procedure added to \texttt{Qibocal}, replacing less accurate approximations. 
+Second, a protocol for correcting flux pulse distortions was implemented using the Cryoscope method \cite{rol_time-domain_2020}. 
+This correction improves the fidelity of flux-based gates such as CNOT and iSWAP, which are particularly sensitive to control-line imperfections.
 
-Specifically, the optimization targeted three parameters: the amplitude and frequency of the microwave pulse implementing the $R_X(\pi)$ gate, and the DRAG correction parameter $\beta$, which scales the second quadrature component of a DRAG pulse \cite{Motzoi_2009}. 
-Various optimization libraries were tested, including \texttt{Optuna} and \texttt{CMA-ES}, to evaluate their effectiveness and reliability.
-
-The methods details and results, detailed in Chapter 3, show that meaningful improvements in gate fidelity are achievable. 
-However, several limitations remain. The main bottleneck is the cost associated with the RB routine used to evaluate fidelity, which must be run multiple times during each optimization cycle. This makes the overall procedure time-consuming and difficult to scale.
-
-Furthermore, convergence to stable solutions was not consistently achieved. 
-In different cases, particularly with broader parameter searches, optimization runs either failed to converge or produced results highly sensitive to small variations in parameter values. 
-Even when high fidelities were attained (up to 99.85\%), the lack of robustness suggests that further improvements are necessary before these methods can be reliably integrated into standard calibration workflows.
-
-%chapter 4 - pulse correction and control
-\paragraph{}
-Chapter 4 is dedicated to the second part of this work in cui we addressed specific practical needs emerging from experimental operations.\\
-In particular, we introduced modifications to \texttt{Qibolab} to enable native support for the $R_X(\pi/2)$ gate. 
-At the same time, we updated the corresponding calibration routines in \texttt{Qibocal}, which were originally designed for the $R_X(\pi)$ rotation, to support the independent calibration of this additional native gate.
-Prior to this addition, the $R_X(\pi/2)$ gate was typically implemented by halving the amplitude of a calibrated $\pi$-pulse. 
-However, as shown in the first part of this chapter, nonlinearities in the system, arising from the electronics or other components, introduce systematic errors when using this approximation. 
-These errors lead to inaccurate estimates of the pulse parameters required to implement a true $R_X(\pi/2)$ rotation.
-
-The inclusion of $R_X(\pi/2)$ as a native gate is important as such $\pi/2$ rotations are frequently used in quantum algorithms and benchmarking protocols. 
-An inaccurate calibration would propagate systematic errors throughout the execution of quantum circuits, ultimately degrading their overall fidelity.
-
-The second major result presented in this chapter is the implementation of a routine to correct distortions in flux pulses arising from imperfections in the control lines. 
-Precise dynamical control of the qubit frequency is essential for the realization of high-fidelity single- and two-qubit gates. 
-In superconducting qubits, this control is typically achieved by modulating the magnetic flux threading a SQUID loop. 
-However, as the control signal propagates through various electronic components along the flux line, it is subject to linear dynamical distortions which can significantly degrade gate performance, compromising both the fidelity and repeatability of quantum operations.
-
-To address this issue, we implemented the Cryoscope protocol, originally introduced by M. A. Rol in 2019 \cite{rol_time-domain_2020}, which enables a time-domain characterization of these distortions and the design of appropriate pre-distorted control pulses. 
-The application of these corrections improves the quality of flux-based quantum gate operations, as demonstrated, for example, in the results obtained from the chevron calibration routine in \texttt{Qibocal}. 
-This routine plays a central role as it enables the calibration of native two-qubit gates such as CNOT and iSWAP, which are implemented through flux pulses and are particularly sensitive to distortions in the control signal.
-
-%chapter 5 - conclusions
-\paragraph{}
-The conclusion chapter summarizes the main results of the work e possibili outlook / estensioni di questo lavoro.

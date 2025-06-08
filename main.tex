@@ -127,31 +127,30 @@
 \tableofcontents
 \clearpage
 
+\input{chapters/Summary}
 
 %THESIS WORK
 \mainmatter
-\input{chapters/Summary}
-\chapter{Superconducting qubits}
-\input{chapters/Introduction.tex}
 
+%introduction and context
+\input{chapters/Introduction.tex}
 \input{chapters/WareDescription.tex}
 
-%%%results
+%results
 \input{chapters/RBoptimization.tex}
 \input{chapters/Pulses.tex}
 
-\chapter{Conclusions}
-%\input{Conlusions}
-
-\backmatter
-%BIBLIOGRAPHY
-\printbibliography
+%conclusion and outlook
+\input{chapters/Conclusions.tex}
 
 % APPENDICES
 \appendix
 \cleardoublepage
 \input{chapters/Appendix.tex}
 
+\backmatter
+%BIBLIOGRAPHY
+\printbibliography
 
 %ACKNOWLEDGEMENT
 \chapter*{Acknowledgement}

@@ -1,7 +1,7 @@
 \appendix
 
 \chapter{2D notch resonator resonance profile} 
-\label{app:AppendixA}
+\label{app:res_low}
 
 A more accurate description of the resonance profile for a two-dimensional notch-type resonator is provided in the literature \cite{Gao2008}, where the transmitted signal is modeled as a complex function of frequency. 
 The complete expression for the complex transmission coefficient is given by
@@ -42,7 +42,7 @@ This protocol is implemented in \Qibocal and available by selecting the \tt{s21}
 \end{figure}
 
 \chapter{Phase reconstruction}
-\label{app:AppendixB}
+\label{app:phase_rec}
 
 In general, it is possible to show that for different forms of the detuning flux 
 \begin{equation}\label{eq:det_flux}
@@ -161,47 +161,8 @@ If we then compute $\int_{0}^{\tau} h(t - t')dt'$ we obtain
 \end{align}
 which is equal to \ref{eq:final} and then concludes the demonstration.
 
-\chapter{RB evaluations}
-\label{app:AppendixC}
-
-In this appendix are reported the plots of all the Randomized Benchmarking evaluations that have been performed during the optimization using different optimization methods.
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_complete.png}
-        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations. First optimization attempt with Nelder-Mead algorithm.}
-        \label{NM_true_fig:complete}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/complete.png}
-        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
-                Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_1}.}
-        \label{NM_true_fig:}
-    \end{subfigure}
-
-    \vspace{0.5cm}
-
-    \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/complete.png }
-        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
-                Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_2}.}
-        \label{NM_true_fig:}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/complete.png}
-        \caption{Plot of the avarge Clifford gate fidielity as a function of the function evauluations.\\
-                Optimization method: Nelder-Mead algorithm with initial symplex - \tt{init\_symp\_3}.}
-        \label{NM_true_fig:}
-    \end{subfigure}
-
-    \caption{Plots of the fidelity and optimization parameters as a function of the number of optimization step.}
-    \label{fig:complete}
-\end{figure}
-
 \chapter{$X$ and $Y$ component measurements}
-\label{app:AppendixD}
+\label{app:XY_measure}
 
 In quantum computing, measurements are restricted to the computational basis, corresponding to projective measurements along the $z$-axis of the Bloch sphere. 
 As a result, direct access is limited to determining the probability of a qubit being in the $\ket{0}$ or $\ket{1}$ state.
@@ -314,7 +275,7 @@ Possibili esensioni dell'appendice in ordine di priorità:
 \end{comment}
 
 \chapter{Flux amplitude frequency routine}
-\label{app:AppendixE}
+\label{app:flux_amplitude_frequency}
 
 Before running the cryoscope experiment, it is necessary to first execute the \texttt{flux\_amplitude\_frequency} routine. 
 The purpose of this routine is to determine the coefficients of the quadratic relationship between the detuning experienced by the qubit and the amplitude of the applied magnetic flux pulse. 
