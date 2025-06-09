@@ -204,13 +204,13 @@ Nevertheless, the progression of the fidelity suggests a stable improvement tren
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/NM_fid.png}
         \caption{Plot of the average Clifford gate fidelity as a function of the function evaluations.}
         \label{NM_true_fig:fidelity}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/frequency.png}
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{NM_true_fig:frequency}
@@ -218,13 +218,13 @@ Nevertheless, the progression of the fidelity suggests a stable improvement tren
 
     \vspace{0.5cm}
 
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/amplitude.png}
         \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{NM_true_fig:amplitude}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/post_ft_true/beta.png}
         \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
         \label{NM_true_fig:beta}
@@ -252,29 +252,29 @@ Some optimization runs were performed with this revised configuration, in this c
 Specifically, we considered the uncertainties on amplitude and frequency obtained respectively from the flipping and Ramsey procedures.
 These values were scaled by a factor of 1.5 to define the characteristic step sizes; using these values, a triangular simplex was generated in the amplitude-frequency parameter space, centered around the initial guess, and offset along each axis to ensure sufficient coverage of the local landscape.
 
-The results of these runs are reported in the following sections and are labeled as \tt{init\_symp\_1}, \tt{init\_symp\_2}, and \tt{init\_symp\_3}.
+The results of these runs are reported in the following sections and are labeled as \tt{init\_simp\_1}, \tt{init\_simp\_2}, and \tt{init\_simp\_3}.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/fidelity.png}
-    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_symp\_1}.}
+    \includegraphics[width=0.495\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/fidelity.png}
+    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_simp\_1}.}
     \label{fig:20241110_211211:fidelity}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/amplitude.png}
         \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241110_211211:amplitude}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241110_211211/frequency.png}
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241110_211211:frequency}
     \end{subfigure}
-    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_symp\_2}.}
+    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_simp\_2}.}
     \label{fig:20241110_211211:parameters}
 \end{figure}
 
@@ -284,29 +284,29 @@ Similar behavior is observed in other plots illustrating the optimization progre
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/fidelity.png}
-    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the second round optimization - \tt{init\_symp\_2}.}
+    \includegraphics[width=0.495\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/fidelity.png}
+    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the second round optimization - \tt{init\_simp\_2}.}
     \label{fig:20241113_181711:fidelity}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Amplitude.png}
         \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_181711:amplitude}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_181711/Frequency.png}
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_181711:frequency}
     \end{subfigure}
-    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_symp\_2}.}
+    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_simp\_2}.}
     \label{fig:20241113_181711:parameters}
 \end{figure}
 
-In particular, regarding the optimization labeled as \tt{init\_symp\_2}, the most important observation is again the presence of large variations in fidelity despite nearly fixed parameters. 
+In particular, regarding the optimization labeled as \tt{init\_simp\_2}, the most important observation is again the presence of large variations in fidelity despite nearly fixed parameters. 
 That is, for comparable values of amplitude and frequency, significantly different fidelity outcomes are observed.
 This is especially evident when examining the optimization steps corresponding to the pronounced fidelity dips in Figure \ref{fig:20241113_181711:fidelity}.
 By comparing those same steps with the parameter evolution shown in Figure \ref{fig:20241113_181711:parameters}, it becomes evident that neither the amplitude nor the frequency of the $R_X(\pi)$ pulse changes significantly. 
@@ -314,25 +314,25 @@ It should be noted, as will be discussed in more detail in the conclusions, that
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/fidelity.png}
-    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_symp\_3}.}
+    \includegraphics[width=0.495\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/fidelity.png}
+    \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps for the first round optimization - \tt{init\_simp\_3}.}
     \label{fig:20241113_200745:fidelity}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Amplitude.png}
         \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_200745:amplitude}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/NM/InitialSymplex/20241113_200745/Frequency.png}
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241113_200745:frequency}
     \end{subfigure}
-    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_symp\_3}.}
+    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_simp\_3}.}
     \label{fig:20241113_200745:parameters}
 \end{figure}
 
@@ -400,13 +400,13 @@ For this run, the same constraints and parameter bounds used in the Nelder-Mead 
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/fidelity.png}
         \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps.}
         \label{fig:SLSQP:fidelity}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/frequency.png}
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:SLSQP:frequency}
@@ -414,13 +414,13 @@ For this run, the same constraints and parameter bounds used in the Nelder-Mead 
 
     \vspace{0.5cm}
 
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/amplitude.png}
         \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:SLSQP:amplitude}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/SLSQP/beta.png}
         \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
         \label{fig:SLSQP:beta}
@@ -447,9 +447,9 @@ Since the gradient must be estimated numerically, each step involves multiple ev
         \textbf{Method} & \textbf{Success} & \textbf{Infidelity} & \textbf{Iterations} & \textbf{RB Evaluations} & \textbf{Duration [s]}\\
         \midrule
         \textbf{Nelder-Mead} & False & 0.002732 & 40 & 93 & 2892 \\
-        \textbf{init\_symplex\_1} & False &  0.004593 & 40 & 99 & 3096\\
-        \textbf{init\_symplex\_2} & False & 0.004297 & 40 & 100 & 3128\\
-        \textbf{init\_symplex\_3} & False & 0.004507 & 40 & 106 & 3190\\
+        \textbf{init\_simplex\_1} & False &  0.004593 & 40 & 99 & 3096\\
+        \textbf{init\_simplex\_2} & False & 0.004297 & 40 & 100 & 3128\\
+        \textbf{init\_simplex\_3} & False & 0.004507 & 40 & 106 & 3190\\
         \textbf{SLSQP} & True & 0.004861 & 15 & 180 & 3873\\
         \bottomrule
     \end{tabular}
@@ -518,13 +518,13 @@ Given a population of 7 individuals and a total of 30 generations, the optimizat
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/fidelity.png}
         \caption{Plot of the average Clifford gate fidelity as a function of the optimization steps.}
         \label{fig:CMA:fidelity}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/CMA_frequency.png}
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:CMA:frequency}
@@ -532,13 +532,13 @@ Given a population of 7 individuals and a total of 30 generations, the optimizat
 
     \vspace{0.5cm}
 
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/CMA_amplitude.png}
         \caption{Plot of the amplitude of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:CMA:amplitude}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/CMA/beta_CMA.png}
         \caption{Plot of the $\beta$ multiplying coefficient for the second quadrature component of the DRAG pulse.}
         \label{fig:CMA:beta}
@@ -748,13 +748,13 @@ Figure \ref{fig:RBfailed} presents a few representative examples of such cases, 
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed1.png}
         \caption{Plot of the output of RB protocol for trial 250.}
         \label{fig:optuna1000beta:failed1}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed2.png}
         \caption{Plot of the output of RB protocol for trial 486.}
         \label{fig:optuna1000beta:failed2}
@@ -762,13 +762,13 @@ Figure \ref{fig:RBfailed} presents a few representative examples of such cases, 
 
     \vspace{0.5cm}
 
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed3.png}
         \caption{Plot of the output of RB protocol for trial 192.}
         \label{fig:optuna1000beta:failed3}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
+    \begin{subfigure}[t]{0.495\textwidth}
         \includegraphics[width=\textwidth]{figures/png/RB_optimization/Optuna/1000beta/failed4.png}
         \caption{Plot of the output of RB protocol for trial 148.}
         \label{fig:optuna1000beta:failed4}
