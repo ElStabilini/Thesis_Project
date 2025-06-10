@@ -43,17 +43,11 @@ U(\gamma, \theta, \phi) = R_Z(\gamma + \phi) \cdot R_Z(-\phi) R_X(\theta) R_Z(\p
 Note that, in practice, this final $R_Z$ rotation does not need to be realized as a physical pulse. 
 Instead, it can be implemented virtually by adjusting the phase reference of subsequent pulses, a technique known as the virtual-Z gate\cite{McKay_2017}. \\
 
-\subsection{RX90 as native gate}
-Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, we decided to explore the possibility of including the $R_X(\pi/2)$ gate in the native set of Qibolab.
+\subsection{Differences in pi-half pulse calibration}
+Since many routines and protocols in quantum computing rely on $R_X(\pi/2)$ rotations, we decided to explore the possibility of including the $R_X(\pi/2)$ gate in the native set of \Qibolab.
 The main motivation for this addition is that, until now, we had assumed the amplitude or duration of the $R_X(\pi/2)$ gate was exactly half that of the $R_X(\pi)$ pulse.
 This assumption implies a perfectly linear response of the qubit to the drive pulse; an idealization that may not be satisfied in practice due to nonlinearities in the system or imperfections in the pulse generation and transmission.
 
-To support this change we updated the \tt{native.py} module, which provides the data containers for holding the pulse parameters required for implementing every native gate.
-Additionally, we modified some of the calibration experiments presented in Section \ref{sec:calibration} to support the calibration of this new gate.
-In particular, we adapted the code used for the various implementations of the Rabi oscillation measurement protocol to include the $R_X(\pi/2)$ gate.
-
-\subsection{Results}
-In this Section, we present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.\\
 For each of the calibration experiments concerning the rotation pulses, we provide examples of plots to show how the relevant physical quantities vary depending on whether we are calibrating the $R_X(\pi)$ or the $R_X(\pi/2)$ gate.\\
 In addition to the plots, we provide a summary table where we report the measured amplitude (or duration) of the microwave pulse, along with the associated uncertainty.
 In each table, we include also the standardized difference between the amplitude (or duration) values of the $RX90$ pulse obtained with different methods.
@@ -97,6 +91,7 @@ This suggests that, despite the theoretical expectation of linear scaling betwee
 \subsubsection{Rabi length}
 The pulse duration measurements for the $R_X(\pi)$ and $R_X(\pi/2)$ gates were carried out on the Soprano-D chip by QuantWare \cite{qw5q}, when necessary we will refer to this chip as \tt{qw5q}.
 The reason for this is that these measurements were performed after the scheduled cryostat maintenance, and at the time \tt{qw11q} was not yet calibrated.
+The \tt{qw5q} chip is a five-qubit chip, in the following the chip will be denoted as \tt{0}, \tt{1}, \tt{2}, \tt{3} and \tt{4}.
 
 The sequence of measurements mirrored that used for the amplitude calibration: $R_X(\pi)$ was calibrated first, followed by $R_X(\pi/2)$, with all experimental settings kept fixed except for the \tt{rx90} flag.
 An example of the output of the calibration protocol for pulse duration, for both the $R_X(\pi)$ and $R_X(\pi/2)$ gates, is shown in Figures \ref{fig:3} and \ref{fig:3_90}. 
@@ -228,7 +223,78 @@ This is especially true in scenarios where high gate fidelity is critical or whe
     \label{fig:RXvsRX90}
 \end{figure}
 
-Considering both these results and the fact that we wanted to avoid introducing breaking changes to the library, we decided not to replace the $R_X(\pi)$ gate with the $R_X(\pi/2)$ gate as the native gate. Instead, we opted to simply add the $R_X(\pi/2)$ gate to the set of native gates in \Qibolab.
+\subsection{RX90 as native gate}
+Considering both these results and the fact that we wanted to avoid introducing breaking changes to the library, we decided not to replace the $R_X(\pi)$ gate with the $R_X(\pi/2)$ gate as the native gate. 
+Instead, we opted to simply add the $R_X(\pi/2)$ gate to the set of native gates in \Qibolab (see \ref{snippet:natives}).
+To support this change we updated the \tt{native.py} module, which provides the data containers for holding the pulse parameters required for implementing every native gate.
+
+Additionally, we modified some of the calibration experiments of the \Qibocal library presented in Section \ref{sec:calibration} to support the calibration of this new gate.
+In particular, we adapted the code used for the various implementations of the Rabi oscillation measurement protocol to include the $R_X(\pi/2)$ gate.
+
+Moreover, we also modified the function that constructs single-qubit rotations so that if the \tt{rx90} flag is set to \tt{True}, meaning the $RX90$ gate has been calibrated, the rotations are built starting from an $R_X(\pi/2)$ pulse (see ref{snippet:rotation.adapt}). 
+In this case, the rotation angle is implemented by adjusting the pulse amplitude accordingly, and if the required amplitude exceeds 0.5, two consecutive pulses are applied to achieve the desired rotation.
+
+\begin{lstlisting}[language=Python, caption={Arbitrary qubit rotation implementation in \Qibolab.}, label={snippet:rotation.adapt}]
+    
+    def rotation(
+        seq: PulseSequence,
+        theta: float = np.pi,
+        phi: float = 0.0,
+        rx90: bool = False,
+    ) -> PulseSequence:
+        """Create a sequence for single-qubit rotation.
+    
+        ``theta`` will be the angle of the rotation, while ``phi`` the angle that the rotation axis forms with x axis.
+        If ``rx90`` is True the rotation will be performed starting from an RX90 pulse doubling its amplitude,
+        if the amplitude is greater than 0.5 two pulses are played.
+        """
+        theta, phi = _normalize_angles(theta, phi)
+        ch, pulse = seq[0]
+        assert isinstance(pulse, Pulse)
+        amplitude = pulse.amplitude * theta / np.pi
+        if rx90:
+            if amplitude > 0.5:
+                p = replace(pulse, amplitude=amplitude, relative_phase=phi)
+                return PulseSequence([(ch, p), (ch, p.model_copy())])
+            else:
+                return PulseSequence(
+                    [(ch, replace(pulse, amplitude=2 * amplitude, relative_phase=phi))]
+                )
+        return PulseSequence(
+            [(ch, replace(pulse, amplitude=amplitude, relative_phase=phi))]
+        )
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={Updated natives class in \Qibolab.}, label={snippet:natives}]
+    
+    class SingleQubitNatives(NativeContainer):
+        """Container with the native single-qubit gates acting on a specific
+        qubit."""
+
+        RX: Optional[Native] = None
+        """Pulse to drive the qubit from state 0 to state 1."""
+        RX90: Optional[Native] = None
+        """Pulse to drive the qubit from state 0 to state +."""
+        RX12: Optional[Native] = None
+        """Pulse to drive to qubit from state 1 to state 2."""
+        MZ: Optional[Native] = None
+        """Measurement pulse."""
+        CP: Optional[Native] = None
+        """Pulse to activate coupler."""
+
+        def R(self, theta: float = np.pi, phi: float = 0.0) -> PulseSequence:
+            """Create a sequence for single-qubit rotation.
+
+            ``theta`` will be the angle of the rotation, while ``phi`` the angle that the rotation axis forms with x axis.
+            """
+            if self.RX90 is not None:
+                return rotation(self.RX90, theta, phi, rx90=True)
+            assert self.RX is not None
+            return rotation(self.RX, theta, phi)
+
+\end{lstlisting}
+
 
 \newpage
 \newgeometry{a4paper, top=2.5cm, bottom=2.5cm, inner=1.5cm, outer=1.5cm, heightrounded, bindingoffset=1 cm}
@@ -290,6 +356,7 @@ Considering both these results and the fact that we wanted to avoid introducing 
 
 \newpage
 \restoregeometry
+
 \section{Flux pulse correction}
 
 \subsection{Cryoscope}
