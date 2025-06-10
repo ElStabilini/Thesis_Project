@@ -1,6 +1,6 @@
 \chapter{Qubit calibration}
 
-In this chapter I will describe the process of calibration for superconducting flux-tunable transmon on the hardware located in the QRC (Quantum Research Center) Laboratory of the TII (Technology \& Innovation Institute) in Abu Dhabi.
+In this chapter we will describe the process of calibration for superconducting flux-tunable transmon on the hardware located in the QRC (Quantum Research Center) Laboratory of the TIwe (Technology \& Innovation Institute) in Abu Dhabi.
 
 \section{Experimental setup}
 Most of the results presented in this work were obtained using the Contralto-D chip \cite{qw11q}, which offers up to 21 fully connected qubits and 4 isolated qubits, for a total of 25 physical qubits.
@@ -57,7 +57,7 @@ The generated microwave pulses are shaped and modulated at room temperature befo
 Similarly, signals returning from the qubits are amplified and digitized for state discrimination and further processing. 
 The electronics employed in the lab for the control of the \tt{qw11q} is the OPX1000 platform by Quantum Machines \cite{opx1000}.
 
-The software I used for the calibration of the qubits and the subsequent experiments is \Qibocal (\cite{pasquale_qibocal_2024}, \cite{qibocalscience}, \cite{qibocalgit}), while the backend for communication with the laboratory instruments is \Qibolab (\cite{efthymiou_qibolab_2024}, \cite{qibolabscience}, \cite{qibolabgit}).
+The software we used for the calibration of the qubits and the subsequent experiments is \Qibocal (\cite{pasquale_qibocal_2024}, \cite{qibocalscience}, \cite{qibocalgit}), while the backend for communication with the laboratory instruments is \Qibolab (\cite{efthymiou_qibolab_2024}, \cite{qibolabscience}, \cite{qibolabgit}).
 \Qibolab is the control layer responsible for managing and executing low-level instructions on the hardware, bridging high-level quantum models and physical quantum platforms.
 It is designed to support diverse experimental setups and allows the researcher to define custom hardware configurations through a platform abstraction and to execute custom pulse sequences using both commercial and open-source firmware.
 The communication between \Qibolab and the quantum hardware is structured and modular, relying on a stack that includes instrument drivers, pulse control logic, and a compiler that translates abstract quantum gates into hardware-specific instructions.
@@ -67,9 +67,9 @@ This structure enables compatibility with heterogeneous platforms and facilitate
 
 \section{Single qubit calibration experiments}\label{sec:calibration}
 
-The first task that I needed to complete at the beginning of my thesis work was the calibration of at least a line of the superconducting qubits of the Contralto-D chip using the \Qibocal library.
-From this point onward, for the sake of brevity, I will refer to the chip interchangeably as Contralto-D or \tt{qw11q}, which is the name of the node under which it is registered on the QRC computing cluster.
-In the following, I will describe the experiments that I performed and comment on the results.
+The first task that we needed to complete at the beginning of my thesis work was the calibration of at least a line of the superconducting qubits of the Contralto-D chip using the \Qibocal library.
+From this point onward, for the sake of brevity, we will refer to the chip interchangeably as Contralto-D or \tt{qw11q}, which is the name of the node under which it is registered on the QRC computing cluster.
+In the following, we will describe the experiments that we performed and comment on the results.
 
 \subsection{Resonator calibration}
 Before starting with the calibration of the gates necessary for quantum computing it is necessary to characterize the qubit and calibrate the readout pulses. 

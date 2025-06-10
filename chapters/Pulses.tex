@@ -1,7 +1,7 @@
 \chapter{Pulses analysis and tuning}
 
 Having concluded that the closed-loop optimization protocol we tested would not significantly improve our circuit performance, we shifted our focus towards the improvement and implementation of individual protocols to improve the accuracy of qubit operations.\\
-In this chapter, I present the results of two additions to the \Qibocal software. 
+In this chapter, we present the results of two additions to the \Qibocal software. 
 The first is the inclusion of an $RX90$ gate as a native gate, which can enhance the performance of protocols requiring qubit rotations of $\frac{\pi}{2}$.
 The second is the implementation of the cryoscope, a routine first described in \cite{rol_time-domain_2020}, which is useful for correcting distortions in the magnetic flux pulse applied to the SQUID.
 
@@ -54,8 +54,8 @@ In particular, we adapted the code used for the various implementations of the R
 
 \subsection{Results}
 In this Section, we present the results obtained performing the modified version of the Rabi experiments implemented in \Qibocal.\\
-For each of the calibration experiments concerning the rotation pulses, I provide examples of plots to show how the relevant physical quantities vary depending on whether we are calibrating the $R_X(\pi)$ or the $R_X(\pi/2)$ gate.\\
-In addition to the plots, I provide a summary table where I report the measured amplitude (or duration) of the microwave pulse, along with the associated uncertainty.
+For each of the calibration experiments concerning the rotation pulses, we provide examples of plots to show how the relevant physical quantities vary depending on whether we are calibrating the $R_X(\pi)$ or the $R_X(\pi/2)$ gate.\\
+In addition to the plots, we provide a summary table where we report the measured amplitude (or duration) of the microwave pulse, along with the associated uncertainty.
 In each table, we include also the standardized difference between the amplitude (or duration) values of the $RX90$ pulse obtained with different methods.
 The standardized difference is defined as
 \begin{equation}\label{eq:std_difference}
@@ -95,7 +95,7 @@ This suggests that, despite the theoretical expectation of linear scaling betwee
 \end{figure}
 
 \subsubsection{Rabi length}
-The pulse duration measurements for the $R_X(\pi)$ and $R_X(\pi/2)$ gates were carried out on the Soprano-D chip by QuantWare \cite{qw5q}, when necessary I will refer to this chip as \tt{qw5q}.
+The pulse duration measurements for the $R_X(\pi)$ and $R_X(\pi/2)$ gates were carried out on the Soprano-D chip by QuantWare \cite{qw5q}, when necessary we will refer to this chip as \tt{qw5q}.
 The reason for this is that these measurements were performed after the scheduled cryostat maintenance, and at the time \tt{qw11q} was not yet calibrated.
 
 The sequence of measurements mirrored that used for the amplitude calibration: $R_X(\pi)$ was calibrated first, followed by $R_X(\pi/2)$, with all experimental settings kept fixed except for the \tt{rx90} flag.
@@ -128,7 +128,7 @@ These observations indicate a more consistent agreement between direct and indir
 \end{figure}
 
 \subsubsection{Rabi amplitude frequency}
-In Figure \ref{fig:af_comparison} I show the results of the Rabi amplitude-frequency calibration experiments, which aim to determine the correct amplitude and frequency for either the $R_X(\pi)$ or $R_X(\pi/2)$ gate, with a fixed pulse duration of 40 ns.
+In Figure \ref{fig:af_comparison} we show the results of the Rabi amplitude-frequency calibration experiments, which aim to determine the correct amplitude and frequency for either the $R_X(\pi)$ or $R_X(\pi/2)$ gate, with a fixed pulse duration of 40 ns.
 As in previous cases, the scan ranges for amplitude and frequency were held constant between the two experiments; the only difference was the target gate for calibration.
 
 \begin{figure}[h!]
@@ -195,7 +195,7 @@ It is important to emphasize, however, that this apparent agreement is largely a
     \label{fig:af_qw5q}
 \end{figure}
 
-In Figure \ref{fig:RXvsRX90} I show three plots, each comparing the pulse parameters obtained for implementing an $R_X(\pi/2)$ gate using different calibration strategies, across the various qubits for which the $RX90$ calibration was performed.
+In Figure \ref{fig:RXvsRX90} we show three plots, each comparing the pulse parameters obtained for implementing an $R_X(\pi/2)$ gate using different calibration strategies, across the various qubits for which the $RX90$ calibration was performed.
 
 An interesting observation, previously mentioned but made more evident when examining the plots, is that both the amplitude and duration estimates for the $R_X(\pi/2)$ gate when obtained by halving the corresponding values calibrated for the $R_X(\pi)$ gate, tend to be slightly overestimated compared to those obtained via direct calibration of the $R_X(\pi/2)$ gate.
 This discrepancy is particularly evident for measurements conducted on the \tt{qw11q} chip, as also confirmed by the values of the standardized difference reported in Table \ref{tab:amplitude}.
@@ -293,7 +293,7 @@ Considering both these results and the fact that we wanted to avoid introducing 
 \section{Flux pulse correction}
 
 \subsection{Cryoscope}
-The protocol that I describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to reconstruct the magnetic flux signal that biases the SQUID and then determine predistortions that need to be applied so that the qubit receives the flux pulse as intended by the experimenter.
+The protocol that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to reconstruct the magnetic flux signal that biases the SQUID and then determine predistortions that need to be applied so that the qubit receives the flux pulse as intended by the experimenter.
 
 As explained in section \ref{sec:cQED}, accurate dynamical control of qubit frequency is of key importance to realize single- and two-qubit gates.
 One of the on-chip control variables that is used on the QunatumWare chip is the magnetic flux through a SQUID loop, the signal for magnetic flux control originates from an arbitrary waveform generator (AWG) which operates at room temperature.\\
@@ -308,7 +308,7 @@ When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\foo
 \begin{equation}\label{eq:phi}
     \frac{\varphi_{\tau}}{2\pi} = \int_{0}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t = \int_{0}^{\tau} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t + \int_{\tau}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t
 \end{equation}
-where in the second step I separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In Appendix \ref{app:phase_rec} we calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
+where in the second step we separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In Appendix \ref{app:phase_rec} we calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
 
 The experiment is then completed with a $\frac{\pi}{2}$ rotation around the $y$- or $x$-axis of the Bloch sphere to measure respectively the $\langle X \rangle$ or $\langle Y \rangle$ components of the Bloch vector when applying the measurement gate $MZ$. 
 From the measurement of $\langle X \rangle$ and $\langle Y \rangle$ we can extract the relative phase $\varphi_{\tau}$.
@@ -328,7 +328,7 @@ numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the
 
 At this point, we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting Equation \ref{eq:freqdepndenceonflux}.
 
-In the following sections I will describe how we used this protocol to reconstruct the voltage-to-flux step response, and then how to determine and apply pre-distortion corrections to the control waveforms.
+In the following sections we will describe how we used this protocol to reconstruct the voltage-to-flux step response, and then how to determine and apply pre-distortion corrections to the control waveforms.
 
 \subsubsection{Experimental parameters}
 The first step in implementing the cryoscope protocol involves building the appropriate pulse sequence. 
@@ -356,7 +356,7 @@ Given the relatively small detuning, we decided to perform an additional acquisi
 For this second acquisition, a \tt{flux\_pulse\_amplitude} of $0.5$ was used, corresponding to a detuning of approximately $0.5$ GHz. 
 In this case, the waveform was also modified: a single step pulse of unit amplitude and $90$ ns duration was applied, with no initial or final padding.
 
-In the following, I will refer to the two waveforms as waveform\_1 and waveform\_2. 
+In the following, we will refer to the two waveforms as waveform\_1 and waveform\_2. 
 The shapes of both waveforms are shown in Figure \ref{fig:ideal_waveform}
 
 \begin{figure}[h!]
@@ -532,7 +532,7 @@ Specifically, we assume a quadratic model of the form
 where $f$ denotes the detuning, $A$ is the applied flux amplitude, and $c_1$, $c_2$, and $c_3$ are coefficients obtained from the \tt{flux\_amplitude\_frequency} routine (see Appendix \ref{app:flux_amplitude_frequency} for more details). 
 By inverting this relation, we reconstruct the time-dependent flux amplitude experienced by the qubit. 
 The results of this reconstruction are shown in Figure \ref{fig:amplitude}.
-For completeness, I have included the plots related to the amplitude reconstruction performed for all previously discussed cases, both with and without demodulation.
+For completeness, we have included the plots related to the amplitude reconstruction performed for all previously discussed cases, both with and without demodulation.
 
 \begin{figure}[h!]
     \centering

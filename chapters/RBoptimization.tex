@@ -17,7 +17,7 @@ In such protocols, Clifford gates enable the depolarization of coherent errors a
 Standard randomized benchmarking (RB) protocols, as used in this chapter, measure the average fidelity of a single-qubit Clifford gate. 
 While this quantity does not directly reflect the fidelity of individual native gates, it remains a meaningful and widely used figure of merit.
 
-In this chapter, I present an initial attempt to address both the challenges of calibration complexity and residual gate errors. 
+In this chapter, we present an initial attempt to address both the challenges of calibration complexity and residual gate errors. 
 The goal is to test calibration procedures that are not only effective but also repeatable and accessible to non-expert users.  
 Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of RB can improve gate performance, we explored an automatic calibration improvement procedure based on average Clifford gate fidelity obtained from standard RB evaluation as an optimization target.
 In our implementation, the optimization is performed with respect to the $R_X(\pi)$ pulse which is a native gate in \Qibolab (see Section \ref{subsec:native_gates}).
