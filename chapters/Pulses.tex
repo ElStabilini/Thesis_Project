@@ -369,12 +369,12 @@ The protocol that we describe in this section was first introduced in \cite{rol_
 \subsection{Preliminary analyses}\label{subsec:preliminary}
 
 In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by directly measuring the qubit state.
-In this routine, we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
-The first $\frac{\pi}{2}$ pulse rotates the qubit of $\frac{\pi}{2}$ around the $y$ axis of the Bloch sphere changing its state from $\ket{0}$ to $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$.
+In this routine, we send the qubit a pulse sequence where a flux pulse, of varying duration $\tau$, is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
+The first $\frac{\pi}{2}$ pulse rotates the qubit of $\frac{\pi}{2}$ around the $y$ axis of the Bloch sphere, changing its state from $\ket{0}$ to $\frac{\ket{0}+\ket{1}}{\sqrt{2}}$.
 
 When a flux pulse $\Phi_{Q,\tau}(t)$ of duration $\tau$ is sent to the qubit\footnote{To send a $\Phi_{Q,\tau}(t)$ flux pulse we are actually sending a $V_{\text{in},\tau}(t)$ DAC pulse} after the first $\frac{\pi}{2}$ pulse, the qubits evolve to the state $\frac{\ket{0}+e^{i\varphi_\tau}\ket{1}}{\sqrt{2}}$ with relative quantum phase 
 \begin{equation}\label{eq:phi}
-    \frac{\varphi_{\tau}}{2\pi} = \int_{0}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t = \int_{0}^{\tau} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t + \int_{\tau}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t
+    \frac{\varphi_{\tau}}{2\pi} = \int_{0}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t = \int_{0}^{\tau} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t + \int_{\tau}^{T_{sep}} \Delta f_Q (\Phi_{Q,\tau(t)})\text{d}t;
 \end{equation}
 where in the second step we separated the contributions from flux response up to $\tau$ and the turn-off transient \footnote{In Appendix \ref{app:phase_rec} we calculate the relative phase $\varphi_{\tau}$ for a more general shape of the flux pulse.}. 
 
@@ -391,11 +391,11 @@ From the measurement of $\varphi_{\tau + \Delta\tau}$ and $\varphi_\tau$ we can 
     &=\frac{1}{\Delta\tau}\left(\int_{\tau}^{\tau+\Delta\tau} \Delta f_Q(\Phi_{Q,\tau+\Delta\tau})dt + \int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\\
     &= \frac{1}{\Delta\tau}\int_{\tau}^{\tau+\Delta\tau} \Delta f_Q(\Phi_{Q,\tau+\Delta\tau})dt + \varepsilon
 \end{align}  
-with \[\varepsilon = \frac{1}{\Delta\tau}\left(\int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right)\]
+with \[\varepsilon = \frac{1}{\Delta\tau}\left(\int_{\tau+\Delta\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau+\Delta\tau}(t))dt - \int_{\tau}^{T_{sep}}\Delta f_Q (\Phi_{Q,\tau}(t))dt\right).\]
 The phase contribution from the turn-off transients is minimal due to the sharp return to the first-order flux-insensitive sweet spot of the nearly quadratic $\Delta f_Q(\Phi_Q)$; 
 numerical simulations suggest that $|\varepsilon|/\Delta f_R$ remains within the range of approximately $10^{-2}$ to $10^{-3}$ for typical dynamical distortions in commonly used electronic components \cite{negligible} \cite{Langford2017}, for this reason it will be neglected.\\
 
-At this point, we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting Equation \ref{eq:freqdepndenceonflux}.
+At this point, we can obtain the reconstructed flux pulse $\Phi_R(t)$ inverting Equation \ref{eq:freqdepndenceonflux_approx}.
 
 In the following sections we will describe how we used this protocol to reconstruct the voltage-to-flux step response, and then how to determine and apply pre-distortion corrections to the control waveforms.
 
@@ -403,7 +403,7 @@ In the following sections we will describe how we used this protocol to reconstr
 In our implementation, we fixed $T_{sep}$ to $100$ ns longer than the maximum duration of the flux pulse; this approach avoids the need for fine timing calibration, as mentioned also in Rol et al \cite{rol_time-domain_2020}.
 
 In the initial analysis conducted to develop the cryoscope routine for the flux pulse, we used a waveform defined as a combination of two-step functions. 
-Specifically, the waveform remains at zero for the first $10$ ns, rises to a nominal unit amplitude for the subsequent $50$ ns, and returns to zero for the final $10$ ns.
+Specifically, the waveform remains at zero for the first $10$ ns, rises to a nominal unit amplitude for the subsequent $50$ ns, and returns to zero for the final $10$ ns.\\
 The flux pulse amplitude used for this first acquisition and the corresponding preliminary analyses was $0.1$, which, as observed using the \tt{flux\_amplitude\_frequency} routine, induces a detuning of approximately $0.01$ GHz in qubit \tt{D1}. 
 
 Given the relatively small detuning, we decided to perform an additional acquisition using a flux pulse with a higher amplitude to obtain more reliable results.
@@ -516,7 +516,7 @@ This behavior is consistent with the physical expectation that the flux pulse ra
 
 \subsubsection{Flux pulse reconstruction}\label{subsec:WL}
 After reconstructing the phase signal from the demodulated complex data, we can estimate the instantaneous detuning of the qubit by computing the time derivative of this phase. 
-As explained at the beginning of this Section, the rate at which the phase accumulates corresponds to the detuning (see Equation \ref{eq:detuning}). 
+As explained at the beginning of this Section, the rate at which the phase accumulates corresponds to the detuning (see Equation \ref{eq:detuning}), to obtain the detuning it's thus necessary to differentiate the phase signal. 
 
 \paragraph{Savitzky-Golay filter}
 To perform this differentiation in a way that reduces the impact of noise, we used a Savitzky-Golay filter, which operates by fitting a polynomial to small segments of the data along the time axis. In this work, we used the \tt{scipy.signal} implementation of the signal with the default settings where possible. 
@@ -664,7 +664,7 @@ where $s(t)$ is the measured response.
 The parameters $g, A$, and $\tau$  are estimated by performing a least-squares minimization. 
 Specifically, we minimize the squared difference between the corrected signal $s_{\text{corr}}(t)$ and the ideal target signal using \tt{least\_squares} method of the \tt{scipy.optimize} library.
 
-Figures \ref{fig:inverse_short} and \ref{fig:inverse:long} show the results of applying the exponential filters, obtained through the procedure described above, to different flux pulses.
+Figures \ref{fig:inverse_short} and \ref{fig:inverse:long} show the results of applying the exponential filter, obtained through the procedure described above, to different flux pulses.
 
 %inverse step
 \begin{figure}[h!]
@@ -745,7 +745,7 @@ Before presenting the remaining results and continuing with the description of t
 The tests on filter performance and the determination of corresponding taps using \tt{waveform\_1} primarily serve as a means to evaluate the effectiveness and limitations of the correction method. 
 In this case, the exponential rise corrected by the filters does not reflect a physical property of the system, but rather an artifact introduced by the smoothing behavior of the Savitzky-Golay filter.
 
-To obtain correction taps that address real physical distortions in the flux line, it is necessary to use acquisitions based on pulses without paddingin order to guarantee a more accurate reconstruction of the system response by avoiding non-physical effects.
+To obtain correction taps that address real physical distortions in the flux line, it is necessary to use acquisitions based on pulses without padding order to guarantee a more accurate reconstruction of the system response by avoiding non-physical effects.
 
 Consequently, in the analyses that follow, we decided to focus exclusively on the non-zero portion of both flux signal. 
 Even for the initial acquisitions that include a flat pre-pulse region, this segment has been excluded to ensure that the tests performed with the filters are more meaningful.
@@ -810,7 +810,6 @@ where $x[n]$ is the input signal and $y[n]$ is the output signal of the filter.
 The filter coefficients are obtained by minimizing the average relative deviation between the filtered output (the result of applying the FIR filter to the signal already corrected by the IIR filter) and the ideal step response. 
 This optimization is carried out using the \tt{CMA-ES} algorithm (for further details on the \tt{CMA-ES} algorithm, see Section \ref{sec:CMA}).
 
-In the implementation for \Qibocal, the number of FIR filter taps can be selected by the user via the \tt{fir} parameter. 
 For our initial tests, we chose to use 20 taps.\\
 Given that the OPX1000 controller for the qw11q operates at a sampling rate of $1$ GSa/s, this corresponds to one tap per nanosecond. 
 Accordingly, in these initial tests, we optimized 20 parameters to determine the 20 filter taps.
@@ -876,12 +875,9 @@ The results of this improved optimization are shown in Figure \ref{fig:nice}.
 As expected, the application of FIR filters leads to a clear improvement in signal quality. 
 For the traces shown in Figure \ref{fig:nice:nopad}, the SNR increases from 833 to 951 in the first case, and from 2867 to 7338 in the second.
 
-\subsubsection{Output filters in QM}
+\subsubsection{Output filters calculations}
 
-Each analog output port of the OPX system used in this work is equipped with a digital filter that is applied to the signal in the digital domain before conversion to analog. 
-Using the output filter, we can attend to the unwanted effects of the different electrical components of the setup without altering our waveforms.
-
-Using \Qibolab the filters are provided to the OPX via the \tt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
+Using \Qibolab the filters are provided to the control electronics via the \tt{parameters.json} file, which contains the coefficients for the feedforward and feedback components according to the equation
 \begin{equation}\label{eq:OPX_filter}
     y[n] = \sum_{m=1}^{M} a_m y[n - m] + \sum_{k=0}^{K} b_k x[n - k],
 \end{equation}
@@ -973,6 +969,7 @@ However, on longer timescales, residual oscillations remain that are not address
 While we could attempt to mitigate these effects by combining multiple IIR and FIR filters, the remaining signal distortions appear to be oscillatory in nature and are likely due to ringing phenomena, transient oscillations that typically arise from impedance mismatches, or resonant components in the control line.
 These ringing effects are particularly evident in the acquisitions shown in Figure \ref{fig:cryoscope:B2} and \ref{fig:cryoscope:B4}, and persist even after the application of corrective filtering, as confirmed by the reconstructed flux pulses displayed in Figures \ref{fig:flux:B2} and \ref{fig:flux:B4}.
 These plots show the reconstructed flux pulse when the digital filters determined with the cryoscope routine are applied, we can see that the oscillations decay in amplitude over time and appear to vanish after approximately $75$ ns. 
+Nonetheless, we expect that the application of these filters will significantly improve the control of the qubit frequency.
 
 \begin{figure}[h!]
     \centering
@@ -1003,7 +1000,8 @@ These plots show the reconstructed flux pulse when the digital filters determine
 \end{figure} 
 
 \paragraph{}
-Experiments in which flux signal distortions are particularly evident are those where a well-defined chevron pattern is expected. Deviations from the ideal chevron structure often indicate the presence of flux distortions in the control signal \cite{Langford2017}.
+Experiments in which flux signal distortions are particularly evident are those where a well-defined chevron pattern is expected. 
+Deviations from the ideal chevron structure often indicate the presence of flux distortions in the control signal \cite{Langford2017}.
 
 An example of such an experiment is the routine referred to as chevron in \Qibocal. The name derives from the characteristic chevron-shaped interference pattern that serves as the expected output of the protocol.
 This calibration routine is used to characterize and tune native two-qubit gates, such as the CNOT or iSWAP, which are typically implemented using sequences of flux pulses, possibly applied to multiple qubits, combined with virtual $Z$-rotations.
@@ -1089,7 +1087,7 @@ Although user-defined, this amplitude should ideally induce a detuning from the 
 For example, it is useful to study the qubit response to a flux pulse which induces a frequency detuning of approximately 1 GHz. 
 This detuning value is commonly employed in high-fidelity entangling gate implementations \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
 
-Reconstruction of the flux pulse is performed using the \tt{savgol} filter from the SciPy library, with a default \tt{window\_length} corresponding to $7$ points, as discussed in Subsection \ref{subsec:WL} - Flux pulse reconstruction.
+Reconstruction of the flux pulse is performed using the \tt{savgol} filter from the SciPy library, with a polynomial order of 2 and a default \tt{window\_length} corresponding to $7$ points, as discussed in Subsection \ref{subsec:WL} - Flux pulse reconstruction.
 
 The Cryoscope protocol enables the extraction of the feedforward and feedback coefficients used to define these filters. 
 In the \Qibo setup, the resulting coefficients are stored in the platform configuration file (\tt{parameters.json}), and, once the setup is updated via the \texttt{qq update} command, the filters are automatically applied to all flux pulses.
@@ -1097,7 +1095,7 @@ In the \Qibo setup, the resulting coefficients are stored in the platform config
 Regarding filter implementation, we have currently opted for a single exponential correction to compute the IIR taps. 
 This decision is supported by the analysis presented in Subsection \ref{subsec:IIR} - IIR corrections, and by the initial experiments in which cryoscope-derived filters were applied (see Subsection \ref{subsec:cryo_results} - Results). 
 The results suggest that a single exponential correction is sufficient for effective IIR filtering. 
-For FIR filtering, we have chosen to apply a correction with 20 FIR taps.
+For FIR filtering, the number of FIR filter taps can be selected by the user via the \tt{fir} parameter, if not specified the default value is of 20 taps. 
 
 \begin{lstlisting}[language=Python, caption={Runcard example to run a Cryoscope experiment.}, label={snippet:cryoscope}]
     
@@ -1115,6 +1113,7 @@ For FIR filtering, we have chosen to apply a correction with 20 FIR taps.
           duration_step: 1
           flux_pulse_amplitude: 0.5
           relaxation_time: 50000
+          fir: 30
 
 \end{lstlisting}
 
