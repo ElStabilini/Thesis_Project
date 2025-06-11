@@ -366,7 +366,7 @@ If not properly compensated, these distortions can degrade gate performance, imp
 
 The protocol that we describe in this section was first introduced in \cite{rol_time-domain_2020}, the goal is to reconstruct the magnetic flux signal that biases the SQUID and then determine predistortions that need to be applied so that the qubit receives the flux pulse as intended by the experimenter.
 
-\subsection{preliminary analyses}\label{subsec:preliminary}
+\subsection{Preliminary analyses}\label{subsec:preliminary}
 
 In \cite{rol_time-domain_2020} is proposed a technique to characterize flux-pulse distortions induced by components inside the dilution refrigerator by directly measuring the qubit state.
 In this routine, we send the qubit a pulse sequence where a flux pulse of varying duration $\tau$ is embedded between two $\frac{\pi}{2}$ pulses which are always separated by a fixed interval $T_{sep}$.\\
@@ -401,18 +401,6 @@ In the following sections we will describe how we used this protocol to reconstr
 
 \subsubsection{Experimental parameters}
 In our implementation, we fixed $T_{sep}$ to $100$ ns longer than the maximum duration of the flux pulse; this approach avoids the need for fine timing calibration, as mentioned also in Rol et al \cite{rol_time-domain_2020}.
-The variation in pulse duration $\Delta\tau$ is user-defined and determines the sampling resolution of the time-dependent frequency shift.
-Specifically, users configure the experiment via a runcard \footnote{In Qibocal, all protocols are deployed through a YAML-based runcard, which allows the user to specify experiment-specific parameters.}
-where they set the minimum (\tt{duration\_min}) and maximum (\tt{duration\_max}) durations of the flux pulse, along with the duration increment (\tt{duration\_step}), which corresponds to the interval $\Delta\tau$ used in Equation \ref{eq:detuning}.
-The lower bound $\Delta\tau$ is constrained by the sampling capabilities of the acquisition hardware.
-For all data and analyses reported in this section, we used the OPX1000 by Quantum Machines \cite{opx1000} as an acquisition device. 
-The OPX1000 has a sampling rate of 1 GSample/s, corresponding to a temporal resolution of $1$ ns which sets a lower limit $\Delta\tau \geq 1$ ns for the acquisition.
-
-The amplitude of the flux pulse, specified by the user through the parameter \tt{flux\_pulse\_amplitude}, can also be configured in the runcard. 
-While this parameter is user-defined, it is advisable to select an amplitude that induces a detuning from the qubit's sweet spot comparable to that used in typical flux-pulsed gate operations. 
-This ensures that the measured system response is representative of practical use cases.
-For example, it is useful to study the qubit response to a flux pulse which induces a frequency detuning of approximately 1 GHz. 
-This detuning value is commonly employed in high-fidelity entangling gate implementations \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
 
 In the initial analysis conducted to develop the cryoscope routine for the flux pulse, we used a waveform defined as a combination of two-step functions. 
 Specifically, the waveform remains at zero for the first $10$ ns, rises to a nominal unit amplitude for the subsequent $50$ ns, and returns to zero for the final $10$ ns.
@@ -447,7 +435,9 @@ The decision to perform tests with the second, longer waveform, omitting initial
 In particular, since the qubit's response is only affected during periods when a non-zero flux is applied, the system behavior before the pulse onset is less relevant for reconstruction purposes.
 Our primary focus is on characterizing the qubit's dynamics during the flux pulse and, potentially, in the transient period following its termination, to assess how long it takes for the qubit to return to its idle frequency after the pulse is switched off
 \footnote{Although we did not focus on this aspect, this is relevant in practical applications, as it allows for shorter idle times between pulses and thus enables a higher number of gate operations within a given time window.}.
-All experimental results and analyses presented herein are based on data acquired from qubit \tt{D1} of chip \tt{qw11q} unless differently specified.
+
+All experimental results and analyses presented herein are based on data acquired from qubit \tt{D1} of chip \tt{qw11q}, with OPX1000 by Quantum Machines \cite{opx1000} as acquisition device.
+The OPX1000 has a sampling rate of 1 GSample/s, corresponding to a temporal resolution of $1$ ns which sets a lower limit $\Delta\tau \geq 1$ ns for the acquisition, this is also the $\Delta\tau$ value we used in all acquisitions.
 
 \subsubsection{Phase reconstruction}
 The first step in analyzing the cryoscope data involves isolating the oscillatory components of the signals corresponding to the $\langle X \rangle$ and $\langle Y \rangle$ measurements. 
@@ -510,7 +500,7 @@ Without this preprocessing, the dominant carrier frequency could overshadow the 
     \label{fig:demodulation}
 \end{figure}
 
-By comparing Figure \ref{fig:no_demodulation:step} and Figure \ref{fig:demodulation:step}, the first observation we can make is that the reconstructed qubit phase begins to vary immediately after $t=10$ ns, while remaining essentially constant up to $t=9$ ns. 
+In the examples of phase reconstruction \ref{fig:demodulation}, by comparing Figure \ref{fig:no_demodulation:step} and Figure \ref{fig:demodulation:step}, the first observation we can make is that the reconstructed qubit phase begins to vary immediately after $t=10$ ns, while remaining essentially constant up to $t=9$ ns. 
 This seems to suggest that, at least within this time window, the flux pulse onset and the resulting qubit frequency shift happen quickly, with no evident latency.
 One possible explanation for the fast response observed at low flux amplitude $A = 0.1$, is that the flux pulse reaches its nominal value rapidly, making the expected exponential rise in frequency shift too fast to be resolved. 
 Additionally, the small amplitude induces a weak detuning, leading to slow phase accumulation that may be more susceptible to background noise, potentially obscuring the signal.
@@ -524,7 +514,7 @@ Notably, unlike the seemingly abrupt transition observed in the short time windo
 During this transient phase, the qubit frequency, and hence the rate of phase accumulation, increases progressively. 
 This behavior is consistent with the physical expectation that the flux pulse ramps up smoothly, and it highlights the importance of demodulation in accurately recovering the continuous phase evolution of the qubit in response to the pulse.
 
-\subsubsection{Flux pulse reconstruction}
+\subsubsection{Flux pulse reconstruction}\label{subsec:WL}
 After reconstructing the phase signal from the demodulated complex data, we can estimate the instantaneous detuning of the qubit by computing the time derivative of this phase. 
 As explained at the beginning of this Section, the rate at which the phase accumulates corresponds to the detuning (see Equation \ref{eq:detuning}). 
 
@@ -638,7 +628,7 @@ For completeness, we have included the plots related to the amplitude reconstruc
 
 Based on the results presented so far regarding the reconstruction of the flux pulse, we chose to adopt a default \tt{window\_length} corresponding to 7 points, similarly to what was done in \cite{rol_time-domain_2020}.
 
-\subsubsection{IIR corrections}
+\subsubsection{IIR corrections}\label{subsec:IIR}
 Our goal in implementing the Cryoscope protocol is to determine how to predistort the flux pulse in order to produce the desired detuning on the qubit. 
 This predistortion is applied by filtering the waveform generated by the AWG using a combination of FIR and IIR digital filters. 
 The goal of these filters is to compensate for the linear-dynamical distortions in the flux control line that would otherwise distort the shape of the pulse as it reaches the qubit.
@@ -755,10 +745,9 @@ Before presenting the remaining results and continuing with the description of t
 The tests on filter performance and the determination of corresponding taps using \tt{waveform\_1} primarily serve as a means to evaluate the effectiveness and limitations of the correction method. 
 In this case, the exponential rise corrected by the filters does not reflect a physical property of the system, but rather an artifact introduced by the smoothing behavior of the Savitzky-Golay filter.
 
-To obtain correction taps that address real physical distortions in the flux line, it is necessary to use acquisitions based on \tt{waveform\_2}, which has therefore been selected as the default waveform for the cryoscope protocol. 
-This choice ensures a more accurate reconstruction of the system response by avoiding non-physical effects due to pre-pulse padding.
+To obtain correction taps that address real physical distortions in the flux line, it is necessary to use acquisitions based on pulses without paddingin order to guarantee a more accurate reconstruction of the system response by avoiding non-physical effects.
 
-Consequently, in the analyses that follow, we decided to focus exclusively on the non-zero portion of the flux signal. 
+Consequently, in the analyses that follow, we decided to focus exclusively on the non-zero portion of both flux signal. 
 Even for the initial acquisitions that include a flat pre-pulse region, this segment has been excluded to ensure that the tests performed with the filters are more meaningful.
 
 At this stage, the parameters for the exponential corrections have been determined. However, to apply these corrections in real-time, they must be discretized and implemented as digital filters within the qubit control electronics. 
@@ -858,7 +847,7 @@ Although this procedure yields a close fit to the reference signal, its practica
 As a result, future signals may exhibit different features, reducing the generalizability of the resulting filter.
 
 To improve robustness, it is preferable to reduce the number of free parameters in the optimization.
-A finer-grained optimization, where individual parameters are assigned to each filter coefficient and time sample—can be restricted to the initial portion of the response (approximately the first 5 ns) where the distortions due to the IIR filters are most pronounced.
+A finer-grained optimization, where individual parameters are assigned to each filter coefficient and time sample, can be restricted to the initial portion of the response (approximately the first 5 ns) where the distortions due to the IIR filters are most pronounced.
 Beyond this interval, a coarser parameterization can be adopted by grouping adjacent FIR coefficients under a single optimization parameter.
 This strategy reduces the dimensionality of the problem while promoting a more general filter profile, better suited for correcting distortions in signals that differ from the original reference.
 
@@ -968,7 +957,7 @@ then we apply the inverse-Z-transform and obtain
 \end{align}
 where the feedforward (feedback) taps of the final filters, are given by the convolution of the feedforward (feedback) taps of the two filters as shown in Equation \ref{eq:ck} and Equation \ref{eq:dk}.
 
-\subsubsection{Results}
+\subsubsection{Results}\label{subsec:cryo_results}
 
 \begin{figure}[h!]
     \centering
@@ -1082,23 +1071,33 @@ After the application of the filters determined by using the cryoscope protocol 
 
 \subsection{Final protocol implementation}
 
-Sulla base di quanto descritto in Subsection \ref{subsec:preliminary} abbiamo implementato una \tt{Routine}, disponibile a partire dalla versione v0.2 di \Qibocal.
-Come tutte le altre routine di \Qibocal the user può accedervi tramite runcard, un esempio di runcard è riportato in Listing \ref{snippet:cryoscope}.
+Based on the results presented in Subsection \ref{subsec:cryo_results} - Results, we have implemented a new \tt{Routine}, which is available starting from version v0.2 of \Qibocal. 
+As with all other routines in \Qibocal, users can access it through a runcard\footnote{In Qibocal, all protocols are deployed through a YAML-based runcard, which allows users to specify experiment-specific parameters.}. 
+An example of such a runcard is shown in Listing \ref{snippet:cryoscope}.
 
-In the final implementation we fixed $T_{sep}$ to $100$ ns longer than the maximum duration of the flux pulse, come fatto anche nelle analisi preliminary.
-The variation in pulse duration $\Delta\tau$ is user-defined and determines the sampling resolution of the time-dependent frequency shift.
-Specifically, users configure the experiment via a runcard \footnote{In Qibocal, all protocols are deployed through a YAML-based runcard, which allows the user to specify experiment-specific parameters.}
-where they set the minimum (\tt{duration\_min}) and maximum (\tt{duration\_max}) durations of the flux pulse, along with the duration increment (\tt{duration\_step}), which corresponds to the interval $\Delta\tau$ used in Equation \ref{eq:detuning}.
-The lower bound $\Delta\tau$ is constrained by the sampling capabilities of the acquisition hardware.
-For all data and analyses reported in this section, we used the OPX1000 by Quantum Machines \cite{opx1000} as an acquisition device. 
-The OPX1000 has a sampling rate of 1 GSample/s, corresponding to a temporal resolution of $1$ ns which sets a lower limit $\Delta\tau \geq 1$ ns for the acquisition.
+The final implementation of the routine is grounded in the considerations and analyses presented in Subsection \ref{subsec:preliminary}. 
+In particular, we set the separation time $T_{sep}$ to $100$ ns longer than the maximum duration of the flux pulse, consistently with the choices taken in the preliminary analyses. 
+The variation in pulse duration $\Delta\tau$, is defined by the user and determines the temporal resolution for sampling the time-dependent frequency shift. 
+The lower bound of $\Delta\tau$ is constrained by the sampling capabilities of the acquisition hardware.
 
-The amplitude of the flux pulse, specified by the user through the parameter \tt{flux\_pulse\_amplitude}, can also be configured in the runcard. 
-While this parameter is user-defined, it is advisable to select an amplitude that induces a detuning from the qubit's sweet spot comparable to that used in typical flux-pulsed gate operations. 
-This ensures that the measured system response is representative of practical use cases.
+Based on outcomes and considerations of the preliminary analyses, we chose to use a standard rectangular pulse that begins at time $t = 0$ ns and maintains a constant, non-zero amplitude. 
+The duration of each flux pulse is determined by parameters defined by the user in the runcard. 
+Specifically, users specify the minimum (\tt{duration\_min}) and maximum (\tt{duration\_max}) durations of the pulse, as well as the increment step (\tt{duration\_step}), which corresponds to $\Delta\tau$.
+
+The amplitude of the flux pulse, specified via the \tt{flux\_pulse\_amplitude} parameter, is also configurable in the runcard. 
+Although user-defined, this amplitude should ideally induce a detuning from the qubit's sweet spot comparable to what is used in standard flux-pulsed gate operations, thereby ensuring that the measured system response reflects practical operational conditions.
 For example, it is useful to study the qubit response to a flux pulse which induces a frequency detuning of approximately 1 GHz. 
 This detuning value is commonly employed in high-fidelity entangling gate implementations \cite{Langford2017}, \cite{Bultink_2020}, \cite{Rol2019iju}.
 
+Reconstruction of the flux pulse is performed using the \tt{savgol} filter from the SciPy library, with a default \tt{window\_length} corresponding to $7$ points, as discussed in Subsection \ref{subsec:WL} - Flux pulse reconstruction.
+
+The Cryoscope protocol enables the extraction of the feedforward and feedback coefficients used to define these filters. 
+In the \Qibo setup, the resulting coefficients are stored in the platform configuration file (\tt{parameters.json}), and, once the setup is updated via the \texttt{qq update} command, the filters are automatically applied to all flux pulses.
+
+Regarding filter implementation, we have currently opted for a single exponential correction to compute the IIR taps. 
+This decision is supported by the analysis presented in Subsection \ref{subsec:IIR} - IIR corrections, and by the initial experiments in which cryoscope-derived filters were applied (see Subsection \ref{subsec:cryo_results} - Results). 
+The results suggest that a single exponential correction is sufficient for effective IIR filtering. 
+For FIR filtering, we have chosen to apply a correction with 20 FIR taps.
 
 \begin{lstlisting}[language=Python, caption={Runcard example to run a Cryoscope experiment.}, label={snippet:cryoscope}]
     
@@ -1119,8 +1118,5 @@ This detuning value is commonly employed in high-fidelity entangling gate implem
 
 \end{lstlisting}
 
-In practice, the Cryoscope protocol allows us to extract the appropriate feedforward and feedback coefficients that define these filters. 
-In the \Qibo setup these coefficients are stored in the platform configuration file (parameters.json) and, once the setup is updated using the \tt{qq update} command, the filters are automatically applied to every flux pulse. 
-Since this correction is handled directly by the control hardware, it effectively acts in real-time.
 
 
