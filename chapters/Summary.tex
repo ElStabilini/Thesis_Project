@@ -14,7 +14,8 @@ The results obtained are summarized in a table reporting the main performance me
 The work described in Chapter 3 concerns an attempt to automate the recalibration of single-qubit gates using modern optimization libraries. 
 In particular, I used tools such as \texttt{Optuna} and \texttt{CMA-ES} to tune key parameters of the $R_X(\pi)$ gate. 
 This effort was inspired by the ORBIT protocol (Optimized Randomized Benchmarking for Immediate Tune-up), which relies on Randomized Benchmarking to evaluate fidelity as a cost function. 
-While improvements were achieved, the work highlighted several challenges — primarily the high cost of fidelity evaluation and the lack of stability in convergence when broader parameter searches were used.
+While improvements were achieved, the work highlighted several challenges, primarily the high cost of fidelity evaluation and the lack of stability in convergence when broader parameter searches were used.
+On the other hand, this work also demonstrates the potential of such approaches: with more advanced tools for qubit control, the automation of the recalibration process is not only feasible but also highly desirable, particularly in systems involving a large number of qubits.
 
 Chapter 4 describes some enhancements and additions to the calibration infrastructure. 
 First, native support for the $R_X(\pi/2)$ gate was introduced in \texttt{Qibolab} and its calibration procedure added to \texttt{Qibocal}, replacing less accurate approximations. 

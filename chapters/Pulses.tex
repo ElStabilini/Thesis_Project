@@ -694,12 +694,15 @@ Figures \ref{fig:inverse_short} and \ref{fig:inverse:long} show the results of a
 
 The first observation from these plots is that the IIR filter effectively compensates for the exponential rise observed in the step response.
 %
-In particular, for the signals shown in Figure \ref{fig:inverse:step}, the signal-to-noise ratio (SNR)
-\footnote{It is worth noting that, in this context, SNR may not be the most appropriate figure of merit; however, it effectively illustrates how the application of a given predistortion improves signal quality.} 
-increases from 20 to 547 following the application of the correction.
-If we instead consider only the time interval during which the signal is non-zero, as in Figure \ref{fig:inverse:no_pad}, the SNR increases from 305 to 1108.\\
+In particular, for the signals shown in Figure \ref{fig:inverse:step}, the Normalized Mean Square Error (NMSE)
+\footnote{Normalized Mean Square Error (NMSE) is a figure of merit used to quantify the error between a processed signal $y[m,n]$ and a reference (ideal) signal $x[m,n]$. It extends the Mean Square Error (MSE), which measures the average squared difference between the signals, by normalizing it with the total power of the reference signal. This normalization enables fair comparison across different datasets or signal amplitudes. The NMSE is defined as:
+\[
+\text{NMSE} = \frac{\sum_{m=0}^{M-1} \sum_{n=0}^{N-1} |y[m,n] - x[m,n]|^2}{\sum_{m=0}^{M-1} \sum_{n=0}^{N-1} |x[m,n]|^2}
+\]
+} decreases from $5.0185\%$ to $0.1894\%$ following the application of the correction.
+If we instead consider only the time interval during which the signal is non-zero, as in Figure \ref{fig:inverse:no_pad}, the NMSE decreases from $0.32\%$ to $0.0902\%$.\\
 In the acquisition performed using waveform\_2, the signal exhibits significantly reduced distortion compared to the previous case. 
-This results in an SNR of 794 for the uncorrected signal, which increases to 19176 following the application of the exponential correction (see Figure \ref{fig:inverse:long}).
+This results in an NMSE of $0.1282\%$ for the uncorrected signal, which decreases to $0.0052\%$ following the application of the exponential correction (see Figure \ref{fig:inverse:long}).
 %
 However, particularly in Figure \ref{fig:inverse:long}, it seems that the filter does not fully eliminate the overshoot. 
 A possible explanation for this behavior is that the apparent exponential overshoot may originate from imperfect signal normalization, rather than from an actual residual distortion.
@@ -734,9 +737,9 @@ Based on this, we tested the application of multiple exponential corrections of 
 \end{figure} 
 
 As shown in Figure \ref{fig:5inverse_short}, the application of successive exponential corrections yields a modest improvement in the reconstructed signal, particularly for the acquisition performed with waveform\_1.
-In this case, the SNR obtained at each iteration for the signal shown in Figure \ref{fig:5inverse:no_pad} is, respectively, 1108, 1108, 1109, 1506, and 1676.
+In this case, the NMSE obtained at each iteration for the signal shown in Figure \ref{fig:5inverse:no_pad} is, respectively, $0.0902\%$, $0.0901\%$, $0.0901\%$, $0.0663\%$, and $0.0596\%$.
 In contrast, for the second acquisition, the application of additional exponential filters does not produce a significant enhancement.
-After the first correction, the SNR increases from 794 to 19176, as previously noted, but remains essentially unchanged with further iterations.
+After the first correction, the NMSE decreases from $0.1282\%$ to $0.0052\%$, as previously noted, but remains essentially unchanged with further iterations.
 This difference is likely due to the distinct experimental conditions of the two acquisitions. 
 In the first case, the reconstruction of the signal acquired with a \tt{flux\_pulse\_amplitude} of $0.1$ exhibits a more pronounced distortion, which the filters compensate for. 
 On the other hand, in the second case, the reconstructed signal already appears much less distorted, reducing the benefit of using more than one exponential correction.
@@ -795,9 +798,9 @@ The results of applying these IIR filters as discrete digital filters are shown 
 \end{figure}
 
 As expected, the quality of the correction obtained using the IIR digital filter is lower compared to that achieved by applying the exponential correction via inversion (as in Equation \ref{eq:inverse}). 
-This is evidenced by the resulting SNR: in the first case, the application of the IIR filter yields an SNR of 833, compared to 1108 obtained with the previous method.
-In the second case, the SNR increases from 1976 to 2867 following the IIR correction. 
-Although this represents a noticeable reduction in performance relative to the inversion-based approach, the resulting SNR remains remarkably high.
+This is evidenced by the resulting NMSE: in the first case, the application of the IIR filter yields an NMSE of $0.1221\%$, compared to $0.0902\%$ obtained with the previous method.
+In the second case, the NMSE decreases from $0.1282\%$ to $0.0361\%$ following the IIR correction. 
+Although this represents a noticeable reduction in performance relative to the inversion-based approach, the resulting NMSE remains remarkably low.
 
 \subsubsection{FIR corrections}
 Once the feedback and feedforward taps for the IIR filters have been determined, it is necessary to implement a finite impulse response filter to correct for residual distortions on shorter timescales, less than 30 ns, which are not fully addressed by the IIR.
@@ -873,7 +876,7 @@ The results of this improved optimization are shown in Figure \ref{fig:nice}.
 \end{figure}
 
 As expected, the application of FIR filters leads to a clear improvement in signal quality. 
-For the traces shown in Figure \ref{fig:nice:nopad}, the SNR increases from 833 to 951 in the first case, and from 2867 to 7338 in the second.
+For the traces shown in Figure \ref{fig:nice:nopad}, the NMSE decreases from $0.1221\%$ to $0.1083\%$ in the first case, and from $0.0361\%$ to $0.0139\%$ in the second.
 
 \subsubsection{Output filters calculations}
 
