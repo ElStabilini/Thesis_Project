@@ -151,7 +151,6 @@ The frequency parameter, expressed in Hz, was allowed to vary within a window of
 For the DRAG parameter $\beta$, the search range was set to $0.25$ around the value returned by the initial DRAG calibration; this interval corresponds to the resolution used in the scan performed during the \tt{drag} routine, thus preserving consistency with earlier characterization steps.
 
 In a subsequent phase of this study, a comparative analysis was performed by repeating the optimization while keeping the pulse shape fixed to a Gaussian envelope, effectively removing $\beta$ as an optimization variable. 
-%TODO: try to run at least once the NM from not-fine tuned
 
 \section{SciPy optimization methods}\label{Sec:OptimizationMethods}
 
@@ -888,7 +887,7 @@ It also reports the number of optimization steps and function evaluations perfor
 
 \section{RB optimization conclusions}
 
-As outlined at the beginning of this chapter, the primary goal was to evaluate whether an automated optimization procedure—executed directly on quantum hardware—could reliably improve the average fidelity of single-qubit Clifford gates, specifically the $R_X(\pi)$ gate. 
+As outlined at the beginning of this chapter, the primary goal was to evaluate whether an automated optimization procedure, executed directly on quantum hardware, could reliably improve the average fidelity of single-qubit Clifford gates, specifically the $R_X(\pi)$ gate. 
 The desired outcome was a routine that could be executed periodically, improving gate fidelity in a reproducible and time-efficient manner.
 
 The results obtained from various optimization strategies, Nelder-Mead, \tt{CMA-ES}, and \tt{Optuna}, demonstrate that while meaningful improvements in fidelity are achievable, the current implementation does not yet meet the robustness and efficiency requirements for routine deployment. 
@@ -960,7 +959,13 @@ These modifications may be particularly relevant in a more stable calibration re
 Another promising direction, particularly with \tt{Optuna}, would be to adopt a multi-objective optimization strategy, where both fidelity and optimization time are minimized simultaneously. 
 However, this approach was not pursued in this work due to the instability of the fidelity results observed even in high-trial regimes, highlighting the current limitations of fidelity optimization using this method.
 
-In conclusion, while the results suggest that automated, hardware-level gate fidelity optimization is feasible in principle, substantial improvements are still needed in both the fidelity evaluation routine and the optimization algorithm design before such a protocol can be adopted for regular use on our quantum hardware.
+In conclusion, while there is still room for improvement in both the fidelity estimation routines and the design of the optimization algorithm, the results presented here demonstrate that automated, hardware-level gate fidelity optimization is indeed feasible and yields meaningful improvements. 
+Despite the fact that many of the routines require over 30 minutes to complete, a clear reduction in the cost function in the average Clifford gate infidelity was consistently observed.
+
+Importantly, in the absence of a dedicated procedure targeting the average Clifford gate fidelity, the only alternative would be to rely on manual tuning by an operator. 
+This would involve repeatedly guessing suitable values for amplitude, frequency, and $\beta$ DRAG parameter in order to improve performance, time-consuming and inefficient approach. 
+As quantum processors continue to scale up in qubit count, manual calibration becomes increasingly impractical. 
+These findings therefore support the development of automated optimization protocols as a necessary and scalable path forward for high-fidelity quantum control.
 
 \begin{sidewaystable}[h]
     \centering
@@ -1011,5 +1016,3 @@ In conclusion, while the results suggest that automated, hardware-level gate fid
     The table also includes the initial fidelity, the percentage decrease in the cost function, and the percentage improvement in fidelity achieved at the end of the optimization process.}
     \label{tab:final_values}
 \end{sidewaystable}
-
-%TODO: inserire riferimento all'appendice in cui mostro tutte le valutazioni che faccio della fidelity

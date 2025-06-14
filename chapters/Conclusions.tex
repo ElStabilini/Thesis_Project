@@ -1,52 +1,58 @@
 \chapter{Conclusions and outlook}
 
-
-In this thesis, after presenting the main theoretical concepts and the main instruments (hardware and software) used, I focused on procedure di calibrazione di singolo qubit e il loro miglioramento.
-The theoretical aspects were related to the superconducting quantum devices as are the one I worked on.
+In this thesis, after introducing the main theoretical concepts and the hardware and software tools employed, the focus shifted to the calibration procedures for single qubits and their optimization. 
+The theoretical framework was focused on superconducting quantum devices, which constitute the experimental platform used throughout the work.
 
 \paragraph{Calibration experiments}
-Come step preliminare al mio lavoro di tesi è stato fondamentale imparare la procedura di calibrazione di un superconducting qubit.
-Per questo motivo, in this thesis, I detailed the experiments required to fully calibrate a single qubit device.
-Il capitolo in cui ho presentato i diversi esperimenti di calibrazione ho cercato di dare anche una spiegazione di base del sistema fisico che si sta studiando e del perchè possono quindi essere eeguiti determinati esperimenti di calibrazione.
-underlying quantum-mechanical and cQED principles exploited for readout and control.
-Proprio perchè acquisire confidenza con l'hardware e con il software era fondamentale per gli step successivi ho provato a calibrare una linea di qubit, nello specifico la linea D del \tt{qw11q}, i risultati sono riportati in Tabella [inserire ref tabella]
+As a preliminary step in this thesis work, it was essential to gain practical experience with the calibration procedures required for operating a superconducting qubit. 
+For this reason, the second Chapter of the thesis is devoted to describing in detail the full calibration workflow for a single-qubit device. 
+In addition to outlining the experimental steps, I also aimed to provide basic explanations of the underlying physical principles, particularly those from quantum mechanics and circuit quantum electrodynamics (cQED), that enable control and readout of superconducting qubits. 
 
+Becoming familiar with the reasoning behind each calibration step was important for effectively working with both the hardware and the software tools used in the project.
+To consolidate this understanding, I carried out a full calibration of a specific qubit line, namely the D-line of the \tt{qw11q} chip. 
+The results of these calibration procedures are summarized in Table \ref{tab:cal_results}, and served as the foundation for the subsequent experiments focused on gate fidelity optimization.
 
 \paragraph{RB optimization}
-abbiamo osservato:
-non convergenza con altri metodi ma, soprattutto con 'optuna' buona esplorazione con un tempo impiegato interessante
-convergenza con NM
-molto tempo per girare RB
-sistema non propriamente stabile 
-Considerato che comunque ha senso pensare di automatizzare la procedura di calibrazione e i risultati sono tutto sommato buoni (un calibratore umano ci metterebbe molto di più perché dovrebbe fondamentalmente girare le stesse routine ma a mano
-possibili interessanti sviluppi
-altri tipi di RB o altre figure di merito (il vantaggio delle RB è che è hardware agnostic, tuttavia su hardware diversi può essere molto dispendiosa)
-provare ad effettuare prima una ottimizzazione degli iper parametri per fare in modo che la RB sia più efficiente
+In Chapter 3, I presented the results of an experimental study exploring the feasibility of automated optimization routines for improving the average fidelity of single-qubit Clifford gates, using Randomized Benchmarking (RB) as the primary figure of merit. 
+The results show that, despite several technical challenges, such routines can yield measurable improvements in fidelity.
 
+From a performance standpoint, the Nelder-Mead simplex algorithm demonstrated the most reliable convergence, although at the cost of high resource consumption due to the large number of RB evaluations required at each step. 
+In contrast, \tt{Optuna} allowed for efficient and broad exploration of the parameter space within a more limited runtime, especially when the number of trials was constrained. 
+However, the optimization outcomes were often unstable: small changes in control parameters could lead to significant variations in the resulting avarage Clifford gate fidelity. 
+This behavior highlights a limitation in the current approach, namely the lack of robustness in the system's response to parameter tuning.
 
+The main drawback of this optimization strategy lies in the time cost associated with evaluating the fidelity via RB. 
+Each iteration of the optimization routine involves executing an RB sequence, making the overall process time-consuming. 
+This is a substantial limitation, especially considering the broader applicability of RB as a fidelity estimator across different quantum platforms, including those with slower gate execution times than superconducting qubits.
+
+To address this bottleneck, a natural direction for future work is to optimize the RB routine itself. 
+Reducing the depth of the Clifford sequences or the number of circuit samples used per evaluation could help shorten runtime without significantly sacrificing accuracy. 
+This could be achieved by performing a systematic hyperparameter optimization of the RB settings. 
+
+Despite the current limitations, automating calibration remains an essential step toward scalable quantum control. 
+Without such routines, calibration would rely on manual tuning, which involves iteratively guessing suitable parameter configurations; a slow and impractical approach, especially as systems grow in size and complexity. 
+In summary, although the system is not yet ready for deployment as a fully reliable calibration tool, this work establishes a solid foundation for the development of automated, hardware-level optimization procedures aimed at improving gate fidelity in a scalable and maintainable way.
 
 
 \paragraph{Calibration routines}
-Chapter 4 is dedicated to the second part of this work in cui I addressed specific practical needs emerging from experimental operations.\\
-In particular, I introduced modifications to \texttt{Qibolab} to enable native support for the $R_X(\pi/2)$ gate. 
-At the same time, I updated the corresponding calibration routines in \texttt{Qibocal}, which were originally designed for the $R_X(\pi)$ rotation, to support the independent calibration of this additional native gate.
-Prior to this addition, the $R_X(\pi/2)$ gate was typically implemented by halving the amplitude of a calibrated $\pi$-pulse. 
-However, as shown in the first part of this chapter, nonlinearities in the system, arising from the electronics or other components, introduce systematic errors when using this approximation. These errors lead to inaccurate estimates of the pulse parameters required to implement a true $R_X(\pi/2)$ rotation.
+In Chapter 4 of this work I presented the results of practical improvements to the calibration framework based on challenges and requirements that emerged from experimental operations. 
+Specifically, I introduced a set of enhancements to the \Qibolab and \Qibocal libraries to support the $R_X(\pi/2)$ gate as a native operation. 
+This involved both modifying the back-end to natively implement the gate and updating the associated calibration routines, which were originally designed only for the $R_X(\pi)$ gate.
+The inclusion of $R_X(\pi/2)$ as a native gate is important as such $\pi/2$ rotations are frequently used in quantum algorithms and benchmarking protocols. 
+An inaccurate calibration would propagate systematic errors throughout the execution of quantum circuits, ultimately degrading their overall fidelity.
 
-The inclusion of $R_X(\pi/2)$ as a native gate is important as such $\pi/2$ rotations are frequently used in quantum algorithms and benchmarking protocols. An inaccurate calibration would propagate systematic errors throughout the execution of quantum circuits, ultimately degrading their overall fidelity.
+The chapter also introduces the implementation of the Cryoscope protocol to correct for dynamical distortions in the control lines used to apply flux pulses. 
+In superconducting qubit platforms, accurate frequency control via flux modulation is fundamental for high-fidelity single- and two-qubit gates. 
+However, as the flux signal propagates through the various components of the control line, it is subject to distortions resulting from finite bandwidth, reflections, and impedance mismatches. 
+These effects introduce deviations between the intended and actual qubit trajectories, which in turn affect gate performance. 
+The Cryoscope protocol enables a detailed, time-domain characterization of these distortions, providing the basis for computing pre-distorted waveforms that effectively cancel out the unwanted dynamics. 
+The improvements obtained using these corrected pulses are particularly evident in the chevron calibration routine in \Qibocal, which plays a central role in tuning flux-based two-qubit gates such as CNOT and iSWAP.
 
-The second major result presented in this chapter is the implementation of a routine to correct distortions in flux pulses arising from imperfections in the control lines. Precise dynamical control of the qubit frequency is essential for the realization of high-fidelity single- and two-qubit gates. 
-In superconducting qubits, this control is typically achieved by modulating the magnetic flux threading a SQUID loop. However, as the control signal propagates through various electronic components along the flux line, it is subject to linear dynamical distortions which can significantly degrade gate performance, compromising both the fidelity and repeatability of quantum operations.
+To further enhance the fidelity of flux pulses, additional corrective strategies can be integrated. 
+These include techniques aimed at minimizing leakage outside the computational subspace, compensating for pulse echoes caused by mismatches in impedance, and suppressing residual ringing that follows sharp transitions in the control waveform. 
+%TOD: change the following line
+Moreover, the use of optimized step-like pulses—such as those introduced in the QUICK protocol—was explored to reduce spurious excitations and ensure smoother transitions in flux. 
+Altogether, these improvements contribute to higher gate fidelity, increased pulse robustness, and better temporal control of qubit dynamics.
 
-To address this issue, we implemented the Cryoscope protocol, originally introduced by M. A. Rol in 2019 \cite{rol_time-domain_2020}, which enables a time-domain characterization of these distortions and the design of appropriate pre-distorted control pulses. 
-The application of these corrections improves the quality of flux-based quantum gate operations, as demonstrated, for example, in the results obtained from the chevron calibration routine in \texttt{Qibocal}. 
-This routine plays a central role as it enables the calibration of native two-qubit gates such as CNOT and iSWAP, which are implemented through flux pulses and are particularly sensitive to distortions in the control signal.
-
-
-Per miglioramento del segnale di flusso del campo magnetico:
-* leakage optimization
-* bounce compensation
-* correzione per il ringing
-* optimized step pulse for flux pulse (see QUICK paper)
-
-Possibile implementazione di un sistema di calibrazione o ricalibrazione automatica, eventualmente basato su reinforcement learning.
+The integration of these tools not only strengthens the current calibration workflow but also lays the foundation for the development of automated recalibration systems. 
+Such systems could dynamically adjust calibration parameters in response to drift or environmental changes, enhancing the long-term stability and scalability of superconducting quantum processors.
