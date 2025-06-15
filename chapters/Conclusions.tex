@@ -48,11 +48,7 @@ These effects introduce deviations between the intended and actual qubit traject
 The Cryoscope protocol enables a detailed, time-domain characterization of these distortions, providing the basis for computing pre-distorted waveforms that effectively cancel out the unwanted dynamics. 
 The improvements obtained using these corrected pulses are particularly evident in the chevron calibration routine in \Qibocal, which plays a central role in tuning flux-based two-qubit gates such as CNOT and iSWAP.
 
-To further enhance the fidelity of flux pulses, additional corrective strategies can be integrated. 
-These include techniques aimed at minimizing leakage outside the computational subspace, compensating for pulse echoes caused by mismatches in impedance, and suppressing residual ringing that follows sharp transitions in the control waveform. 
-%TOD: change the following line
-Moreover, the use of optimized step-like pulses—such as those introduced in the QUICK protocol—was explored to reduce spurious excitations and ensure smoother transitions in flux. 
-Altogether, these improvements contribute to higher gate fidelity, increased pulse robustness, and better temporal control of qubit dynamics.
-
-The integration of these tools not only strengthens the current calibration workflow but also lays the foundation for the development of automated recalibration systems. 
-Such systems could dynamically adjust calibration parameters in response to drift or environmental changes, enhancing the long-term stability and scalability of superconducting quantum processors.
+To further enhance the fidelity of flux pulses, additional corrective strategies can be employed. 
+These include techniques designed to minimize leakage outside the computational subspace, compensate for pulse echoes resulting from impedance mismatches, and suppress residual ringing that follows sharp transitions in the control waveform. 
+Other approaches focus on more precise correction of long-time distortions, such as the method described in the supplementary material of \cite{Ma_2019}. 
+Collectively, these improvements contribute to higher gate fidelity, increased pulse robustness, and more accurate temporal control of qubit dynamics.

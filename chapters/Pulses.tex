@@ -970,8 +970,8 @@ As previously discussed, the application of a single IIR filter is sufficient to
 However, on longer timescales, residual oscillations remain that are not addressed by either the IIR or FIR filters.
 
 While we could attempt to mitigate these effects by combining multiple IIR and FIR filters, the remaining signal distortions appear to be oscillatory in nature and are likely due to ringing phenomena, transient oscillations that typically arise from impedance mismatches, or resonant components in the control line.
-These ringing effects are particularly evident in the acquisitions shown in Figure \ref{fig:cryoscope:B2} and \ref{fig:cryoscope:B4}, and persist even after the application of corrective filtering, as confirmed by the reconstructed flux pulses displayed in Figures \ref{fig:flux:B2} and \ref{fig:flux:B4}.
-These plots show the reconstructed flux pulse when the digital filters determined with the cryoscope routine are applied, we can see that the oscillations decay in amplitude over time and appear to vanish after approximately $75$ ns. 
+These ringing effects are particularly evident in the acquisitions shown in Figure \ref{fig:cryoscope:B2} and \ref{fig:cryoscope:B4}, and persist even after the application of corrective filtering, as confirmed by the reconstructed flux pulses displayed in Figures \ref{fig:flux:B2} and \ref{fig:flux:B4}.\\
+In particular, Figure \ref{fig:flux:B2} and Figure \ref{fig:flux:B4} show the reconstructed flux pulse when the digital filters determined with the cryoscope routine are applied, the measured NMSE for the two signal is equal to $0.0101\%$ and $0.0135\%$; in both plots we can see that the oscillations decay in amplitude over time and appear to vanish after approximately $75$ ns. 
 Nonetheless, we expect that the application of these filters will significantly improve the control of the qubit frequency.
 
 \begin{figure}[h!]
