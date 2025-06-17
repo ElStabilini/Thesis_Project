@@ -21,7 +21,7 @@ In this chapter, we present an initial attempt to address both the challenges of
 The goal is to test calibration procedures that are not only effective but also repeatable and accessible to non-expert users.  
 Building on the approach proposed in \cite{kelly_optimal_2014}, which demonstrated that optimizing the sequence fidelity at a fixed length of RB can improve gate performance, we explored an automatic calibration improvement procedure based on average Clifford gate fidelity obtained from standard RB evaluation as an optimization target.
 In our implementation, the optimization is performed with respect to the $R_X(\pi)$ pulse which is a native gate in \Qibolab (see Section \ref{subsec:native_gates}).
-The optimization is performed by adjusting its amplitude, frequency, and possibly, the multiplicative factor of the quadrature component of the DRAG, pulse parameters.
+The optimization is performed by adjusting its amplitude, frequency, and possibly, the multiplicative factor of the second quadrature component of the DRAG, pulse parameters.
 
 The focus of this first study is on improving the average Clifford gate fidelity for single qubits. 
 This choice was made considering the important role of these operations in quantum circuits and the relative simplicity of their control compared to multi-qubit gates.
@@ -38,7 +38,7 @@ The main idea is that the cumulative error resulting from the combined action of
 This effectively removes the dependence on the specific structure of the noise and leads to a simple exponential decay model from which the average fidelity can be extracted.
 
 Later improvements showed that the procedure could be further simplified by restricting the unitaries to the Clifford group and removing the requirement for sequences to be strictly self-inverting \cite{knill_randomized_2008}.
-In the standard RB protocol, sequences of random Clifford gates $C_1, C_2, ..., C_m$ are followed by a final inversion gate $C_{m+1}$ which ideally returns the system to its initial state. 
+In the standard RB protocol implementation in \Qibocal, sequences of random Clifford gates $C_1, C_2, ..., C_m$ are followed by a final inversion gate $C_{m+1}$ which ideally returns the system to its initial state. 
 In real devices, the measured survival probability provides an estimate of the average fidelity over the set of applied Clifford gates.
 
 The standard RB procedure consists of the following steps:
@@ -88,7 +88,7 @@ All the results presented in the following were obtained running the protocols o
 
 \subsection{Parameters for the optimization}
 The optimization procedures described in this work aim to enhance the average fidelity of a Clifford gate by minimizing its infidelity, as determined through RB experiments. 
-The optimization is carried out over three control parameters: the amplitude and frequency of the microwave pulse and the DRAG correction parameter $\beta$, which modulates the second quadrature of the pulse shape. 
+The optimization is carried out over three control parameters: the amplitude and frequency of the microwave pulse for the $R_X(\pi)$ gate implementation and the DRAG correction parameter $\beta$, which modulates the second quadrature of the pulse shape. 
 This closed-loop optimization approach follows a structure similar to the Optimal Randomized Benchmarking for Immediate Tune-up (ORBIT) protocol introduced in \cite{kelly_optimal_2014}, wherein the gate performance is iteratively improved based on benchmarking results.
 
 Prior to the application of the optimization algorithm, a fine-tuning sequence is executed to obtain reliable starting values for each parameter. 
@@ -148,7 +148,7 @@ In addition to defining the initial parameter values, explicit boundaries were a
 This choice was motivated by the need to constrain the search space to physically meaningful regions, avoid unstable pulse configurations, and ensure compatibility with the dynamic range and resolution of the control electronics.
 For the amplitude, the range was chosen to match the full extent accessible by the hardware. 
 The frequency parameter, expressed in Hz, was allowed to vary within a window of 4 MHz centered on the optimal resonance frequency obtained from the Ramsey experiment, ensuring that only physically meaningful detunings are explored. 
-For the DRAG parameter $\beta$, the search range was set to $0.25$ around the value returned by the initial DRAG calibration; this interval corresponds to the resolution used in the scan performed during the \tt{drag} routine, thus preserving consistency with earlier characterization steps.
+For the DRAG parameter $\beta$, the search range was set to $0.25$ around the value returned by the initial DRAG calibration; this interval corresponds to the resolution used in the scan performed during the \tt{drag\_tuning} routine, thus preserving consistency with earlier characterization steps.
 
 In a subsequent phase of this study, a comparative analysis was performed by repeating the optimization while keeping the pulse shape fixed to a Gaussian envelope, effectively removing $\beta$ as an optimization variable. 
 
@@ -195,7 +195,7 @@ To mitigate these constraints, both a cap on the total number of cost function e
 It is important to note that each iteration of the NM algorithm typically involves the evaluation of multiple points in parameter space: at least four in the case of optimization over three parameters, and at least three when optimizing over two parameters.
 
 In the first run of the algorithm, the maximum number of iterations was limited at 40 such that no more than 160 cost function evaluations were performed.
-Additionally, a convergence tolerance of $1\cdot10^{-4}$ was set (\texttt{tol=1e-4} \footnote{In \texttt{scipy.optimize.minimize}, this parameter sets both the tolerance on the optimization variables, referred to as \texttt{xtol}, and the tolerance on the cost function value (\texttt{ftol}).}), applying stopping criteria to both parameter updates and cost function changes.
+Additionally, a convergence tolerance of $1\cdot10^{-4}$ was set (\texttt{tol=1e-4} \footnote{In \texttt{scipy.optimize.minimize}, this parameter sets both the tolerance on the optimization variables, referred to as \tt{xtol}, and the tolerance on the cost function value \tt{ftol}.}), applying stopping criteria to both parameter updates and cost function changes.
 
 The results of this initial optimization attempt are shown in Figure \ref{fig:NM_plots}. As illustrated in Figure \ref{NM_true_fig:fidelity}, a clear improvement in gate fidelity was achieved, increasing from an initial value of $99.02\%$ to a final value of $99.71\%$.
 Despite this apparent improvement, the optimizer did not converge within the specified tolerance. After forty steps, the stopping criterion was not satisfied, and the optimization was formally marked as unsuccessful. 
@@ -273,12 +273,12 @@ The results of these runs are reported in the following sections and are labeled
         \caption{Plot of the frequency of the $R_X(\pi)$ gate corresponding to different optimization steps.}
         \label{fig:20241110_211211:frequency}
     \end{subfigure}
-    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_simp\_2}.}
+    \caption{Plots of the optimization parameters as a function of the number of optimization steps for the first round optimization - \tt{init\_simp\_1}.}
     \label{fig:20241110_211211:parameters}
 \end{figure}
 
 From the plots showing the outcome of the first optimization run, it can be observed that the fidelity increases over the initial iterations and then stabilizes around a value of approximately 99.45\% after about fifteen steps.
-Two aspects are particularly noteworthy. The first concerns the noticeable drop in fidelity observed at the sixteenth iteration, where the fidelity falls below the 97\% threshold (Figure \ref{fig:20241110_211211:fidelity}), despite the amplitude and frequency of the $R_X(\pi)$ pulse showing no significant changes compared to the previous optimization steps (see Figure \ref{fig:20241110_211211:parameters}).
+An aspect that is particularly noteworthy is the noticeable drop in fidelity observed at the sixteenth iteration, where the fidelity falls below the 97\% threshold (Figure \ref{fig:20241110_211211:fidelity}), despite the amplitude and frequency of the $R_X(\pi)$ pulse showing no significant changes compared to the previous optimization steps (see Figure \ref{fig:20241110_211211:parameters}).
 Similar behavior is observed in other plots illustrating the optimization progress for this algorithm (see Figure \ref{fig:20241113_181711:fidelity}), which may point to possible issues in measurement or data acquisition, or to imperfect control over the qubit state.
 
 \begin{figure}[h!]
@@ -335,7 +335,7 @@ It should be noted, as will be discussed in more detail in the conclusions, that
     \label{fig:20241113_200745:parameters}
 \end{figure}
 
-In the third and final case, the lack of convergence is apparent directly from the fidelity plot shown in Figure \ref{fig:20241113_200745:fidelity}.
+In the third and final case, the lack of convergence is immediately evident from the fidelity plot shown in Figure \ref{fig:20241113_200745:fidelity}.
 Upon closer inspection, it was observed that the frequency parameter quickly settles at the lower bound of its defined range. 
 This initially led to the hypothesis that the preceding Ramsey-based fine-tuning step used to initialize the optimization had failed.
 However, this assumption was disproven by the report automatically generated for each operation performed with \Qibocal.
@@ -351,8 +351,8 @@ These findings lead us to conclude that in this case, the Nelder Mead algorithm 
 
 A summary of the results obtained using the Nelder Mead algorithm under different configurations is presented in the top rows of Table \ref{tab:scipy_opt} while a more detailed summary is reported in Table \ref{tab:best_values} and Table \ref{tab:final_values}, at the end of the present chapter.
 
-Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization process enabled the achievement of higher average Clifford gate fidelities. 
-For this reason, the optimization of $\beta$ was reintroduced in the subsequent optimization attempts.
+Overall, it is evident that including the $\beta$ parameter for DRAG correction in the optimization led to higher average Clifford gate fidelities.
+For this reason, $\beta$ was included again in the later optimization runs.
 
 \subsection{SLSQP}
 \subsubsection{Algorithm description}
@@ -391,11 +391,11 @@ In such cases, each gradient estimation requires $n+1$ function evaluations per 
 The values of internal parameters, such as merit function balancing terms and quasi-Newton updates, are managed internally and are not user-configurable through \tt{SciPy}.
 
 \subsubsection{Results}
-As shown in Figure \ref{fig:SLSQP:fidelity}, the optimization procedure appears to converge, a result that is also confirmed by the object returned by the \texttt{SciPy} optimizer.
+For the \tt{SLSQP} optimization run, the same constraints and parameter bounds used in the Nelder-Mead optimization were applied: a maximum of 40 optimization steps and parameter ranges set by the initial fine-tuning routine carried out before the fidelity optimization.
+
+As shown in Figure \ref{fig:SLSQP:fidelity}, the optimization procedure appears to converge, a result that is also confirmed by the object returned by the \texttt{SciPy} optimizer, where the \tt{success} assumes has the \tt{true} value.
 This indicates that the algorithm successfully reached a local minimum within the specified tolerance of $1\cdot10^{-4}$ in less the 15 optimization steps. On the other hand, it is important to consider that SLSQP is a gradient-based method and, as such, may lack robustness in the presence of a noisy or irregular cost landscape.
 This makes it susceptible to becoming trapped in local minima, especially if the optimization is not ideal.
-
-For this run, the same constraints and parameter bounds used in the Nelder-Mead optimization were applied: a maximum of 40 optimization steps and parameter ranges set by the initial fine-tuning routine carried out before the fidelity optimization.
 
 \begin{figure}[h]
     \centering
@@ -432,8 +432,7 @@ For this run, the same constraints and parameter bounds used in the Nelder-Mead 
 In this case, an interesting observation is that, as expected, a sharp drop in fidelity corresponds to a frequency value that deviates significantly from the optimal one for the $R_X(\pi)$ gate.
 This behavior is consistent with the assumption that frequency and amplitude are the two dominant parameters in determining the quality of the $R_X(\pi)$ gate and as a consequence the average fidelity of Clifford gates.
 
-However, as can be seen in Figure \ref{fig:SLSQP:fidelity}, the convergence behavior is not particularly stable: the fidelity exhibits large step-to-step fluctuations. 
-As mentioned previously, this indicates that the SLSQP method is not robust enough to be reliably used as a systematic approach for optimizing average Clifford gate fidelity.
+However, as can be seen in Figure \ref{fig:SLSQP:fidelity}, the convergence behavior is not particularly stable: this is also due to the fact that the SLSQP method may not be robust enough to be reliably used as a systematic approach for optimizing average Clifford gate fidelity.
 In particular, it becomes difficult to define a minimum number of steps beyond which a certain fidelity level can be guaranteed.
 
 Furthermore, from a computational standpoint, this method is relatively inefficient. 
@@ -603,7 +602,7 @@ In the present work, the cost function is defined as the infidelity extracted fr
 
 \subsection{Results}
 
-As a first attempt at applying the optimization algorithm implemented in the \texttt{Optuna} library, a total of 30 optimization steps, or trials as referred to in the library itself, were performed. 
+As a first attempt at applying the optimization algorithm implemented in the \texttt{Optuna} library, we decided to perform  a total of 30 optimization steps, or trials as referred to in the library itself. 
 This choice was made to maintain consistency with the number of steps used in previous optimization methods. 
 As in the earlier cases, initial parameter values and search boundaries were provided to the algorithm and derived from the fine-tuning routines executed prior to the optimization.
 
