@@ -12,12 +12,14 @@
 
 % \usepackage{beamerthememetropolis}
 \usetheme[progressbar=frametitle]{metropolis}
+\metroset{progressbar=none}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
 
 \usepackage{xcolor}
 % Remove default navigation symbols
 \setbeamertemplate{navigation symbols}{}
+\setbeamercolor{background canvas}{bg=white}
 
 % Custom footline with frame numbers on the left and navigation symbols on the right
 \setbeamertemplate{footline}{
@@ -28,7 +30,7 @@
     \end{beamercolorbox}%
     \hfill
     \begin{beamercolorbox}[wd=.9\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
-      \usebeamerfont{footline} \insertnavigation{2cm}
+      \usebeamerfont{footline} %\insertnavigation{2cm}
     \end{beamercolorbox}%
   }%
   \vskip0pt%
@@ -38,7 +40,6 @@
 \title{Development of an open-source calibration framework\\ for superconducting qubits}
 \subtitle{Master degree in Physics}
 \author{Elisa Stabilini}
-
 \institute{Università degli Studi di Milano - Department of Physics}
 \titlegraphic{\hfill}
 \date{July 4th 2025}
@@ -53,11 +54,120 @@
     \tableofcontents[hideallsubsections]
 \end{frame}
 
+\section{Superconducting qubits}
 
-\begin{frame}[allowframebreaks]{Packages and libraries references}
+\begin{frame}[t,fragile]{Artificial atoms}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+        Qubit: two level system
+        Superconducting qubits: use Josephson Junctions to build anharmonic oscillators
+        
+    \end{column}
+  \end{columns}
+%Josephson junction
+\end{frame}
+
+%
+\begin{frame}[t,fragile]{State readout}
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{center}
+          \vspace{2mm}
+          \includegraphics[width=0.85\textwidth]{figures/TransmonCircuit.png}
+          \vspace{8mm}
+          \includegraphics[width=0.85\textwidth]{figures/TransmonBoard.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+%
+%\begin{frame}[t,fragile]{Calibration}
+%  
+%\end{frame}
+
+\begin{frame}[t,fragile]{Qibo framework}
+  \begin{center}
+      \includegraphics[height=0.80\paperheight]{figures/qibo_ecosystem.png}
+  \end{center}
+\end{frame}
+
+\section{Avarage Clifford gate fidelity optimization}
+
+%\begin{frame}[t,fragile]{Randomized Benchmarking}
+%
+%\end{frame}
+%
+%\begin{frame}[t,fragile]{RB optimization results}
+%  
+%\end{frame}
+
+\section{Library additions}
+
+\subsection{Native RX90}
+
+%\begin{frame}[t,fragile]{Native RX90 gate}
+%  
+%\end{frame}
+
+\subsection{Cryoscope}
+
+%\begin{frame}[t,fragile]{Flux pulse reconstruction}
+%  
+%\end{frame}
+%
+%\begin{frame}[t,fragile]{Filter determination}
+%  
+%\end{frame}
+%
+%\begin{frame}[t,fragile]{Results}
+%  
+%\end{frame}
+
+\section{Conclusions \& Outlooks}
+
+
+\begin{frame}[t,standout]
+\Large
+Questions?
+\end{frame}
+
+
+\begin{frame}{References}
     \nocite{*}
     \bibliographystyle{plain}
     \bibliography{bibliography}
+\end{frame}
+
+\begin{frame}{What is for?}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+        \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"
+        %\href{https://link.springer.com/article/10.1007/BF02650179}{\faBook\,\, Richard Feynman, 1982, Simulating Physics with Computers}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{center}
+            \includegraphics[width=0.8\textwidth]{figures/feynmann.jpg}
+        \end{center}
+      \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Other quantum computing}
+  \begin{enumerate}
+    \item Optimization and modeling (finance, traffic, weather...)
+    \item Quantum algorithms 
+    \item Quantum Machine Learning
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Qubit platforms}
+  \begin{center}
+      \includegraphics[height=0.8\textheight]{figures/platforms.png}
+  \end{center}
 \end{frame}
 
 \end{document}
