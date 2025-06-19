@@ -1,19 +1,19 @@
 # === CONFIGURATION ===
 
-# Main presentation file (without .tex)
-MAIN := main
+# Main presentation file (without .tex extension)
+MAIN := presentation
 
 # Output and temporary directory
 OUTDIR := tmp
 
 # Source directories
-FIGDIR := figures
+FIGDIR := images
 
 # Bibliography file
 BIBFILE := bibliography.bib
 
-# Files to watch for changes (add others as needed)
-TEX_SRCS := $(MAIN).tex $(wildcard $(FIGDIR)/*.png) $(wildcard $(FIGDIR)/*.pdf)
+# Files to watch for changes
+TEX_SRCS := $(MAIN).tex $(wildcard $(FIGDIR)/*) $(wildcard *.sty) colors.tex
 
 # === TARGETS ===
 

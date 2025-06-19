@@ -1,0 +1,63 @@
+% % -*- coding:utf-8 -*-
+\documentclass[aspectratio=169,10pt]{beamer}
+\nonstopmode
+
+\usepackage{appendixnumberbeamer}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{comment}
+\usepackage{verbatim}
+\input{colors}
+
+% \usepackage{beamerthememetropolis}
+\usetheme[progressbar=frametitle]{metropolis}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+
+\usepackage{xcolor}
+% Remove default navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Custom footline with frame numbers on the left and navigation symbols on the right
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
+      \usebeamerfont{footline} \insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+    \hfill
+    \begin{beamercolorbox}[wd=.9\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
+      \usebeamerfont{footline} \insertnavigation{2cm}
+    \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+}
+
+
+\title{Development of an open-source calibration framework\\ for superconducting qubits}
+\subtitle{Master degree in Physics}
+\author{Elisa Stabilini}
+
+\institute{Università degli Studi di Milano - Department of Physics}
+\titlegraphic{\hfill}
+\date{July 4th 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Table of contents}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \setbeamertemplate{subsection in toc}[subsections numbered]  
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Packages and libraries references}
+    \nocite{*}
+    \bibliographystyle{plain}
+    \bibliography{bibliography}
+\end{frame}
+
+\end{document}
