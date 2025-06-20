@@ -8,6 +8,11 @@
 \usepackage{cite}
 \usepackage{comment}
 \usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{tikz}
+
+\captionsetup{skip=4pt}
 \input{colors}
 
 % \usepackage{beamerthememetropolis}
@@ -54,14 +59,24 @@
     \tableofcontents[hideallsubsections]
 \end{frame}
 
+\begin{frame}[t,fragile]{Qibo framework}
+  \begin{center}
+      \includegraphics[height=0.80\paperheight]{figures/qibo_ecosystem.png}
+  \end{center}
+\end{frame}
+
 \section{Superconducting qubits}
 
 \begin{frame}[t,fragile]{Artificial atoms}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-        Qubit: two level system
-        Superconducting qubits: use Josephson Junctions to build anharmonic oscillators
-        
+      \begin{itemize}
+        \item Qubit: two level system
+        \item Superconducting qubits: use Josephson Junctions to build anharmonic oscillators
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      
     \end{column}
   \end{columns}
 %Josephson junction
@@ -70,15 +85,26 @@
 %
 \begin{frame}[t,fragile]{State readout}
   \begin{columns}
-    \begin{column}{0.4\textwidth}
-      
-    \end{column}
-    \begin{column}{0.6\textwidth}
+    \begin{column}{0.35\textwidth}
+    Qubit - resonator hamiltonian:
+    \begin{equation*}
+      \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger)
+    \end{equation*}
+    Dispersive regime $g \ll \omega_q - \omega_r$
+    \begin{equation*}
+      \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z
+    \end{equation*}
+    dispersive shift: $\chi = \frac{g^2}{\Delta}, \Delta = \omega_q - \omega_r$
+  \end{column}
+    \begin{column}{0.65\textwidth}
       \begin{center}
+        \begin{figure}
           \vspace{2mm}
           \includegraphics[width=0.85\textwidth]{figures/TransmonCircuit.png}
-          \vspace{8mm}
+          \vfill
           \includegraphics[width=0.85\textwidth]{figures/TransmonBoard.png}
+          \caption{DOI: 10.1109/MAP.2022.3176593}
+        \end{figure}
       \end{center}
     \end{column}
   \end{columns}
@@ -88,18 +114,36 @@
 %  
 %\end{frame}
 
-\begin{frame}[t,fragile]{Qibo framework}
-  \begin{center}
-      \includegraphics[height=0.80\paperheight]{figures/qibo_ecosystem.png}
-  \end{center}
+\section{Average Clifford gate fidelity optimization}
+
+\begin{frame}[t,fragile]{Randomized Benchmarking}
+\begin{center}
+  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
+  \vspace{3mm}
+  \begin{figure}
+      \includegraphics[height=0.52\textheight]{figures/RBcircuit.png}
+      \caption{DOI: 10.1007/s10773-024-05811-8}
+  \end{figure}
+\end{center}
 \end{frame}
 
-\section{Avarage Clifford gate fidelity optimization}
+\begin{frame}[t,fragile]{Randomized Benchmarking}
+\begin{center}
+  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
+  \vfill
+  \includegraphics[width=\textwidth]{figures/rb.png}
+\end{center}
+\end{frame}
 
-%\begin{frame}[t,fragile]{Randomized Benchmarking}
-%
-%\end{frame}
-%
+\begin{frame}[t,fragile]{RB optimization}%insert listings 
+%\begin{center}
+%  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
+%  \vfill
+%  \includegraphics[width=0.6\texwidth]{figures/rb.png}
+%\end{center}
+\end{frame}
+
+
 %\begin{frame}[t,fragile]{RB optimization results}
 %  
 %\end{frame}
@@ -114,10 +158,17 @@
 
 \subsection{Cryoscope}
 
-%\begin{frame}[t,fragile]{Flux pulse reconstruction}
-%  
-%\end{frame}
-%
+\begin{frame}[t,fragile]{Flux pulse reconstruction}
+  Transmon flux dependence:
+  \begin{equation*}
+    f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right)
+  \end{equation*}
+
+  \begin{figure}
+    \includegraphics[width=0.35\textwidth]{figures/cryoscope_pulse.png}
+  \end{figure}
+\end{frame}
+
 %\begin{frame}[t,fragile]{Filter determination}
 %  
 %\end{frame}
@@ -144,8 +195,13 @@ Questions?
 \begin{frame}{What is for?}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-        \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"
-        %\href{https://link.springer.com/article/10.1007/BF02650179}{\faBook\,\, Richard Feynman, 1982, Simulating Physics with Computers}
+      \begin{itemize}
+        \item \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"
+                 %\href{https://link.springer.com/article/10.1007/BF02650179}{\faBook\,\, Richard Feynman, 1982, Simulating Physics with Computers}
+        \item Optimization and modeling (finance, traffic, weather...)
+        \item Quantum Algorithms 
+        \item Quantum Machine Learning
+      \end{itemize}        
       \end{column}
       \begin{column}{0.5\textwidth}
         \begin{center}
@@ -155,19 +211,34 @@ Questions?
   \end{columns}
 \end{frame}
 
-
-\begin{frame}{Other quantum computing}
-  \begin{enumerate}
-    \item Optimization and modeling (finance, traffic, weather...)
-    \item Quantum algorithms 
-    \item Quantum Machine Learning
-  \end{enumerate}
-\end{frame}
-
 \begin{frame}{Qubit platforms}
   \begin{center}
-      \includegraphics[height=0.8\textheight]{figures/platforms.png}
+      \includegraphics[height=0.82\textheight]{figures/platforms.png}
   \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Standard Randomized Benchmarking protocol}
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        RB protocol
+      {\setbeamertemplate{enumerate items}[default]
+       \begin{enumerate}[leftmargin=*, label=\arabic*.]
+         \item Initialize the system in the ground state
+         \item For each sequence length \( m \), draw a sequence of Clifford group elements
+         \item Calculate the inverse gate 
+         \item Measure sequence and inverse gate
+         \item Repeat the process for multiple sequences of the same length while varying the length
+       \end{enumerate}}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        RB features
+        \begin{itemize}
+          \item robust to SPAM errors
+          \item faster than state tomography
+          \item hardware-agnostic 
+        \end{itemize}
+      \end{column}
+    \end{columns}
 \end{frame}
 
 \end{document}
