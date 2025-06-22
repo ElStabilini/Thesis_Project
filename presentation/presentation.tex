@@ -2,15 +2,13 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \nonstopmode
 
-\usepackage{appendixnumberbeamer}
+%\usepackage{appendixnumberbeamer}
 \usepackage{graphicx}
 \usepackage{url}
-\usepackage{cite}
-\usepackage{comment}
-%\usepackage{verbatim}
 \usepackage{enumitem}
 \usepackage{caption}
-\usepackage{tikz}
+\usepackage[style=authoryear,backend=biber]{biblatex}
+\addbibresource{bibliography.bib}
 
 \captionsetup{skip=4pt}
 \input{colors}
@@ -69,32 +67,38 @@
 
 \begin{frame}[t,fragile]{Artificial atoms}
   \begin{columns}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.6\textwidth}
+      \centering
       \begin{itemize}
         \item Qubit: two level system
-        \item Superconducting qubits: use Josephson Junctions to build anharmonic oscillators
+        \hspace{10 mm}
+        \item Superconducting qubits: use Josephson Junctions\\ to build anharmonic oscillators
       \end{itemize}
+      \begin{figure}
+        \includegraphics[height=0.5\textheight]{figures/Transmon.png}
+        \caption{DOI: 10.1109/MAP.2022.3176593}
+      \end{figure}
     \end{column}
-    \begin{column}{0.5\textwidth}
-      
+    \begin{column}{0.6\textwidth}
+      \centering
+      \includegraphics[width=0.5\textwidth]{figures/cryostat.png}
     \end{column}
   \end{columns}
-%Josephson junction
 \end{frame}
 
-%
 \begin{frame}[t,fragile]{State readout}
   \begin{columns}
     \begin{column}{0.35\textwidth}
     Qubit - resonator hamiltonian:
     \begin{equation*}
       \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger)
-    \end{equation*}
-    Dispersive regime $g \ll \omega_q - \omega_r$
+    \end{equation*}\\
+    \vspace{1.5em}
+    Dispersive regime ($g \ll \omega_q - \omega_r$):
     \begin{equation*}
       \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z
     \end{equation*}
-    dispersive shift: $\chi = \frac{g^2}{\Delta}, \Delta = \omega_q - \omega_r$
+    dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$
   \end{column}
     \begin{column}{0.65\textwidth}
       \begin{center}
@@ -109,10 +113,28 @@
     \end{column}
   \end{columns}
 \end{frame}
-%
-%\begin{frame}[t,fragile]{Calibration}
-%  
-%\end{frame}
+
+\begin{frame}{Calibration}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      {\setbeamertemplate{enumerate items}[default]
+      \begin{enumerate}[leftmargin=*, label=\arabic*.]
+        \item Resonator characterization
+        \item Qubit characterization
+        \item Gate calibration
+        \item Gate set characterization
+      \end{enumerate}}
+      \vspace{1em}
+      Metrics: Fidelity, T1, T2
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
+      \includegraphics[width=0.55\textwidth]{figures/classification.png}
+    \end{column}
+  \end{columns}
+
+\end{frame}
 
 \section{Average Clifford gate fidelity optimization}
 
@@ -135,7 +157,7 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[t,fragile]{RB optimization}%insert listings 
+\begin{frame}[t,fragile]{RB optimization [\cite{kelly_optimal_2014}]}%insert listings 
 %\begin{center}
 %  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
 %  \vfill
@@ -152,21 +174,52 @@
 
 \subsection{Native RX90}
 
-%\begin{frame}[t,fragile]{Native RX90 gate}
-%  
-%\end{frame}
+\begin{frame}{Native RX90}
+  \centering
+  \texttt{Qibolab} native gates: $ RX, MZ$
+\end{frame}
 
 \subsection{Cryoscope}
 
-\begin{frame}{Flux pulse reconstruction}
-  Transmon flux dependence:
-  \begin{equation*}
-    f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right)
-  \end{equation*}
+\begin{frame}{Flux pulse reconstruction [\cite{rol_time-domain_2020}]}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \centering
+      Transmon flux dependence:
+      \begin{equation*}
+        f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right)
+      \end{equation*}\\
+      \vspace{3em}
+      Detuning as function of the flux pulse:
+      \begin{equation*}
+        \Delta f_R = \frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_Q(\Phi_{Q, \tau + \Delta \tau} (t))
+      \end{equation*}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
+        \vspace{3em}
+        \includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}
+        \caption{DOI: 10.1039/D2TC01258H}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
 
+\begin{frame}{Filter determination}
   \begin{figure}
-    \includegraphics[width=0.35\textwidth]{figures/cryoscope_pulse.png}
+    \centering
+    \includegraphics[width=\textwidth]{figures/B4_ringin.png}
   \end{figure}
+  \vspace{0.5em}
+  {\setbeamertemplate{enumerate items}[default]
+    \begin{enumerate}[leftmargin=*, label=\arabic*.]    
+      \item Determine exponential correction
+      \item Obtain IIR filters from exponential correction
+      \item Determine FIR
+      \item Apply pre-distortion
+    \end{enumerate}}
 \end{frame}
 
 \begin{frame}{Impact on chevron plots}
@@ -178,16 +231,8 @@
   \end{figure}
 \end{frame}
 
-%\begin{frame}[t,fragile]{Filter determination}
-%  
-%\end{frame}
-%
-%\begin{frame}[t,fragile]{Results}
-%  
-%\end{frame}
 
 \section{Conclusions \& Outlooks}
-
 
 \begin{frame}[t,standout]
 \Large
@@ -196,21 +241,22 @@ Questions?
 
 
 \begin{frame}{References}
-    \nocite{*}
-    \bibliographystyle{plain}
-    \bibliography{bibliography}
+    \printbibliography
 \end{frame}
+
+
+\section*{Backup slides}
 
 \begin{frame}{What is for?}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-      \begin{itemize}
+      \begin{itemize}[label=\textbullet]
         \item \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"
                  %\href{https://link.springer.com/article/10.1007/BF02650179}{\faBook\,\, Richard Feynman, 1982, Simulating Physics with Computers}
-        \item Optimization and modeling (finance, traffic, weather...)
+        \item Optimization and modeling (chemistry, finance, traffic, weather...), eg. VQE, QAOA
         \item Quantum Algorithms 
         \item Quantum Machine Learning
-      \end{itemize}        
+      \end{itemize}
       \end{column}
       \begin{column}{0.5\textwidth}
         \begin{center}
@@ -233,7 +279,7 @@ Questions?
       {\setbeamertemplate{enumerate items}[default]
        \begin{enumerate}[leftmargin=*, label=\arabic*.]
          \item Initialize the system in the ground state
-         \item For each sequence length \( m \), draw a sequence of Clifford group elements
+         \item For each sequence length $m$ draw a sequence of Clifford group elements
          \item Calculate the inverse gate 
          \item Measure sequence and inverse gate
          \item Repeat the process for multiple sequences of the same length while varying the length
@@ -243,7 +289,9 @@ Questions?
         RB features
         \begin{itemize}
           \item robust to SPAM errors
+          \hspace{10mm}
           \item faster than state tomography
+          \hspace{10mm}
           \item hardware-agnostic 
         \end{itemize}
       \end{column}
@@ -252,12 +300,22 @@ Questions?
 
 \begin{frame}{Clifford gates}
   \begin{columns}
-    \begin{column}{0.45\textwidth}
-      \begin{itemize}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}[label=\textbullet]
         \item Special subset of quantum gates that map Pauli operators to Pauli operators under conjugation
+        \hspace{10mm}
         \item Clifford gates group is generated by $H$, $S$, $CNOT$ gates
+        \hspace{10mm}
         \item Quantum circuits that consist of only Clifford gates can be efficiently simulated with a classical computer (Gottesman–Knill theorem)
       \end{itemize}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/HS.png}
+        \includegraphics[width=\textwidth]{figures/CNOT.png}
+        \vfill
+      \end{figure}
     \end{column}
   \end{columns}
 \end{frame}
