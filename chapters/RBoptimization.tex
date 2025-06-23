@@ -947,17 +947,16 @@ This is particularly evident from the results shown in Table \ref{tab:best_param
 
 Two directions for future improvement emerge from this work. 
 First, the RB evaluation process itself could be optimized. 
-In the present study, sequences of depth 1000 were used, and for each depth, 1000 Clifford circuits were sampled. 
+In the present study, sequences of depth 1000 were used, and for each depth, 1000 Clifford circuits were sampled. %here!
 This approach, while reliable, is computationally expensive. 
 A detailed study, possibly involving hyperparameter optimization techniques, could help determine whether shorter sequences or fewer samples still yield meaningful fidelity estimates, potentially reducing total runtime and making on-chip calibration more feasible.
 
 Second, the performance of the optimization algorithms themselves could be refined. 
-For example, in the case of \tt{CMA-ES}, adjusting the population size or reducing the initial value of $\sigma$ could improve convergence, albeit at the cost of reduced parameter space exploration or increased computational load. 
+For example, in the case of \tt{CMA-ES}, adjusting the population size or reducing the initial value of $\sigma$ could improve convergence, although at the cost of reduced parameter space exploration or increased computational load. 
 These modifications may be particularly relevant in a more stable calibration regime, where parameter values show limited drift over time.
 
-Another promising direction, particularly with \tt{Optuna}, would be to adopt a multi-objective optimization strategy, where both fidelity and optimization time are minimized simultaneously. 
-However, this approach was not pursued in this work due to the instability of the fidelity results observed even in high-trial regimes, highlighting the current limitations of fidelity optimization using this method.
-
+%Another promising direction, particularly with \tt{Optuna}, would be to adopt a multi-objective optimization strategy, where both fidelity and optimization time are minimized simultaneously. 
+%However, this approach was not pursued in this work due to the instability of the fidelity results observed even in high-trial regimes, highlighting the current limitations of fidelity optimization using this method.
 In conclusion, while there is still room for improvement in both the fidelity estimation routines and the design of the optimization algorithm, the results presented here demonstrate that automated, hardware-level gate fidelity optimization is indeed feasible and yields meaningful improvements. 
 Despite the fact that many of the routines require over 30 minutes to complete, a clear reduction in the cost function in the average Clifford gate infidelity was consistently observed.
 

@@ -9,7 +9,7 @@ For this reason, the second Chapter of the thesis is devoted to describing in de
 In addition to outlining the experimental steps, I also aimed to provide basic explanations of the underlying physical principles, particularly those from quantum mechanics and circuit quantum electrodynamics (cQED), that enable control and readout of superconducting qubits. 
 
 Becoming familiar with the reasoning behind each calibration step was important for effectively working with both the hardware and the software tools used in the project.
-To consolidate this understanding, I carried out a full calibration of a specific qubit line, namely the D-line of the \tt{qw11q} chip. 
+To support this understanding, I carried out a full calibration of a specific qubit line, namely the D-line of the \tt{qw11q} chip. 
 The results of these calibration procedures are summarized in Table \ref{tab:cal_results}, and served as the foundation for the subsequent experiments focused on gate fidelity optimization.
 
 \paragraph{RB optimization}
@@ -19,24 +19,24 @@ The results show that, despite several technical challenges, such routines can y
 From a performance standpoint, the Nelder-Mead simplex algorithm demonstrated the most reliable convergence, although at the cost of high resource consumption due to the large number of RB evaluations required at each step. 
 In contrast, \tt{Optuna} allowed for efficient and broad exploration of the parameter space within a more limited runtime, especially when the number of trials was constrained. 
 However, the optimization outcomes were often unstable: small changes in control parameters could lead to significant variations in the resulting avarage Clifford gate fidelity. 
-This behavior highlights a limitation in the current approach, namely the lack of robustness in the system's response to parameter tuning.
+This behavior highlights a limitation in the current approach, namely a possible lack of robustness in the system's response to parameter tuning due to parameters drift.
 
 The main drawback of this optimization strategy lies in the time cost associated with evaluating the fidelity via RB. 
 Each iteration of the optimization routine involves executing an RB sequence, making the overall process time-consuming. 
 This is a substantial limitation, especially considering the broader applicability of RB as a fidelity estimator across different quantum platforms, including those with slower gate execution times than superconducting qubits.
 
-To address this bottleneck, a natural direction for future work is to optimize the RB routine itself. 
+To address this bottleneck, a natural direction for future work is to try optimize the RB routine itself. 
 Reducing the depth of the Clifford sequences or the number of circuit samples used per evaluation could help shorten runtime without significantly sacrificing accuracy. 
 This could be achieved by performing a systematic hyperparameter optimization of the RB settings. 
 
 Despite the current limitations, automating calibration remains an essential step toward scalable quantum control. 
 Without such routines, calibration would rely on manual tuning, which involves iteratively guessing suitable parameter configurations; a slow and impractical approach, especially as systems grow in size and complexity. 
-In summary, although the system is not yet ready for deployment as a fully reliable calibration tool, this work establishes a solid foundation for the development of automated, hardware-level optimization procedures aimed at improving gate fidelity in a scalable and maintainable way.
+In summary, although the system is not yet ready for deployment as a fully reliable calibration tool, this work provides an initial basis for exploring automated, hardware-level optimization procedures that could contribute to improving gate fidelity in a scalable and maintainable way.
 
 
 \paragraph{Calibration routines}
 In Chapter 4 of this work I presented the results of practical improvements to the calibration framework based on challenges and requirements that emerged from experimental operations. 
-Specifically, I introduced a set of enhancements to the \Qibolab and \Qibocal libraries to support the $R_X(\pi/2)$ gate as a native operation. 
+Specifically, we introduced a set of enhancements to the \Qibolab and \Qibocal libraries to support the $R_X(\pi/2)$ gate as a native operation. 
 This involved both modifying the back-end to natively implement the gate and updating the associated calibration routines, which were originally designed only for the $R_X(\pi)$ gate.
 The inclusion of $R_X(\pi/2)$ as a native gate is important as such $\pi/2$ rotations are frequently used in quantum algorithms and benchmarking protocols. 
 An inaccurate calibration would propagate systematic errors throughout the execution of quantum circuits, ultimately degrading their overall fidelity.

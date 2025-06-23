@@ -224,8 +224,8 @@ This is especially true in scenarios where high gate fidelity is critical or whe
 \end{figure}
 
 \subsection{RX90 as native gate}
-Considering both these results and the fact that we wanted to avoid introducing breaking changes to the library, we decided not to replace the $R_X(\pi)$ gate with the $R_X(\pi/2)$ gate as the native gate. 
-Instead, we opted to simply add the $R_X(\pi/2)$ gate to the set of native gates in \Qibolab (see \ref{snippet:natives}).
+Considering both these results and the fact that we wanted to avoid introducing breaking changes to the library, we did not replace the $R_X(\pi)$ gate with the $R_X(\pi/2)$ in the natives set. 
+Instead, we opted to add the $R_X(\pi/2)$ gate to the set of native gates in \Qibolab (see \ref{snippet:natives}).
 To support this change we updated the \tt{native.py} module, which provides the data containers for holding the pulse parameters required for implementing every native gate.
 
 Additionally, we modified some of the calibration experiments of the \Qibocal library presented in Section \ref{sec:calibration} to support the calibration of this new gate.
@@ -1075,7 +1075,7 @@ After the application of the filters determined by using the cryoscope protocol 
 
 Based on the results presented in Subsection \ref{subsec:cryo_results} - Results, we have implemented a new \tt{Routine}, which is available starting from version v0.2 of \Qibocal. 
 As with all other routines in \Qibocal, users can access it through a runcard\footnote{In Qibocal, all protocols are deployed through a YAML-based runcard, which allows users to specify experiment-specific parameters.}. 
-An example of such a runcard is shown in Listing \ref{snippet:cryoscope}.
+An example of such runcard is shown in Listing \ref{snippet:cryoscope}.
 
 The final implementation of the routine is grounded in the considerations and analyses presented in Subsection \ref{subsec:preliminary}. 
 In particular, we set the separation time $T_{sep}$ to $100$ ns longer than the maximum duration of the flux pulse, consistently with the choices taken in the preliminary analyses. 
@@ -1083,7 +1083,7 @@ The variation in pulse duration $\Delta\tau$, is defined by the user and determi
 The lower bound of $\Delta\tau$ is constrained by the sampling capabilities of the acquisition hardware.
 
 Based on outcomes and considerations of the preliminary analyses, we chose to use a standard rectangular pulse that begins at time $t = 0$ ns and maintains a constant, non-zero amplitude. 
-The duration of each flux pulse is determined by parameters defined by the user in the runcard. 
+The duration of each flux pulse is determined by the parameters defined by the user in the runcard. 
 Specifically, users specify the minimum (\tt{duration\_min}) and maximum (\tt{duration\_max}) durations of the pulse, as well as the increment step (\tt{duration\_step}), which corresponds to $\Delta\tau$.
 
 The amplitude of the flux pulse, specified via the \tt{flux\_pulse\_amplitude} parameter, is also configurable in the runcard. 
