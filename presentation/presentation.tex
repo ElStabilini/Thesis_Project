@@ -2,6 +2,8 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \nonstopmode
 
+\usepackage{pifont}
+\usepackage{subcaption}
 \usepackage{fontawesome}
 \usepackage{graphicx}
 \usepackage{url}
@@ -65,7 +67,7 @@
 
 \section{Superconducting qubits}
 
-\begin{frame}[t,fragile]{Artificial atoms}
+\begin{frame}{Artificial atoms}
   \begin{columns}
     \begin{column}{0.6\textwidth}
       \centering
@@ -86,10 +88,31 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}[t,fragile]{State readout}
+\begin{frame}{Qubit control}
+
+  Electromagnetic pulse applied to the qubit
+  \begin{equation*}
+    V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)},
+  \end{equation*}
+
+  Qubit - electric field Hamiltonian (RWA)
+  \begin{equation*}
+    \hat{H} = -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \varepsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right),
+  \end{equation*}
+
+  General qubit evolution under electromagnetic pulse:
+  \begin{equation*}
+    R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta},
+  \end{equation*}
+
+  where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$
+
+\end{frame}
+
+\begin{frame}{State readout}
   \begin{columns}
     \begin{column}{0.35\textwidth}
-    Qubit - resonator hamiltonian:
+    Qubit - resonator Hamiltonian:
     \begin{equation*}
       \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger)
     \end{equation*}\\
@@ -115,7 +138,7 @@
 \end{frame}
 
 \begin{frame}{Superconducting qubit calibration}
-  \vbox to 0.95\textheight{ 
+  \vbox to \textheight{ 
     \vspace{1em}
     \begin{minipage}[t]{\textwidth}
       \centering
@@ -123,7 +146,7 @@
       \hspace{10mm}
       \includegraphics[height=0.4\textheight]{figures/classification.png}
     \end{minipage}
-    \vspace{0.1em}
+    \vspace{0.015mm}
 
     \begin{minipage}[b]{\textwidth}
       \centering
@@ -154,13 +177,13 @@
 \end{frame}
 
 \begin{frame}{Superconducting qubit calibration}
-  \vbox to 0.95\textheight{ 
+  \vbox to \textheight{ 
     \vspace{1em}
     \begin{minipage}[t]{\textwidth}
       \centering
       \includegraphics[height=0.4\textheight]{figures/cal_results.png}
     \end{minipage}
-    \vspace{0.1em}
+    \vspace{0.015mm}
 
     \begin{minipage}[b]{\textwidth}
       \centering
@@ -222,26 +245,108 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[t,fragile]{RB optimization [\cite{kelly_optimal_2014}]}%insert listings 
-%\begin{center}
-%  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
-%  \vfill
-%  \includegraphics[width=0.6\texwidth]{figures/rb.png}
-%\end{center}
+\begin{frame}[t,fragile]{RB optimization [\cite{kelly_optimal_2014}]}
+  \includegraphics[width=\textwidth]{figures/rb.png}\\
+  \vspace{1em}
+  Can we optimize the average gate fidelity to automate $RX$ gate reacalibration?\\
+  \vspace{1em}
+  Test closed-loop optimization with modern optimization libraries\\
+
+  \vspace{1em}
+  Optimization parameters: \; \textbf{amplitude}, \; \textbf{frequency} \; \textbf{$\beta$ DRAG parameter}
 \end{frame}
 
 
-%\begin{frame}[t,fragile]{RB optimization results}
-%  
+\begin{frame}[t,fragile]{Average Clifford gate Fidelity}
+    \vbox to \textheight{ 
+    \vspace{1em}
+    \begin{minipage}[t]{\textwidth}
+      \centering
+      \includegraphics[height=0.35\textheight]{figures/NM_fid.png}
+      \hspace{10mm}
+      \includegraphics[height=0.35\textheight]{figures/fidelity_CMA.png}
+    \end{minipage}
+    \vspace{0.5em}
+    \begin{minipage}[b]{\textwidth}
+      \centering
+      \includegraphics[width=0.85\textwidth]{figures/optuna.png}
+    \end{minipage}
+    \vspace{1em}
+  }
+\end{frame}
+
+\begin{frame}[t,fragile]{Parameters evolution}
+  \begin{figure}
+    \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/amplitude.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/frequency.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/beta.png}
+    \end{subfigure}
+
+  \end{figure}
+    \begin{figure}
+    \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/CMA_amplitude.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/CMA_frequency.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/beta_CMA.png}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
+
+%\begin{frame}[t,fragile]{Results summary}
+%  \begin{itemize}
+%    \item[\ding{51}] Fidelity improvement
+%    \item[\ding{55}]Overall time-expensive
+%    \item[\ding{55}]Unstable convergence
+%  \end{itemize}
+%
+%%  \begin{figure}
+%%    \centering
+%%    \includegraphics[options]{name}
+%%  \end{figure}
+%
 %\end{frame}
 
 \section{Library additions}
-
 \subsection{Native RX90}
 
 \begin{frame}{Native RX90}
-  \centering
-  \texttt{Qibolab} native gates: $ RX, MZ$
+  \begin{itemize}
+    \item Only native gates are directly implemented on hardware, other gates are transpiled into natives
+    \hspace{10 mm}
+    \item Qibolab single qubit natives: $RX$, $MZ$ + $RX/2$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Native RX90}
+  \begin{itemize}
+    \item Only native gates are directly implemented on hardware, other gates are transpiled into natives
+    \hspace{10 mm}
+    \item Qibolab single qubit natives: RX, MZ
+    \hspace{10 mm}
+    \item Add RX90 native for more precise gates implementation
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/RX90.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Rabi amplitude experiment}
+    \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/B4.png}
+    \vfill
+    \includegraphics[width=\textwidth]{figures/B4_90.png}
+  \end{figure}
 \end{frame}
 
 \subsection{Cryoscope}
@@ -257,7 +362,8 @@
       \vspace{3em}
       Detuning as function of the flux pulse:
       \begin{equation*}
-        \Delta f_R = \frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_Q(\Phi_{Q, \tau + \Delta \tau} (t))
+        \Delta f_R = \frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t))
+        %TODO: riguardare notazione
       \end{equation*}
     \end{column}
     \begin{column}{0.5\textwidth}
@@ -304,9 +410,19 @@
 
 \section{Conclusions \& Outlooks}
 
+\begin{frame}{Conclusions \& Outlooks}
+  \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
+    \item Tested automated optimization routines to enhance single-qubit Clifford gates fidelities and highlighted main limitations for systematic application
+    \item Possible future work related to parameters optimization of the RB protocol itself for this purpose
+    \item Extended Qibolab and Qibocal to support native $R_X(\pi/2)$ gates with dedicated calibration routines
+    \item Implemented and added the Cryoscope calibration experiment to Qibocal library 
+    \item Other possible experiments that can be added to Qibocal library include readout optimization, active qubit reset schemes, and leakage mitigation techniques 
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[t,standout]
 \Large
-Questions?
+Thank you
 \end{frame}
 
 
