@@ -32,7 +32,7 @@ chapter:
 # Clean generated files
 clean:
 	rm -rf tmp/*
-	rm -f *.pdf
+	rm -f main.pdf main_backup.pdf
 	rm -f *.log *.aux *.bbl *.blg *.out *.toc *.lof *.lot *.bcf *.run.xml
 
 .PHONY: all png note chapter clean

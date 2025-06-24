@@ -2,7 +2,7 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \nonstopmode
 
-%\usepackage{appendixnumberbeamer}
+\usepackage{fontawesome}
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{enumitem}
@@ -114,26 +114,80 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Calibration}
-  \begin{columns}
-    \begin{column}{0.45\textwidth}
-      {\setbeamertemplate{enumerate items}[default]
-      \begin{enumerate}[leftmargin=*, label=\arabic*.]
-        \item Resonator characterization
-        \item Qubit characterization
-        \item Gate calibration
-        \item Gate set characterization
-      \end{enumerate}}
-      \vspace{1em}
-      Metrics: Fidelity, T1, T2
-    \end{column}
-    \begin{column}{0.55\textwidth}
+\begin{frame}{Superconducting qubit calibration}
+  \vbox to 0.95\textheight{ 
+    \vspace{1em}
+    \begin{minipage}[t]{\textwidth}
       \centering
-      \includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
-      \includegraphics[width=0.55\textwidth]{figures/classification.png}
-    \end{column}
-  \end{columns}
+      \includegraphics[height=0.4\textheight]{figures/disp_sihft.png}
+      \hspace{10mm}
+      \includegraphics[height=0.4\textheight]{figures/classification.png}
+    \end{minipage}
+    \vspace{0.1em}
 
+    \begin{minipage}[b]{\textwidth}
+      \centering
+      \begin{columns}
+        \begin{column}{0.4\textwidth}
+          Procedure:
+          \setbeamertemplate{enumerate items}[default]
+          \begin{enumerate}[leftmargin=*, label=\arabic*.]
+            \item Resonator characterization
+            \item Qubit characterization
+            \item Gate calibration
+            \item Gate set characterization
+          \end{enumerate}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+          Metrics example:
+          \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
+            \item readout \& assignment fidelity
+            \item relaxation time $T_1$
+            \item decoherence time $T_22$
+            \item gate fidelity
+          \end{itemize}   
+        \end{column}
+      \end{columns}
+    \end{minipage}
+    \vspace{1em}
+  }
+\end{frame}
+
+\begin{frame}{Superconducting qubit calibration}
+  \vbox to 0.95\textheight{ 
+    \vspace{1em}
+    \begin{minipage}[t]{\textwidth}
+      \centering
+      \includegraphics[height=0.4\textheight]{figures/cal_results.png}
+    \end{minipage}
+    \vspace{0.1em}
+
+    \begin{minipage}[b]{\textwidth}
+      \centering
+      \begin{columns}
+        \begin{column}{0.4\textwidth}
+          Procedure:
+          \setbeamertemplate{enumerate items}[default]
+          \begin{enumerate}[leftmargin=*, label=\arabic*.]
+            \item Resonator characterization
+            \item Qubit characterization
+            \item Gate calibration
+            \item Gate set characterization
+          \end{enumerate}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+          Metrics example:
+          \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
+            \item readout \& assignment fidelity
+            \item relaxation time $T_1$
+            \item decoherence time $T_22$
+            \item gate fidelity
+          \end{itemize}   
+        \end{column}
+      \end{columns}
+    \end{minipage}
+    \vspace{1em}
+  }
 \end{frame}
 
 \section{Average Clifford gate fidelity optimization}
@@ -154,6 +208,17 @@
   Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
   \vfill
   \includegraphics[width=\textwidth]{figures/rb.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[t,fragile]{Randomized Benchmarking}
+\begin{center}
+  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
+  \vspace{1.25em}
+
+  \includegraphics[width=\textwidth]{figures/rb.png}
+  \vspace{1.25em}
+  Can we optimize the average gate fidelity to automate $RX$ gate reacalibration? 
 \end{center}
 \end{frame}
 
@@ -229,6 +294,11 @@
     \vfill
     \includegraphics[width=\textwidth]{figures/B2B4.png}
   \end{figure}
+\end{frame}
+
+\begin{frame}{Cryoscope routine}
+  \centering
+  \includegraphics[height=\textheight]{figures/cryoscope_routine.png}
 \end{frame}
 
 
@@ -319,5 +389,6 @@ Questions?
     \end{column}
   \end{columns}
 \end{frame}
+
 
 \end{document}
