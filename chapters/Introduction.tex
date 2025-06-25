@@ -368,7 +368,7 @@ An example of such a system is shown in Figure \ref{fig:Transmon_model}, along w
 
 As mentioned in the introduction of this section, in circuit quantum electrodynamics (cQED), the qubit state is measured via a dispersive interaction between a qubit and a far-detuned microwave resonator.\\
 In Figure \ref{fig:TransmonCircuit}, in blue is represented the resonator circuit capacitively coupled to the (red) qubit that is used for the readout of the qubit state. 
-The resonator circuit is characterized by a an inductance $L_r$ and a capacitance $C_r$, then the characteristic frequency is $\omega_r =  1/\sqrt{L_r C_r}$. 
+The resonator circuit is characterized by an inductance $L_r$ and a capacitance $C_r$, then the characteristic frequency is $\omega_r =  1/\sqrt{L_r C_r}$. 
 
 The classical Hamiltonian of the resonator can be written as 
 \begin{equation}\label{eq:classical_hamiltonian_resonator}
@@ -505,7 +505,7 @@ In general, a microwave pulse given by $V_d = A\varepsilon(t) \sin(\omega_d t + 
     R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta},
 \end{equation}
 
-\section{Qubit state degradetion}
+\section{Qubit state degradation}
 The ability to apply quantum gates to qubits is essential for executing complex circuits and operations. 
 However, to ensure their effective implementation, it is crucial to study the qubit decoherence time, as it directly impacts the reliability and performance of quantum computations.
 
@@ -513,7 +513,7 @@ However, to ensure their effective implementation, it is crucial to study the qu
     \centering
     \includegraphics[width=\textwidth]{figures/png/noise_model.png}
     \caption{Transverse and longitudinal noise represented on the Bloch sphere. 
-    (a) Bloch sphere representation of the quantum state $\ket{\psi}= \alpha\ket{0} + \beta\ket{1}$, the $z$-axis is longitudinal in the qubit frame, whike the $x-y$ plane is transverse in the qubit frame.
+    (a) Bloch sphere representation of the quantum state $\ket{\psi}= \alpha\ket{0} + \beta\ket{1}$, the $z$-axis is longitudinal in the qubit frame, while the $x-y$ plane is transverse in the qubit frame.
     (b) Longitudinal relaxation results from energy exchange between the qubit and its environment, due to transverse noise.
     (c) Pure dephasing in the transverse plane arises from longitudinal noise along the $z$-axis that fluctuates the qubit frequency. A Bloch vector along the x-axis will diffuse clockwise or counterclockwise around the equator due to the stochastic frequency fluctuations.
     (d)  Transverse relaxation results in a loss of coherence due to a combination of energy relaxation and pure dephasing. \\Credits: \cite{krantz_quantum_2019}}
@@ -530,7 +530,7 @@ The energy relaxation time describes the characteristic time over which a qubit 
 where $p_e(t)$ is the probability of the qubit being in the excited state at time $t$, $p_e(0)$ the probability of the qubit being in the excited state at time $t=0$ and $\Gamma_1=1/T_1$ is the decay rate of the qubit from state $\ket{0}$ to state $\ket{1}$.
 Energy relaxation is primarily due to transverse noise, namely noise that couples the qubit through $\hat{\sigma}_x$ and/or $\hat{\sigma}_y$, it is caused by coupling to electromagnetic noise and other dissipative processes that induce energy exchange with the environment.
 
-Longitudinal noise instead is due to environmental fluctuations coupling to $\hat{\sigma}_z$ that randomize the phase of the the superposition state without causing energy exchange with the environment.
+Longitudinal noise instead is due to environmental fluctuations coupling to $\hat{\sigma}_z$ that randomize the phase of the superposition state without causing energy exchange with the environment.
 The characteristic dephasing time of a qubit is $T_2^* = 1/\Gamma_\phi$ dove $\Gamma_\phi$ is the pure dephasing rate.
 
 The transverse relaxation rate $\Gamma_2$ describes the combined effects of pure dephasing and energy relaxation and is defined as 
@@ -610,6 +610,6 @@ This channel models both energy relaxation and phase randomization, effectively 
 
 An alternative representation of the depolarizing channel describes the process in which the system state $\rho$ is replaced by the maximally mixed state $\frac{\id}{2}$ with probability $d$:
 \begin{equation}\label{eq:depolarizing_channel}
-    \mathcal{E}_{dc}(\rho) = p\frac{\id}{2}+(1-p)\rho.
+    \mathcal{E}_{dc}(\rho) = p\frac{\id}{2}+(1-p)\rho,
 \end{equation}
 where the following relation holds between  $p$ and $q$, $q=3p/4$.
