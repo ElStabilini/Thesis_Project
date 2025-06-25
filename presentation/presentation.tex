@@ -19,10 +19,14 @@
 \usetheme[progressbar=frametitle]{metropolis}
 \metroset{progressbar=none}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+\newcounter{mainframenumber}
+\newcommand{\backupbegin}{
+  \setcounter{mainframenumber}{\value{framenumber}}
+}
+
 
 
 \usepackage{xcolor}
-% Remove default navigation symbols
 \setbeamertemplate{navigation symbols}{}
 \setbeamercolor{background canvas}{bg=white}
 
@@ -31,7 +35,7 @@
   \leavevmode%
   \hbox{%
     \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
-      \usebeamerfont{footline} \insertframenumber{} / \inserttotalframenumber
+      \usebeamerfont{footline} \insertframenumber{} / 19
     \end{beamercolorbox}%
     \hfill
     \begin{beamercolorbox}[wd=.9\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
@@ -41,6 +45,7 @@
   \vskip0pt%
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PRESENTATION START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \title{Development of an open-source calibration framework\\ for superconducting qubits}
 \subtitle{Master's degree in Physics}
@@ -64,6 +69,8 @@
       \includegraphics[height=0.80\paperheight]{figures/qibo_ecosystem.png}
   \end{center}
 \end{frame}
+
+
 
 \section{Superconducting qubits}
 
@@ -90,170 +97,128 @@
 
 \begin{frame}{Qubit control}
 
-  Electromagnetic pulse applied to the qubit
-  \begin{equation*}
-    V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)},
-  \end{equation*}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      Electromagnetic pulse applied to the qubit
+      \begin{equation*}
+        V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)},
+      \end{equation*}
+    
+      Qubit - electric field Hamiltonian (RWA)
+      \begin{equation*}
+        \hat{H} = -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \varepsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right)
+      \end{equation*}
+    
+      General qubit evolution under electromagnetic pulse:
+      \begin{equation*}
+        R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta}
+      \end{equation*}
+    
+      where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{figure}
+        \vspace{2mm}
+        \includegraphics[width=0.8\textwidth]{figures/TransmonCircuit.png}
+        \vfill
+        \includegraphics[width=0.8\textwidth]{figures/TransmonBoard.png}
+        \caption{DOI: 10.1109/MAP.2022.3176593}
+      \end{figure}
+    \end{column}
+  \end{columns}   
 
-  Qubit - electric field Hamiltonian (RWA)
-  \begin{equation*}
-    \hat{H} = -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \varepsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right),
-  \end{equation*}
-
-  General qubit evolution under electromagnetic pulse:
-  \begin{equation*}
-    R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta},
-  \end{equation*}
-
-  where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$
 
 \end{frame}
 
 \begin{frame}{State readout}
   \begin{columns}
     \begin{column}{0.35\textwidth}
-    Qubit - resonator Hamiltonian:
-    \begin{equation*}
-      \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger)
-    \end{equation*}\\
-    \vspace{1.5em}
-    Dispersive regime ($g \ll \omega_q - \omega_r$):
-    \begin{equation*}
-      \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z
-    \end{equation*}
-    dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$
-  \end{column}
+      Qubit - resonator Hamiltonian:
+      \begin{equation*}
+        \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger)
+      \end{equation*}\\
+      \vspace{1.5em}
+      Dispersive regime ($g \ll \omega_q - \omega_r$):
+      \begin{equation*}
+        \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z
+      \end{equation*}
+      dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$
+    \end{column}
     \begin{column}{0.65\textwidth}
-      \begin{center}
-        \begin{figure}
-          \vspace{2mm}
-          \includegraphics[width=0.85\textwidth]{figures/TransmonCircuit.png}
-          \vfill
-          \includegraphics[width=0.85\textwidth]{figures/TransmonBoard.png}
-          \caption{DOI: 10.1109/MAP.2022.3176593}
-        \end{figure}
-      \end{center}
+      \centering
+      \includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
+      \hspace{10mm}
+      \includegraphics[height=0.4\textwidth]{figures/classification.png}
     \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}{Superconducting qubit calibration}
-  \vbox to \textheight{ 
-    \vspace{1em}
-    \begin{minipage}[t]{\textwidth}
-      \centering
-      \includegraphics[height=0.4\textheight]{figures/disp_sihft.png}
-      \hspace{10mm}
-      \includegraphics[height=0.4\textheight]{figures/classification.png}
-    \end{minipage}
-    \vspace{0.015mm}
-
-    \begin{minipage}[b]{\textwidth}
-      \centering
-      \begin{columns}
-        \begin{column}{0.4\textwidth}
-          Procedure:
-          \setbeamertemplate{enumerate items}[default]
-          \begin{enumerate}[leftmargin=*, label=\arabic*.]
-            \item Resonator characterization
-            \item Qubit characterization
-            \item Gate calibration
-            \item Gate set characterization
-          \end{enumerate}
-        \end{column}
-        \begin{column}{0.4\textwidth}
-          Metrics example:
-          \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
-            \item readout \& assignment fidelity
-            \item relaxation time $T_1$
-            \item decoherence time $T_22$
-            \item gate fidelity
-          \end{itemize}   
-        \end{column}
-      \end{columns}
-    \end{minipage}
-    \vspace{1em}
-  }
+  
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/calibration.png}
+  \end{figure}
+  \vspace{1.5em}
+  \begin{itemize}
+    \item We need to calibrate \textit{only} native gates
+    \item Native single qubit gates on superconducting qubits: $R_X(\pi)$, $R_X(\frac{\pi}{2})$, $R_Z(\theta)$
+    \item For each pulse we calibrate frequency, duration, power, shape
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Superconducting qubit calibration}
-  \vbox to \textheight{ 
-    \vspace{1em}
-    \begin{minipage}[t]{\textwidth}
-      \centering
-      \includegraphics[height=0.4\textheight]{figures/cal_results.png}
-    \end{minipage}
-    \vspace{0.015mm}
 
-    \begin{minipage}[b]{\textwidth}
-      \centering
-      \begin{columns}
-        \begin{column}{0.4\textwidth}
-          Procedure:
-          \setbeamertemplate{enumerate items}[default]
-          \begin{enumerate}[leftmargin=*, label=\arabic*.]
-            \item Resonator characterization
-            \item Qubit characterization
-            \item Gate calibration
-            \item Gate set characterization
-          \end{enumerate}
-        \end{column}
-        \begin{column}{0.4\textwidth}
-          Metrics example:
-          \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
-            \item readout \& assignment fidelity
-            \item relaxation time $T_1$
-            \item decoherence time $T_22$
-            \item gate fidelity
-          \end{itemize}   
-        \end{column}
-      \end{columns}
-    \end{minipage}
-    \vspace{1em}
-  }
-\end{frame}
+
+
 
 \section{Average Clifford gate fidelity optimization}
 
 \begin{frame}[t,fragile]{Randomized Benchmarking}
-\begin{center}
-  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
+
+  \begin{itemize}
+    \item Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
+    \item Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$
+  \end{itemize}
+
   \vspace{3mm}
-  \begin{figure}
-      \includegraphics[height=0.52\textheight]{figures/RBcircuit.png}
-      \caption{DOI: 10.1007/s10773-024-05811-8}
-  \end{figure}
-\end{center}
+  Randomized Benchmarking protocol:
+  {\setbeamertemplate{enumerate items}[default]
+   \begin{enumerate}[leftmargin=*, label=\arabic*.]
+     \item Initialize the system in the ground state
+     \item For each sequence length $m$ draw a sequence of Clifford group elements
+     \item Calculate the inverse gate 
+     \item Measure sequence and inverse gate
+     \item Repeat the process for multiple sequences of the same length while varying the length
+  \end{enumerate}}
 \end{frame}
 
 \begin{frame}[t,fragile]{Randomized Benchmarking}
-\begin{center}
-  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
-  \vfill
-  \includegraphics[width=\textwidth]{figures/rb.png}
-\end{center}
-\end{frame}
-
-\begin{frame}[t,fragile]{Randomized Benchmarking}
-\begin{center}
-  Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
-  \vspace{1.25em}
-
-  \includegraphics[width=\textwidth]{figures/rb.png}
-  \vspace{1.25em}
-  Can we optimize the average gate fidelity to automate $RX$ gate reacalibration? 
-\end{center}
+  \begin{itemize}
+    \item The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.
+    \item From $p$ we can extract the average error per Clifford gate
+  \end{itemize}
+  \begin{center}
+    \vspace{0.5em}
+    \includegraphics[width=\textwidth]{figures/rb.png}
+    \vspace{1.25em}
+    Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration? 
+  \end{center}
 \end{frame}
 
 \begin{frame}[t,fragile]{RB optimization [\cite{kelly_optimal_2014}]}
-  \includegraphics[width=\textwidth]{figures/rb.png}\\
-  \vspace{1em}
-  Can we optimize the average gate fidelity to automate $RX$ gate reacalibration?\\
-  \vspace{1em}
-  Test closed-loop optimization with modern optimization libraries\\
-
-  \vspace{1em}
-  Optimization parameters: \; \textbf{amplitude}, \; \textbf{frequency} \; \textbf{$\beta$ DRAG parameter}
+  \begin{center}
+    Test closed-loop optimization with modern optimization libraries
+    \vspace{1.25em}
+    \includegraphics[width=0.9\textwidth]{figures/opt_workflow.png}
+  \end{center}
+  \vspace{1.25em}
+  Optimization parameters:
+  \begin{itemize}
+    \item Pulse amplitude
+    \item Pulse frequency
+    \item Pulse shape (through $\beta$ DRAG parameter)
+  \end{itemize}
 \end{frame}
 
 
@@ -301,38 +266,17 @@
   \end{figure}
 \end{frame}
 
-%\begin{frame}[t,fragile]{Results summary}
-%  \begin{itemize}
-%    \item[\ding{51}] Fidelity improvement
-%    \item[\ding{55}]Overall time-expensive
-%    \item[\ding{55}]Unstable convergence
-%  \end{itemize}
-%
-%%  \begin{figure}
-%%    \centering
-%%    \includegraphics[options]{name}
-%%  \end{figure}
-%
-%\end{frame}
+
+
 
 \section{Library additions}
 \subsection{Native RX90}
 
 \begin{frame}{Native RX90}
   \begin{itemize}
-    \item Only native gates are directly implemented on hardware, other gates are transpiled into natives
-    \hspace{10 mm}
-    \item Qibolab single qubit natives: $RX$, $MZ$ + $RX/2$
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Native RX90}
-  \begin{itemize}
-    \item Only native gates are directly implemented on hardware, other gates are transpiled into natives
-    \hspace{10 mm}
-    \item Qibolab single qubit natives: RX, MZ
-    \hspace{10 mm}
-    \item Add RX90 native for more precise gates implementation
+    \item Qibolab single-qubit native gates are $R_X(\pi)$ and $MZ$
+    \item $R_X(\frac{\pi}{2})$ gate is implemented by halving the calibrated values for $R_X(\pi)$ 
+    \item Add native $R_X(\frac{\pi}{2})$ for more precise gates implementation
   \end{itemize}
   \begin{figure}
     \centering
@@ -353,20 +297,20 @@
 
 \begin{frame}{Flux pulse reconstruction [\cite{rol_time-domain_2020}]}
   \begin{columns}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.4\textwidth}
       \centering
-      Transmon flux dependence:
+      Transmon frquency dependence on magnetic flux:
       \begin{equation*}
         f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right)
       \end{equation*}\\
-      \vspace{3em}
+      \vspace{1em}
       Detuning as function of the flux pulse:
-      \begin{equation*}
-        \Delta f_R = \frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t))
-        %TODO: riguardare notazione
-      \end{equation*}
+      \begin{align*}
+        \Delta f_q = &\frac{\varphi_{\tau+\Delta\tau}-\varphi_\tau}{2\pi} \approx \\
+        &\frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t))
+      \end{align*}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.6\textwidth}
       \begin{figure}
         \centering
         \includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
@@ -385,15 +329,15 @@
   \end{figure}
   \vspace{0.5em}
   {\setbeamertemplate{enumerate items}[default]
-    \begin{enumerate}[leftmargin=*, label=\arabic*.]    
+    \begin{enumerate}[leftmargin=*, label=\arabic*.]
       \item Determine exponential correction
-      \item Obtain IIR filters from exponential correction
-      \item Determine FIR
-      \item Apply pre-distortion
+      \item Obtain coefficients for the Infinite Impulse Response from exponential correction
+      \item Determine Finite Impulse Response coefficients
+      \item Obtain coefficients for real-time correction
     \end{enumerate}}
 \end{frame}
 
-\begin{frame}{Impact on chevron plots}
+\begin{frame}{Impact of correction on chevron plots}
   \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/B2B4_nofilter.png}
@@ -410,13 +354,28 @@
 
 \section{Conclusions \& Outlooks}
 
-\begin{frame}{Conclusions \& Outlooks}
+\begin{frame}{Gate recalibration by RB optimization}
+  \begin{itemize}
+    \item[\ding{51}] We can always find parameters configuration with average Clifford gate fidelity > $99.5\%$
+    \item[\ding{51}] Does not rely on manual tuning by an operator
+    \item[\ding{55}] RB evaluation is computationally expensive ($\sim 30$ minutes)
+    \item[\ding{55}] More stable methods (eg. Nelder-Mead) require many cost function evaluation
+    \item[\ding{55}] Parameters drift makes optimization unstable
+  \end{itemize}
+  Possible future work: optimize RB parameters to allow a faster and more reliable optimization
+\end{frame}
+
+\begin{frame}{Library additions}
+  \begin{itemize}
+    \item[\ding{51}] Extended Qibolab and Qibocal libraries to support native $R_X(\pi/2)$ gates with dedicated calibration routines
+    \item[\ding{51}] Implemented and added the Cryoscope calibration experiment to Qibocal library to correct flux-pulse distortions (average NMSE improvement $\sim 70\%$)
+    \item[\ding{55}] Study long-time distortions of the flux-pulse
+  \end{itemize}
+  Possible future extensions: 
   \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
-    \item Tested automated optimization routines to enhance single-qubit Clifford gates fidelities and highlighted main limitations for systematic application
-    \item Possible future work related to parameters optimization of the RB protocol itself for this purpose
-    \item Extended Qibolab and Qibocal to support native $R_X(\pi/2)$ gates with dedicated calibration routines
-    \item Implemented and added the Cryoscope calibration experiment to Qibocal library 
-    \item Other possible experiments that can be added to Qibocal library include readout optimization, active qubit reset schemes, and leakage mitigation techniques 
+    \item Readout optimization protocols
+    \item Active qubit reset schemes
+    \item Implement leakage mitigation strategies
   \end{itemize}
 \end{frame}
 
@@ -425,6 +384,10 @@
 Thank you
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BACKUP SLIDES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\backupbegin
+\appendix
 
 \begin{frame}{References}
     \printbibliography
@@ -437,8 +400,8 @@ Thank you
   \begin{columns}
     \begin{column}{0.5\textwidth}
       \begin{itemize}[label=\textbullet]
-        \item \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"
-                 %\href{https://link.springer.com/article/10.1007/BF02650179}{\faBook\,\, Richard Feynman, 1982, Simulating Physics with Computers}
+        \item \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"\\
+                 - Richard Feynman, 1982, Simulating Physics with Computers
         \item Optimization and modeling (chemistry, finance, traffic, weather...), eg. VQE, QAOA
         \item Quantum Algorithms 
         \item Quantum Machine Learning
@@ -456,32 +419,6 @@ Thank you
   \begin{center}
       \includegraphics[height=0.82\textheight]{figures/platforms.png}
   \end{center}
-\end{frame}
-
-\begin{frame}[fragile]{Standard Randomized Benchmarking protocol}
-    \begin{columns}
-      \begin{column}{0.5\textwidth}
-        RB protocol
-      {\setbeamertemplate{enumerate items}[default]
-       \begin{enumerate}[leftmargin=*, label=\arabic*.]
-         \item Initialize the system in the ground state
-         \item For each sequence length $m$ draw a sequence of Clifford group elements
-         \item Calculate the inverse gate 
-         \item Measure sequence and inverse gate
-         \item Repeat the process for multiple sequences of the same length while varying the length
-       \end{enumerate}}
-      \end{column}
-      \begin{column}{0.5\textwidth}
-        RB features
-        \begin{itemize}
-          \item robust to SPAM errors
-          \hspace{10mm}
-          \item faster than state tomography
-          \hspace{10mm}
-          \item hardware-agnostic 
-        \end{itemize}
-      \end{column}
-    \end{columns}
 \end{frame}
 
 \begin{frame}{Clifford gates}
@@ -505,6 +442,87 @@ Thank you
     \end{column}
   \end{columns}
 \end{frame}
+
+
+
+\begin{frame}{Calibration workflow \& assessment}
+  \vbox to \textheight{ 
+    \begin{minipage}[t]{\textwidth}
+      \centering
+      \begin{columns}
+        \begin{column}{0.4\textwidth}
+          Procedure:
+          \setbeamertemplate{enumerate items}[default]
+          \begin{enumerate}[leftmargin=*, label=\arabic*.]
+            \item Resonator characterization
+            \item Qubit characterization
+            \item Gate calibration
+            \item Gate set characterization
+          \end{enumerate}
+        \end{column}
+      
+        \begin{column}{0.4\textwidth}
+          Metrics example:
+          \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
+            \item readout \& assignment fidelity
+            \item relaxation time $T_1$
+            \item decoherence time $T_22$
+            \item gate fidelity
+          \end{itemize}   
+        \end{column}
+      \end{columns}
+    \end{minipage}
+    \vspace{1em}
+  }
+\end{frame}
+
+\begin{frame}{Calibration workflow \& assessment}
+  \vbox to \textheight{ 
+
+    \begin{minipage}[t]{\textwidth}
+      \centering
+      \begin{columns}
+        \begin{column}{0.4\textwidth}
+          Main steps:
+          \setbeamertemplate{enumerate items}[default]
+          \begin{enumerate}[leftmargin=*, label=\arabic*.]
+            \item Resonator characterization
+            \item Qubit characterization
+            \item Gate calibration
+            \item Gate set characterization
+          \end{enumerate}
+        \end{column}
+      
+        \begin{column}{0.4\textwidth}
+          Calibration quality metrics:
+          \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
+            \item readout \& assignment fidelity
+            \item relaxation time $T_1$
+            \item decoherence time $T_22$
+            \item gate fidelity
+          \end{itemize}   
+        \end{column}
+      \end{columns}
+    \end{minipage}
+    \vspace{1em}
+
+
+    \begin{minipage}[b]{\textwidth}
+      \centering
+      \includegraphics[height=0.4\textheight]{figures/cal_results.png}
+    \end{minipage}
+  }
+\end{frame}
+
+\begin{frame}{RB optimization summary}
+  
+\end{frame}
+
+
+\begin{frame}{Filter determination details}
+  
+\end{frame}
+
 
 
 \end{document}
