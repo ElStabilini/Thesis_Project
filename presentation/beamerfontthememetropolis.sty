@@ -38,7 +38,7 @@
     \fi%
     \suppressfontnotfounderror=0%
   }
-
+  \newcommand{\titlecustomsize}{\fontsize{13pt}{15.6pt}\selectfont}
   \newcommand{\iffontsavailable}[3]{%
     \setcounter{fontsnotfound}{0}%
     \expandafter\forcsvlist\expandafter%
@@ -93,7 +93,7 @@
     You need to compile with XeLaTeX or LuaLaTeX to use the Fira fonts%
   }
 }
-\setbeamerfont{title}{size=\Large,%
+\setbeamerfont{title}{size=\large,%
                       series=\bfseries}
 \setbeamerfont{author}{size=\small}
 \setbeamerfont{date}{size=\small}
@@ -103,7 +103,7 @@
                             series=\bfseries}
 \setbeamerfont{block title alerted}{size=\normalsize,%
                                     series=\bfseries}
-\setbeamerfont*{subtitle}{size=\large}
+\setbeamerfont*{subtitle}{size=\normalsize}
 \setbeamerfont{frametitle}{size=\large,%
                            series=\bfseries}
 \setbeamerfont{caption}{size=\small}
