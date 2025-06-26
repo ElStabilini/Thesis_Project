@@ -64,10 +64,23 @@
     \tableofcontents[hideallsubsections]
 \end{frame}
 
-\begin{frame}[t,fragile]{Qibo framework}
-  \begin{center}
-      \includegraphics[height=0.80\paperheight]{figures/qibo_ecosystem.png}
-  \end{center}
+\begin{frame}{QC, what is for?}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}[label=\textbullet]
+        \item \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"\\
+                 - Richard Feynman, 1982, Simulating Physics with Computers
+        \item Optimization and modeling (chemistry, finance, traffic, weather...), eg. VQE, QAOA
+        \item Quantum Algorithms 
+        \item Quantum Machine Learning
+      \end{itemize}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{center}
+            \includegraphics[width=0.8\textwidth]{figures/feynmann.jpg}
+        \end{center}
+      \end{column}
+  \end{columns}
 \end{frame}
 
 
@@ -84,8 +97,9 @@
         \item Superconducting qubits: use Josephson Junctions\\ to build anharmonic oscillators
       \end{itemize}
       \begin{figure}
-        \includegraphics[height=0.5\textheight]{figures/Transmon.png}
-        \caption{DOI: 10.1109/MAP.2022.3176593}
+        \centering
+        \includegraphics[height=0.5\textheight]{figures/Transmon.png}\\
+        {\tiny DOI: 10.1109/MAP.2022.3176593}      
       \end{figure}
     \end{column}
     \begin{column}{0.6\textwidth}
@@ -99,31 +113,37 @@
 
   \begin{columns}
     \begin{column}{0.45\textwidth}
+      \small
+
       Electromagnetic pulse applied to the qubit
       \begin{equation*}
-        V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)},
-      \end{equation*}
-    
+        V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)}
+      \end{equation*}\\
+      \vspace{1.5em}
+
       Qubit - electric field Hamiltonian (RWA)
       \begin{equation*}
         \hat{H} = -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \varepsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right)
-      \end{equation*}
-    
-      General qubit evolution under electromagnetic pulse:
+      \end{equation*}\\
+      \vspace{1.5em}
+
+
+      Qubit evolution under electromagnetic pulse:
       \begin{equation*}
         R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta}
       \end{equation*}
-    
       where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$
+
     \end{column}
     \begin{column}{0.55\textwidth}
       \centering
       \begin{figure}
+        \centering
         \vspace{2mm}
-        \includegraphics[width=0.8\textwidth]{figures/TransmonCircuit.png}
-        \vfill
-        \includegraphics[width=0.8\textwidth]{figures/TransmonBoard.png}
-        \caption{DOI: 10.1109/MAP.2022.3176593}
+        \includegraphics[width=0.8\textwidth]{figures/TransmonCircuit.png}\\
+        \vspace{1.5em}
+        \includegraphics[width=0.8\textwidth]{figures/TransmonBoard.png}\\
+        {\tiny DOI: 10.1109/MAP.2022.3176593}
       \end{figure}
     \end{column}
   \end{columns}   
@@ -148,10 +168,16 @@
     \begin{column}{0.65\textwidth}
       \centering
       \includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
-      \hspace{10mm}
-      \includegraphics[height=0.4\textwidth]{figures/classification.png}
+      \hspace{5mm}
+      \includegraphics[height=0.48\textwidth]{figures/classification.png}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}[t,fragile]{Qibo framework}
+  \begin{center}
+      \includegraphics[height=0.80\paperheight]{figures/qibo_ecosystem.png}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Superconducting qubit calibration}
@@ -188,19 +214,20 @@
      \item Initialize the system in the ground state
      \item For each sequence length $m$ draw a sequence of Clifford group elements
      \item Calculate the inverse gate 
-     \item Measure sequence and inverse gate
+     \item Measure complete sequence
      \item Repeat the process for multiple sequences of the same length while varying the length
   \end{enumerate}}
 \end{frame}
 
 \begin{frame}[t,fragile]{Randomized Benchmarking}
   \begin{itemize}
-    \item The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.
-    \item From $p$ we can extract the average error per Clifford gate
+    \item The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.\\
+    \item From $p$ we can extract the average error per Clifford gate.\\
   \end{itemize}
+
   \begin{center}
     \vspace{0.5em}
-    \includegraphics[width=\textwidth]{figures/rb.png}
+    \includegraphics[width=\textwidth]{figures/rb.png}\\
     \vspace{1.25em}
     Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration? 
   \end{center}
@@ -315,8 +342,8 @@
         \centering
         \includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
         \vspace{3em}
-        \includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}
-        \caption{DOI: 10.1039/D2TC01258H}
+        \includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}\\
+        {\tiny DOI: 10.1039/D2TC01258H}
       \end{figure}
     \end{column}
   \end{columns}
@@ -356,7 +383,7 @@
 
 \begin{frame}{Gate recalibration by RB optimization}
   \begin{itemize}
-    \item[\ding{51}] We can always find parameters configuration with average Clifford gate fidelity > $99.5\%$
+    \item[\ding{51}] We can always find parameters configuration with average Clifford gate fidelity $> 99.5\%$
     \item[\ding{51}] Does not rely on manual tuning by an operator
     \item[\ding{55}] RB evaluation is computationally expensive ($\sim 30$ minutes)
     \item[\ding{55}] More stable methods (eg. Nelder-Mead) require many cost function evaluation
@@ -395,25 +422,6 @@ Thank you
 
 
 \section*{Backup slides}
-
-\begin{frame}{What is for?}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}[label=\textbullet]
-        \item \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"\\
-                 - Richard Feynman, 1982, Simulating Physics with Computers
-        \item Optimization and modeling (chemistry, finance, traffic, weather...), eg. VQE, QAOA
-        \item Quantum Algorithms 
-        \item Quantum Machine Learning
-      \end{itemize}
-      \end{column}
-      \begin{column}{0.5\textwidth}
-        \begin{center}
-            \includegraphics[width=0.8\textwidth]{figures/feynmann.jpg}
-        \end{center}
-      \end{column}
-  \end{columns}
-\end{frame}
 
 \begin{frame}{Qubit platforms}
   \begin{center}
