@@ -4,18 +4,18 @@
 
 \usepackage{pifont}
 \usepackage{subcaption}
-\usepackage{fontawesome}
 \usepackage{graphicx}
-\usepackage{url}
 \usepackage{enumitem}
 \usepackage{caption}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true}
+
 \usepackage[style=authoryear,backend=biber]{biblatex}
 \addbibresource{bibliography.bib}
 
 \captionsetup{skip=4pt}
 \input{colors}
 
-% \usepackage{beamerthememetropolis}
 \usetheme[progressbar=frametitle]{metropolis}
 \metroset{progressbar=none}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
@@ -119,22 +119,22 @@
 
       Microwave pulse applied to the qubit
       \begin{equation*}
-        V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)}
+        V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)};
       \end{equation*}\\
       \vspace{1.5em}
 
       Qubit - electric field Hamiltonian (RWA)
       \begin{equation*}
-        \hat{H} = -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \varepsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right)
+        \hat{H} = -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \varepsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right);
       \end{equation*}\\
       \vspace{1.5em}
 
 
       Qubit evolution under microwave pulse:
       \begin{equation*}
-        R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta}
+        R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta};
       \end{equation*}
-      where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$
+      where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$.
 
     \end{column}
     \begin{column}{0.55\textwidth}
@@ -158,14 +158,14 @@
     \begin{column}{0.35\textwidth}
       Qubit - resonator Hamiltonian:
       \begin{equation*}
-        \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger)
+        \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger);
       \end{equation*}\\
       \vspace{1.5em}
       Dispersive regime ($g \ll \omega_q - \omega_r$):
       \begin{equation*}
-        \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z
+        \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z;
       \end{equation*}
-      dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$
+      dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$.
     \end{column}
     \begin{column}{0.65\textwidth}
       \centering
@@ -195,7 +195,9 @@
 
 \begin{frame}[t,fragile]{Qibo framework}
   \begin{center}
-      \includegraphics[height=0.80\paperheight]{figures/qibo_ecosystem.png}
+      {\small Qibo: a modular and open-source framework for quantum computing, control and calibration.}
+      \includegraphics[height=0.70\paperheight]{figures/qibo_ecosystem.png}
+      {\small \url{https://qibo.science/}}
   \end{center}
 \end{frame}
 
@@ -299,7 +301,7 @@
 
 
 
-\section{Library additions}
+\section{New features in Qibo}
 \subsection{Native RX90}
 
 \begin{frame}{Native RX90}
@@ -386,20 +388,20 @@
 
 \begin{frame}{Gate recalibration by RB optimization}
   \begin{itemize}
-    \item[\ding{51}] We can always find parameters configuration with average Clifford gate fidelity $> 99.5\%$
-    \item[\ding{51}] Does \textbf{not rely on manual tuning} by an operator
-    \item[\ding{55}] RB evaluation is \textbf{computationally expensive} ($\sim 30$ minutes)
-    \item[\ding{55}] More stable methods (eg. Nelder-Mead) require many cost function evaluation
-    \item[\ding{55}] Parameters drift makes optimization unstable
+    \item[\ding{51}] We can always find parameters configuration with average Clifford gate fidelity $> 99.5\%$.
+    \item[\ding{51}] Does \textbf{not rely on manual tuning} by an operator.
+    \item[\ding{55}] RB evaluation is \textbf{computationally expensive} ($\sim 30$ minutes).
+    \item[\ding{55}] More stable methods (eg. Nelder-Mead) require many cost function evaluation.
+    \item[\ding{55}] Parameters drift makes optimization unstable.
   \end{itemize}
-  Possible future work: \textbf{optimize RB parameters} to allow a faster and more reliable optimization
+  Possible future work: \textbf{optimize RB parameters} to allow a faster and more reliable optimization.
 \end{frame}
 
 \begin{frame}{Library additions}
   \begin{itemize}
-    \item[\ding{51}] Extended Qibolab and Qibocal libraries to support \textbf{native $R_X(\pi/2)$ gates} with dedicated calibration routines
-    \item[\ding{51}] Implemented and added the \textbf{Cryoscope} calibration experiment to Qibocal library to correct flux-pulse distortions (average NMSE improvement $\sim 70\%$)
-    \item[\ding{55}] Study long-time distortions of the flux-pulse
+    \item[\ding{51}] Extended Qibolab and Qibocal libraries to support \textbf{native $R_X(\pi/2)$ gates} with dedicated calibration routines.
+    \item[\ding{51}] Implemented and added the \textbf{Cryoscope} calibration experiment to Qibocal library to correct flux-pulse distortions (average NMSE improvement $\sim 70\%$).
+    \item[\ding{55}] Study long-time distortions of the flux-pulse.
   \end{itemize}
   Possible future extensions: 
   \begin{itemize}[label={\raisebox{0.2ex}{\tiny$\bullet$}}]
