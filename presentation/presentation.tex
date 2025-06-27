@@ -7,8 +7,8 @@
 \usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{caption}
-\usepackage{hyperref}
-\hypersetup{colorlinks=true}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
 
 \usepackage[style=authoryear,backend=biber]{biblatex}
 \addbibresource{bibliography.bib}
@@ -70,16 +70,19 @@
   \begin{columns}
     \begin{column}{0.5\textwidth}
       \begin{itemize}[label=\textbullet]
-        \item \textbf{Simulation of quantum system:} "Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical, and by golly it's a wonderful problem, because it doesn't look so easy"\\
-                 - Richard Feynman, 1982, Simulating Physics with Computers
-        \item Optimization and modeling (chemistry, finance, traffic, weather...), eg. VQE, QAOA
-        \item Quantum Algorithms 
-        \item Quantum Machine Learning
+        \small
+        \item Simulation of quantum system: classical computers can not efficiently simulate quantum staes. Classical computers can usally simulate a $\sim 30$ qubits  
+        \item Optimization and modeling (eg. direct annealing, adiabatic evolutions, QAOA) with applications in finance, traffic, weather... 
+        \item Gate-based circuits (eg. Shor, Grover, Deutsch)
+        \item AI-inspired algorithms (VQE, autoencoders, classifiers ...)
       \end{itemize}
       \end{column}
       \begin{column}{0.5\textwidth}
         \begin{center}
-            \includegraphics[width=0.8\textwidth]{figures/feynmann.jpg}
+            \includegraphics[width=0.75\textwidth]{figures/BlochSphere.png}\\
+            \vspace*{1.75em}
+            \includegraphics[width=0.75\textwidth]{figures/circuit.png}\\
+            {\tiny DOI: 10.1109/TQE.2021.3053921}
         \end{center}
       \end{column}
   \end{columns}
@@ -89,7 +92,7 @@
 
 \section{Superconducting qubits}
 
-\begin{frame}{Artificial atoms}
+\begin{frame}{Artificial atoms \hfill{\tiny[arXiv:cond-mat/0703002]}}
   \begin{columns}
     \begin{column}{0.6\textwidth}
       \centering
@@ -111,7 +114,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Qubit control}
+\begin{frame}{Qubit control \hfill{\tiny[arXiv:2403.04383]}}
 
   \begin{columns}
     \begin{column}{0.45\textwidth}
@@ -153,7 +156,7 @@
 
 \end{frame}
 
-\begin{frame}{State readout}
+\begin{frame}{State readout \hfill{\tiny[arXiv:cond-mat/0407325]}}
   \begin{columns}
     \begin{column}{0.35\textwidth}
       Qubit - resonator Hamiltonian:
@@ -177,27 +180,51 @@
 \end{frame}
 
 
+
 \section{Quantum Middleware}
 
 \begin{frame}{Superconducting qubit calibration}
-  
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figures/calibration.png}
-  \end{figure}
-  \vspace{1.5em}
   \begin{itemize}
-    \item We need to calibrate \textit{only} native gates pulses
+    \item Circuit: sequence of quantum gates applied to qubits to perform a computation.
+    \item Gates: abstract unitary operations (logical or native).
+    \item   Pulses: physical signal (control field) implementing a gate.
+  \end{itemize}
+\vspace{0.75em}
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+      box/.style={rectangle, rounded corners=10pt, fill=green!20, minimum width=3.8cm, minimum height=1.6cm, align=center},
+      arrow/.style={->, thick},
+      label/.style={font=\small, midway, above}
+    ]
+
+    % Step-by-step reveals
+    \onslide<1->{\node[box] (logical) {Circuit with\\logical gates};}
+    \onslide<2->{\node[box, right=3.5cm of logical] (native) {Circuit with\\native gates};}
+    \onslide<3->{\node[box, right=3.5cm of native] (pulses) {Pulses};}
+
+    \onslide<2->{\draw[arrow] (logical) -- node[label] {Transpilation} (native);}
+    \onslide<3->{\draw[arrow] (native) -- node[label] {Compilation} (pulses);}
+
+  \end{tikzpicture}%
+  }
+  \vspace{0.75em}
+  \begin{itemize}
+    \item We need to calibrate \textit{only} native gates
     \item Native single qubit gates on superconducting qubits: $R_X(\pi)$, $R_X(\frac{\pi}{2})$, $R_Z(\theta)$
     \item For each pulse we calibrate frequency, duration, power, shape
   \end{itemize}
 \end{frame}
 
-\begin{frame}[t,fragile]{Qibo framework}
+\begin{frame}[t,fragile]{Qibo framework \hfill{\tiny[arXiv:2308.06313]}}
+  \setlength{\topskip}{0pt}
+  \setlength{\textheight}{\paperheight}
+  \vspace*{-0.5cm}
   \begin{center}
-      {\small Qibo: a modular and open-source framework for quantum computing, control and calibration.}
-      \includegraphics[height=0.70\paperheight]{figures/qibo_ecosystem.png}
-      {\small \url{https://qibo.science/}}
+      {\fontsize{10pt}{0pt}\selectfont Qibo: a modular and open-source framework for quantum computing, control and calibration.}\\
+      \vspace*{0.5em}
+      \includegraphics[height=0.7\paperheight]{figures/qibo_ecosystem.png}\\
+      \vfill
+      {\fontsize{8pt}{0pt}\selectfont \url{https://qibo.science/}}
   \end{center}
 \end{frame}
 
@@ -205,7 +232,7 @@
 
 \section{Average Clifford gate fidelity optimization}
 
-\begin{frame}[t,fragile]{Randomized Benchmarking [\cite{PhysRevA.77.012307}]}
+\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\tiny[arXiv:0707.0963v1]}}
 
   \begin{itemize}
     \item Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
@@ -224,7 +251,7 @@
   \end{enumerate}}
 \end{frame}
 
-\begin{frame}[t,fragile]{Randomized Benchmarking [\cite{PhysRevA.77.012307}]}
+\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\tiny[arXiv:0707.0963v1]}}
   \begin{itemize}
     \item The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.\\
     \item From $p$ we can extract the average error per Clifford gate.\\
@@ -238,7 +265,7 @@
   \end{center}
 \end{frame}
 
-\begin{frame}[t,fragile]{RB optimization [\cite{kelly_optimal_2014}]}
+\begin{frame}[t,fragile]{RB optimization \hfill{\tiny[arXiv:1403.0035]}}
   \begin{center}
     Test closed-loop optimization with modern optimization libraries\\
     \vspace{1.2em}
@@ -302,7 +329,17 @@
 
 
 \section{New features in Qibo}
+
 \subsection{Native RX90}
+
+\begin{frame}{Improving Qubit Control for Calibration}
+  \textbf{Single qubit gates}:
+  \begin{itemize}
+    \item Qibo already implement many calibration routines for $R_X(\pi)$
+    \item We can try to reduce residual erros by adding directly calibrating $R_X(\pi/2)$
+  \end{itemize}
+  Introduce support for $R_X(\pi/2)$ as native gate in Qibolab
+\end{frame}
 
 \begin{frame}{Native RX90}
   \begin{itemize}
@@ -325,9 +362,26 @@
   \end{figure}
 \end{frame}
 
+
 \subsection{Cryoscope}
 
-\begin{frame}{Flux pulse reconstruction [\cite{rol_time-domain_2020}]}
+\begin{frame}{Improving Qubit Control for Calibration}
+  \textbf{Single qubit gates}:
+  \begin{itemize}
+    \item Qibo already implement many calibration routines for $R_X(\pi)$.
+    \item We can try to reduce residual erros by adding directly calibrating $R_X(\pi/2)$.
+  \end{itemize}
+  Introduce support for $R_X(\pi/2)$ as native gate in Qibolab.\\
+  \vspace*{1.em}
+  \textbf{Two qubit gates}:
+  \begin{itemize}
+    \item Two-qubit gates typically require bringing qubits into resonance.
+    \item Frequency tuning is achieved via flux pulses applied to tunable qubits.
+  \end{itemize}
+  Add Cryoscope portocol to improve control over flux pulses.
+\end{frame}
+
+\begin{frame}{Flux pulse reconstruction \hfill{\tiny{arXiv:1907.04818}}}
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \centering
@@ -420,10 +474,6 @@ Thank you
 
 \backupbegin
 \appendix
-
-\begin{frame}{References}
-    \printbibliography
-\end{frame}
 
 
 \section*{Backup slides}
