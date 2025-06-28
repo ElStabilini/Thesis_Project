@@ -55,38 +55,35 @@
   Dr. Andrea Pasquale\\
   Dott. Edoardo Pedicillo
 }
-\setbeamertemplate{title page}{
-  \begin{minipage}[t][0.90\paperheight]{\textwidth}
-    \ifx\inserttitlegraphic\@empty\else\usebeamertemplate*{title graphic}\fi
-    \vfill%
-    \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
-    \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
-    \usebeamertemplate*{title separator}
-    \vspace{3mm}
-    \begin{columns}[t,onlytextwidth]
-      \begin{column}{0.48\textwidth}
-        \raggedright
-        \textbf{Candidate:}\\
-        Elisa Stabilini\\
-        28326A\\
-        \vspace{1em}
-        \usebeamertemplate*{date}
-        \usebeamertemplate*{institute}
-      \end{column}
-      \begin{column}{0.48\textwidth}
-        \raggedleft
-        \supervisors
-      \end{column}
-    \end{columns}
+\setbeamertemplate{title page}{\normalsize
+  \vspace*{1em}  % adjust as needed
+  \ifx\inserttitlegraphic\@empty\else\usebeamertemplate*{title graphic}\fi
+  \vspace*{1em}
 
-    %\vfill
-    \vspace{3mm}
-    \usebeamertemplate*{title separator}
-    \begin{center}
-      \includegraphics[height=1.25cm]{figures/logoUnimi.png} \hspace{0.5cm}
-      \includegraphics[height=1.25cm]{figures/Technology_Innovation_Institute_Logo.jpg}
-    \end{center}
-  \end{minipage}
+  \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+  \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+
+  \usebeamertemplate*{title separator}
+  \vfill
+  
+  \normalsize
+  \begin{columns}[t,onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \raggedright
+      \textbf{Candidate:}\\
+      Elisa Stabilini\\
+      28326A\\
+      \vspace{1em}
+      \usebeamertemplate*{date}
+      \usebeamertemplate*{institute}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \raggedleft
+      \supervisors
+    \end{column}
+  \end{columns}
+
+  \vspace*{2em}
 }
 \def\maketitle{%
   \ifbeamer@inframe
@@ -100,18 +97,23 @@
 }
 \setbeamertemplate{title graphic}{
   \vbox to 0pt {
-    \vspace*{2em}
+    \vspace*{1em}
     \inserttitlegraphic%
   }%
   \nointerlineskip%
 }
 \setbeamertemplate{title}{
   \raggedright%
-  \linespread{1.0}%
-  \inserttitle%
-  \par%
+  {\fontsize{13.75pt}{15.6pt}\selectfont\inserttitle\par}
   \vspace*{0.5em}
 }
+%\setbeamertemplate{title}{
+%  \raggedright%
+%  \linespread{1.0}%
+%  \inserttitle%
+%  \par%
+%  \vspace*{0.5em}
+%}
 \setbeamertemplate{subtitle}{
   \raggedright%
   \insertsubtitle%
