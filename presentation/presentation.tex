@@ -35,7 +35,7 @@
   \leavevmode%
   \hbox{%
     \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
-      \usebeamerfont{footline} \insertframenumber{} / 20
+      \usebeamerfont{footline} \insertframenumber{} / 22
     \end{beamercolorbox}%
     \hfill
     \begin{beamercolorbox}[wd=.9\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
@@ -92,7 +92,7 @@
 
 \section{Superconducting qubits}
 
-\begin{frame}{Artificial atoms \hfill{\tiny[arXiv:cond-mat/0703002]}}
+\begin{frame}{Artificial atoms \hfill{\small[arXiv:cond-mat/0703002]}}
   \begin{columns}
     \begin{column}{0.6\textwidth}
       \centering
@@ -114,7 +114,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Qubit control \hfill{\tiny[arXiv:2403.04383]}}
+\begin{frame}{Qubit control \hfill{\small[arXiv:2403.04383]}}
 
   \begin{columns}
     \begin{column}{0.45\textwidth}
@@ -156,7 +156,7 @@
 
 \end{frame}
 
-\begin{frame}{State readout \hfill{\tiny[arXiv:cond-mat/0407325]}}
+\begin{frame}{State readout \hfill{\small[arXiv:cond-mat/0407325]}}
   \begin{columns}
     \begin{column}{0.35\textwidth}
       Qubit - resonator Hamiltonian:
@@ -198,24 +198,24 @@
     ]
 
     % Step-by-step reveals
-    \onslide<1->{\node[box] (logical) {Circuit with\\logical gates};}
-    \onslide<2->{\node[box, right=3.5cm of logical] (native) {Circuit with\\native gates};}
-    \onslide<3->{\node[box, right=3.5cm of native] (pulses) {Pulses};}
+    {\node[box] (logical) {Circuit with\\logical gates};}
+    {\node[box, right=3.5cm of logical] (native) {Circuit with\\native gates};}
+    {\node[box, right=3.5cm of native] (pulses) {Pulses};}
 
-    \onslide<2->{\draw[arrow] (logical) -- node[label] {Transpilation} (native);}
-    \onslide<3->{\draw[arrow] (native) -- node[label] {Compilation} (pulses);}
+    {\draw[arrow] (logical) -- node[label] {Transpilation} (native);}
+    {\draw[arrow] (native) -- node[label] {Compilation} (pulses);}
 
   \end{tikzpicture}%
   }
   \vspace{0.75em}
   \begin{itemize}
-    \item We need to calibrate \textit{only} native gates
-    \item Native single qubit gates on superconducting qubits: $R_X(\pi)$, $R_X(\frac{\pi}{2})$, $R_Z(\theta)$
-    \item For each pulse we calibrate frequency, duration, power, shape
+    \item We need to calibrate \textit{only} native gates.
+    \item Native single qubit gates on superconducting qubits: $R_X(\pi)$, $R_X(\frac{\pi}{2})$, $R_Z(\theta)$.
+    \item For each pulse we calibrate frequency, duration, power, shape.
   \end{itemize}
 \end{frame}
 
-\begin{frame}[t,fragile]{Qibo framework \hfill{\tiny[arXiv:2308.06313]}}
+\begin{frame}[t,fragile]{Qibo framework \hfill{\small[arXiv:2308.06313]}}
   \setlength{\topskip}{0pt}
   \setlength{\textheight}{\paperheight}
   \vspace*{-0.5cm}
@@ -232,11 +232,11 @@
 
 \section{Average Clifford gate fidelity optimization}
 
-\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\tiny[arXiv:0707.0963v1]}}
+\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
 
   \begin{itemize}
     \item Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
-    \item Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$
+    \item Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$.
   \end{itemize}
 
   \vspace{3mm}
@@ -251,7 +251,7 @@
   \end{enumerate}}
 \end{frame}
 
-\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\tiny[arXiv:0707.0963v1]}}
+\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
   \begin{itemize}
     \item The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.\\
     \item From $p$ we can extract the average error per Clifford gate.\\
@@ -265,12 +265,29 @@
   \end{center}
 \end{frame}
 
-\begin{frame}[t,fragile]{RB optimization \hfill{\tiny[arXiv:1403.0035]}}
+\begin{frame}[t,fragile]{RB optimization \hfill{\small[arXiv:1403.0035]}}
   \begin{center}
-    Test closed-loop optimization with modern optimization libraries\\
-    \vspace{1.2em}
-    \includegraphics[width=0.9\textwidth]{figures/opt_workflow.png}
+    Test closed-loop optimization with modern optimization libraries.\\
   \end{center}
+  \vspace*{1.25em}
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+      box/.style={rectangle, rounded corners=10pt, fill=green!20, minimum width=3.8cm, minimum height=1.6cm, align=center},
+      arrow/.style={->, thick},
+      label/.style={font=\small, midway, above}
+    ]
+
+    % Step-by-step reveals
+    {\node[box] (logical) {Pre-calibrated\\platform};}
+    {\node[box, right=3.5cm of logical] (native) {Parameters\\range};}
+    {\node[box, right=3.5cm of native] (pulses) {Optimized\\platform};}
+
+    {\draw[arrow] (logical) -- node[label] {Fine-tuning} (native);}
+    {\draw[arrow] (native) -- node[label] {Optimization} (pulses);}
+
+  \end{tikzpicture}%
+  }
+
   \vspace{1.25em}
   Optimization parameters:
   \begin{itemize}
@@ -335,17 +352,17 @@
 \begin{frame}{Improving Qubit Control for Calibration}
   \textbf{Single qubit gates}:
   \begin{itemize}
-    \item Qibo already implement many calibration routines for $R_X(\pi)$
-    \item We can try to reduce residual erros by adding directly calibrating $R_X(\pi/2)$
+    \item Qibo already implement many calibration routines for $R_X(\pi)$.
+    \item We can try to reduce residual erros by adding calibrating $R_X(\pi/2)$ as native gate. 
   \end{itemize}
-  Introduce support for $R_X(\pi/2)$ as native gate in Qibolab
+  Introduce support for $R_X(\pi/2)$ as native gate in Qibolab.
 \end{frame}
 
 \begin{frame}{Native RX90}
   \begin{itemize}
-    \item Qibolab single-qubit native gates are $R_X(\pi)$ and $MZ$
-    \item $R_X(\frac{\pi}{2})$ gate is implemented by halving the calibrated values for $R_X(\pi)$ 
-    \item Add native $R_X(\frac{\pi}{2})$ for more precise gates implementation
+    \item Qibolab single-qubit native gates are $R_X(\pi)$ and $MZ$.
+    \item $R_X(\frac{\pi}{2})$ gate is implemented by halving the calibrated values for $R_X(\pi)$.
+    \item Problem: there may be nonlinearities and distortions in signals that degradete the $R_X(\frac{\pi}{2})$ fidelity.
   \end{itemize}
   \begin{figure}
     \centering
@@ -387,13 +404,13 @@
       \centering
       Transmon frquency dependence on magnetic flux:
       \begin{equation*}
-        f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right)
+        f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right).
       \end{equation*}\\
       \vspace{1em}
       Detuning as function of the flux pulse:
       \begin{align*}
         \Delta f_q = &\frac{\varphi_{\tau+\Delta\tau}-\varphi_\tau}{2\pi} \approx \\
-        &\frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t))
+        &\frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t)).
       \end{align*}
     \end{column}
     \begin{column}{0.6\textwidth}
