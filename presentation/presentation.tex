@@ -71,10 +71,10 @@
     \begin{column}{0.5\textwidth}
       \begin{itemize}[label=\textbullet]
         \small
-        \item Simulation of quantum system: classical computers can not efficiently simulate quantum staes. Classical computers can usally simulate a $\sim 30$ qubits  
-        \item Optimization and modeling (eg. direct annealing, adiabatic evolutions, QAOA) with applications in finance, traffic, weather... 
-        \item Gate-based circuits (eg. Shor, Grover, Deutsch)
-        \item AI-inspired algorithms (VQE, autoencoders, classifiers ...)
+        \item<1-> Simulation of quantum system: classical computers can not efficiently simulate quantum staes. Classical computers can usally simulate a $\sim 30$ qubits  
+        \item<2-> Optimization and modeling (eg. direct annealing, adiabatic evolutions, QAOA) with applications in finance, traffic, weather... 
+        \item<3-> Gate-based circuits (eg. Shor, Grover, Deutsch)
+        \item<4-> AI-inspired algorithms (VQE, autoencoders, classifiers ...)
       \end{itemize}
       \end{column}
       \begin{column}{0.5\textwidth}
@@ -97,19 +97,19 @@
     \begin{column}{0.6\textwidth}
       \centering
       \begin{itemize}
-        \item Qubit: two level system
+        \item<1-> Qubit: two level system
         \hspace{10 mm}
-        \item Superconducting qubits: use Josephson Junctions\\ to build anharmonic oscillators
+        \item<2-> Superconducting qubits: use Josephson Junctions\\ to build anharmonic oscillators
       \end{itemize}
       \begin{figure}
         \centering
-        \includegraphics[height=0.5\textheight]{figures/Transmon.png}\\
-        {\tiny DOI: 10.1109/MAP.2022.3176593}      
+        \onslide<2->\includegraphics[height=0.5\textheight]{figures/Transmon.png}\\
+        \onslide<2->{\tiny DOI: 10.1109/MAP.2022.3176593}      
       \end{figure}
     \end{column}
     \begin{column}{0.6\textwidth}
       \centering
-      \includegraphics[width=0.5\textwidth]{figures/cryostat.png}
+      \onslide<1->\includegraphics[width=0.5\textwidth]{figures/cryostat.png}
     \end{column}
   \end{columns}
 \end{frame}
@@ -120,27 +120,27 @@
     \begin{column}{0.45\textwidth}
       \small
 
-      Microwave pulse applied to the qubit
+      \onslide<2->{Microwave pulse applied to the qubit
       \begin{equation*}
         V_d(t) = A\varepsilon(t)\sin{(\omega_d t + \alpha)};
       \end{equation*}\\
-      \vspace{1.5em}
+      \vspace{1.5em}}
 
-      Qubit - electric field Hamiltonian (RWA)
+      \onslide<3->{Qubit - electric field Hamiltonian (RWA)
       \begin{equation*}
         \hat{H} = -\frac{\hbar (\omega_q - \omega_d)}{2} \hat{\sigma}_z + \frac{\hbar \Omega}{2} \varepsilon(t) \left( \hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha \right);
       \end{equation*}\\
-      \vspace{1.5em}
+      \vspace{1.5em}}
 
 
-      Qubit evolution under microwave pulse:
+      \onslide<4->{Qubit evolution under microwave pulse:
       \begin{equation*}
         R_{\hat{n}(\alpha)}(\theta) = e^{-\frac{i}{2} \hat{n}(\alpha) \cdot \vec{\sigma} \theta} = e^{-\frac{i}{2} (\hat{\sigma}_x \cos \alpha + \hat{\sigma}_y \sin \alpha) \theta};
       \end{equation*}
-      where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$.
+      where $\theta = \Omega\int_{0}^{+\infty}\varepsilon(t')dt'$.}
 
     \end{column}
-    \begin{column}{0.55\textwidth}
+    \onslide<1->\begin{column}{0.55\textwidth}
       \centering
       \begin{figure}
         \centering
@@ -159,22 +159,22 @@
 \begin{frame}{State readout \hfill{\small[arXiv:cond-mat/0407325]}}
   \begin{columns}
     \begin{column}{0.35\textwidth}
-      Qubit - resonator Hamiltonian:
+      \onslide<1->{Qubit - resonator Hamiltonian:
       \begin{equation*}
         \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger);
-      \end{equation*}\\
+      \end{equation*}\\}
       \vspace{1.5em}
-      Dispersive regime ($g \ll \omega_q - \omega_r$):
+      \onslide<2->{Dispersive regime ($g \ll \omega_q - \omega_r$):
       \begin{equation*}
         \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z;
       \end{equation*}
-      dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$.
+      dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$.}
     \end{column}
     \begin{column}{0.65\textwidth}
       \centering
-      \includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
+      \onslide<2->\includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
       \hspace{5mm}
-      \includegraphics[height=0.48\textwidth]{figures/classification.png}
+      \onslide<3->\includegraphics[height=0.48\textwidth]{figures/classification.png}
     \end{column}
   \end{columns}
 \end{frame}
@@ -185,33 +185,32 @@
 
 \begin{frame}{Superconducting qubit calibration}
   \begin{itemize}
-    \item Circuit: sequence of quantum gates applied to qubits to perform a computation.
-    \item Gates: abstract unitary operations (logical or native).
-    \item   Pulses: physical signal (control field) implementing a gate.
+    \item<1-> Circuit: sequence of quantum gates applied to qubits to perform a computation.
+    \item<2-> Gates: abstract unitary operations (logical or native).
+    \item<3-> Pulses: physical signal (control field) implementing a gate.
   \end{itemize}
 \vspace{0.75em}
-  \resizebox{\textwidth}{!}{%
+  \resizebox{\textwidth}{!}{
   \begin{tikzpicture}[
       box/.style={rectangle, rounded corners=10pt, fill=green!20, minimum width=3.8cm, minimum height=1.6cm, align=center},
       arrow/.style={->, thick},
       label/.style={font=\small, midway, above}
     ]
 
-    % Step-by-step reveals
-    {\node[box] (logical) {Circuit with\\logical gates};}
-    {\node[box, right=3.5cm of logical] (native) {Circuit with\\native gates};}
-    {\node[box, right=3.5cm of native] (pulses) {Pulses};}
+    \onslide<1->{\node[box] (logical) {Circuit with\\logical gates};}
+    \onslide<2->{\node[box, right=3.5cm of logical] (native) {Circuit with\\native gates};}
+    \onslide<3->{\node[box, right=3.5cm of native] (pulses) {Pulses};}
 
-    {\draw[arrow] (logical) -- node[label] {Transpilation} (native);}
-    {\draw[arrow] (native) -- node[label] {Compilation} (pulses);}
+    \onslide<2->{\draw[arrow] (logical) -- node[label] {Transpilation} (native);}
+    \onslide<3->{\draw[arrow] (native) -- node[label] {Compilation} (pulses);}
 
-  \end{tikzpicture}%
+  \end{tikzpicture}
   }
   \vspace{0.75em}
   \begin{itemize}
-    \item We need to calibrate \textit{only} native gates.
-    \item Native single qubit gates on superconducting qubits: $R_X(\pi)$, $R_X(\frac{\pi}{2})$, $R_Z(\theta)$.
-    \item For each pulse we calibrate frequency, duration, power, shape.
+    \item<2-> We need to calibrate \textit{only} native gates.
+    \item<2-> Native single qubit gates on superconducting qubits: $R_X(\pi)$, $R_X(\frac{\pi}{2})$, $R_Z(\theta)$.
+    \item<3-> For each pulse we calibrate frequency, duration, power, shape.
   \end{itemize}
 \end{frame}
 
@@ -234,13 +233,13 @@
 
 \begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
 
-  \begin{itemize}
+  \onslide<1->{\begin{itemize}
     \item Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
     \item Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$.
-  \end{itemize}
+  \end{itemize}}
 
   \vspace{3mm}
-  Randomized Benchmarking protocol:
+  \onslide<2->{Randomized Benchmarking protocol:
   {\setbeamertemplate{enumerate items}[default]
    \begin{enumerate}[leftmargin=*, label=\arabic*.]
      \item Initialize the system in the ground state
@@ -248,7 +247,7 @@
      \item Calculate the inverse gate 
      \item Measure complete sequence
      \item Repeat the process for multiple sequences of the same length while varying the length
-  \end{enumerate}}
+  \end{enumerate}}}
 \end{frame}
 
 \begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
@@ -261,31 +260,30 @@
     \vspace{0.5em}
     \includegraphics[width=\textwidth]{figures/rb.png}\\
     \vspace{1.25em}
-    Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration? 
+    \onslide<2->{Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration?}
   \end{center}
 \end{frame}
 
 \begin{frame}[t,fragile]{RB optimization \hfill{\small[arXiv:1403.0035]}}
   \begin{center}
-    Test closed-loop optimization with modern optimization libraries.\\
+    \onslide<1->Test closed-loop optimization with modern optimization libraries.\\
   \end{center}
   \vspace*{1.25em}
-  \resizebox{\textwidth}{!}{%
+  \resizebox{\textwidth}{!}{
   \begin{tikzpicture}[
       box/.style={rectangle, rounded corners=10pt, fill=green!20, minimum width=3.8cm, minimum height=1.6cm, align=center},
       arrow/.style={->, thick},
       label/.style={font=\small, midway, above}
     ]
 
-    % Step-by-step reveals
-    {\node[box] (logical) {Pre-calibrated\\platform};}
-    {\node[box, right=3.5cm of logical] (native) {Parameters\\range};}
-    {\node[box, right=3.5cm of native] (pulses) {Optimized\\platform};}
+    \onslide<2->{\node[box] (logical) {Pre-calibrated\\platform};}
+    \onslide<3->{\node[box, right=3.5cm of logical] (native) {Parameters\\range};}
+    \onslide<4->{\node[box, right=3.5cm of native] (pulses) {Optimized\\platform};}
 
-    {\draw[arrow] (logical) -- node[label] {Fine-tuning} (native);}
-    {\draw[arrow] (native) -- node[label] {Optimization} (pulses);}
+    \onslide<3->{\draw[arrow] (logical) -- node[label] {Fine-tuning} (native);}
+    \onslide<4->{\draw[arrow] (native) -- node[label] {Optimization} (pulses);}
 
-  \end{tikzpicture}%
+  \end{tikzpicture}
   }
 
   \vspace{1.25em}
@@ -352,21 +350,21 @@
 \begin{frame}{Improving Qubit Control for Calibration}
   \textbf{Single qubit gates}:
   \begin{itemize}
-    \item Qibo already implement many calibration routines for $R_X(\pi)$.
-    \item We can try to reduce residual erros by adding calibrating $R_X(\pi/2)$ as native gate. 
+    \item<1-> Qibo already implement many calibration routines for $R_X(\pi)$.
+    \item<2-> We can try to reduce residual erros by adding calibrating $R_X(\pi/2)$ as native gate. 
   \end{itemize}
-  Introduce support for $R_X(\pi/2)$ as native gate in Qibolab.
+  <3->Introduce support for $R_X(\pi/2)$ as native gate in Qibolab.
 \end{frame}
 
 \begin{frame}{Native RX90}
   \begin{itemize}
-    \item Qibolab single-qubit native gates are $R_X(\pi)$ and $MZ$.
-    \item $R_X(\frac{\pi}{2})$ gate is implemented by halving the calibrated values for $R_X(\pi)$.
-    \item Problem: there may be nonlinearities and distortions in signals that degradete the $R_X(\frac{\pi}{2})$ fidelity.
+    \item<1-> Qibolab single-qubit native gates are $R_X(\pi)$ and $MZ$.
+    \item<2-> $R_X(\frac{\pi}{2})$ gate is implemented by halving the calibrated values for $R_X(\pi)$.
+    \item<3-> Problem: there may be nonlinearities and distortions in signals that degradete the $R_X(\frac{\pi}{2})$ fidelity.
   \end{itemize}
   \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/RX90.png}
+    \onslide<4->\includegraphics[width=\textwidth]{figures/RX90.png}
   \end{figure}
 \end{frame}
 
@@ -383,46 +381,55 @@
 \subsection{Cryoscope}
 
 \begin{frame}{Improving Qubit Control for Calibration}
-  \textbf{Single qubit gates}:
+  \onslide<1->{\textbf{Single qubit gates}:
   \begin{itemize}
     \item Qibo already implement many calibration routines for $R_X(\pi)$.
     \item We can try to reduce residual erros by adding directly calibrating $R_X(\pi/2)$.
   \end{itemize}
   Introduce support for $R_X(\pi/2)$ as native gate in Qibolab.\\
   \vspace*{1.em}
-  \textbf{Two qubit gates}:
+  \textbf{Two qubit gates}:}
   \begin{itemize}
-    \item Two-qubit gates typically require bringing qubits into resonance.
-    \item Frequency tuning is achieved via flux pulses applied to tunable qubits.
+    \item<2-> Two-qubit gates typically require bringing qubits into resonance.
+    \item<3-> Frequency tuning is achieved via flux pulses applied to tunable qubits.
   \end{itemize}
-  Add Cryoscope portocol to improve control over flux pulses.
+  <4->Add Cryoscope portocol to improve control over flux pulses.
 \end{frame}
 
 \begin{frame}{Flux pulse reconstruction \hfill{\tiny{arXiv:1907.04818}}}
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \centering
-      Transmon frquency dependence on magnetic flux:
+      \onslide<1->{Transmon frquency dependence on magnetic flux:
       \begin{equation*}
         f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right).
-      \end{equation*}\\
+      \end{equation*}\\}
       \vspace{1em}
-      Detuning as function of the flux pulse:
+      \onslide<3->{Detuning as function of the flux pulse:
       \begin{align*}
         \Delta f_q = &\frac{\varphi_{\tau+\Delta\tau}-\varphi_\tau}{2\pi} \approx \\
         &\frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t)).
-      \end{align*}
+      \end{align*}}
     \end{column}
     \begin{column}{0.6\textwidth}
       \begin{figure}
         \centering
-        \includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
+        \onslide<1->\includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
         \vspace{3em}
-        \includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}\\
-        {\tiny DOI: 10.1039/D2TC01258H}
+        \onslide<2->\includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}\\
+        \onslide<2->{\tiny DOI: 10.1039/D2TC01258H}
       \end{figure}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}{Filter determination}
+  \begin{enumerate}[leftmargin=*, label=\arabic*.]
+    \item<1-> Determine exponential correction
+    \item<2-> Obtain coefficients for the Infinite Impulse Response from exponential correction
+    \item<3-> Determine Finite Impulse Response coefficients
+    \item<4-> Obtain coefficients for real-time correction
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}{Filter determination}
@@ -443,9 +450,9 @@
 \begin{frame}{Impact of correction on chevron plots}
   \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/B2B4_nofilter.png}
+    \onslide<1->\includegraphics[width=\textwidth]{figures/B2B4_nofilter.png}
     \vfill
-    \includegraphics[width=\textwidth]{figures/B2B4.png}
+    \onslide<2->\includegraphics[width=\textwidth]{figures/B2B4.png}
   \end{figure}
 \end{frame}
 
