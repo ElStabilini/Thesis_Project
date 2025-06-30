@@ -71,18 +71,18 @@
     \begin{column}{0.5\textwidth}
       \begin{itemize}[label=\textbullet]
         \small
-        \item<1-> Simulation of quantum system: classical computers can not efficiently simulate quantum staes. Classical computers can usally simulate a $\sim 30$ qubits  
-        \item<2-> Optimization and modeling (eg. direct annealing, adiabatic evolutions, QAOA) with applications in finance, traffic, weather... 
-        \item<3-> Gate-based circuits (eg. Shor, Grover, Deutsch)
-        \item<4-> AI-inspired algorithms (VQE, autoencoders, classifiers ...)
+        \item<2-> Simulation of quantum system: classical computers can not efficiently simulate quantum staes. Classical computers can usally simulate a $\sim 30$ qubits  
+        \item<3-> Optimization and modeling (eg. direct annealing, adiabatic evolutions, QAOA) with applications in finance, traffic, weather... 
+        \item<4-> Gate-based circuits (eg. Shor, Grover, Deutsch)
+        \item<5-> AI-inspired algorithms (VQE, autoencoders, classifiers ...)
       \end{itemize}
       \end{column}
       \begin{column}{0.5\textwidth}
         \begin{center}
-            \includegraphics[width=0.75\textwidth]{figures/BlochSphere.png}\\
+            \onslide<1->\includegraphics[width=0.75\textwidth]{figures/BlochSphere.png}\\
             \vspace*{1.75em}
-            \includegraphics[width=0.75\textwidth]{figures/circuit.png}\\
-            {\tiny DOI: 10.1109/TQE.2021.3053921}
+            \onslide<4->\includegraphics[width=0.75\textwidth]{figures/circuit.png}\\
+            \onslide<4->{\tiny DOI: 10.1109/TQE.2021.3053921}
         \end{center}
       \end{column}
   \end{columns}
@@ -97,7 +97,7 @@
     \begin{column}{0.6\textwidth}
       \centering
       \begin{itemize}
-        \item<1-> Qubit: two level system
+        \item<1-> Qubit: two level quantum system
         \hspace{10 mm}
         \item<2-> Superconducting qubits: use Josephson Junctions\\ to build anharmonic oscillators
       \end{itemize}
@@ -109,7 +109,7 @@
     \end{column}
     \begin{column}{0.6\textwidth}
       \centering
-      \onslide<1->\includegraphics[width=0.5\textwidth]{figures/cryostat.png}
+      \onslide<2->\includegraphics[width=0.5\textwidth]{figures/cryostat.png}
     \end{column}
   \end{columns}
 \end{frame}
@@ -233,13 +233,13 @@
 
 \begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
 
-  \onslide<1->{\begin{itemize}
-    \item Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
-    \item Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$.
-  \end{itemize}}
+  \begin{itemize}
+    \item<1-> Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
+    \item<2-> Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$.
+  \end{itemize}
 
   \vspace{3mm}
-  \onslide<2->{Randomized Benchmarking protocol:
+  \onslide<3->{Randomized Benchmarking protocol:
   {\setbeamertemplate{enumerate items}[default]
    \begin{enumerate}[leftmargin=*, label=\arabic*.]
      \item Initialize the system in the ground state
@@ -252,15 +252,15 @@
 
 \begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
   \begin{itemize}
-    \item The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.\\
-    \item From $p$ we can extract the average error per Clifford gate.\\
+    \item<1-> The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.\\
+    \item<2-> From $p$ we can extract the average error per Clifford gate.\\
   \end{itemize}
 
   \begin{center}
     \vspace{0.5em}
     \includegraphics[width=\textwidth]{figures/rb.png}\\
     \vspace{1.25em}
-    \onslide<2->{Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration?}
+    \onslide<3->{Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration?}
   \end{center}
 \end{frame}
 
@@ -396,7 +396,7 @@
   <4->Add Cryoscope portocol to improve control over flux pulses.
 \end{frame}
 
-\begin{frame}{Flux pulse reconstruction \hfill{\tiny{arXiv:1907.04818}}}
+\begin{frame}{Flux pulse reconstruction \hfill{\small[arXiv:1907.04818]}}
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \centering
@@ -405,7 +405,7 @@
         f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right).
       \end{equation*}\\}
       \vspace{1em}
-      \onslide<3->{Detuning as function of the flux pulse:
+      \onslide<4->{Detuning as function of the flux pulse:
       \begin{align*}
         \Delta f_q = &\frac{\varphi_{\tau+\Delta\tau}-\varphi_\tau}{2\pi} \approx \\
         &\frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t)).
@@ -414,10 +414,10 @@
     \begin{column}{0.6\textwidth}
       \begin{figure}
         \centering
-        \onslide<1->\includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
+        \onslide<2->\includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
         \vspace{3em}
-        \onslide<2->\includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}\\
-        \onslide<2->{\tiny DOI: 10.1039/D2TC01258H}
+        \onslide<3->\includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}\\
+        \onslide<3->{\tiny DOI: 10.1039/D2TC01258H}
       \end{figure}
     \end{column}
   \end{columns}
