@@ -66,28 +66,6 @@
     \tableofcontents[hideallsubsections]
 \end{frame}
 
-\begin{frame}{Quantum Computing, what for?}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}[label=\textbullet]
-        \small
-        \item<2-> Simulation of quantum system: classical computers can not efficiently simulate quantum staes. Classical computers can usally simulate a $\sim 30$ qubits  
-        \item<3-> Optimization and modeling (eg. direct annealing, adiabatic evolutions, QAOA) with applications in finance, traffic, weather... 
-        \item<4-> Gate-based circuits (eg. Shor, Grover, Deutsch)
-        \item<5-> AI-inspired algorithms (VQE, autoencoders, classifiers ...)
-      \end{itemize}
-      \end{column}
-      \begin{column}{0.5\textwidth}
-        \begin{center}
-            \onslide<1->\includegraphics[width=0.75\textwidth]{figures/BlochSphere.png}\\
-            \vspace*{1.75em}
-            \onslide<4->\includegraphics[width=0.75\textwidth]{figures/circuit.png}\\
-            \onslide<4->{\tiny DOI: 10.1109/TQE.2021.3053921}
-        \end{center}
-      \end{column}
-  \end{columns}
-\end{frame}
-
 
 
 \section{Superconducting qubits}
@@ -154,29 +132,6 @@
   \end{columns}   
 
 
-\end{frame}
-
-\begin{frame}{State readout \hfill{\small[arXiv:cond-mat/0407325]}}
-  \begin{columns}
-    \begin{column}{0.35\textwidth}
-      \onslide<1->{Qubit - resonator Hamiltonian:
-      \begin{equation*}
-        \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger);
-      \end{equation*}\\}
-      \vspace{1.5em}
-      \onslide<2->{Dispersive regime ($g \ll \omega_q - \omega_r$):
-      \begin{equation*}
-        \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z;
-      \end{equation*}
-      dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$.}
-    \end{column}
-    \begin{column}{0.65\textwidth}
-      \centering
-      \onslide<2->\includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
-      \hspace{5mm}
-      \onslide<3->\includegraphics[height=0.48\textwidth]{figures/classification.png}
-    \end{column}
-  \end{columns}
 \end{frame}
 
 
@@ -314,33 +269,6 @@
   }
 \end{frame}
 
-\begin{frame}[t,fragile]{Parameters evolution}
-  \begin{figure}
-    \begin{subfigure}[t]{0.315\textwidth}
-      \includegraphics[width=\textwidth]{figures/NM_amplitude.png}
-    \end{subfigure}
-        \begin{subfigure}[t]{0.315\textwidth}
-      \includegraphics[width=\textwidth]{figures/NM_frequency.png}
-    \end{subfigure}
-        \begin{subfigure}[t]{0.315\textwidth}
-      \includegraphics[width=\textwidth]{figures/NM_beta.png}
-    \end{subfigure}
-
-  \end{figure}
-    \begin{figure}
-    \begin{subfigure}[t]{0.315\textwidth}
-      \includegraphics[width=\textwidth]{figures/CMA_amplitude.png}
-    \end{subfigure}
-        \begin{subfigure}[t]{0.315\textwidth}
-      \includegraphics[width=\textwidth]{figures/CMA_frequency.png}
-    \end{subfigure}
-        \begin{subfigure}[t]{0.315\textwidth}
-      \includegraphics[width=\textwidth]{figures/CMA_beta.png}
-    \end{subfigure}
-  \end{figure}
-\end{frame}
-
-
 
 
 \section{New features in Qibo}
@@ -393,7 +321,7 @@
     \item<2-> Two-qubit gates typically require bringing qubits into resonance.
     \item<3-> Frequency tuning is achieved via flux pulses applied to tunable qubits.
   \end{itemize}
-  <4->Add Cryoscope portocol to improve control over flux pulses.
+  \onslide<4->Add Cryoscope portocol to improve control over flux pulses.
 \end{frame}
 
 \begin{frame}{Flux pulse reconstruction \hfill{\small[arXiv:1907.04818]}}
@@ -424,27 +352,17 @@
 \end{frame}
 
 \begin{frame}{Filter determination}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/B4_ringin.png}
+  \end{figure}
+  \vspace{0.5em}
   \begin{enumerate}[leftmargin=*, label=\arabic*.]
     \item<1-> Determine exponential correction
     \item<2-> Obtain coefficients for the Infinite Impulse Response from exponential correction
     \item<3-> Determine Finite Impulse Response coefficients
     \item<4-> Obtain coefficients for real-time correction
   \end{enumerate}
-\end{frame}
-
-\begin{frame}{Filter determination}
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/B4_ringin.png}
-  \end{figure}
-  \vspace{0.5em}
-  {\setbeamertemplate{enumerate items}[default]
-    \begin{enumerate}[leftmargin=*, label=\arabic*.]
-      \item Determine exponential correction
-      \item Obtain coefficients for the Infinite Impulse Response from exponential correction
-      \item Determine Finite Impulse Response coefficients
-      \item Obtain coefficients for real-time correction
-    \end{enumerate}}
 \end{frame}
 
 \begin{frame}{Impact of correction on chevron plots}
@@ -502,11 +420,57 @@ Thank you
 
 \section*{Backup slides}
 
+\begin{frame}{Quantum Computing, what for?}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}[label=\textbullet]
+        \small
+        \item<2-> Simulation of quantum system: classical computers can not efficiently simulate quantum staes. Classical computers can usally simulate a $\sim 30$ qubits  
+        \item<3-> Optimization and modeling (eg. direct annealing, adiabatic evolutions, QAOA) with applications in finance, traffic, weather... 
+        \item<4-> Gate-based circuits (eg. Shor, Grover, Deutsch)
+        \item<5-> AI-inspired algorithms (VQE, autoencoders, classifiers ...)
+      \end{itemize}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{center}
+            \onslide<1->\includegraphics[width=0.75\textwidth]{figures/BlochSphere.png}\\
+            \vspace*{1.75em}
+            \onslide<4->\includegraphics[width=0.75\textwidth]{figures/circuit.png}\\
+            \onslide<4->{\tiny DOI: 10.1109/TQE.2021.3053921}
+        \end{center}
+      \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Qubit platforms}
   \begin{center}
       \includegraphics[height=0.82\textheight]{figures/platforms.png}
   \end{center}
 \end{frame}
+
+\begin{frame}{State readout \hfill{\small[arXiv:cond-mat/0407325]}}
+  \begin{columns}
+    \begin{column}{0.35\textwidth}
+      \onslide<1->{Qubit - resonator Hamiltonian:
+      \begin{equation*}
+        \hat{H} = \hbar\omega_r\hat{a}\hat{a}^\dagger - \frac{\hbar\omega_{01}}{2}\hat{\sigma}_z + \hbar g(\hat{\sigma}^+\hat{a}+\hat{\sigma}^-\hat{a}^\dagger);
+      \end{equation*}\\}
+      \vspace{1.5em}
+      \onslide<2->{Dispersive regime ($g \ll \omega_q - \omega_r$):
+      \begin{equation*}
+        \hat{H}_{disp} = \hbar(\omega_r - \chi\hat{\sigma}_z)\hat{a}^\dagger\hat{a} - \frac{\hbar}{2}(\omega_{01}+\chi)\hat{\sigma}_z;
+      \end{equation*}
+      dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$.}
+    \end{column}
+    \begin{column}{0.65\textwidth}
+      \centering
+      \onslide<2->\includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
+      \hspace{5mm}
+      \onslide<3->\includegraphics[height=0.48\textwidth]{figures/classification.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 
 \begin{frame}{Calibration workflow \& assessment}
   \vbox to \textheight{ 
@@ -607,6 +571,33 @@ Thank you
   \centering
   \includegraphics[width=\textwidth]{figures/recap_table.pdf}
 \end{frame}
+
+\begin{frame}[t,fragile]{Parameters evolution}
+  \begin{figure}
+    \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/NM_amplitude.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/NM_frequency.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/NM_beta.png}
+    \end{subfigure}
+
+  \end{figure}
+    \begin{figure}
+    \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/CMA_amplitude.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/CMA_frequency.png}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.315\textwidth}
+      \includegraphics[width=\textwidth]{figures/CMA_beta.png}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
+
 
 
 \begin{frame}{Filter determination details}
