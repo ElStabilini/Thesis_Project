@@ -35,7 +35,7 @@
   \leavevmode%
   \hbox{%
     \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
-      \usebeamerfont{footline} \insertframenumber{} / 22
+      \usebeamerfont{footline} \insertframenumber{} / 19
     \end{beamercolorbox}%
     \hfill
     \begin{beamercolorbox}[wd=.9\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=1em,rightskip=1em]{author in head/foot}%
@@ -186,15 +186,15 @@
 
 \section{Average Clifford gate fidelity optimization}
 
-\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
+\begin{frame}[t,fragile]{Standard Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
 
   \begin{itemize}
     \item<1-> Randomized benchmarking estimates average gate fidelity by applying random sequences of Clifford gates followed by an inverting gate.
-    \item<2-> Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$.
+    \item<1-> Randomization with Clifford gates provides a depolarized noise channel: $\rho \rightarrow d \frac{\mathbb{I}}{2} + (1-d)\rho$ where $d$ is the depolarization rate.
   \end{itemize}
 
   \vspace{3mm}
-  \onslide<3->{Randomized Benchmarking protocol:
+  \onslide<1->{Standard Randomized Benchmarking protocol:
   {\setbeamertemplate{enumerate items}[default]
    \begin{enumerate}[leftmargin=*, label=\arabic*.]
      \item Initialize the system in the ground state
@@ -205,17 +205,17 @@
   \end{enumerate}}}
 \end{frame}
 
-\begin{frame}[t,fragile]{Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
+\begin{frame}[t,fragile]{Standard Randomized Benchmarking \hfill{\small[arXiv:0707.0963v1]}}
   \begin{itemize}
     \item<1-> The survival probability decays exponentially with the number of Clifford gates $F(m) = Ap^m + B$ where $1-p$ is the depolarization rate.\\
-    \item<2-> From $p$ we can extract the average error per Clifford gate.\\
+    \item<1-> From $p$ we can extract the average error per Clifford gate.\\
   \end{itemize}
 
   \begin{center}
     \vspace{0.5em}
     \includegraphics[width=\textwidth]{figures/rb.png}\\
     \vspace{1.25em}
-    \onslide<3->{Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration?}
+    \onslide<2->{Can we optimize the average Clifford gate fidelity to automate $R_X(\pi)$ gate recalibration?}
   \end{center}
 \end{frame}
 
@@ -242,12 +242,12 @@
   }
 
   \vspace{1.25em}
-  Optimization parameters:
+  \onslide<4->{Optimization parameters:
   \begin{itemize}
     \item Pulse amplitude
     \item Pulse frequency
     \item Pulse shape (through $\beta$ DRAG parameter)
-  \end{itemize}
+  \end{itemize}}
 \end{frame}
 
 
@@ -279,9 +279,9 @@
   \textbf{Single qubit gates}:
   \begin{itemize}
     \item<1-> Qibo already implement many calibration routines for $R_X(\pi)$.
-    \item<2-> We can try to reduce residual erros by adding calibrating $R_X(\pi/2)$ as native gate. 
+    \item<1-> We can try to reduce residual erros by adding calibrating $R_X(\pi/2)$ as native gate. 
   \end{itemize}
-  <3->Introduce support for $R_X(\pi/2)$ as native gate in Qibolab.
+  \onslide<2->Introduce support for $R_X(\pi/2)$ as native gate in Qibolab.
 \end{frame}
 
 \begin{frame}{Native RX90}
@@ -328,12 +328,12 @@
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \centering
-      \onslide<1->{Transmon frquency dependence on magnetic flux:
+      \onslide<2->{Transmon frquency dependence on magnetic flux:
       \begin{equation*}
         f_q(\Phi_q) \approx \left( \sqrt{8E_J E_C \left| \cos\left(\pi \frac{\Phi_q}{\Phi_0}\right) \right|} \right).
       \end{equation*}\\}
       \vspace{1em}
-      \onslide<4->{Detuning as function of the flux pulse:
+      \onslide<3->{Detuning as function of the flux pulse:
       \begin{align*}
         \Delta f_q = &\frac{\varphi_{\tau+\Delta\tau}-\varphi_\tau}{2\pi} \approx \\
         &\frac{1}{\Delta \tau} \int_{\tau}^{\tau + \Delta \tau} \Delta f_q(\Phi_{q, \tau + \Delta \tau} (t)).
@@ -342,10 +342,10 @@
     \begin{column}{0.6\textwidth}
       \begin{figure}
         \centering
-        \onslide<2->\includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
+        \includegraphics[width=0.85\textwidth]{figures/cryoscope_pulse.png}\\
         \vspace{3em}
-        \onslide<3->\includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}\\
-        \onslide<3->{\tiny DOI: 10.1039/D2TC01258H}
+        \includegraphics[width=0.85\textwidth]{figures/BlochEvolution.png}\\
+        {\tiny DOI: 10.1039/D2TC01258H}
       \end{figure}
     \end{column}
   \end{columns}
@@ -368,9 +368,9 @@
 \begin{frame}{Impact of correction on chevron plots}
   \begin{figure}
     \centering
-    \onslide<1->\includegraphics[width=\textwidth]{figures/B2B4_nofilter.png}
+    \includegraphics[width=\textwidth]{figures/B2B4_nofilter.png}
     \vfill
-    \onslide<2->\includegraphics[width=\textwidth]{figures/B2B4.png}
+    \includegraphics[width=\textwidth]{figures/B2B4.png}
   \end{figure}
 \end{frame}
 
