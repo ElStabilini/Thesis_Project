@@ -665,4 +665,49 @@ Thank you
 
 \end{frame}
 
+
+
+\begin{frame}{Gate decomposition - single-qubit gates}
+  \centering
+  \textbf{Euler's theorem}\\
+  \vspace*{0.75em}
+  Any single-qubit unitary $U \in SU(2)$ can be decomposed (up to global phase) as
+  \begin{equation*}
+    U =  e^{i\alpha}R_z(\phi)R_x(\theta)R_z(\lambda)
+  \end{equation*}
+  \vspace*{1.5em}
+  Hadamard gate decomposition:
+  \begin{equation*}
+    H = R_z(\pi)R_x(\frac{\pi}{2})R_z(0)
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{DRAG pulse}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item<1-> pulse shaping technique designed to suppress leakage and phase errors.
+        \item<2-> Standard gaussian pulse on first quadrature + pulse proportional to the gaussian derivative on second quadrature
+      \end{itemize}
+      \onslide<2->{\begin{align*}
+        \Omega_x(t) &= \Omega e^{-t^2 / 2\sigma^2}, \\
+        \Omega_y(t) &= \lambda \eta \frac{d}{dt} \Omega_x(t).
+      \end{align*}}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=0.55\textwidth]{figures/DRAG.png}\\
+      {\tiny ISBN: 9780198787488}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Virtual-Z}
+  \begin{itemize}
+    \item<1-> A $R_z(\theta)$ gate applies a rotation of angle $\theta$ around the $z$-axis of the Bloch sphere.
+    \item<2-> Physically, it shifts the phase between the $\ket{0}$ and $\ket{1}$ states: $R_z(\theta)\ket{0} = \ket{0} \; R_z(\theta)\ket{1} = e^{-i\theta}\ket{1}$
+    \item<3-> Can be implemented virtually by redefining the phase of the qubit's rotating reference frame.
+    \item<4-> A $R_z(\theta)$ gate is applied by shifting the phase of subsequent drive pulses by $-\theta$.
+  \end{itemize}
+\end{frame}
+
 \end{document}
