@@ -161,7 +161,7 @@
 
   \end{tikzpicture}
   }
-  \vspace{0.75em}
+  \vspace{0.25em}
   \begin{itemize}
     \item<2-> We need to calibrate \textit{only} native gates.
     \item<2-> Native single qubit gates on superconducting qubits: $R_X(\pi)$, $R_X(\frac{\pi}{2})$, $R_Z(\theta)$.
@@ -395,7 +395,7 @@
 
 \begin{frame}{Library additions}
   \begin{itemize}
-    \item[\ding{51}] Extended Qibolab and Qibocal libraries to support \textbf{native $R_X(\pi/2)$ gates} with dedicated calibration routines.
+    \item[\ding{51}] Extended Qibolab and Qibocal libraries to support \textbf{native $R_X(\pi/2)$ gate} with dedicated calibration routines.
     \item[\ding{51}] Implemented and added the \textbf{Cryoscope} calibration experiment to Qibocal library to correct flux-pulse distortions (average NMSE improvement $\sim 70\%$).
     \item[\ding{55}] Study long-time distortions of the flux-pulse.
   \end{itemize}
@@ -463,10 +463,12 @@ Thank you
       dispersive shift: $\chi = \frac{g^2}{\Delta},$ \hfill $\Delta = \omega_q - \omega_r$.}
     \end{column}
     \begin{column}{0.65\textwidth}
-      \centering
-      \onslide<2->\includegraphics[width=0.75\textwidth]{figures/disp_sihft.png}
-      \hspace{5mm}
-      \onslide<3->\includegraphics[height=0.48\textwidth]{figures/classification.png}
+      \onslide<2->{
+        \vspace*{3mm}
+        \centering
+        \includegraphics[width=0.72\textwidth]{figures/disp_sihft.png}
+      }
+      \onslide<3->\includegraphics[height=0.45\textwidth]{figures/classification.png}
     \end{column}
   \end{columns}
 \end{frame}
