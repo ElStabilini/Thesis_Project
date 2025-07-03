@@ -2,6 +2,7 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \nonstopmode
 
+\usepackage{physics}
 \usepackage{pifont}
 \usepackage{subcaption}
 \usepackage{graphicx}
@@ -686,7 +687,8 @@ Thank you
   \begin{columns}
     \begin{column}{0.5\textwidth}
       \begin{itemize}
-        \item<1-> pulse shaping technique designed to suppress leakage and phase errors.
+        \item<1-> Pulse shaping technique designed to suppress leakage and phase errors.
+        \item<2->\vspace*{1.5em}
         \item<2-> Standard gaussian pulse on first quadrature + pulse proportional to the gaussian derivative on second quadrature
       \end{itemize}
       \onslide<2->{\begin{align*}
@@ -695,8 +697,11 @@ Thank you
       \end{align*}}
     \end{column}
     \begin{column}{0.5\textwidth}
-      \includegraphics[width=0.55\textwidth]{figures/DRAG.png}\\
-      {\tiny ISBN: 9780198787488}
+      \centering
+      \onslide<2->\includegraphics[width=0.45\textwidth]{figures/DRAG.png}\\
+      \onslide<2->{\tiny ISBN: 9780198787488}\\
+      \vfill
+      \onslide<3->\includegraphics[width=0.75\textwidth]{figures/drag_simple.png}
     \end{column}
   \end{columns}
 \end{frame}
@@ -704,8 +709,11 @@ Thank you
 \begin{frame}{Virtual-Z}
   \begin{itemize}
     \item<1-> A $R_z(\theta)$ gate applies a rotation of angle $\theta$ around the $z$-axis of the Bloch sphere.
-    \item<2-> Physically, it shifts the phase between the $\ket{0}$ and $\ket{1}$ states: $R_z(\theta)\ket{0} = \ket{0} \; R_z(\theta)\ket{1} = e^{-i\theta}\ket{1}$
+    \item<2->\vspace*{1.5em}
+    \item<2-> Physically, it shifts the phase between the $\ket{0}$ and $\ket{1}$ states: $R_z(\theta)\ket{0} = \ket{0} \quad R_z(\theta)\ket{1} = e^{-i\theta}\ket{1}$
+    \item<3->\vspace*{1.5em}
     \item<3-> Can be implemented virtually by redefining the phase of the qubit's rotating reference frame.
+    \item<4->\vspace*{1.5em}
     \item<4-> A $R_z(\theta)$ gate is applied by shifting the phase of subsequent drive pulses by $-\theta$.
   \end{itemize}
 \end{frame}
